@@ -37,7 +37,7 @@ import math
 # Prio 2: workspace skill (lokale development)
 # Fallback: duidelijke error bij ontbrekende dependency
 _engine_dir = os.path.dirname(__file__)
-_vendor_path = os.path.join(_engine_dir, "..", "..", "vendor", "sanskrit_frequency_bridge")
+_vendor_path = os.path.join(_engine_dir, "..", "vendor", "sanskrit_frequency_bridge")
 _workspace_path = os.path.join(_engine_dir, "..", "..", "skills", "sanskrit-frequency-bridge", "scripts")
 
 if os.path.isdir(_vendor_path):
