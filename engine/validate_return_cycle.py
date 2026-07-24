@@ -97,6 +97,176 @@ def return_cycle(centroid, ref_bytes, base=432.0):
     return r, e, c
 
 
+# === Return Projection Operator ===
+def return_projection(component_centroid, dr_signature):
+    """ρ_ℱ: ReturnProjectionInput → ℱ (fractal field projection).
+    
+    Projects a subset of R_raw(E_raw) into a 2D fractal field ℱ.
+    Uses only component_centroid and DR_signature, not the full AudioFeatureSpace.
+    
+    Args:
+        component_centroid: float > 0 (ComponentCentroid from R_raw)
+        dr_signature: tuple of ints, each in [1,9] (DRSignature from R_raw)
+    
+    Returns:
+        tuple[int, int]: ℱ = (DR(round(centroid)), DR(sum(dr_signature)))
+    
+    Raises:
+        TypeError: if centroid is not numeric or signature is not tuple of ints
+        ValueError: if centroid ≤ 0, signature empty, or any DR not in [1,9]
+    """
+    # Type checks
+    if not isinstance(component_centroid, (int, float)):
+        raise TypeError(
+            f"component_centroid must be numeric, got {type(component_centroid).__name__}"
+        )
+    if not isinstance(dr_signature, (tuple, list)):
+        raise TypeError(
+            f"dr_signature must be tuple/list of ints, got {type(dr_signature).__name__}"
+        )
+    if not all(isinstance(x, int) for x in dr_signature):
+        raise TypeError(
+            f"dr_signature elements must be ints, got {[type(x).__name__ for x in dr_signature]}"
+        )
+    
+    # Value checks
+    if component_centroid <= 0:
+        raise ValueError(
+            f"component_centroid must be positive, got {component_centroid}"
+        )
+    if len(dr_signature) == 0:
+        raise ValueError("dr_signature must not be empty")
+    if not all(1 <= x <= 9 for x in dr_signature):
+        raise ValueError(
+            f"all DR values must be in [1,9], got {tuple(dr_signature)}"
+        )
+    
+    # Projection
+    dr_centroid = dr(round(component_centroid))
+    dr_sig_sum = dr(sum(dr_signature))
+    
+    return (dr_centroid, dr_sig_sum)
+
+
+def test_return_projection():
+    """Test ρ_ℱ with Model A and diverse inputs."""
+    passed, failed = 0, 0
+    
+    # Model A: the canonical case
+    tests = [
+        # (centroid, dr_sig, expected_ℱ, label)
+        (432.00, (1, 8, 1, 2), (9, 3), "Model A canonical"),
+        # 396 base (Flower of Life) — same DR pattern if sig unchanged
+        (396.00, (1, 8, 1, 2), (9, 3), "396 Hz, same sig"),
+        # 440 Hz (ISO standard)
+        (440.00, (1, 8, 1, 2), (8, 3), "440 Hz, same sig"),
+        # Different DR signature
+        (432.00, (3, 6, 9), (9, 9), "alt sig (3,6,9)"),
+        # Single-element signature
+        (220.00, (5,), (4, 5), "single sig, 220 Hz"),
+        # High centroid
+        (880.00, (1, 8, 1, 2), (7, 3), "880 Hz"),
+        # Decimal centroid
+        (433.32, (1, 8, 1, 2), (1, 3), "433.32 Hz"),
+    ]
+    
+    print("\n--- Return Projection (ρ_ℱ) Tests ---")
+    for centroid, sig, expected, label in tests:
+        try:
+            result = return_projection(centroid, sig)
+            if result == expected:
+                print(f"  ✅ {label}: ρ_ℱ({centroid}, {sig}) = {result}")
+                passed += 1
+            else:
+                print(f"  ❌ {label}: ρ_ℱ({centroid}, {sig}) = {result}, expected {expected}")
+                failed += 1
+        except Exception as e:
+            print(f"  ❌ {label}: unexpected error: {e}")
+            failed += 1
+    
+    return passed, failed
+
+
+def test_return_projection_edge_cases():
+    """Test ρ_ℱ error handling."""
+    print("\n--- Return Projection Edge Cases ---")
+    passed, failed = 0, 0
+    
+    # Zero centroid
+    try:
+        return_projection(0, (1, 8, 1, 2))
+        print("  ❌ ρ_ℱ(0, ...) should raise ValueError")
+        failed += 1
+    except ValueError:
+        print("  ✅ ρ_ℱ(0, ...) raises ValueError")
+        passed += 1
+    
+    # Negative centroid
+    try:
+        return_projection(-432, (1, 8, 1, 2))
+        print("  ❌ ρ_ℱ(-432, ...) should raise ValueError")
+        failed += 1
+    except ValueError:
+        print("  ✅ ρ_ℱ(-432, ...) raises ValueError")
+        passed += 1
+    
+    # String centroid
+    try:
+        return_projection("432", (1, 8, 1, 2))
+        print("  ❌ ρ_ℱ('432', ...) should raise TypeError")
+        failed += 1
+    except TypeError:
+        print("  ✅ ρ_ℱ('432', ...) raises TypeError")
+        passed += 1
+    
+    # Empty signature
+    try:
+        return_projection(432, ())
+        print("  ❌ ρ_ℱ(432, ()) should raise ValueError")
+        failed += 1
+    except ValueError:
+        print("  ✅ ρ_ℱ(432, ()) raises ValueError")
+        passed += 1
+    
+    # Invalid DR value (0)
+    try:
+        return_projection(432, (0, 8, 1, 2))
+        print("  ❌ ρ_ℱ(432, (0,...)) should raise ValueError")
+        failed += 1
+    except ValueError:
+        print("  ✅ ρ_ℱ(432, (0,...)) raises ValueError")
+        passed += 1
+    
+    # Invalid DR value (10)
+    try:
+        return_projection(432, (10,))
+        print("  ❌ ρ_ℱ(432, (10,)) should raise ValueError")
+        failed += 1
+    except ValueError:
+        print("  ✅ ρ_ℱ(432, (10,)) raises ValueError")
+        passed += 1
+    
+    # Non-int in signature
+    try:
+        return_projection(432, (1.5, 8, 1, 2))
+        print("  ❌ ρ_ℱ(432, (1.5,...)) should raise TypeError")
+        failed += 1
+    except TypeError:
+        print("  ✅ ρ_ℱ(432, (1.5,...)) raises TypeError")
+        passed += 1
+    
+    # String signature
+    try:
+        return_projection(432, "1812")
+        print("  ❌ ρ_ℱ(432, '1812') should raise TypeError")
+        failed += 1
+    except TypeError:
+        print("  ✅ ρ_ℱ(432, '1812') raises TypeError")
+        passed += 1
+    
+    return passed, failed
+
+
 # === Test cases ===
 def test_return_cycle():
     """Test ReturnCycle met diverse centroids."""
@@ -305,6 +475,13 @@ def main():
 
     p, f = test_forward_return_roundtrip(base=440.0, ref=81.75, label="440")
     results.append(("Roundtrip-440", p, f))
+
+    # Return Projection (ρ_ℱ)
+    p, f = test_return_projection()
+    results.append(("ReturnProjection", p, f))
+
+    p, f = test_return_projection_edge_cases()
+    results.append(("ProjectionEdge", p, f))
 
     # hex_phoneme is observatie — telt niet mee als test
     p, f = analyze_hex_phoneme_complementarity()

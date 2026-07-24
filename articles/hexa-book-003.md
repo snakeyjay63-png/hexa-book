@@ -82,7 +82,7 @@ Consumers:
 | `E_audio` | 011 | `superposition()` | ✅ gesloten |
 | `R_raw` | 004 | `npr_sound_engine.py` | ✅ gesloten |
 | `R_audio` | 004 | `npr_sound_engine.py` | ✅ gesloten |
-| `ρ_ℱ` | 004 | — | ✅ conventie |
+| `ρ_ℱ` | 004 | `validate_return_cycle.py` | ✅ `gevalideerd_lokaal` |
 
 ---
 

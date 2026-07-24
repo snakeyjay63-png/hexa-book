@@ -71,13 +71,24 @@ R_audio(E_audio):
 
 **De projectie van R(E) naar het fractaalveld.**
 
+### Type-definities
+
+```
+ComponentCentroid := float64  # > 0
+DRSignature := tuple[int, ...]  # each element ∈ [1,9], len ≥ 1
+ReturnProjectionInput := ComponentCentroid × DRSignature
+ℱ := int × int  # (DR_centroid, DR_signature_sum)
+```
+
+### Operator
+
 ```
 # ρ_ℱ gebruikt een subset van R_raw, niet de volledige feature-space
 
-ReturnProjectionInput := ComponentCentroid × DRSignature
+ρ_ℱ : ReturnProjectionInput → ℱ
 
 ρ_ℱ(c, d) := (
-  DR(round(c)),      # centroid → DR
+  DR(round(c)),      # centroid → integer → DR
   DR(sum(d))         # DR-signatuur som → DR
 )
 ```
@@ -104,17 +115,47 @@ Resultaat: ℱ = (9, 3)
 Overige velden (RMS, peak, signal_centroid, ratios) zijn **niet** in de projectie opgenomen.
 Dit is een bewuste keuze: ρ_ℱ is compressie, niet identiteit.
 
+### Error Handling
+
+```
+ρ_ℱ raises TypeError if:
+  - centroid is not numeric (int/float)
+  - signature is not tuple/list of ints
+  - any signature element is not int
+
+ρ_ℱ raises ValueError if:
+  - centroid ≤ 0
+  - signature is empty
+  - any DR value ∉ [1,9]
+```
+
+### "Fractal Field" — Semantische Status
+
+```
+"fractal field" = conventie
+  # ℱ = (9,3) is een 2D-DR-ruimte.
+  # "Fractal" = interpretatief label (vikalpa), niet formeel bewezen.
+  # De wiskunde (DR-projectie) is concreet. De naam is conventie.
+```
+
 ### Status
 
 ```
 ρ_ℱ:
   operator_status = conventie
-  execution_status = voltooid
+  execution_status = engine
   validatie_status = gevalideerd_lokaal
+  engine = validate_return_cycle.py :: return_projection()
   domein = ReturnProjectionInput (subset van R_raw)
+  type_checking = ✅ (TypeError + ValueError)
+  edge_cases = ✅ (zero, negative, non-numeric, empty, out-of-range)
+  tests = 15 ✅ (7 projection + 8 edge)
 ```
 
-> ρ_ℱ is nu uitgevoerd. De projectie van R_raw(E_raw) → ℱ is concreet.\n> Domein is expliciet: `ComponentCentroid × DRSignature`.
+> ρ_ℱ is nu uitgevoerd als engine-operator (`return_projection`).
+> De projectie van R_raw(E_raw) → ℱ is concreet en getest.
+> Domein is expliciet: `ComponentCentroid × DRSignature`.
+> "Fractal field" is conventie, niet formeel bewezen theorema.
 
 ## ReturnCycle: R', ReconstructTone, C'
 
@@ -201,7 +242,8 @@ Byte-roundtrip: ✅ C'(ReconstructTone(R'(byte_to_freq(B)))) = B (8/8 bytes, |B'
 > **F-1:** Return-routes nu uitgevoerd (R', ReconstructTone, C' in artikel 002).  
 > **F-2:** `0≐_lens 1` is lensaxioma, niet bewezen operator — `status = axioma`.  
 > **F-3:** Veldcontract nu in artikel 003 — E_raw, E_audio, R_raw, R_audio.  
-> **F-4:** ρ_ℱ domein expliciet: `ComponentCentroid × DRSignature` (niet volledige feature-space).
+> **F-4:** ρ_ℱ domein expliciet: `ComponentCentroid × DRSignature` (niet volledige feature-space).  
+> **F-5:** ρ_ℱ nu engine-operator (`return_projection`) met type-checking + edge-cases (15 ✅).
 
 ---
 
