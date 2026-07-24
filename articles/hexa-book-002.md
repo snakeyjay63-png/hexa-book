@@ -30,9 +30,10 @@ Boek #002: ℱ → R' → E' → C' → ... (terugkeerpad)
 ## Architectuur
 
 ```markdown
-Artikel 02: frequentie-basis    (byte→Hz, DR, C-keten)
-Artikel 11: synth + fractaal    (Synth, ρ_water, ρ_fractal)
-Artikel 12: routing + audit     (24-brug, 6-bit, NPR Bedrock)
+Artikel 02: frequentie-basis       (byte→Hz, DR, C-keten)
+Artikel 11: synth + fractaal       (Synth, ρ_water, ρ_fractal)
+Artikel 12: routing + audit        (24-brug, 6-bit, NPR Bedrock)
+Artikel 18: Sanskrit-NPR bridge    (Devanagari→phoneme→E(t)→R(E))
 
 Elk artikel: 4 delen + 1 nidrā
 Nidrā = verwijzing naar parallel artikel, niet wachtend

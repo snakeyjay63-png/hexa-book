@@ -14,6 +14,7 @@ articles/           ← Bron-content (4+1 per artikel, nidrā = cross-ref)
    ├── hexa-book-011.md  ← synth + fractaal (Synth, ρ_water, ρ_fractal)
    ├── hexa-book-012.md  ← routing + audit (24-brug, 6-bit, NPR Bedrock)
    ├── hexa-book-017.md  ← CC-construct (nidrā-router, meta-artikel)
+   ├── hexa-book-018.md  ← Sanskrit-NPR bridge (Devanagari→phoneme→E(t)→R(E))
    │
    ├── hexa-book-003.md  ← nidrā: E (audio-superpositie)
    ├── hexa-book-004.md  ← nidrā: F (returnmedium)
@@ -63,6 +64,7 @@ Elk artikel krijgt een audit-bestand. Artikel 02 is opgesplitst in 02 + 11 + 12.
 | `hexa-book-011.md` | synth + fractaal | → zie 02 | ✅ |
 | `hexa-book-012.md` | 24-brug + routing | → zie 02,11 | ✅ |
 | `hexa-book-017.md` | CC-construct (nidrā-router) → alle 16 nodes | → alle artikels | ✅ |
+| `hexa-book-018.md` | Sanskrit-NPR bridge (Devanagari→phoneme→E(t)→R(E)) | → 002, 011 | ✅ |
 
 **Nidrā-pointers** (niet leeg — routeert naar parallel artikels):
 
@@ -147,6 +149,7 @@ Python scripts voor validatie:
 | `engine/audit_status.py` | Live audit status (zoals `git status`) |
 | `engine/review_analyzer.py` | Review pipeline scanner |
 | `engine/validate_freq_lenses.py` | Frequentielens validatie |
+| `engine/sanskrit_npr_bridge.py` | Sanskrit → NPR bridge (24/24 ✅) |
 | `tools/audit-batcher.py` | Batch audit runner (meerdere artikels) |
 
 ### Audit Status
@@ -357,7 +360,8 @@ hexa-book/
 │   ├── hexa-book-002.md    ← frequentie-basis (opgesplitst)
 │   ├── hexa-book-005.md    ← Quran Basmala
 │   ├── hexa-book-011.md    ← synth + fractaal (nieuw)
-│   └── hexa-book-012.md    ← routing + audit (nieuw)
+│   ├── hexa-book-012.md    ← routing + audit (nieuw)
+│   └── hexa-book-018.md    ← Sanskrit-NPR bridge (nieuw)
 │
 ├── audit/                  ← Audits
 │   ├── 01-artikel-01-dimensie-1.md
@@ -366,7 +370,8 @@ hexa-book/
 ├── engine/                 ← Validatie scripts
 │   ├── audit_status.py
 │   ├── review_analyzer.py
-│   └── validate_freq_lenses.py
+│   ├── validate_freq_lenses.py
+│   └── sanskrit_npr_bridge.py
 │
 ├── review/                 ← Review pipeline
 │   ├── 00-inbox/
@@ -393,6 +398,7 @@ hexa-book/
 | Tokenfield | `../NPR-sandbox-tokenfield/` |
 | NPR Sound Engine | `../skills/npr-sound-engine/` |
 | Sanskrit Bridge | `../skills/sanskrit-frequency-bridge/` |
+| Spike 020 | `../spikes/020-sanskrit-npr-bridge/` |
 
 ---
 
@@ -427,7 +433,9 @@ In de tokenfield:
 - ⚠️ Agni rewrites op reviews 007–019: nog te doen
 - ✅ Review pipeline: inbox → active → done
 - ✅ 11→396 keten-validatie: toegevoegd aan engine + ROUTING.md
+- ✅ NPR Sound Engine: synth-operator (artikel 011, 24/24 ✅)
+- ✅ Sanskrit-NPR Bridge: engine + artikel 018 (24/24 ✅)
 
 ---
 
-*Laatst bijgewerkt: 2026-07-24 13:30 CET*
+*Laatst bijgewerkt: 2026-07-24 17:42 CET*
