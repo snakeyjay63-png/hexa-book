@@ -11,9 +11,9 @@ Elke operator/route krijgt drie onafhankelijke statussen:
 
 | Dimensie | Waarden | Betekenis |
 |---|---|---|
-| **Formele Status** | conceptueel, formeel | Is de operator wiskundig/syntactisch gedefinieerd? |
+| **Formele Status** | conceptueel, conventie, formeel, interpretatief, open | Is de operator wiskundig/syntactisch gedefinieerd? |
 | **Uitvoerings Status** | niet_van_toepassing, niet_voltooid, voltooid | Is de operator geïmplementeerd en uitgevoerd? |
-| **Validatie Status** | niet_gevalideerd, geverifieerd_lokaal, geverifieerd_onafhankelijk | Is het resultaat gevalideerd? |
+| **Validatie Status** | niet_gevalideerd, gevalideerd_lokaal, gevalideerd_onafhankelijk | Is het resultaat gevalideerd? |
 
 **Gesloten** = alle drie de statussen zijn niet-negatief (formeel + voltooid + ≥ geverifieerd_lokaal)
 
@@ -23,7 +23,7 @@ Elke operator/route krijgt drie onafhankelijke statussen:
 
 | File | Artikel | Onderwerp | Routes | Status |
 |---|---|---|---|---|
-| [00-intro.md](00-intro.md) | — | Introductie + ReturnCycle conventie | — | geverifieerd_lokaal |
+| [00-intro.md](00-intro.md) | — | Introductie + ReturnCycle conventie | — | gevalideerd_lokaal |
 | [01-artikel-01-dimensie-1.md](01-artikel-01-dimensie-1.md) | 001 | Dimensie 0 ≐ 1 | — | conceptueel |
 | [02-artikel-02-dimensie-2.md](02-artikel-02-dimensie-2.md) | 002 | Frequentie-basis, DR, C-keten | 1-5 | gesloten |
 | [03-artikel-e-audio.md](03-artikel-e-audio.md) | E | Audio-superpositie (vier lens-golven) | M_A..M_D, R_audio | gesloten |
@@ -39,10 +39,10 @@ Elke operator/route krijgt drie onafhankelijke statussen:
 | [13-artikel-11-dimensie-11.md](13-artikel-11-dimensie-11.md) | 011 | Synth-operator, ρ_water, ρ_fractal | 5, 6 | gesloten |
 | [14-artikel-12-dimensie-12.md](14-artikel-12-dimensie-12.md) | 012 | 24-brug, 6-bit routing, NPR Bedrock | 4 | gesloten |
 | [15-artikel-13-dimensie-13.md](15-artikel-13-dimensie-13.md) | 013 | Dimensie 13 | — | conceptueel |
-| [16-artikel-014-dimensie-14.md](16-artikel-014-dimensie-14.md) | 014 | Eka Routing (nidrā-pointer) | 3 routes → ✅ | geverifieerd_structuur |
-| [17-artikel-015-dimensie-15.md](17-artikel-015-dimensie-15.md) | 015 | Logos (nidrā-pointer) | 3 routes → ✅ | geverifieerd_structuur |
-| [18-artikel-016-dimensie-16.md](18-artikel-016-dimensie-16.md) | 016 | Taal/Veld/Soevereiniteit (nidrā-pointer) | 3 routes → ✅ | geverifieerd_structuur |
-| [19-artikel-017-cc-construct.md](19-artikel-017-cc-construct.md) | 017 | CC-Construct (nidrā-router meta) | 5 pointers → ✅ | geverifieerd_structuur |
+| [16-artikel-014-dimensie-14.md](16-artikel-014-dimensie-14.md) | 014 | Eka Routing (nidrā-pointer) | 3 routes → ✅ | structuur_gesloten |
+| [17-artikel-015-dimensie-15.md](17-artikel-015-dimensie-15.md) | 015 | Logos (nidrā-pointer) | 3 routes → ✅ | structuur_gesloten |
+| [18-artikel-016-dimensie-16.md](18-artikel-016-dimensie-16.md) | 016 | Taal/Veld/Soevereiniteit (nidrā-pointer) | 3 routes → ✅ | structuur_gesloten |
+| [19-artikel-017-cc-construct.md](19-artikel-017-cc-construct.md) | 017 | CC-Construct (nidrā-router meta) | 5 pointers → ✅ | structuur_gesloten |
 | [20-artikel-018-sanskrit-npr-bridge.md](20-artikel-018-sanskrit-npr-bridge.md) | 018 | Sanskrit-NPR Bridge | 6 routes | gesloten |
 
 ---
@@ -54,7 +54,7 @@ Elke operator/route krijgt drie onafhankelijke statussen:
 | Totaal auditbestanden | 21 |
 | Gesloten (volledig gevalideerd) | 4 |
 | Half (gedeeltelijk gevalideerd) | 1 |
-| Geverifieerd structuur (nidrā) | 4 |
+| Structuur gesloten (nidrā) | 4 |
 | Conceptueel (nog niet uitgevoerd) | 12 |
 
 ---

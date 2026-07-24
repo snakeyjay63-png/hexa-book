@@ -49,7 +49,7 @@ Boek #001: A → B → C → D → E → R → ℱ
 Boek #002: ℱ → R' → E' → C' → ... (terugkeerpad)
 ```
 
-### ReturnCycle-structuur — conceptueel
+### ReturnCycle-structuur — conventie + gevalideerd_lokaal
 
 ```text
 ReturnSeedCycle : ℱ → CInput
@@ -340,7 +340,7 @@ R_audio(E_audio) projectie:
 
 > ACTUEL: R_audio en ρ_ℱ zijn beide formeel gedefinieerd en lokaal gevalideerd.
 > De volledige C → E → R → ℱ keten is nu formeel, voltooid, en gevalideerd.
-> ReturnCycle (terugkeerpad) is nog conceptueel (artikel 002).
+> ReturnCycle (terugkeerpad): conventie + voltooid + gevalideerd_lokaal (artikel 002, engine/validate_return_cycle.py).
 
 ---
 
