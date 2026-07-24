@@ -1,0 +1,11 @@
+{
+  "tone_class": "middentoon",
+  "digital_root": 5,
+  "frequency_hz": 437.27,
+  "amplitude": 1.0,
+  "waveform": "sine",
+  "sample_rate": 44100,
+  "duration_s": 1.0,
+  "samples": 44100,
+  "formula": "W_C(t) = sin(2\u03c0 \u00b7 437.27 \u00b7 t)"
+}

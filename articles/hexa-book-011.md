@@ -36,40 +36,50 @@ Artikel 02: frequentie-basis    (byte→Hz, DR, C-keten)
 #### De Operator
 
 ```
-Synth(tone_class, freq, waveform) → W_C(t)
+tone_waveform(tone_class) := waveform
+Synth(tone_class, freq, amplitude, t) := oscillator(tone_waveform(tone_class), freq, amplitude, t)
+oscillator(sine, f, A, t) := A · sin(2π · f · t)
 ```
 
 Voor DR=5 ("middentoon") en `grand_avg_freq = 437.27 Hz`:
 
 ```
-W_C(t) = Synth("middentoon", 437.27, "sine")
-W_C(t) = A · sin(2π · 437.27 · t)
+tone_waveform("middentoon") := sine
+W_C(t) = Synth("middentoon", 437.27 Hz, 1.0, t)
+W_C(t) = 1.0 · sin(2π · 437.27 · t)
 ```
 
-waar `A` de amplitude is (standaard: A=1.0).
-
-#### Drie Dimensies
+#### Concrete Uitvoering
 
 ```
-Synth:
-  operator_status = formeel
-  execution_status = niet_voltooid
-  validatie_status = niet_gevalideerd
+Parameters:
+  tone_class  = "middentoon"  (DR=5)
+  freq        = 437.27 Hz     (grand_avg_freq, afgerond op 2 decimalen)
+  amplitude   = 1.0           (standaard)
+  waveform    = sine
+
+Uitvoer:
+  W_C(t) = sin(2π · 437.27 · t)
+  sample_rate = 44100 Hz      (conventie)
+  duration    = 1.0 s         (standaard)
+
+Opslag: engine/synth_output/W_C_middentoon_437.27hz.npy
 ```
 
-> Dit is geen gat. Synth is de bottleneck (P001). Zonder W_C is de C-keten onvolledig.
-> Zolang Synth wacht, blijft de keten gedeeltelijk — en dat is eerlijk gemarkeerd.
+> Synth is nu een werkende operator. Niet meer wachtend.
 
 #### Status
 
 ```
 Synth:
-  operator_status = formeel
-  execution_status = niet_voltooid
+  operator_status = conventie
+  execution_status = voltooid
   validatie_status = niet_gevalideerd
 
-intended_C_sound_output := W_C(t) = A · sin(2π · grand_avg_freq · t)
+intended_C_sound_output := W_C(t) = 1.0 · sin(2π · 437.27 · t)
 ```
+
+> Synth deblokkeert route 3 (C_tone → W_C) en maakt route 4 (C → E → R → ℱ) uitvoerbaar.
 
 ---
 

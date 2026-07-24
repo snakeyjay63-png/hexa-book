@@ -285,7 +285,7 @@ R(E) features:
 | 1 | byte_to_freq | gesloten | conventie | voltooid | niet_gevalideerd |
 | 1a | hex_to_phoneme | open | open | niet_voltooid | niet_gevalideerd |
 | 2 | avg_freq → DR_freq | gesloten | conventie | voltooid | gevalideerd |
-| 3 | C_tone → W_C | ↝ extern | formeel | niet_voltooid | niet_gevalideerd |
+| 3 | C_tone → W_C | gesloten | conventie | voltooid | niet_gevalideerd |
 | 4 | C → E → R → ℱ | half | formeel | gedeeltelijk | niet_gevalideerd |
 | 4a | R(E) features | open | open | niet_voltooid | niet_gevalideerd |
 | 4b | ρ_ℱ projectie | ↝ extern | open | niet_voltooid | niet_gevalideerd |
@@ -296,7 +296,8 @@ R(E) features:
 - ⚠️ half = route heeft begin/einde, maar mist een schakel
 - 🔓 open = geen werkende operator of concrete doelnode
 
-> Routes 3 (Synth) en 4b (ρ_ℱ) zijn **extern** — geldige pointers naar artikel 011 resp. 004.
+> Route 3 (Synth) is nu **gesloten** — uitgevoerd in artikel 11.
+> Route 4b (ρ_ℱ) blijft **extern** — pointer naar artikel 004.
 > Routes 1a (hex_to_phoneme), 4a (R(E)) en ReturnCycle (R'/E'/C') zijn **open** — nog te implementeren.
 > Dit is geen gat — het is een parallelle verwijzing. Nidrā.
 
@@ -308,7 +309,7 @@ Nidrā is geen gat. Het is de brug tussen artikels die *tegelijk* bestaan.
 
 | Wat | Waar | route_status |
 |-----|------|-------------|
-| Synth-operator (C_tone → W_C) | Artikel 11, deel 1 | ↝ extern |
+| Synth-operator (C_tone → W_C) | Artikel 11, deel 1 | gesloten |
 | ρ_water (24ℕ → ℱ) | Artikel 11, deel 2 | ↝ extern |
 | ρ_fractal-D (D_numeric → fractaal) | Artikel 11, deel 3 | ↝ extern |
 | Waveform Mapping | Artikel 11, deel 4 | ↝ extern |
