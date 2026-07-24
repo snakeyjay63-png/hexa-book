@@ -141,7 +141,7 @@ R_audio(E)      := signaal → {centroid, rms, peak, dominant_freq, DR_signature
 npr_analysis(t) := Devanagari → NPR-result (tekstlengte-gebasseerd)
 ```
 
-Route 7 is `R_audio(E)`, niet `npr_analysis(text).
+Route 7 is `R_audio(E)`, niet `npr_analysis(text)`.
 
 #### Return Cycle Integratie
 
@@ -194,7 +194,6 @@ Tests per input (6 per input, 4 inputs = 24 totaal):
   ✅ byte_roundtrip: freq → byte → freq binnen 0.01 Hz
   ✅ deterministic: herhaalde runs → identieke hash
   ✅ DR_signature: allemaal binnen 1-9
-  ✅ peak_bounded: ≤ N × amplitude
   ✅ peak_bounded: peak(E) ≤ N × amplitude (max constructieve interferentie)
 
 Totaal: 24 ✅ | 0 ❌
