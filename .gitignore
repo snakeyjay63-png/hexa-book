@@ -9,6 +9,7 @@ __pycache__/
 *.o
 hexa-book-001-E.wav
 engine/synth_output/*.npy
+engine/synth_output/*.wav
 
 # Test files
 test_args
