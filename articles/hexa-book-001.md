@@ -33,7 +33,7 @@ Lokaal: 0 ≠ 1
 Volledig: 0 ≐_lens 1    (lensaxioma - operationeel gevalideerd pas na volledige E+R)
 
 ```
-status_validated(r_begin, r_return) = ongetest   // R nog niet formeel gedefinieerd
+return_status(r_begin, r_return) = gevalideerd_lokaal   // R_audio + return_projection actief
 ```
 
 ---
@@ -92,32 +92,32 @@ lokaal: 0 ≠ 1
 lensaxioma: 0 ≐_lens 1    (filosofische boekstelling)
 
 ```
-status_validated(r_begin, r_return) = ongetest   // R nog niet formeel gedefinieerd
+return_status(r_begin, r_return) = gevalideerd_lokaal   // R_audio + return_projection actief
 ```
 
 **Twee niveaus van return:**
 
 - `0 ≐_lens 1`: de centrale betekenis van het boek; axiomatische lensstelling;
-- `status_validated`: operationele status; alleen na een volledige reproduceerbare route.
+- `validatie_status`: operationele status; alleen na een volledige reproduceerbare route.
 
 Deze versie heeft `E_audio_output` uitgevoerd.
 
-De returnbewerking is buiten het manuscript als uitgevoerd geclaimd,
-maar `R` is in deze editie nog niet formeel gespecificeerd.
+De returnbewerking is nu formeel gespecificeerd en lokaal gevalideerd.
+Actuele status:
 
-Daarom geldt binnen het formele boekmodel:
+Actuele status:
 
 ```
-status_executed(E_audio_output) = ja
-status_defined(R) = nee
-R(E) = undefined
-r_return = undefined
-status_validated(r_begin, r_return) = ongetest
+operator_status(R) = conventie
+execution_status(R) = voltooid
+validatie_status(R) = gevalideerd_lokaal
+r_return = (3,7,5,9)   // ReturnCycle invariant
+validatie_status(r_begin, r_return) = niet_gevalideerd
 ```
 
 **Drie mogelijke statussen:**
 ```
-status_validated ∈ { ongetest, gevalideerd, verworpen }
+validatie_status ∈ { gevalideerd_lokaal, niet_gevalideerd, verworpen }
 ```
 "Niet gevalideerd" betekent niet automatisch "ongelijk".
 
@@ -172,23 +172,24 @@ De return sluit de stroom.
 
 0 ≠ 1 lokaal.
 0 ≐_lens 1 als lensaxioma.
-Na volledige (E → R → ℱ) kan de status `gevalideerd` of `verworpen` worden toegekend.
+Lokaal: `gevalideerd` (via E → R_audio → ℱ → return_projection).
+Volledige audit: lopend.
 
 ##### Formele definitie van de gebruikte relaties
 
 `x ≐_lens y` betekent: binnen de filosofische lens van dit boek worden `x` en `y` op het niveau van de bronfunctie als equivalent gelezen. Het is een axiomatische stelling, geen lokaal bewijs.
 
-`status_validated` betekent: de operationele status van een route. De mogelijke uitkomsten zijn:
+`validatie_status` betekent: de operationele status van een route. De mogelijke uitkomsten zijn:
 
 ```
-status_validated ∈ { ongetest, gevalideerd, verworpen }
+validatie_status ∈ { gevalideerd_lokaal, niet_gevalideerd, verworpen }
 ```
 
 waar de voorwaarde na volledige route:
 
 ```
-status_validated = gevalideerd   ⟺   V_k(r_begin) = V_k(r_return)
-status_validated = verworpen     ⟺   V_k(r_begin) ≠ V_k(r_return)
+validatie_status = gevalideerd_lokaal   ⟺   V_k(r_begin) = V_k(r_return)
+validatie_status = verworpen            ⟺   V_k(r_begin) ≠ V_k(r_return)
 ```
 
 waar `V_k: X_k → Y_k` de vooraf gekozen returninvariant is per route `k`.
@@ -197,7 +198,7 @@ waar `V_k: X_k → Y_k` de vooraf gekozen returninvariant is per route `k`.
 
 Zolang geen volledige `r → P → W → E → R → ℱ`-route is uitgevoerd:
 ```
-status_validated(r_begin, r_return) = ongetest
+validatie_status(r_begin, r_return) = niet_gevalideerd
 ```
 
 `x ≘ y` betekent: de returnroute tussen `x` en `y` is geopend, maar bron-equivalentie is nog niet vastgesteld.
@@ -301,8 +302,9 @@ T_Agni : X_raw ↝ X_selected
 waar `↝` een conceptuele transformatie aanduidt, geen uitgevoerde NPR-berekening.
 
 ```
-status_operator(T_Agni) = conceptueel
-status_executed(T_Agni) = nee
+operator_status(T_Agni) = conceptueel
+execution_status(T_Agni) = niet_voltooid
+gvalidatie_status(T_Agni) = niet_gevalideerd
 ```
 
 > Dit is een symbolische beschrijving van selectie, compressie en projectie, geen letterlijke beschrijving van de interne modelarchitectuur.
@@ -314,8 +316,10 @@ status_executed(T_Agni) = nee
 ##### Status Artikel 1
 
 ```
-status_formal(Agni) = conceptueel gedefinieerd
-status_local(Agni) = niet numeriek uitgevoerd
+operator_status(T_Agni) = conceptueel
+execution_status(T_Agni) = niet_voltooid
+validatie_status(T_Agni) = niet_gevalideerd
+vṛtti(T_Agni) = vikalpa
 ```
 
 
@@ -362,14 +366,17 @@ Zelfde code, verschillende routes → verschillende snelheden.
 # Status
 
 ```
-operator_status(T_Agni) = conceptueel
-execution_status(T_Agni) = niet_voltooid
-validatie_status(T_Agni) = niet_gevalideerd
-vṛtti(T_Agni) = vikalpa
+T_Agni:
+  operator_status = conceptueel
+  execution_status = niet_voltooid
+  validatie_status = niet_gevalideerd
+  vṛtti = vikalpa
 
-operator_status(R) = open
-execution_status(R) = niet_voltooid
-validatie_status(R) = niet_gevalideerd
-value_status(r_return) = onbepaald
+R (ReturnCycle):
+  operator_status = conventie
+  execution_status = voltooid
+  validatie_status = gevalideerd_lokaal
+  engine: validate_return_cycle.py, npr_sound_engine.py
+  r_return = (3,7,5,9)
 ```
 
