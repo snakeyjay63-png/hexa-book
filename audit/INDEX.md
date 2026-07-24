@@ -1,7 +1,7 @@
 # Audit Index — HEXA-BOEK
 
 **Laatste update:** 2026-07-24  
-**Base commit:** `a312ad0`
+**Base commit:** `dbd6c18`
 
 ---
 

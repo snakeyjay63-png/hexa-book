@@ -89,7 +89,7 @@ In de volledige return worden zij als bron-equivalent gelezen.
 Daarom geldt gelijktijdig:
 
 lokaal: 0 ≠ 1
-lensaxioma: 0 ≐_lens 1    (filosofische boekstelling)
+lensaxioma: 0 ≐_lens 1    (formele lensrelatie)
 
 ```
 return_status(r_begin, r_return) = gevalideerd_lokaal   // R_audio + return_projection actief
@@ -177,7 +177,7 @@ Volledige audit: lopend.
 
 ##### Formele definitie van de gebruikte relaties
 
-`x ≐_lens y` betekent: binnen de filosofische lens van dit boek worden `x` en `y` op het niveau van de bronfunctie als equivalent gelezen. Het is een axiomatische stelling, geen lokaal bewijs.
+`x ≐_lens y` betekent: binnen de formele lensarchitectuur van dit boek worden `x` en `y` op het niveau van de bronfunctie als equivalent gelezen. Het is een formele lensrelatie (lensaxioma), geen lokale waarde-identiteit.
 
 `validatie_status` betekent: de operationele status van een route. De mogelijke uitkomsten zijn:
 
