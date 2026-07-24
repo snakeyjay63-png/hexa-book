@@ -1,7 +1,7 @@
 # hexa-book — Python dependencies
 #
 # Core: all engines
-numpy>=1.24
+numpy>=1.24,<3
 
 # Optional: audio synthesis (NPR Sound Engine)
 # scipy  (not required — pure numpy fallback is default)

@@ -11,7 +11,7 @@ Voert uit (volgorde):
 
 Exit codes:
   0 — alle engines gepasseerd
-  1 — een of meer engines gefaald
+  1 — een of meer engines gefaald of ontbreekt
   2 — dependency ontbreekt (sanskrit_freq, numpy, ...)
 """
 
@@ -29,21 +29,40 @@ _vendor = os.path.join(REPO_ROOT, "vendor", "sanskrit_frequency_bridge")
 if os.path.isdir(_vendor):
     sys.path.insert(0, _vendor)
 
-# Engine engines in uitvoeringsvolgorde
+# Engines in uitvoeringsvolgorde
+# required=False → mag ontbreken zonder suite te breken (bijv. zig-afhankelijk)
 ENGINES = [
-    ("validate_freq_lenses",    os.path.join(ENGINE_DIR, "validate_freq_lenses.py")),
-    ("validate_patanjali",      os.path.join(ENGINE_DIR, "validate_patanjali.py")),
-    ("npr_sound_engine",        os.path.join(ENGINE_DIR, "npr_sound_engine.py")),
-    ("sanskrit_npr_bridge",     os.path.join(ENGINE_DIR, "sanskrit_npr_bridge.py")),
-    ("validate_return_cycle",   os.path.join(ENGINE_DIR, "validate_return_cycle.py")),
+    ("validate_freq_lenses",    os.path.join(ENGINE_DIR, "validate_freq_lenses.py"),    True),
+    ("validate_patanjali",      os.path.join(ENGINE_DIR, "validate_patanjali.py"),      False),
+    ("npr_sound_engine",        os.path.join(ENGINE_DIR, "npr_sound_engine.py"),        True),
+    ("sanskrit_npr_bridge",     os.path.join(ENGINE_DIR, "sanskrit_npr_bridge.py"),     True),
+    ("validate_return_cycle",   os.path.join(ENGINE_DIR, "validate_return_cycle.py"),   True),
 ]
 
 # ── Helpers ─────────────────────────────────────────────
 
-def run_engine(name, path):
-    """Run a single engine via subprocess. Return (passed, output)."""
+def run_engine(name, path, required=True):
+    """Run a single engine via subprocess. Return (passed, output).
+    
+    required=True  → ontbrekend bestand = suite failure (False)
+    required=False → ontbrekend bestand = skip (None)
+    """
     if not os.path.isfile(path):
-        return None, f"  ❌ {name}: bestand niet gevonden ({path})"
+        if required:
+            return False, f"  ❌ {name}: bestand niet gevonden ({path})"
+        else:
+            return None, f"  ⏭ {name}: overgeslagen (niet verplicht)"
+
+    # Injecteer PYTHONPATH zodat vendored dependencies beschikbaar zijn
+    env = os.environ.copy()
+    current_path = env.get("PYTHONPATH", "")
+    vendor_paths = []
+    if os.path.isdir(_vendor):
+        vendor_paths.append(_vendor)
+    for vp in vendor_paths:
+        if vp not in current_path:
+            current_path = os.pathsep.join([vp] + [current_path] if current_path else [vp])
+    env["PYTHONPATH"] = current_path
 
     try:
         result = subprocess.run(
@@ -52,6 +71,7 @@ def run_engine(name, path):
             text=True,
             timeout=60,
             cwd=ENGINE_DIR,
+            env=env,
         )
         output = result.stdout.strip()
         if result.stderr:
@@ -126,8 +146,8 @@ def main():
     # 2. Run engines
     print("├─ Engines:")
     results = []
-    for name, path in ENGINES:
-        passed, output = run_engine(name, path)
+    for name, path, required in ENGINES:
+        passed, output = run_engine(name, path, required)
         results.append((name, passed, output))
         print(output)
 
@@ -147,7 +167,7 @@ def main():
 
     print()
     if failed > 0:
-        print("STATUS: GEFaald")
+        print("STATUS: SUITE GEFAALD ❌")
         sys.exit(1)
     elif skipped > 0 and passed == 0:
         print("STATUS: GEEN ENGINES UITGEVOERD")
