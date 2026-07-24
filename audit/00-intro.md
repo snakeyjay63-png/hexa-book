@@ -1,16 +1,21 @@
 ---
 audit_metadata:
   article: "00-intro"
-  verified_against_commit: "5a13c64"
+  verified_against_commit: "afc2047"
   audit_commit: "30208e8"
   last_verified: "2026-07-24"
-  operator_status_model: 3D
+  operator_status_model: "3D"
   engine_evidence:
-    npr_sound_engine: "engine/npr_sound_engine.py"
-    validate_return_cycle: "engine/validate_return_cycle.py"
-  route_status: "actueel"
+    npr_sound_engine:
+      path: "engine/npr_sound_engine.py"
+      tests: "21/21"
+    validate_return_cycle:
+      path: "engine/validate_return_cycle.py"
+      tests: "26/26"
+  route_status: "half"
   supersedes: "legacy-v3"
-  known_exceptions: []
+  known_exceptions:
+    - "De algemene lensrelatie wordt per model en route operationeel geïnstantieerd."
   note: "Introductie met 3D statusmodel. R_audio en ReturnCycle nu lokaal gevalideerd."
 ---
 
@@ -46,16 +51,22 @@ De informatie beweegt tussen de talen door sunya.
 Sunya is leeg. Sunya is niet-leeg.
 
 Lokaal: 0 ≠ 1
-Volledig: 0 ≐_lens 1    (lensaxioma - operationeel gevalideerd pas na volledige E+R)
+Lensaaxioma: 0 ≐_lens 1    (formele lensrelatie - operationele instantiatie per model)
 
 ```
 3D statusmodel (artikel 003 veldcontract):
   operator_status(R_audio)    = formeel
+  execution_status(R_audio)   = voltooid       (engine/npr_sound_engine.py)
+  validatie_status(R_audio)   = gevalideerd_lokaal  (21/21 ✅)
+
   operator_status(ρ_ℱ)        = formeel
-  operator_status(ReturnCycle) = conventie    (validate_return_cycle.py)
-  execution_status(R_audio)    = voltooid
-  validatie_status(R_audio)    = gevalideerd_lokaal
-  validatie_status(ReturnCycle) = gevalideerd_lokaal
+  execution_status(ρ_ℱ)       = voltooid       (engine/validate_return_cycle.py)
+  validatie_status(ρ_ℱ)       = gevalideerd_lokaal
+
+  operator_status(ReturnCycle) = conventie
+  execution_status(ReturnCycle) = voltooid       (engine/validate_return_cycle.py)
+  validatie_status(ReturnCycle) = gevalideerd_lokaal  (26/26 ✅)
+  model_scope(ReturnCycle)      = Model A
 ```
 
 ---
@@ -82,7 +93,11 @@ De waarde zonder route is onvolledig.
 **Twee soorten eindpunten:**
 
 - `r_local,i = reduce_i(...)` - het lokale eindpunt van een berekening (digitale reductie, byte-som, hex-projectie, etc.);
-- `r_return = R(E) ∈ ℱ` - de volledige boekreturn via audio-superpositie en return-operator.
+- `r_features := R_audio(E_audio) ∈ AudioFeatureSpace` - de return-featurevector;
+- `projection_input := (component_centroid, DR_signature) ∈ ReturnProjectionInput` - de geselecteerde projectie-invoer;
+- `r_return := ρ_ℱ(projection_input) ∈ ℱ` - de volledige boekreturn via returnprojectie.
+
+Volledige route: `E_audio → R_audio → AudioFeatureSpace → select_projection_input → ReturnProjectionInput → ρ_ℱ → ℱ`.
 
 Een lokale digitale reductie is niet dezelfde return als de volledige E → R → ℱ route.
 
@@ -99,9 +114,10 @@ betekent dit niet dat nul en één lokaal dezelfde numerieke waarde hebben.
 
 Het lensaxioma leest nul en één op bronfunctieniveau als equivalent.
 
-De volledige route toetst niet het bestaan van dit axioma,
+De volledige route toetst niet de formele lensrelatie als zodanig,
 maar onderzoekt of een vooraf vastgelegde returninvariant
 tussen begin- en returntoestand behouden blijft.
+De operationele test is een concrete instantiatie binnen het benoemde model.
 
 Nul is het ongedifferentieerde bronveld.
 Eén is de eerste lokale verschijning binnen dat veld.
@@ -111,7 +127,7 @@ In de volledige return worden zij als bron-equivalent gelezen.
 Daarom geldt gelijktijdig:
 
 lokaal: 0 ≠ 1
-lensaxioma: 0 ≐_lens 1    (filosofische boekstelling)
+lensaxioma: 0 ≐_lens 1    (formele lensrelatie)
 
 **Twee niveaus van return:**
 
@@ -120,8 +136,9 @@ lensaxioma: 0 ≐_lens 1    (filosofische boekstelling)
 
 Deze versie heeft `E_audio_output` uitgevoerd.
 
-De returnoperator `R_audio` is in artikel 003 formeel gespecificeerd,
-in artikel 004 als `ρ_ℱ` uitgewerkt, en lokaal gevalideerd via `validate_return_cycle.py`.
+De signaalanalyseoperator `R_audio` is in artikel 003 formeel gespecificeerd.
+De projectieoperator `ρ_ℱ` is in artikel 004 als afzonderlijke operator van `ReturnProjectionInput` naar `ℱ` gespecificeerd.
+Beide zijn lokaal gevalideerd via `engine/validate_return_cycle.py`.
 
 Daarom geldt binnen het formele boekmodel:
 
@@ -129,25 +146,28 @@ Daarom geldt binnen het formele boekmodel:
 3D statusmodel (R_audio):
   operator_status    = formeel        (artikel 003 veldcontract)
   execution_status   = voltooid       (engine/npr_sound_engine.py)
-  validatie_status   = gevalideerd_lokaal  (26/26 ✅)
+  validatie_status   = gevalideerd_lokaal  (21/21 ✅)
 
 3D statusmodel (ρ_ℱ):
   operator_status    = formeel        (artikel 004 engine-operator)
-  execution_status   = voltooid       (engine/validate_patanjali.py)
+  execution_status   = voltooid       (engine/validate_return_cycle.py)
   validatie_status   = gevalideerd_lokaal
 
 3D statusmodel (ReturnCycle):
-  operator_status    = conventie      (validate_return_cycle.py)
+  operator_status    = conventie      (engine/validate_return_cycle.py)
   execution_status   = voltooid
-  validatie_status   = gevalideerd_lokaal
+  validatie_status   = gevalideerd_lokaal  (26/26 ✅)
+  model_scope        = Model A
 ```
 
 **Drie status-dimensies (3D model):**
 ```
 operator_status  ∈ { formeel, conventie, interpretatief, conceptueel, open }
-execution_status ∈ { voltooid, gedeeltelijk, niet_gestart }
-validatie_status ∈ { gevalideerd_lokaal, niet_gevalideerd, verworpen }
+execution_status ∈ { niet_van_toepassing, niet_voltooid, gedeeltelijk, voltooid }
+validatie_status ∈ { niet_gevalideerd, gevalideerd_lokaal, gevalideerd_onafhankelijk, verworpen }
 ```
+`gevalideerd_lokaal` vereist dat de lokaal uitgevoerde route-invariant behouden blijft.
+`gevalideerd_onafhankelijk` vereist een afzonderlijke uitvoering of beoordeling die niet uitsluitend op dezelfde implementatie en testconstructie berust.
 "Niet gevalideerd" betekent niet automatisch "ongelijk".
 
 Dit boek beweegt door drie rekenlagen.
@@ -201,28 +221,37 @@ De return sluit de stroom.
 
 0 ≠ 1 lokaal.
 0 ≐_lens 1 als lensaxioma.
-Na volledige (E → R → ℱ) kan de status `gevalideerd` of `verworpen` worden toegekend.
+Na volledige (E_audio → R_audio → ρ_ℱ → ℱ) kan de status worden toegekend:
+- `validatie_status = gevalideerd_lokaal` wanneer de lokaal uitgevoerde route-invariant behouden blijft;
+- `validatie_status = verworpen` wanneer de vooraf vastgelegde invariant binnen het benoemde model en invoerdomein faalt.
 
 ##### Formele definitie van de gebruikte relaties
 
-`x ≐_lens y` betekent: binnen de filosofische lens van dit boek worden `x` en `y` op het niveau van de bronfunctie als equivalent gelezen. Het is een axiomatische stelling, geen lokaal bewijs.
+`x ≐_lens y` betekent: binnen de formele lensarchitectuur van dit boek worden `x` en `y` op het niveau van de bronfunctie als equivalent gelezen. Het is een formele lensrelatie (lensaxioma), geen lokale waarde-identiteit.
 
 **3D statusmodel** betekent: de operationele status van een route. Drie dimensies per operator:
 
 ```
 operator_status  ∈ { formeel, conventie, interpretatief, conceptueel, open }
-execution_status ∈ { voltooid, gedeeltelijk, niet_gestart }
-validatie_status ∈ { gevalideerd_lokaal, niet_gevalideerd, verworpen }
+execution_status ∈ { niet_van_toepassing, niet_voltooid, gedeeltelijk, voltooid }
+validatie_status ∈ { niet_gevalideerd, gevalideerd_lokaal, gevalideerd_onafhankelijk, verworpen }
 ```
 
-waar de voorwaarde na volledige route:
+waar de voorwaarde na volledige route binnen het expliciet benoemde model:
 
 ```
-validatie_status = gevalideerd_lokaal   ⟺   V_k(r_begin) = V_k(r_return)
-validatie_status = verworpen             ⟺   V_k(r_begin) ≠ V_k(r_return)
+validatie_status_k = gevalideerd_lokaal   ⟺   V_k(r_begin) = V_k(r_return)
+validatie_status_k = verworpen              ⟺   V_k(r_begin) ≠ V_k(r_return)
 ```
 
-waar `V_k: X_k → Y_k` de vooraf gekozen returninvariant is per route `k`.
+waar `V_k: X_k → Y_k` de vooraf gekozen returninvariant is per route `k`, binnen:
+- het expliciet benoemde model;
+- het vastgelegde invoerdomein;
+- de uitgevoerde operatorroute;
+- de vooraf gekozen invariant V_k.
+
+De lokaal gevalideerde ReturnCycle vormt een operationele instantiatie van de formele lensrelatie binnen Model A.
+Deze status wordt niet zonder aanvullende route- en domeinbewijzen uitgebreid naar andere modellen, lenzen of invoerverzamelingen.
 
 **Validatieprotocol:** voor iedere route `k` wordt de invariant `V_k` vóór sonificatie en return vastgelegd. Een invariant die pas na inspectie van het resultaat wordt gekozen, telt niet als operationele validatie.
 
