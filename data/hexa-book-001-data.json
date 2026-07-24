@@ -1,0 +1,177 @@
+{
+  "C_sound": {
+    "1.24": {
+      "werklaag": {
+        "bytes": 82,
+        "hex": "0x52",
+        "dr": 1,
+        "avg_freq": 397.03743902439027,
+        "dr_avg_freq": 1
+      },
+      "bronlaag": {
+        "bytes": 134,
+        "hex": "0x86",
+        "dr": 8,
+        "avg_freq": 490.29634328358225,
+        "dr_avg_freq": 4
+      },
+      "quality": "kli\u1e63\u1e6da"
+    },
+    "1.25": {
+      "werklaag": {
+        "bytes": 37,
+        "hex": "0x25",
+        "dr": 1,
+        "avg_freq": 393.39054054054054,
+        "dr_avg_freq": 6
+      },
+      "bronlaag": {
+        "bytes": 74,
+        "hex": "0x4a",
+        "dr": 2,
+        "avg_freq": 468.35581081081114,
+        "dr_avg_freq": 9
+      },
+      "quality": "kli\u1e63\u1e6da"
+    },
+    "output": {
+      "grand_avg_freq": 437.27003341483106,
+      "grand_dr": 5,
+      "toonklasse": 349.23,
+      "toonklasse_name": "DR=5 \u2192 349.23 Hz"
+    }
+  },
+  "mappings": {
+    "M_A": {
+      "dr": 3,
+      "f": 293.66,
+      "a": 1.0,
+      "phi": 1.5707963267948966
+    },
+    "M_B": {
+      "dr": 7,
+      "f": 440.0,
+      "a": 0.5,
+      "phi": 4.71238898038469
+    },
+    "M_C": {
+      "dr": 5,
+      "f": 349.23,
+      "a": 0.3333333333333333,
+      "phi": 3.141592653589793
+    },
+    "M_D": {
+      "dr": 9,
+      "f": 523.25,
+      "a": 1.0,
+      "phi": 6.283185307179586
+    }
+  },
+  "waves": {
+    "M_A": {
+      "freq": 293.66,
+      "amplitude": 1.0,
+      "phase": 1.5707963267948966,
+      "dr": 3
+    },
+    "M_B": {
+      "freq": 440.0,
+      "amplitude": 0.5,
+      "phase": 4.71238898038469,
+      "dr": 7
+    },
+    "M_C": {
+      "freq": 349.23,
+      "amplitude": 0.3333333333333333,
+      "phase": 3.141592653589793,
+      "dr": 5
+    },
+    "M_D": {
+      "freq": 523.25,
+      "amplitude": 1.0,
+      "phase": 6.283185307179586,
+      "dr": 9
+    }
+  },
+  "E_audio": {
+    "path": "/home/claw/.openclaw/workspace/hexa-book-001-E.wav",
+    "duration": 3.0,
+    "sample_rate": 44100,
+    "num_samples": 132300,
+    "rms": 0.3885109816901859,
+    "peak": 1.0,
+    "samples_preview": [
+      0.17883675183423797,
+      0.19958528775927747,
+      0.220276238387448,
+      0.2407745839705254,
+      0.26094522517698465,
+      0.28065377769195216,
+      0.2997673622364199,
+      0.3181553855425614,
+      0.33569030788322873,
+      0.35224839283941584
+    ]
+  },
+  "invariant": {
+    "name": "V_DR",
+    "description": "Digitale wortel behoud door volledige keten",
+    "r_begin": [
+      3,
+      7,
+      5,
+      9
+    ],
+    "r_begin_sum": 6,
+    "components": {
+      "DR_A": 3,
+      "DR_B": 7,
+      "DR_C": 5,
+      "DR_D": 9
+    }
+  },
+  "r_return": {
+    "M_A": 3,
+    "M_B": 7,
+    "M_C": 5,
+    "M_D": 9
+  },
+  "validation": {
+    "status": "gevalideerd",
+    "r_begin": [
+      3,
+      7,
+      5,
+      9
+    ],
+    "r_return": [
+      3,
+      7,
+      5,
+      9
+    ],
+    "match": true,
+    "detail": {
+      "M_A": {
+        "begin": 3,
+        "return": 3,
+        "match": true
+      },
+      "M_B": {
+        "begin": 7,
+        "return": 7,
+        "match": true
+      },
+      "M_C": {
+        "begin": 5,
+        "return": 5,
+        "match": true
+      },
+      "M_D": {
+        "begin": 9,
+        "return": 9,
+        "match": true
+      }
+    }
+  }
+}

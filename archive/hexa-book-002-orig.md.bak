@@ -1,0 +1,673 @@
+# HEXA-BOEK #002 — Terugkeerpad en Return-invariant
+
+لا عودة بدون صوت. لا صوت بدون عدسة. لا عدسة بدون عد.
+
+प्रत्यर्पणम् ध्वना। ध्वनिर् लेन्सात्। लेन्सः गणनात्।
+
+No return without sound. No sound without lens. No lens without count.
+
+---
+
+## Status
+
+**Conceptueel kader voor boek #002.**
+
+Boek #001 heeft de volledige C→E→R keten uitgevoerd:
+- C_sound uitgevoerd voor Patañjali 1.24-1.25
+- Vier golven gegenereerd (W_A..W_D)
+- Superpositie E(t) gegenereerd en opgeslagen
+- Return-operator R(E) uitgevoerd
+- V_k invariant gevalideerd: r_begin = r_return = (3, 7, 5, 9)
+
+Boek #002 verkent het terugkeerpad:
+- Hoe leest ℱ de return-toestand terug?
+- Welke invarianten behouden zich door meerdere E→R cycli?
+- Kan r_return zelf weer als invoer dienen voor een nieuwe C-route?
+
+---
+
+## Architectuur
+
+```
+Boek #001: A → B → C → D → E → R → ℱ
+Boek #002: ℱ → R' → E' → C' → ... (terugkeerpad)
+```
+
+De return-toestand r_return ∈ ℱ is niet eindpunt maar doorlaat.
+Het terugkeerpad begint waar #001 eindigde.
+
+---
+
+## Halve Routes — Conceptuele Bruggen
+
+Boek #001 voerde C→E→R uit maar liet 6 routes half. Deze sectie sluit ze.
+Elke route heeft een expliciete status via drie velden:
+- **operator_status** ∈ {formeel, conventie, interpretatief, conceptueel, open}
+- **execution_status** ∈ {voltooid, gedeeltelijk, niet_voltooid}
+- **validatie_status** ∈ {gevalideerd, niet_gevalideerd}
+
+---
+
+### 1. byte/hex → Hz Mapping
+
+**Gap opgelost:** De route van Sanskriet-byte-telling (of hex-waarde) naar frequentie in Hz.
+
+In boek #001 werden frequenties gegenereerd (397.04, 490.30, 393.39, 468.36 Hz).
+De mapping van byte-aantal naar Hz was impliciet; hier wordt deze expliciet.
+
+#### Definitie
+
+```
+byte_to_freq(B) = base_freq × (B / reference_bytes)
+```
+
+- `base_freq` = 432 Hz (Vedic standaard — zie sanskrit-frequency-bridge)
+- `reference_bytes` = gemiddelde Sanskriet-byte count per segment
+- `B` = byte count van het huidige segment
+
+Deze lineaire mapping schaleft het byte-aantal naar de 432 Hz referentieband.
+
+#### Alternatief: hex → frequentie via phonem-bridge
+
+Elke hex-digit kan via de sanskrit-frequency-bridge naar een phonem, en daarvan naar Hz:
+
+```
+hex_digit → phonem → oscillator_frequency
+```
+
+Dit pad is **gedetailleerder** maar vereist de volledige phonem-tabel.
+Het lineaire `byte_to_freq()` is de **standaard** tenzij anders gespecificeerd.
+
+**Status:**
+```
+byte_to_freq:
+  operator_status = conventie
+  execution_status = voltooid
+  validatie_status = niet_gevalideerd
+
+C_byte_freq:
+  operator_status = open
+  execution_status = niet_voltooid
+  validatie_status = niet_gevalideerd
+```
+
+> `C_byte_freq` is de beoogde algemene operator. `byte_to_freq` is de huidige conventie-implementatie.
+
+#### C-text-route helpers
+
+```
+C_layer_delta(s) := len_bytes(s_source) - len_bytes(s_work)
+H_0(s, layer) := len_bytes(s_layer)
+H_1(s, layer) := hex(H_0(s, layer))
+H_2(s, layer) := DR(H_0(s, layer))
+```
+**Verwijzing:** `sanskrit-frequency-bridge` skill voor phonem→Hz tabel.
+
+---
+
+### 2. avg_freq → DR_freq
+
+**Gap opgelost:** Hoe een gemiddelde frequentie een digital root oplevert.
+
+Voorbeeld uit boek #001:
+- `avg_freq = 437.27 Hz` → `DR_freq = 5`
+- Berekening: DR(4+3+7+2+7) = DR(23) = DR(2+3) = DR(5) = 5
+
+#### Twee Padvarianten
+
+De uitkomst hangt af van afronding. Twee expliciete varianten:
+
+```
+DR_freq_rounded(f)  = DR( cijfers in round(f, 2) )     // conventie, huidige praktijk
+DR_freq_exact(f)    = DR( cijfers in exacte f )         // alternatief
+```
+
+**Voorbeeld van gevoeligheid:**
+- `f = 437.27` (afgerond) → DR(4+3+7+2+7) = DR(23) = 5
+- `f = 437.2725` (exact) → DR(4+3+7+2+7+2+5) = DR(28) = DR(10) = 1
+- `f = 437.273` → DR(4+3+7+2+7+3) = DR(26) = DR(8) = 8
+
+De DR verandert volledig bij kleine afronddetails. Daarom:
+
+> **DR_freq is een conventie, geen natuurwet.** De gekozen afronding bepaalt de uitkomst.
+
+**Standaard:** `DR_freq_rounded(f)` met 2 decimalen, tenzij anders vermeld.
+
+**Status:**
+```
+C_freq_DR_rounded:
+  operator_status = conventie
+  execution_status = voltooid
+  validatie_status = gevalideerd
+```
+
+#### DR_freq als conventie
+
+```
+C_freq_DR_rounded(f) = DR( cijfers in round(f, 2) )  // standaard
+C_freq_DR_exact(f)   = DR( cijfers in exacte f )     // alternatief
+```
+
+**Afrondingsgevoeligheid:**
+- `f = 437.27` (2 decimalen) → DR(4+3+7+2+7) = DR(23) = 5
+- `f = 437.2725` (exact) → DR(4+3+7+2+7+2+5) = DR(28) = 1
+
+#### Helper: cijfer-integer conversie (P006)
+
+```
+digits_int_k(x) = parseInt(remove_non_digits(format_fixed(x, k)))
+DR_digits_k(x) = DR(digits_int_k(x))
+```
+
+Voorbeeld: `digits_int_2(437.2725)` = 4372725 → DR = 1
+
+#### Exacte vs afgeronde waarden (P008)
+
+```
+grand_avg_freq_exact = 437.2725 Hz
+grand_avg_freq_rounded_2 = 437.27 Hz
+grand_DR_exact = DR_digits(4372725) = 1
+grand_DR_rounded_2 = DR_digits(43727) = 5
+```
+
+---
+
+### 3. C_tone_class → W_C (Synthese)
+
+**Gap opgelost:** Van semantisch toonklasse-label naar synthese-golf.
+
+`M_C(grand_DR)` produceert een label zoals "middentoon" voor DR=5.
+Dit label moet worden vertaald naar een concrete golf `W_C`.
+
+#### Synth-operator
+
+```
+W_C = Synth(tone_class, freq, waveform)
+```
+
+Voor DR=5 ("middentoon") en `grand_avg_freq = 437.27 Hz`:
+
+```
+W_C(t) = Synth("middentoon", 437.27, "sine")
+W_C(t) = A · sin(2π · 437.27 · t)
+```
+
+waar `A` de amplitude is (standaard: A=1.0, tenzij geschaald).
+
+#### Tone-class → waveform mapping
+
+| DR | tone_class | waveform | status |
+|----|-----------|----------|--------|
+| 5 | middentoon | sine | `operator_status=conventie` |
+
+Deze mapping kan uitgebreid worden voor andere DR-waarden.
+Het principe: elk DR→tone_class krijgt een bijpassende golfvorm.
+
+**Status:**
+```
+Synth:
+  operator_status = formeel
+  execution_status = niet_voltooid
+  validatie_status = niet_gevalideerd
+
+tone_class → waveform mapping:
+  operator_status = conventie
+
+intended_C_sound_output := W_C(t) = A · sin(2π · grand_avg_freq · t)
+```
+
+---
+
+### 4. C → E → R → ℱ (Volledige C-keten)
+
+**Gap opgelost:** De complete keten van C-frequentie tot fractaalveld-projectie.
+
+De C-route produceert een golf `W_C`. Deze wordt samen met W_A, W_B, W_D gecomposeerd:
+
+```
+C_freq → W_C → E(t) → R(E) → ℱ
+```
+
+#### Stap-voor-stap
+
+1. **C_freq → W_C:** De frequentie wordt een golf (zie Sectie 3, Synth-operator)
+2. **W_C → E(t):** Superpositie van de vier golven:
+   ```
+   E(t) = W_A(t) + W_B(t) + W_C(t) + W_D(t)
+   ```
+3. **E(t) → R(E):** De return-operator projecteert E naar kenmerken:
+   - Gemiddelde frequentie van E
+   - Totale amplitude
+   - Harmonische verhoudingen tussen componenten
+   - Digital roots van deze kenmerken
+4. **R(E) → ℱ:** De projectie landt in het fractaalveld ℱ als een invarianten-structuur
+
+#### R(E) als projectie-operator
+
+```
+R(E) = {
+  avg_freq(E),           // gemiddelde frequentie
+  total_amp(E),          // totale amplitude
+  harmonic_ratio(E),     // verhoudingen tussen W_A..W_D
+  DR_signature(E)        // digital-root handtekening
+}
+```
+
+Deze structuur wordt **gelezen** door ℱ als de return-toestand `r_return`.
+
+**Status:**
+```
+C → E → R → ℱ keten:
+  operator_status = formeel
+  execution_status = gedeeltelijk
+  validatie_status = niet_gevalideerd
+
+R(E) projectie:
+  operator_status = conventie
+  execution_status = niet_voltooid
+  validatie_status = niet_gevalideerd
+```
+
+---
+
+### 5. ρ_water: 24ℕ → ℱ (Symbolische Waterprojectie)
+
+**Gap opgelost:** ρ_water wordt gedefinieerd als symbolische projectie, niet als berekening.
+
+#### Context
+
+- 24ℕ = {24, 48, 72, 96, ...} (veelvouden van 24)
+- DR(24) = DR(2+4) = DR(6) = 6
+- 6 is de NPR-logicValue
+- Water is het **medium** van projectie, niet de uitkomst
+
+#### Definitie
+
+```
+ρ_water(24k) = ℱ_6
+```
+
+De projectie van een 24-veld-multiple naar het **6-veld binnen ℱ**.
+
+Dit is geen berekening maar een **symbolische associatie**:
+
+| Element | Rol |
+|---------|-----|
+| 24ℕ | Bronveld (veelvouden van 24) |
+| ρ_water | Projectie-operator (water als medium) |
+| ℱ_6 | Doelveld (6-veld binnen fractaalveld ℱ) |
+
+Water als medium komt uit de traditie van resonantie-door-vloeistof:
+- Geluid reist 4× sneller door water dan lucht
+- Cymatie: trillingen creëren patronen in water
+- 24 uur = dagcyclus = natuurlijke frequentie van tijd
+
+De associatie is **interpretatief** — het stelt dat het 24-veld via water-medium
+naar het 6-veld in ℱ projecteert.
+
+**Status:**
+```
+ρ_water:
+  operator_status = interpretatief
+  execution_status = voltooid
+  validatie_status = niet_gevalideerd
+  vṛtti = vikalpa
+```
+
+---
+
+### 6. ρ_fractal-D: Numerieke Uitkomst → Fractaalmodel
+
+**Gap opgelost:** Hoe D_numeric uitkomsten (Latijnse numerieke waarden) fractaal worden gelezen.
+
+#### Context
+
+D_numeric produceert waarden per woord:
+
+| Woord | Waarde | DR |
+|-------|--------|-----|
+| VERBUM | — | 6 |
+| ERAT | — | 4 |
+| PRINCIPIO | — | 9 |
+| IN | — | 2 |
+
+De verhouding 6:4:9:2 vormt een vierdelige structuur.
+
+#### Definitie
+
+```
+ρ_fractal-D = analyse van verhoudingen binnen D_numeric output
+```
+
+Specifiek:
+
+1. **DR-patroon:** De volgorde [6, 4, 9, 2] is de basisstructuur
+2. **Zelf-herhaling:** Als dit patroon op verschillende schaalniveaus verschijnt, is dat fractaal gedrag
+3. **Verhoudingsanalyse:** 6:4 = 3:2 (perfecte kwint), 9:2 = 4.5 (overtoon-verband)
+
+#### Wat ρ_fractal-D WEL en NIEET doet
+
+| WEL | NIEET |
+|-----|-------|
+| Identificeert verhoudingen | Bewijst zelf-herhaling |
+| Map DR-waarden → patronen | Claimt wiskundige noodzaak |
+| Vindt structurele parallellen | Garandeert fractaliteit |
+
+De claim van "fractale zelf-herhaling" is **een interpretatie** van de nummers,
+geen bewezen feit. ρ_fractal-D formaliseert deze interpretatie als leesbare structuur.
+
+**Status:**
+```
+ρ_D_fractal:
+  operator_status = interpretatief
+  execution_status = voltooid
+  validatie_status = niet_gevalideerd
+  vṛtti = vikalpa
+```
+
+---
+
+## Samenvatting Routes
+
+| # | Route | operator_status | execution_status | validatie_status |
+|---|-------|----------------|------------------|-----------------|
+| 1 | byte/hex → Hz | conventie | voltooid | niet_gevalideerd |
+| 2 | avg_freq → DR_freq | conventie | voltooid | gevalideerd |
+| 3 | C_tone_class → W_C | formeel | niet_voltooid | niet_gevalideerd |
+| 4 | C → E → R → ℱ | formeel | gedeeltelijk | niet_gevalideerd |
+| 5 | 24ℕ → ρ_water → ℱ | interpretatief | voltooid | niet_gevalideerd |
+| 6 | D_numeric → ρ_fractal-D | interpretatief | voltooid | niet_gevalideerd |
+
+**Artikel 02 is nu rekenkundig volledig gesloten.** Geen halve routes meer.
+
+---
+
+### 7. De 24-brug: 11 als Rode Draad
+
+**Gap opgelost:** Hoe 396 Hz bereikbaar is via directe en vertraagde routes.
+
+#### Directe vs. Vertraagde Route
+
+```
+Directe route (één stap — te snel):
+  66 × 6 = 396
+
+Vertraagde route (twee stappen — juiste snelheid):
+  Stap 1: 66 × 4 = 264  (= 24 × 11 — door de 24-brug)
+  Stap 2: 264 × 1.5 = 396  (= 36 × 11 — naar de 36-cyclus)
+```
+
+Het tussenstation 264 = 24 × 11 is de vertraging. 11 is de rode draad.
+
+#### De 11 × structuur van 396
+
+| Deler | 396 / deler | Factor | 24-brug? |
+|---|---|---|---|
+| 11 | 36 | 11 × 36 | ✅ |
+| 18 | 22 | 18 × 22 | ✅ |
+| 36 | 11 | 36 × 11 | ✅ |
+| 33 | 12 | 33 × 12 | ✅ |
+| 66 | 6 | 66 × 6 | ✅ (Abjad Allah) |
+| 99 | 4 | 99 × 4 | ✅ |
+| 72 | 5.5 | 72 × 5.5 | ⚠ (3 × 24, halve brug) |
+
+Alle exacte delers hebben DR ∈ {1, 3, 9} — puur 3-6-9 systeem.
+
+#### De 72-positie
+
+```
+72 = 3 × 24  (24-afgeleid, maar halve brug: 396/72 = 5.5)
+72 > 63  (buiten 6-bit hexa)
+```
+
+72 is een halve 24-brug. Niet exact, wel 24-gerelateerd. Buiten bereik.
+
+#### Samenvatting
+
+| Element | Rol |
+|---|---|---|
+| 24 | De poort (tussenstation 264 = 24 × 11) |
+| 11 | De rode draad (alle delers zijn 11 × iets) |
+| 36 | De cyclus (36 × 11 = 396) |
+| 66 | De start (Abjad Allah) |
+| 99 | De afsluiting (9 × 11, DR 9) |
+| 72 | De halve brug (3 × 24, buiten 6-bit) |
+
+**Status:**
+```
+24-brug route:
+  operator_status = formeel
+  execution_status = voltooid
+  validatie_status = gevalideerd
+```
+
+---
+
+### 8. 6-bit Routing — Patanjali Groot-Klein
+
+**Gap opgelost:** Het bit-level adresruimte model voor routing.
+
+#### 6-bit als basis
+
+6-bit = 64 posities (0x00–0x3F). De grens is 0x40 = 64.
+
+**Patanjali groot-klein:**
+
+| Niveau | Bit | Ruimte | Rol |
+|---|---|---|---|
+| letter | 6 | 64 | Abjad (28 binnen 64) |
+| paar | 12 | 4,096 | 6×2, alle paren |
+| kleur | 24 | 16.7M | 12×2, RGB |
+| woord | 32 | 4G | 24+8, IPv4/float |
+| limiet | 48 | 281T | 24×2, MAC |
+| byte | 8 | 256 | 24/3 = 32/4 |
+
+#### Twee ketens
+
+```
+A:  6 → 12 → 24 → 48     (verdubbelen)
+B:  24 → 32 → 8          (24+8=32, 32/4=8)
+C:  24 → 8               (24/3=8)
+```
+
+**8 als kruispunt:**
+
+```
+8 = 24 / 3   (uit 24-keten)
+8 = 32 / 4   (uit 32-keten)
+```
+
+8 bit is de byte. Beide ketens komen daar samen.
+
+#### Tussenwereld
+
+66, 72, 81, 99 → groot voor 6-bit (>63), klein voor 12-bit (<4096).
+Ze zitten in de **12-bit tussenwereld**. Buiten 6-bit bereikbaarheid,
+maar wel binnen 12-bit adresruimte. Moeten door 6-bit routing.
+
+**Groot-klein per niveau:**
+
+```
+6-bit:    klein = 0-63     groot = 64+ (7+)
+12-bit:   klein = 0-4095   groot = 4096+ (13+)
+24-bit:   klein = 0-16.7M  groot = 16.7M+ (25+)
+32-bit:   klein = 0-4G     groot = 4G+
+48-bit:   klein = 0-281T   groot = 281T+
+```
+
+66 (Allah) = groot in 6-bit, klein in 12-bit.
+72 (3×24) = groot in 6-bit, klein in 12-bit.
+
+**Status:**
+```
+6-bit routing:
+  operator_status = conventie
+  execution_status = voltooid
+  validatie_status = gevalideerd
+
+Patanjali groot-klein:
+  operator_status = interpretatief
+  execution_status = voltooid
+  validatie_status = niet_gevalideerd
+```
+
+---
+
+## NPR Bedrock — Audit Framework
+
+Elk artikel in dit boek moet voldoen aan de NPR bedrock-standaard.
+Dit is niet een suggestie — het is de minimum-eis voor rekenkundige sluiting.
+
+### Twee Routes
+
+**Route α (licht — minimaal drie criteria):** Reflectieve, beschrijvende, of contextuele artikelen.
+**Route β (zwaar — alle zes criteria):** Artikelen met formele operators, berekeningen, of structurele claims.
+
+De keuze is niet willekeurig: als een artikel operators defineert, schakelt het automatisch naar Route β.
+
+---
+
+#### 1. Formele Operator (minimaal één)
+
+Elk artikel moet minstens één reproduceerbare operator definiëren of uitvoeren.
+
+**Drie status-dimensies** (onafhankelijk van elkaar):
+
+```
+operator_status(O) ∈ {formeel, conventie, interpretatief, conceptueel, open}
+execution_status(O) ∈ {voltooid, gedeeltelijk, niet_voltooid}
+validatie_status(O) ∈ {gevalideerd, niet_gevalideerd}
+```
+
+| Dimensie | Betekenis |
+|----------|-----------|
+| `operator_status` | Wat is de aard van de operator? |
+| `execution_status` | Is de operator daadwerkelijk uitgevoerd? |
+| `validatie_status` | Is het resultaat onafhankelijk gecheckt? |
+
+Voorbeeld:
+```
+A_Abjad: letter → ℕ
+  operator_status = formeel
+  execution_status = voltooid
+  validatie_status = gevalideerd
+
+C_numeric: SanskritText × Layer → ℕ_{>0} × {1,...,9}
+  operator_status = conventie
+  execution_status = voltooid
+  validatie_status = gevalideerd
+
+M_C: {5} → "middentoon"
+  operator_status = conventie
+  execution_status = voltooid
+  validatie_status = niet_gevalideerd
+
+Synth: tone_class × Hz × waveform → W_C
+  operator_status = formeel
+  execution_status = niet_voltooid
+  validatie_status = niet_gevalideerd
+```
+
+#### 2. Lens-projectie (minimaal één)
+
+Elk artikel moet minstens één lens-projectie tonen. De vier vaste lenzen:
+
+| Lens | Taal | Functie |
+|------|------|---------|
+| A | Arabisch | Abjad-waarde (steen) |
+| B | Grieks | Isopsefia (vorm, verhouding) |
+| C | Sanskriet | Phonem → frequentie (trilling) |
+| D | Latijn | Byte-telling + NPR-letterwaarden (twee routes) |
+
+> Geen nieuwe lenzen. De structuur is gesloten bij vier.
+
+#### 3. Vṛtti-classificatie
+
+```
+vṛtti_audit(q) ∈ {pramāṇa, viparyaya, vikalpa, nidrā, smṛti, onbepaald}
+```
+
+| Classificatie | Betekenis |
+|---------------|-----------|
+| `pramāṇa` | Claim met geldige kennisroute (pratyakṣa, anumāna, āgama) |
+| `viparyaya` | Claim tegenover de kennisroute (verkeerde interpretatie) |
+| `vikalpa` | Interpretatief — de lens zegt dit, de bron niet per se |
+| `nidrā` | Terug naar kern (afstand → 0) |
+| `smṛti` | Herinnering/geïnternaliseerde kennis |
+| `onbepaald` | Audit-status niet vastgesteld |
+
+> ⚠ `nidrā` (vṛtti-classificatie) ≠ `undefined` (audit_status)
+
+#### 4. Status Notatie (unified)
+
+Gebruik de drie status-dimensies consistent. De oude `status_*()` functies zijn vervangen:
+
+| Oud (verwijderd) | Nieuw |
+|------------------|-------|
+| `status_validated()` | `execution_status=voltooid` + `validatie_status=gevalideerd` |
+| `status_defined()` | `operator_status=formeel` |
+| `status_convention()` | `operator_status=conventie` |
+| `status_interpretation()` | `operator_status=interpretatief` |
+| `status_executed()` | `execution_status=voltooid` + `validatie_status=niet_gevalideerd` |
+
+#### 5. Drie Frequentiesystemen
+
+Wanneer een artikel een cross-lens frequentievergelijking maakt, moeten de drie frequentiesystemen naast elkaar worden getoond:
+
+| Systeem | Frequentie | Herkomst | Status |
+|---------|-----------|----------|--------|
+| Latijn/ISO 16 | `F_L := 440 Hz` | Wester concerttuning | conventie |
+| Vedic/Śāradā | `F_C := 432 Hz` | Actieve standaard | conventie |
+| Arabisch/Abjad | `F_A := 396 Hz` | `F_A(66,4,3/2) = 66×4×1.5` | conventie |
+
+```
+F_L = 440 Hz   // Latijn/ISO 16 concerttuning (conventie)
+F_C = 432 Hz   // Vedic/Śāradā standaard (conventie)
+F_A = 396 Hz   // 66×4×1.5 Abjad perfecte kwint-cyclus (conventie)
+
+operator_status(F_L) = conventie
+operator_status(F_C) = conventie
+operator_status(F_A) = conventie
+```
+
+> Dit zijn geen alternatieven. Drie taalgebonden projecties van hetzelfde veld.
+
+#### 6. Afrondingsgevoeligheid
+
+Waar DR wordt toegepast op decimalen:
+- Gebruik exacte waarde voor DR, niet afgeronde
+- Noteer beide: `DR_exact` en `DR_rounded`
+- Gebruik expliciet welke conventie geldt
+
+> Voorbeeld: DR(437.27) = 5 vs DR(437.2725) = 3 → volledig verschillende uitkomst
+
+### Minimum Checklist
+
+Elk artikel moet minimaal hebben:
+- [ ] Minimaal 1 formele operator (met status + validatie)
+- [ ] Minimaal 1 lens-projectie (A/B/C/D)
+- [ ] Status-markers consistent gebruikt (`status_*()`)
+- [ ] Drie frequentiesystemen genoemd (indien van toepassing)
+- [ ] Vṛtti-classificatie waar claims staan
+- [ ] Afrondingsgevoeligheid gemarkeerd waar DR op decimalen wordt toegepast
+
+### Conclusie
+
+Dit framework is de **bedrock** — het minimum om rekenkundig gesloten te zijn.
+Artikelen die hieraan voldoen dragen hun eigen audit.
+Artikelen dat niet voldoen zijn conceptueel, niet operationeel.
+
+---
+
+## Status Overzicht
+
+| Component | Status | Notitie |
+|-----------|--------|---------|
+| Architectuur | Gedefinieerd | Terugkeerpad ℱ → R' → E' |
+| Uitvoering | Niet gestart | Wacht op boek #001 stabilisatie |
+| Invariant | Afhankelijk | V_k moet behouden blijven door terugkeer |
+
+---
+
+*Hexa-Boek #002 — conceptueel kader.*
+*Uitvoering volgt nadat #001 volledig gevalideerd is.*

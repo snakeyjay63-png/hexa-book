@@ -1,0 +1,22 @@
+# Workspace noise
+../
+!.openclaw/
+
+# Build artifacts
+.zig-cache/
+__pycache__/
+*.pyc
+*.o
+hexa-book-001-E.wav
+
+# Test files
+test_args
+test_args2
+test_args3
+test_args4
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~

@@ -1,0 +1,119 @@
+{
+  "review_id": "001",
+  "target_file": "hexa-book-002.md",
+  "total_points": 19,
+  "total_batches": 7,
+  "max_depth": 3,
+  "batches": [
+    {
+      "batch_id": "B01",
+      "batch_name": "Batch 1 — Twee audit-frameworks lopen parallel / `execution_status` ontbreekt",
+      "points": [
+        "P001",
+        "P002",
+        "P003"
+      ],
+      "point_count": 3,
+      "line_range": [
+        21,
+        102
+      ],
+      "complexity": "medium",
+      "isolation": true
+    },
+    {
+      "batch_id": "B02",
+      "batch_name": "Batch 2 — `C_freq_features(S_C(r))` is te sterk / `DR_freq` is ongerouteerd",
+      "points": [
+        "P004",
+        "P005",
+        "P006"
+      ],
+      "point_count": 3,
+      "line_range": [
+        103,
+        184
+      ],
+      "complexity": "medium",
+      "isolation": true
+    },
+    {
+      "batch_id": "B03",
+      "batch_name": "Batch 3 — Oudere rekenfout \"Route 1=2, Route 2=5\" / `grand_avg_freq` verwart exacte en afger",
+      "points": [
+        "P007",
+        "P008",
+        "P009"
+      ],
+      "point_count": 3,
+      "line_range": [
+        185,
+        265
+      ],
+      "complexity": "medium",
+      "isolation": true
+    },
+    {
+      "batch_id": "B04",
+      "batch_name": "Batch 4 — `π_C^E` is schijnrouting / Audioroute definitie te absoluut",
+      "points": [
+        "P010",
+        "P011",
+        "P012"
+      ],
+      "point_count": 3,
+      "line_range": [
+        266,
+        344
+      ],
+      "complexity": "medium",
+      "isolation": true
+    },
+    {
+      "batch_id": "B05",
+      "batch_name": "Batch 5 — Semantische route blijft half / `D_fractaleert` voltooit niet-bestaande ",
+      "points": [
+        "P013",
+        "P014",
+        "P015"
+      ],
+      "point_count": 3,
+      "line_range": [
+        345,
+        421
+      ],
+      "complexity": "medium",
+      "isolation": true
+    },
+    {
+      "batch_id": "B06",
+      "batch_name": "Batch 6 — \"Het veld E trilt terug\" voltooit open r / Freq-bedrock introduceert nieuwe halve r",
+      "points": [
+        "P016",
+        "P017",
+        "P018"
+      ],
+      "point_count": 3,
+      "line_range": [
+        422,
+        501
+      ],
+      "complexity": "medium",
+      "isolation": true
+    },
+    {
+      "batch_id": "B07",
+      "batch_name": "Batch 7 — Fractaalmodel gebruikt oude statusnotati",
+      "points": [
+        "P019"
+      ],
+      "point_count": 1,
+      "line_range": [
+        502,
+        573
+      ],
+      "complexity": "medium",
+      "isolation": true
+    }
+  ]
+}

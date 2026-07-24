@@ -1,0 +1,943 @@
+{
+  "pipeline_id": "001",
+  "article_file": "articles/hexa-book-002.md",
+  "audit_file": "audit/02-artikel-02-dimensie-2.md",
+  "review_file": "review/02-done/review-001-2026-07-24-hexa-book-002.md",
+  "state": "batched",
+  "roles": {
+    "orchestrator": {
+      "state": "done",
+      "updated": "2026-07-24 10:21:51 +0200",
+      "points": [],
+      "batches": [
+        {
+          "id": "B01",
+          "points": [
+            {
+              "id": "P001",
+              "title": "Twee audit-frameworks lopen parallel",
+              "line": 21,
+              "body": [
+                "**Type:** consistentie",
+                "**Locatie:** regel ~290 (NPR Bedrock)",
+                "**Zeerheid:** high",
+                "**Routestatus:** half",
+                "",
+                "**Huidige situatie:**",
+                "```",
+                "Bovenin: operator_status(O), validatie_status(O)",
+                "Onderin: status_validated(), status_defined(), status_convention()",
+                "```",
+                "",
+                "**Probleem:**",
+                "Twee verschillende statussystemen. Operator begint in het ene, eindigt in het andere → halve statusrouting.",
+                "",
+                "**Oplossing:**",
+                "```",
+                "Kies één model. Eerder model is zuiverder:",
+                "",
+                "operator_status(O) ∈ {formeel, conventie, interpretatief, conceptueel, open}",
+                "execution_status(O) ∈ {voltooid, gedeeltelijk, niet_voltooid}",
+                "validatie_status(O) ∈ {gevalideerd, niet_gevalideerd}",
+                "```",
+                "",
+                "**Impact op bedrock:**",
+                "- [X] Status-notatie",
+                "- [ ] Formele operator",
+                "",
+                "---",
+                ""
+              ],
+              "range": [
+                21,
+                50
+              ]
+            },
+            {
+              "id": "P002",
+              "title": "`execution_status` ontbreekt",
+              "line": 51,
+              "body": [
+                "**Type:** operator",
+                "**Locatie:** regel ~290 (NPR Bedrock)",
+                "**Zeerheid:** high",
+                "**Routestatus:** open",
+                "",
+                "**Huidige situatie:**",
+                "```",
+                "Framework kent alleen: operator_status, validatie_status",
+                "```",
+                "",
+                "**Probleem:**",
+                "\"uitgevoerd\", \"gedeeltelijk operationeel\", \"ontbreekt\" hebben geen formeel status-veld.",
+                "",
+                "**Oplossing:**",
+                "```",
+                "Voeg toe: execution_status(O) ∈ {voltooid, gedeeltelijk, niet_voltooid}",
+                "```",
+                "",
+                "**Impact op bedrock:**",
+                "- [X] Formele operator",
+                "- [X] Status-notatie",
+                "",
+                "---",
+                ""
+              ],
+              "range": [
+                51,
+                75
+              ]
+            },
+            {
+              "id": "P003",
+              "title": "Byte/hex → Hz blijft halve route",
+              "line": 76,
+              "body": [
+                "**Type:** route",
+                "**Locatie:** regel ~150 (Lens C)",
+                "**Zeerheid:** high",
+                "**Routestatus:** half",
+                "",
+                "**Huidige situatie:**",
+                "```",
+                "tekst → phonem → Gaṇa → Śāradā → MIDI → Hz",
+                "MAAR: \"phonemische route niet als bron gebruikt\"",
+                "```",
+                "",
+                "**Probleem:**",
+                "Werkelijk gebruikte route (byte/hex → Hz) heeft geen operator tussen hex en Hz.",
+                "",
+                "**Oplossing:**",
+                "```",
+                "Definieer: C_byte_freq: ByteFeatures → ℝ_{>0},Hz",
+                "Tot dan: operator_status(C_byte_freq_map) = open",
+                "```",
+                "",
+                "**Impact op bedrock:**",
+                "- [X] Formele operator",
+                "- [ ] Drie frequentiesystemen",
+                "",
+                "---",
+                ""
+              ],
+              "range": [
+                76,
+                102
+              ]
+            }
+          ],
+          "range": [
+            21,
+            102
+          ],
+          "state": "pending"
+        },
+        {
+          "id": "B02",
+          "points": [
+            {
+              "id": "P004",
+              "title": "`C_freq_features(S_C(r))` is te sterk",
+              "line": 103,
+              "body": [
+                "**Type:** route",
+                "**Locatie:** regel ~160 (Lens C)",
+                "**Zeerheid:** medium",
+                "**Routestatus:** half",
+                "",
+                "**Huidige situatie:**",
+                "```",
+                "C_freq_features(S_C(r))",
+                "```",
+                "",
+                "**Probleem:**",
+                "Suggereert dat `C_freq_features` werkelijk uit `S_C(r)` wordt berekend, maar de byte/hex→Hz-operator ontbreekt.",
+                "",
+                "**Oplossing:**",
+                "```",
+                "Gebruik: C_freq_features(recorded_C_frequencies)",
+                "Of: C_freq_features^given(S_C(r)) + derivation_status = open",
+                "```",
+                "",
+                "**Impact op bedrock:**",
+                "- [X] Formele operator",
+                "",
+                "---",
+                ""
+              ],
+              "range": [
+                103,
+                127
+              ]
+            },
+            {
+              "id": "P005",
+              "title": "`DR_freq` is ongerouteerd",
+              "line": 128,
+              "body": [
+                "**Type:** berekening",
+                "**Locatie:** regel ~170 (Lens C)",
+                "**Zeerheid:** high",
+                "**Routestatus:** open",
+                "",
+                "**Huidige situatie:**",
+                "```",
+                "397.04 Hz → DR_freq 1",
+                "490.30 Hz → DR_freq 4",
+                "393.39 Hz → DR_freq 6",
+                "468.36 Hz → DR_freq 9",
+                "```",
+                "",
+                "**Probleem:**",
+                "Met cijferreductie: 39704→5, 49030→7, 39339→9, 46836→9. Volledig andere uitkomsten.",
+                "",
+                "**Oplossing:**",
+                "```",
+                "Definieer: C_freq_DR : ℝ_{>0} → {1,...,9}",
+                "Toon voor alle vier waarden dezelfde regel",
+                "```",
+                "",
+                "**Impact op bedrock:**",
+                "- [X] Formele operator",
+                "- [X] Afrondingsgevoeligheid",
+                "",
+                "---",
+                ""
+              ],
+              "range": [
+                128,
+                156
+              ]
+            },
+            {
+              "id": "P006",
+              "title": "`DR` wordt toegepast op strings en decimalen",
+              "line": 157,
+              "body": [
+                "**Type:** berekening",
+                "**Locatie:** regel ~180 (Lens C)",
+                "**Zeerheid:** medium",
+                "**Routestatus:** half",
+                "",
+                "**Huidige situatie:**",
+                "```",
+                "DR(\"43727\")",
+                "DR(\"1749.09\")",
+                "DR(\"437.2725\")",
+                "```",
+                "",
+                "**Probleem:**",
+                "DR: ℕ_{>0} → {1,...,9}. Accepteert geen string en geen decimaal.",
+                "",
+                "**Oplossing:**",
+                "```",
+                "Definieer: digits_int_k(x) = parseInt(remove_non_digits(format_fixed(x,k)))",
+                "DR_digits_k(x) = DR(digits_int_k(x))",
+                "```",
+                "",
+                "**Impact op bedrock:**",
+                "- [X] Formele operator",
+                "- [X] Afrondingsgevoeligheid",
+                "",
+                "---",
+                ""
+              ],
+              "range": [
+                157,
+                184
+              ]
+            }
+          ],
+          "range": [
+            103,
+            184
+          ],
+          "state": "pending"
+        },
+        {
+          "id": "B03",
+          "points": [
+            {
+              "id": "P007",
+              "title": "Oudere rekenfout \"Route 1=2, Route 2=5\"",
+              "line": 185,
+              "body": [
+                "**Type:** berekening",
+                "**Locatie:** regel ~200 (Frequentiebron)",
+                "**Zeerheid:** high",
+                "**Routestatus:** gesloten",
+                "",
+                "**Huidige situatie:**",
+                "```",
+                "\"Route 1 geeft 2; route 2 geeft 5\"",
+                "```",
+                "",
+                "**Probleem:**",
+                "Directe interne tegenspraak. Eerder staat correct: Route 1=3, Route 2=3, Route 3=5.",
+                "",
+                "**Oplossing:**",
+                "```",
+                "Route 1 (som, vaste decimale representatie) = 3",
+                "Route 2 (exact gemiddelde, vier decimalen) = 3",
+                "Route 3 (gemiddelde afgerond op twee decimalen) = 5",
+                "```",
+                "",
+                "**Impact op bedrock:**",
+                "- [ ] Afrondingsgevoeligheid",
+                "",
+                "---",
+                ""
+              ],
+              "range": [
+                185,
+                210
+              ]
+            },
+            {
+              "id": "P008",
+              "title": "`grand_avg_freq` verwart exacte en afgeronde waarden",
+              "line": 211,
+              "body": [
+                "**Type:** berekening",
+                "**Locatie:** regel ~205 (Frequentiebron)",
+                "**Zeerheid:** medium",
+                "**Routestatus:** half",
+                "",
+                "**Huidige situatie:**",
+                "```",
+                "grand_avg_freq = 437.27 Hz (afgerond)",
+                "```",
+                "",
+                "**Probleem:**",
+                "Exacte waarde is 437.2725 Hz. Afgeronde weergave wordt als exact gebruikt.",
+                "",
+                "**Oplossing:**",
+                "```",
+                "grand_avg_freq_exact = 437.2725 Hz",
+                "grand_avg_freq_rounded_2 = 437.27 Hz",
+                "grand_DR_exact_repr = 3",
+                "grand_DR_rounded_2 = 5",
+                "```",
+                "",
+                "**Impact op bedrock:**",
+                "- [X] Afrondingsgevoeligheid",
+                "",
+                "---",
+                ""
+              ],
+              "range": [
+                211,
+                237
+              ]
+            },
+            {
+              "id": "P009",
+              "title": "C-text-route bevat twee halve substappen",
+              "line": 238,
+              "body": [
+                "**Type:** route",
+                "**Locatie:** regel ~220 (Lens C)",
+                "**Zeerheid:** medium",
+                "**Routestatus:** half",
+                "",
+                "**Huidige situatie:**",
+                "```",
+                "4. Accent-kosten berekenen",
+                "5. Hex-projectieketen itereren",
+                "```",
+                "",
+                "**Probleem:**",
+                "Geen operators voor deze stappen. IAST-ASCII → Devanagari Unicode is niet alleen accentverschil.",
+                "",
+                "**Oplossing:**",
+                "```",
+                "C_layer_delta(s) := len_bytes(s_source) - len_bytes(s_work)",
+                "H_0(s,layer) := len_bytes(s_layer)",
+                "H_1(s,layer) := hex(H_0(s,layer))",
+                "H_2(s,layer) := DR(H_0(s,layer))",
+                "```",
+                "",
+                "**Impact op bedrock:**",
+                "- [X] Formele operator",
+                "",
+                "---",
+                ""
+              ],
+              "range": [
+                238,
+                265
+              ]
+            }
+          ],
+          "range": [
+            185,
+            265
+          ],
+          "state": "pending"
+        },
+        {
+          "id": "B04",
+          "points": [
+            {
+              "id": "P010",
+              "title": "`π_C^E` is schijnrouting",
+              "line": 266,
+              "body": [
+                "**Type:** operator",
+                "**Locatie:** regel ~230 (Lens C→E)",
+                "**Zeerheid:** medium",
+                "**Routestatus:** open",
+                "",
+                "**Huidige situatie:**",
+                "```",
+                "π_C^E(x) := x",
+                "```",
+                "",
+                "**Probleem:**",
+                "Zonder verschillende getypeerde domeinen/codomeinen is dit een identiteit die niets toevoegt.",
+                "",
+                "**Oplossing:**",
+                "```",
+                "Als contextuele embedding: π_C^E(x) = embed_E(x)",
+                "Als hetzelfde type: verwijder uit numerieke keten",
+                "```",
+                "",
+                "**Impact op bedrock:**",
+                "- [X] Formele operator",
+                "",
+                "---",
+                ""
+              ],
+              "range": [
+                266,
+                290
+              ]
+            },
+            {
+              "id": "P011",
+              "title": "Audioroute definitie te absoluut",
+              "line": 291,
+              "body": [
+                "**Type:** route",
+                "**Locatie:** regel ~240 (Lens C→E)",
+                "**Zeerheid:** medium",
+                "**Routestatus:** open",
+                "",
+                "**Huidige situatie:**",
+                "```",
+                "C_sound_output = W_C",
+                "```",
+                "",
+                "**Probleem:**",
+                "`W_C` ontbreekt. Gesloten route eindigt bij M_C(5)=\"middentoon\", niet bij een golf.",
+                "",
+                "**Oplossing:**",
+                "```",
+                "intended_C_sound_output := W_C",
+                "operator_status(Synth) = open",
+                "execution_status(Synth) = niet_voltooid",
+                "```",
+                "",
+                "**Impact op bedrock:**",
+                "- [X] Formele operator",
+                "- [X] Status-notatie",
+                "",
+                "---",
+                ""
+              ],
+              "range": [
+                291,
+                317
+              ]
+            },
+            {
+              "id": "P012",
+              "title": "`operator_status(ρ_NPR(4))` verkeerd getypeerd",
+              "line": 318,
+              "body": [
+                "**Type:** operator",
+                "**Locatie:** regel ~250 (Lens C→E)",
+                "**Zeerheid:** low",
+                "**Routestatus:** gesloten",
+                "",
+                "**Huidige situatie:**",
+                "```",
+                "operator_status(ρ_NPR(4)) = conventie",
+                "```",
+                "",
+                "**Probleem:**",
+                "`ρ_NPR` is een operator. `ρ_NPR(4)` is een waarde. Niet dezelfde dingen typen.",
+                "",
+                "**Oplossing:**",
+                "```",
+                "operator_status(ρ_NPR) = conventie",
+                "ρ_NPR(4) := p_4",
+                "value_status(p_4) = conventioneel_vastgelegd",
+                "```",
+                "",
+                "**Impact op bedrock:**",
+                "- [X] Formele operator",
+                "- [X] Status-notatie",
+                "",
+                "---",
+                ""
+              ],
+              "range": [
+                318,
+                344
+              ]
+            }
+          ],
+          "range": [
+            266,
+            344
+          ],
+          "state": "pending"
+        },
+        {
+          "id": "B05",
+          "points": [
+            {
+              "id": "P013",
+              "title": "Semantische route blijft half",
+              "line": 345,
+              "body": [
+                "**Type:** route",
+                "**Locatie:** regel ~260 (Lens C→E)",
+                "**Zeerheid:** medium",
+                "**Routestatus:** open",
+                "",
+                "**Huidige situatie:**",
+                "```",
+                "T_i(r) → K_i → R_i → Q_i",
+                "```",
+                "",
+                "**Probleem:**",
+                "K_i, R_i, Q_i niet gedefinieerd. `~_r` gebruikt alleen generieke R.",
+                "",
+                "**Oplossing:**",
+                "```",
+                "Voor lokaal voorbeeld: R(T_A(r)) := divine_source_role",
+                "Algemene route: T_i→K_i?→R_i?→Q_i? (met gestippelde pijlen)",
+                "```",
+                "",
+                "**Impact op bedrock:**",
+                "- [X] Formele operator",
+                "",
+                "---",
+                ""
+              ],
+              "range": [
+                345,
+                369
+              ]
+            },
+            {
+              "id": "P014",
+              "title": "`D_fractaleert` voltooit niet-bestaande operator",
+              "line": 370,
+              "body": [
+                "**Type:** route",
+                "**Locatie:** regel ~270 (Lens D)",
+                "**Zeerheid:** medium",
+                "**Routestatus:** open",
+                "",
+                "**Huidige situatie:**",
+                "```",
+                "D_byte, D_numeric → fractalisatie",
+                "```",
+                "",
+                "**Probleem:**",
+                "D_byte, D_numeric zijn uitgevoerd, maar \"fractalisatie\" is een interpretatie, geen operator.",
+                "",
+                "**Oplossing:**",
+                "```",
+                "ρ_D_fractal: D_features ⇢ FractalLabels",
+                "operator_status(ρ_D_fractal) = interpretatief",
+                "```",
+                "",
+                "**Impact op bedrock:**",
+                "- [X] Formele operator",
+                "- [X] Status-notatie",
+                "",
+                "---",
+                ""
+              ],
+              "range": [
+                370,
+                395
+              ]
+            },
+            {
+              "id": "P015",
+              "title": "Waterroute wordt in proza alsnog voltooid",
+              "line": 396,
+              "body": [
+                "**Type:** route",
+                "**Locatie:** regel ~275 (Lens D)",
+                "**Zeerheid:** medium",
+                "**Routestatus:** extern",
+                "",
+                "**Huidige situatie:**",
+                "```",
+                "\"alle post-3-priemroutes bewegen door hetzelfde watermedium\"",
+                "```",
+                "",
+                "**Probleem:**",
+                "Presenteert voorgesteld als uitkomst. ρ_water is voorgesteld, niet voltooid.",
+                "",
+                "**Oplossing:**",
+                "```",
+                "\"Binnen de voorgestelde watermapping zouden alle post-3-priemuitkomsten...\"",
+                "intended_role(ρ_water) := zijroute_naar_ℱ",
+                "```",
+                "",
+                "**Impact op bedrock:**",
+                "- [X] Formele operator",
+                "- [X] Status-notatie",
+                "",
+                "---",
+                ""
+              ],
+              "range": [
+                396,
+                421
+              ]
+            }
+          ],
+          "range": [
+            345,
+            421
+          ],
+          "state": "pending"
+        },
+        {
+          "id": "B06",
+          "points": [
+            {
+              "id": "P016",
+              "title": "\"Het veld E trilt terug\" voltooit open route",
+              "line": 422,
+              "body": [
+                "**Type:** route",
+                "**Locatie:** regel ~280 (Lens C→E)",
+                "**Zeerheid:** low",
+                "**Routestatus:** open",
+                "",
+                "**Huidige situatie:**",
+                "```",
+                "C → E → Return",
+                "```",
+                "",
+                "**Probleem:**",
+                "Suggereert volledige route, maar R(E) is nog open.",
+                "",
+                "**Oplossing:**",
+                "```",
+                "\"Het veld E is de beoogde returnlaag; de operator R is nog open\"",
+                "C → π_C^E → E ⇢ R(E)",
+                "```",
+                "",
+                "**Impact op bedrock:**",
+                "- [X] Status-notatie",
+                "",
+                "---",
+                ""
+              ],
+              "range": [
+                422,
+                446
+              ]
+            },
+            {
+              "id": "P017",
+              "title": "Freq-bedrock introduceert nieuwe halve routes",
+              "line": 447,
+              "body": [
+                "**Type:** route",
+                "**Locatie:** regel ~290 (NPR Bedrock)",
+                "**Zeerheid:** high",
+                "**Routestatus:** open",
+                "",
+                "**Huidige situatie:**",
+                "```",
+                "396 Hz = 66×4×1.5 (Arabisch/Abjad)",
+                "432 Hz (Vedic/Śāradā)",
+                "440 Hz (Latijn/ISO 16)",
+                "```",
+                "",
+                "**Probleem:**",
+                "Geen operators die deze frequenties uit de lenzen produceren. Waarom deze factoren?",
+                "",
+                "**Oplossing:**",
+                "```",
+                "Definieer: F_A(a,b,c) := a·b·c",
+                "F_A(66,4,3/2) = 396 Hz",
+                "Leg vast waar 66, 4 en 3/2 vandaan komen",
+                "Of: F_L := 440 Hz, F_C := 432 Hz, F_A := 396 Hz (conventie)",
+                "```",
+                "",
+                "**Impact op bedrock:**",
+                "- [X] Formele operator",
+                "- [X] Drie frequentiesystemen",
+                "",
+                "---",
+                ""
+              ],
+              "range": [
+                447,
+                476
+              ]
+            },
+            {
+              "id": "P018",
+              "title": "Bedrock zegt \"alle drie frequentiesystemen verplicht\"",
+              "line": 477,
+              "body": [
+                "**Type:** concept",
+                "**Locatie:** regel ~295 (NPR Bedrock)",
+                "**Zeerheid:** medium",
+                "**Routestatus:** gesloten",
+                "",
+                "**Huidige situatie:**",
+                "```",
+                "\"Elk artikel dat frequenties gebruikt moet de drie systemen naast elkaar tonen\"",
+                "```",
+                "",
+                "**Probleem:**",
+                "Artikelen over Lens B of D zonder frequentieroute moeten dan toch drie frequenties invoegen.",
+                "",
+                "**Oplossing:**",
+                "```",
+                "\"Wanneer een artikel een cross-lens frequentievergelijking maakt, moeten de drie frequentiesystemen naast elkaar worden getoond\"",
+                "Of: redactionele conventie, geen mathematische vereiste",
+                "```",
+                "",
+                "**Impact op bedrock:**",
+                "- [X] Drie frequentiesystemen",
+                "",
+                "---",
+                ""
+              ],
+              "range": [
+                477,
+                501
+              ]
+            }
+          ],
+          "range": [
+            422,
+            501
+          ],
+          "state": "pending"
+        },
+        {
+          "id": "B07",
+          "points": [
+            {
+              "id": "P019",
+              "title": "Fractaalmodel gebruikt oude statusnotatie",
+              "line": 502,
+              "body": [
+                "**Type:** consistentie",
+                "**Locatie:** regel ~280 (Lens D)",
+                "**Zeerheid:** low",
+                "**Routestatus:** gesloten",
+                "",
+                "**Huidige situatie:**",
+                "```",
+                "status_defined(fractal_route_model) = interpretatief",
+                "```",
+                "",
+                "**Probleem:**",
+                "Oude statusnotatie. Actief systeem: operator_status, execution_status, validatie_status.",
+                "",
+                "**Oplossing:**",
+                "```",
+                "operator_status(fractal_route_model) = interpretatief",
+                "execution_status(fractal_route_model) = voltooid",
+                "validatie_status(fractal_route_model) = niet_gevalideerd",
+                "vṛtti(fractal_route_model) = vikalpa",
+                "```",
+                "",
+                "**Impact op bedrock:**",
+                "- [X] Status-notatie",
+                "- [X] Vṛtti-classificatie",
+                "",
+                "---",
+                "",
+                "## Routekaart",
+                "",
+                "### Volledig gesloten ✅",
+                "```",
+                "GreekWord → isopsefia → som → DR ⊣",
+                "LatinText → byte_count → DR ⊣",
+                "SanskritLayer → byte_count → hex(byte_count) ⊣",
+                "SanskritLayer → byte_count → DR ⊣",
+                "recorded frequencies → exact gemiddelde → DR_digits_2 → grand_DR=5 → M_C(5)=\"middentoon\" ⊣",
+                "prime p>3 → p²−1 → 24k ⊣",
+                "```",
+                "",
+                "### Half of open ⚠",
+                "```",
+                "Sanskrit bytes/hex → ? → Hz",
+                "Hz → ? → DR_freq",
+                "C_tone_class → Synth? → W_C",
+                "C-features → E → R?",
+                "24ℕ → ρ_water? → ℱ",
+                "D-numerieke uitkomsten → ρ_D_fractal? → fractale lezing",
+                "T_i → K_i? → R_i? → Q_i?",
+                "Abjad → factoren 66,4,3/2 → 396 Hz",
+                "Śāradā → 432 Hz",
+                "Latijn/ISO 16 → 440 Hz",
+                "```",
+                "",
+                "## Eindoordeel",
+                "",
+                "**Totaal punten:** 19",
+                "**Kernroutes half/open:** 10",
+                "**Prioriteit:** ",
+                "1. P001 (status-systemen unifiëren)",
+                "2. P003 (byte/hex → Hz operator)",
+                "3. P005 (DR_freq route)",
+                "4. P017 (frequentie-bedrock operators)",
+                "",
+                "---",
+                "",
+                "## Verwerkingslog",
+                "",
+                "| Datum | Actie | Door | Status |",
+                "|-------|-------|------|--------|",
+                "| 2026-07-24 | Review ontvangen | extern | inbox |",
+                "| 2026-07-24 | Herschreven naar template | hexa-engine | inbox |",
+                ""
+              ],
+              "range": [
+                502,
+                573
+              ]
+            }
+          ],
+          "range": [
+            502,
+            573
+          ],
+          "state": "pending"
+        }
+      ],
+      "validation": "ok",
+      "points_count": 19
+    },
+    "coordinators": {
+      "B01": {
+        "state": "pending",
+        "points": [
+          "P001",
+          "P002",
+          "P003"
+        ],
+        "line_range": [
+          21,
+          102
+        ]
+      },
+      "B02": {
+        "state": "pending",
+        "points": [
+          "P004",
+          "P005",
+          "P006"
+        ],
+        "line_range": [
+          103,
+          184
+        ]
+      },
+      "B03": {
+        "state": "pending",
+        "points": [
+          "P007",
+          "P008",
+          "P009"
+        ],
+        "line_range": [
+          185,
+          265
+        ]
+      },
+      "B04": {
+        "state": "pending",
+        "points": [
+          "P010",
+          "P011",
+          "P012"
+        ],
+        "line_range": [
+          266,
+          344
+        ]
+      },
+      "B05": {
+        "state": "pending",
+        "points": [
+          "P013",
+          "P014",
+          "P015"
+        ],
+        "line_range": [
+          345,
+          421
+        ]
+      },
+      "B06": {
+        "state": "pending",
+        "points": [
+          "P016",
+          "P017",
+          "P018"
+        ],
+        "line_range": [
+          422,
+          501
+        ]
+      },
+      "B07": {
+        "state": "pending",
+        "points": [
+          "P019"
+        ],
+        "line_range": [
+          502,
+          573
+        ]
+      }
+    }
+  },
+  "editors": {},
+  "merged": {
+    "state": "idle",
+    "updated": null,
+    "patches": [],
+    "conflicts": []
+  },
+  "history": [
+    {
+      "time": "2026-07-24 10:21:50 +0200",
+      "state": "idle"
+    },
+    {
+      "time": "2026-07-24 10:21:51 +0200",
+      "state": "batched"
+    },
+    {
+      "time": "2026-07-24 10:21:51 +0200",
+      "role": "orchestrator",
+      "action": "batched",
+      "detail": "19 punten → 7 batches"
+    },
+    {
+      "time": "2026-07-24 10:21:51 +0200",
+      "state": "batched"
+    }
+  ]
+}
