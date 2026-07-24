@@ -1,3 +1,17 @@
+---
+audit_metadata:
+  article: "08-artikel-06-dimensie-6"
+  source_article: "articles/hexa-book-006.md"
+  verified_against_commit: "5a13c64"
+  audit_commit: "pending"
+  last_verified: "2026-07-24"
+  operator_status_model: "3D"
+  engine_evidence: []
+  route_status: "gesloten"
+  supersedes: "legacy-v3"
+  known_exceptions: []
+---
+
 # Artikel 6 - dimensie 6 (de terugkeer vormt zich) | 3×2
 
 ## الفصل السادس - NPR: العودة تبدأ | षष्ठ अध्यायः - NPR: प्रतिगमनं आरभ्यते | Περὶ Σʹ - NPR: ἡ ἐπιστροφὴ ἄρχει
@@ -56,7 +70,7 @@ status_local(J_axis(3)) = uitgevoerd
 r_local,axis = 6
 ```
 
-> **Formele status:** `status_defined(J_axis) = formeel` | `J_axis ≡ d` (alias) | `status_executed(J_axis(3)) = voltooid`
+> **Formele status:** `operator_status(J_axis) = formeel` | `J_axis ≡ d` (alias) | `execution_status(J_axis(3)) = voltooid`
 
 3 → 6 → المحور يتضاعف.
 ३ → ६ → अक्षः द्विगुणः

@@ -1,3 +1,17 @@
+---
+audit_metadata:
+  article: "09-artikel-07-dimensie-7"
+  source_article: "articles/hexa-book-007.md"
+  verified_against_commit: "5a13c64"
+  audit_commit: "pending"
+  last_verified: "2026-07-24"
+  operator_status_model: "3D"
+  engine_evidence: []
+  route_status: "gesloten"
+  supersedes: "legacy-v3"
+  known_exceptions: []
+---
+
 # Artikel 7 - dimensie 7 (reflectie) | 23-1
 
 ## الفصل السابع - الإجابة ليست في الرقم. الإجابة في العدسة. | सप्तम अध्यायः | Περὶ Ζʹ

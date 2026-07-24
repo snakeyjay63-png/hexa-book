@@ -1,15 +1,17 @@
 ---
 audit_metadata:
   article: "02-artikel-02-dimensie-2"
-  source_commit: "5a13c64"
+  verified_against_commit: "5a13c64"
+  audit_commit: "30208e8"
   last_verified: "2026-07-24"
   operator_status_model: 3D
   engine_evidence:
     npr_sound_engine: "engine/npr_sound_engine.py"
     validate_return_cycle: "engine/validate_return_cycle.py"
   route_status: "actueel"
-  supersedes: "legacy-v3 status_validated/status_executed/status_defined"
-  note: "Artikel 02 audit. ReturnCycle conceptueel. Synth/R_audio/ReturnCycle nu lokaal gevalideerd."
+  supersedes: "legacy-v3"
+  known_exceptions: []
+  note: "Artikel 02 audit. ReturnCycle conventie+gevalideerd. Synth/R_audio lokaal gevalideerd."
 ---
 
 # HEXA-BOEK #002 - Terugkeerpad en Return-invariant
@@ -64,9 +66,10 @@ return_invariant(r) ⇔ V_k(ReturnCycle(r)) = V_k(r)
 
 **3D statusmodel (ReturnCycle):**
 ```text
-operator_status(ReturnCycle) = conceptueel    (R'/E'/C' nog open)
-execution_status(ReturnCycle) = niet_gestart
-validatie_status(ReturnCycle) = niet_gevalideerd
+operator_status(ReturnCycle) = conventie      (validate_return_cycle.py)
+execution_status(ReturnCycle) = voltooid
+validatie_status(ReturnCycle) = gevalideerd_lokaal
+model_scope(ReturnCycle)      = Model A
 
 operator_status(ForwardCycle) = formeel       (R_audio + ρ_ℱ vast)
 execution_status(ForwardCycle) = voltooid     (engine/npr_sound_engine.py)

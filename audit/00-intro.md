@@ -1,14 +1,16 @@
 ---
 audit_metadata:
   article: "00-intro"
-  source_commit: "5a13c64"
+  verified_against_commit: "5a13c64"
+  audit_commit: "30208e8"
   last_verified: "2026-07-24"
   operator_status_model: 3D
   engine_evidence:
     npr_sound_engine: "engine/npr_sound_engine.py"
     validate_return_cycle: "engine/validate_return_cycle.py"
   route_status: "actueel"
-  supersedes: "legacy-v3 status_validated/status_executed/status_defined"
+  supersedes: "legacy-v3"
+  known_exceptions: []
   note: "Introductie met 3D statusmodel. R_audio en ReturnCycle nu lokaal gevalideerd."
 ---
 
@@ -50,10 +52,10 @@ Volledig: 0 ≐_lens 1    (lensaxioma - operationeel gevalideerd pas na volledig
 3D statusmodel (artikel 003 veldcontract):
   operator_status(R_audio)    = formeel
   operator_status(ρ_ℱ)        = formeel
-  operator_status(ReturnCycle) = conceptueel
+  operator_status(ReturnCycle) = conventie    (validate_return_cycle.py)
   execution_status(R_audio)    = voltooid
   validatie_status(R_audio)    = gevalideerd_lokaal
-  validatie_status(ReturnCycle) = niet_gevalideerd
+  validatie_status(ReturnCycle) = gevalideerd_lokaal
 ```
 
 ---
@@ -135,9 +137,9 @@ Daarom geldt binnen het formele boekmodel:
   validatie_status   = gevalideerd_lokaal
 
 3D statusmodel (ReturnCycle):
-  operator_status    = conceptueel    (artikel 002, R'/E'/C' nog open)
-  execution_status   = niet_gestart
-  validatie_status   = niet_gevalideerd
+  operator_status    = conventie      (validate_return_cycle.py)
+  execution_status   = voltooid
+  validatie_status   = gevalideerd_lokaal
 ```
 
 **Drie status-dimensies (3D model):**

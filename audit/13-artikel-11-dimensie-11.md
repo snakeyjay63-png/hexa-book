@@ -1,3 +1,17 @@
+---
+audit_metadata:
+  article: "13-artikel-11-dimensie-11"
+  source_article: "articles/hexa-book-011.md"
+  verified_against_commit: "5a13c64"
+  audit_commit: "pending"
+  last_verified: "2026-07-24"
+  operator_status_model: "3D"
+  engine_evidence: []
+  route_status: "gesloten"
+  supersedes: "legacy-v3"
+  known_exceptions: []
+---
+
 # Artikel 11 - dimensie 11 (eka routing, quad-quad veld) | ∑i=14 20 = 4
 
 ## الفصل الحادي عشر - إكا: أربع مسارات | ग्यारहवां अध्यायः - एक: चतुर्-मार्गः | Περὶ Κʹ - ἕκα: τέσσαρες ὁδοί
@@ -67,9 +81,16 @@ interne structuur maar voegt routing-dimensies toe.
 ```
 Γ: S₄ → H₆
 Γ(s) = { s×4 + δ | δ ∈ {0,1,2,3} }
-status_defined(Γ) = conceptueel gedefinieerd
-status_executed(Γ) = nee (geen numerieke uitvoering)
-vṛtti_HEXA(Γ-output) = nidrā    /* geen numerieke uitvoer → nidrā */
+operator_status(Γ) = conceptueel
+execution_status(Γ) = niet_gestart (geen numerieke uitvoering)
+vṛtti_HEXA(Γ-output):
+```
+local_missing
+→ eerst ROUTING.md
+→ target article
+→ engine execution
+→ audit evidence
+```
 ```
 
 Zonder gedefinieerde Γ blijft de verbinding een NPR-constructie.

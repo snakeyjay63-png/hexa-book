@@ -1,3 +1,17 @@
+---
+audit_metadata:
+  article: "11-artikel-09-dimensie-9"
+  source_article: "articles/hexa-book-009.md"
+  verified_against_commit: "5a13c64"
+  audit_commit: "pending"
+  last_verified: "2026-07-24"
+  operator_status_model: "3D"
+  engine_evidence: []
+  route_status: "gesloten"
+  supersedes: "legacy-v3"
+  known_exceptions: []
+---
+
 # Artikel 9 - dimensie 9 (het veld, voltooiing) | 32
 
 ## الفصل التاسع - التسعة: الحقل المكتمل | नवम अध्यायः - नवम्: क्षेत्रं पूर्णम् | Περὶ Θʹ - τὸ ἐννέα: τὸ πεδίον τετελειωμένον
@@ -44,7 +58,7 @@ Vuur verbrandt. Steen draagt. Water keert terug.
 μηδὲν ≘ εἷς - ἐν τῇ ἐπιστροφῇ
 0 ≘ 1 - op weg naar de terugkeer (nog niet vastgesteld).
 
-> **Formele status:** `status_defined(≘) = operationele bron-equivalentie` | `status_validated(≘) = nog niet gevalideerd` | `≘ ≠ ≐_lens`
+> **Formele status:** `operator_status(≘) = conceptueel` | `validatie_status(≘) = niet_gevalideerd` | `≘ ≠ ≐_lens`
 
 
 > **Lensoptiek 9:** Het veld. Alle lenzen samen. De bron die niet vergeten is, alleen de lenzen die wij vergeten.

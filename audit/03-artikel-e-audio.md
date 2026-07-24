@@ -1,14 +1,16 @@
 ---
 audit_metadata:
   article: "03-artikel-e-audio"
-  source_commit: "5a13c64"
+  verified_against_commit: "5a13c64"
+  audit_commit: "30208e8"
   last_verified: "2026-07-24"
   operator_status_model: 3D
   engine_evidence:
     npr_sound_engine: "engine/npr_sound_engine.py"
     validate_return_cycle: "engine/validate_return_cycle.py"
   route_status: "actueel"
-  supersedes: "legacy-v3 status_validated/status_executed/status_defined"
+  supersedes: "legacy-v3"
+  known_exceptions: []
   note: "Artikel E audit. Alle golven uitgevoerd. R_audio nu formeel + gevalideerd."
 ---
 
@@ -264,7 +266,7 @@ waar `∼_s` **superpositiecorrespondentie** aanduidt. `≐` wordt pas na de ret
 ```
 R : E → ℱ
 r_return = R(E) ∈ ℱ
-status_validated(r_begin, r_return) = ongetest
+validatie_status(r_begin, r_return) = niet_gevalideerd
 ```
 
 Hier is `r_return` de returntoestand, een element van F. `R` zelf is de operator; `F` is het codomein. Er is geen aparte `decode_F`-operator nodig tenzij deze functioneel van `R` verschilt.

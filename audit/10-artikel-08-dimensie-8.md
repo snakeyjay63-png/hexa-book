@@ -1,3 +1,17 @@
+---
+audit_metadata:
+  article: "10-artikel-08-dimensie-8"
+  source_article: "articles/hexa-book-008.md"
+  verified_against_commit: "5a13c64"
+  audit_commit: "pending"
+  last_verified: "2026-07-24"
+  operator_status_model: "3D"
+  engine_evidence: []
+  route_status: "gesloten"
+  supersedes: "legacy-v3"
+  known_exceptions: []
+---
+
 # Artikel 8 - dimensie 8 (onzichtbaar) | 23
 
 ## الفصل الثامن - ما لا يقاس | अष्टम अध्यायः - यत् न मीयते | Περὶ Ηʹ - τὸ ἀμετρήσιμον
@@ -47,11 +61,19 @@ visibility(L4) = onzichtbaar_aanwezig```
 Elk CC-woord is een laag. Formele transformatieoperatoren `C_CC,i : X_i → Y_i` zijn nog niet gedefinieerd.
 
 ```
-status_formal(CC_layers) = conceptueel gedefinieerd
-status_local(CC_layers) = niet operationeel uitgevoerd
+operator_status(CC_layers) = conceptueel
+execution_status(CC_layers) = niet_gestart
 ```
 
-> **Formele status:** `status_defined(CC_layers) = conceptueel` | `status_defined(C_CC,i) = undefined` | `status_executed(CC_layers) = ongetest`
+> **Formele status:** `operator_status(CC_layers) = conceptueel` | `C_CC,i`:
+> ```
+> local_missing
+> → eerst ROUTING.md
+> → target article
+> → engine execution
+> → audit evidence
+> ```
+> | `execution_status(CC_layers) = niet_gestart`
 
 Niet verdwenen — onzichtbaar door de huidige lens. Binnen de huidige lens worden sommige dragers niet rechtstreeks als meetbare uitvoer behandeld. Dit betekent niet dat zij niet bestaan — alleen dat zij buiten het huidige meetkader vallen.
 

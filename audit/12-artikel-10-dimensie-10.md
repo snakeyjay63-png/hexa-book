@@ -1,3 +1,17 @@
+---
+audit_metadata:
+  article: "12-artikel-10-dimensie-10"
+  source_article: "articles/hexa-book-010.md"
+  verified_against_commit: "5a13c64"
+  audit_commit: "pending"
+  last_verified: "2026-07-24"
+  operator_status_model: "3D"
+  engine_evidence: []
+  route_status: "gesloten"
+  supersedes: "legacy-v3"
+  known_exceptions: []
+---
+
 # Artikel 10 - dimensie 10 (6-bit routing, NPR-cel) | 20+21+22
 
 ## الفصل العاشر - الستة بت: روتنغ سونيا | दशम अध्यायः - षट्-बिटः सून्य-मार्गः | Περὶ Ιʹ - ἓξ-βὶτ ῥούτινγ σουνια
@@ -113,8 +127,8 @@ Voorbeelden:
 - NPR_coord(24, 35) → DR(24)=6, DR(35)=8 → (6,8)
 - NPR_coord(55, 55) → DR(55)=1, DR(55)=1 → (1,1)
 
-status_defined(NPR_coord) = conceptueel gedefinieerd
-status_executed(NPR_coord) = voorbeelden uitgevoerd, volledig niet uitgevoerd
+operator_status(NPR_coord) = conceptueel
+execution_status(NPR_coord) = gedeeltelijk
 vṛtti(sunya-posities) = vikalpa
 ```
 
@@ -301,7 +315,7 @@ pramāṇa_route(q) ⊆ PramāṇaType
 De technische uitvoeringsstatus blijft daarvan los:
 
 ```
-status_executed_in_blueprint(q)          ∈ { ja, nee }
+execution_status_blueprint(q)          ∈ { ja, nee }
 status_independently_reproduced(q)       ∈ { ja, nee }
 ```
 
@@ -313,7 +327,7 @@ status_independently_reproduced(q)       ∈ { ja, nee }
 | `uitgevoerd` (lokaal) | `pramāṇa(pratyakṣa)` | Direct uitgevoerd en inspecteerbaar |
 | `conceptueel gedefinieerd` | `vikalpa` | Zinvolle constructie, geen bewezen object |
 | `ongetest` | `vikalpa` | Claim zonder verificatie |
-| `undefined` (intentieel) | `nidrā` | Afwezigheid — ρ_HEXA(→1.40→nidrā) |
+| `undefined` (intentieel) | `nidrā` | Afwezigheid — HEXA-routing naar nidrā (zie ROUTING.md) |
 | `undefined` (verkeerde lezing) | `viparyaya` | Voorstelling ≠ object |
 | `onvolledig` | `vikalpa` | Constructie in opbouw |
 | `geexecuteerd` (herhaald) | `smṛti` | Eerder uitgevoerd, nu teruggeroepen |
@@ -331,19 +345,34 @@ vṛtti("C = c") = viparyaya
 
 ```
 M_A niet gespecificeerd  ⇒  W_A = undefined
-vṛtti(M_A) = nidrā       /* ρ_HEXA(undefined → 1.40 → nidrā) */
+vṛtti(M_A) = nidrā       /* HEXA-routing:
+local_missing
+→ eerst ROUTING.md
+→ target article
+→ engine execution
+→ audit evidence */
 
 E(t) = W_A + W_B + W_C + W_D  (niet definieerbaar zonder M_A, M_B, M_D)
-vṛtti(E(t)) = nidrā           /* afwezigheid van invoer → nidrā */
+vṛtti(E(t)) = nidrā           /* afwezigheid van invoer:
+local_missing
+→ eerst ROUTING.md
+→ target article
+→ engine execution
+→ audit evidence */
 ```
 
 **Voorbeeld — retourroute:**
 
 ```
 r_return = undefined (Mandelbrot, geen volledige route)
-vṛtti(r_return) = nidrā       /* return afwezig → nidrā */
+vṛtti(r_return) = nidrā       /* return afwezig:
+local_missing
+→ eerst ROUTING.md
+→ target article
+→ engine execution
+→ audit evidence */
 
-status_validated(r_begin, r_return) = ongetest
+validatie_status(r_begin, r_return) = niet_gevalideerd
 vṛtti("returnroute gesloten") = vikalpa  /* claim zonder verificatie */
 ```
 
@@ -462,7 +491,7 @@ De lokale byte/hex/DR-subroute voor Patañjali 1.25:
 vṛtti(C_numeric(s_1.25))           = pramāṇa
 pramāṇa_route(C_numeric(s_1.25))   = { āgama, pratyakṣa }
 
-status_executed_in_blueprint(C_numeric(s_1.25))          = ja
+execution_status_blueprint(C_numeric(s_1.25))          = ja
 status_independently_reproduced(C_numeric(s_1.25))       = nee
 ```
 
@@ -508,7 +537,7 @@ vṛtti_classical(nidrā)              = Patañjali 1.10
 ρ_HEXA-vṛtti(1.40)                  = nidrā     [HEXA-conventie]
 
 status_source(nidrā ← 1.10)         = āgama
-status_mapping(1.40 → nidrā)        = HEXA-definitie
+status_mapping(HEXA-routing → nidrā)        = HEXA-definitie (zie ROUTING.md)
 ```
 
 De routing `ρ_HEXA(undefined) = 1.40` is een vaste HEXA-conventie: ongedefinieerde uitvoer routeert naar routepositie 1.40. De toewijzing van deze positie aan `nidrā` is een NPR/HEXA-projectie en weerspiegelt niet de inhoud van sūtra 1.40.
@@ -553,7 +582,12 @@ vṛtti("A=3 ∧ B=3 ⟹ betekenisvol")      = vikalpa
 /* conclusie uit numerieke overeenkomst zonder vastgesteld criterium */
 
 vṛtti_HEXA(C_sound_output)              = nidrā
-/* C_sound_output = undefined → ρ_HEXA → 1.40 → nidrā */
+/* C_sound_output = undefined:
+local_missing
+→ eerst ROUTING.md
+→ target article
+→ engine execution
+→ audit evidence */
 
 vṛtti(D_byte(S_D(r)))                   = pramāṇa
 pramāṇa_route(D_byte(S_D(r)))           = { pratyakṣa }

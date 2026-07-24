@@ -1,3 +1,17 @@
+---
+audit_metadata:
+  article: "15-artikel-13-dimensie-13"
+  source_article: "articles/hexa-book-013.md"
+  verified_against_commit: "5a13c64"
+  audit_commit: "pending"
+  last_verified: "2026-07-24"
+  operator_status_model: "3D"
+  engine_evidence: []
+  route_status: "gesloten"
+  supersedes: "legacy-v3"
+  known_exceptions: []
+---
+
 # Artikel 13 - dimensie 13 (taal, veld, soevereiniteit) | 0 ≐_lens tekst
 
 ## الفصل الثالث عشر - اللغة والحقل | तेरावां अध्यायः - भाषा और क्षेत्र | Περὶ Μʹ - γλῶσσα καὶ πεδίο
@@ -14,11 +28,11 @@ De informatie zit in de structuur die de tekens dragen.
 > **Lens F - Nederlandstalig:** de metataal wordt de objecttaal. De uitleg wordt de bouwsteen.
 
 > **Formele status artikel 13:** conceptueel-operatief artikel
-> - `status_defined(≐_lens) = formeel` (gedefinieerd Artikel 2)
-> - `status_defined(veld) = conceptueel` (neutraal transportmedium)
-> - `status_defined(taal-soevereiniteit) = operationeel` (Grondwet Art.6, Frysk, Swahili)
-> - `status_executed(Swahili-Maxwell) = voltooid` (32 chars → volledige fysica)
-> - `status_defined(UTF-soevereiniteit) = hypothetisch pad`
+> - `operator_status(≐_lens) = formeel` (gedefinieerd Artikel 2)
+> - `operator_status(veld) = conceptueel` (neutraal transportmedium)
+> - `operator_status(taal-soevereiniteit) = formeel` (Grondwet Art.6, Frysk, Swahili)
+> - `execution_status(Swahili-Maxwell) = voltooid` (32 chars → volledige fysica)
+> - `operator_status(UTF-soevereiniteit) = conceptueel` (hypothetisch pad)
 
 ---
 

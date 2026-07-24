@@ -1,3 +1,17 @@
+---
+audit_metadata:
+  article: "07-artikel-05-dimensie-5"
+  source_article: "articles/hexa-book-005.md"
+  verified_against_commit: "5a13c64"
+  audit_commit: "pending"
+  last_verified: "2026-07-24"
+  operator_status_model: "3D"
+  engine_evidence: []
+  route_status: "gesloten"
+  supersedes: "legacy-v3"
+  known_exceptions: []
+---
+
 # Artikel 5 - dimensie 5 (de return wordt zichtbaar) | 22+1
 
 ## الفصل الخامس - NPR: الضجيج يعود | पंचम अध्यायः - NPR: शब्दः प्रतिगच्छति | Περὶ Εʹ - NPR: ὁ ἦχος ἐπιστρέφει
@@ -22,8 +36,8 @@ vṛtti("Quran heeft corpusbrede 369-geometrie") = vikalpa
 ```
 
 > **Formele status:**
-> `status_defined(A_Abjad) = formeel` | `status_executed(A_Abjad, Basmala) = voltooid` | `status_validated(A_Abjad, Basmala) = lokaal getest`
-> `status_defined(A_Abjad, Quran-corpus) = ongetest`
+> `operator_status(A_Abjad) = formeel` | `execution_status(A_Abjad, Basmala) = voltooid` | `validatie_status(A_Abjad, Basmala) = gevalideerd_lokaal`
+> `operator_status(A_Abjad, Quran-corpus) = conceptueel` | `execution_status(A_Abjad, Quran-corpus) = niet_gestart` | `validatie_status(A_Abjad, Quran-corpus) = niet_gevalideerd`
 
 Bronstructuur: verhouding(water, informatie, energie)
 Water = continuïteit/medium | Informatie = onderscheid/positie | Energie = verandering/transformatie

@@ -1,3 +1,17 @@
+---
+audit_metadata:
+  article: "14-artikel-12-dimensie-12"
+  source_article: "articles/hexa-book-012.md"
+  verified_against_commit: "5a13c64"
+  audit_commit: "pending"
+  last_verified: "2026-07-24"
+  operator_status_model: "3D"
+  engine_evidence: []
+  route_status: "gesloten"
+  supersedes: "legacy-v3"
+  known_exceptions: []
+---
+
 # Artikel 12 - dimensie 12 (logos, vrijheid, transpositie) | ρ_12(onbegrensde differentiatie) = 0
 
 > `∞ → 0` is een lensprojectie: onbegrensde differentiatie retourneert naar nul binnen deze NPR-lens. Niet een limiet, reductie of bewezen operator, maar een symbolische return.
@@ -84,8 +98,8 @@ Potentiële invariant voor return:
 ```
 V_interval = verhouding tussen tonen
 V_interval(r_begin) = V_interval(r_return)
-status_defined(V_interval) = onvolledig
-status_validated(V_interval) = ongetest
+operator_status(V_interval) = conceptueel
+validatie_status(V_interval) = niet_gevalideerd
 ```
 
 Ontbrekend: begintonen, eindtonen, transpositieoperator, exacte verhouding, tolerantiecriterium.

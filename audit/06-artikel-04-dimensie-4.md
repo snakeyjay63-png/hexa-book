@@ -1,3 +1,17 @@
+---
+audit_metadata:
+  article: "06-artikel-04-dimensie-4"
+  source_article: "articles/hexa-book-004.md"
+  verified_against_commit: "5a13c64"
+  audit_commit: "pending"
+  last_verified: "2026-07-24"
+  operator_status_model: "3D"
+  engine_evidence: []
+  route_status: "gesloten"
+  supersedes: "legacy-v3"
+  known_exceptions: []
+---
+
 # Artikel 4 - dimensie 4 (expansie) | 22
 
 ## الفصل الرابع - ماندلبروت: 0.0.0.0 جزيرة الصفر | चतुर्थ अध्यायः - मन्देलब्रोतः | Περὶ Δʹ - Μαντελμπρότ
@@ -35,7 +49,7 @@ waar `(c ∉ M)` de voorwaarde is dat de baan divergeert (`|z_n| → ∞`).
 Punten buiten M zijn geen wiskundige leegte - het zijn waarden van `c` waarvoor de baan divergeert.
 "Leegte" is een symbolische projectie binnen NPR, geen wiskundige definitie.
 
-> **Formele status:** `status_defined(ρ_Mandelbrot-lens) = interpretatief` | `status_executed(ρ_Mandelbrot-lens) = ongetest` | `status_validated(ρ_Mandelbrot-lens) = ongetest`
+> **Formele status:** `operator_status(ρ_Mandelbrot-lens) = interpretatief` | `execution_status(ρ_Mandelbrot-lens) = niet_gestart` | `validatie_status(ρ_Mandelbrot-lens) = niet_gevalideerd`
 
 كل نقطة في المستوى المركب هي قيمة لـ c.
 यत्किञ्चित् बिन्दु जटिल-तलं c-संख्या भवेत्
@@ -68,7 +82,7 @@ Dit is een NPR-roltoewijzing, geen eigenschap van de Mandelbrot-definitie.
 Dit zijn NPR-projecties, geen wiskundige Mandelbrot-afleidingen.
 
 > **Formele status:**
-> `status_defined(ρ_HEXA) = interpretatief` | `status_defined(ρ_cartografisch) = interpretatief` | `status_defined(ρ_Mandelbrot-role) = interpretatief` | `status_defined(ρ_NPR-source) = interpretatief`
+> `operator_status(ρ_HEXA) = interpretatief` | `operator_status(ρ_cartografisch) = interpretatief` | `operator_status(ρ_Mandelbrot-role) = interpretatief` | `operator_status(ρ_NPR-source) = interpretatief`
 
 هذا هو رمز 0.0.0.0 في هذه العدسة. جزيرة الصفر.
 इदं ०.०.०.० इत्यस्य लेन्स-प्रतीकम्। शून्य-द्वीपः

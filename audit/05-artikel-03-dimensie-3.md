@@ -1,3 +1,17 @@
+---
+audit_metadata:
+  article: "05-artikel-03-dimensie-3"
+  source_article: "articles/hexa-book-003.md"
+  verified_against_commit: "5a13c64"
+  audit_commit: "pending"
+  last_verified: "2026-07-24"
+  operator_status_model: "3D"
+  engine_evidence: []
+  route_status: "gesloten"
+  supersedes: "legacy-v3"
+  known_exceptions: []
+---
+
 # Artikel 3 - dimensie 3 (de as, 3-6-9 veld) | 31
 
 ## الفصل الثالث - الحلقة 3-6-9 | तृतीय अध्यायः - वलयः ३-६-९ | Περὶ Γʹ - Ὄλκισ ३-६-९
@@ -41,7 +55,7 @@ d(9)=9           [vast punt]
 
 Digitale wortels in de eenhedencyclus: 1, 2, 4, 8, 7, 5
 
-> **Formele status:** `status_defined(d) = formeel` | `status_executed(d) = voltooid` | `status_validated(d) = getest`
+> **Formele status:** `operator_status(d) = formeel` | `execution_status(d) = voltooid` | `validatie_status(d) = gevalideerd_lokaal`
 
 الجذور الرقمية: 1، 2، 4، 8، 7، 5
 संख्या-मूले: १, २, ४, ८, ७, ५
@@ -67,7 +81,7 @@ Ze ontbreken niet. Ze liggen buiten de niet-nulle eenhedencyclus van herhaalde v
 
 Dit zijn interpretatieve labels, niet meetkundige eigenschappen afgeleid uit de cyclus.
 
-> **Formele status:** `status_defined(ρ_NPR-phase) = interpretatief` | `status_executed(ρ_NPR-phase) = ongetest` | `status_validated(ρ_NPR-phase) = ongetest`
+> **Formele status:** `operator_status(ρ_NPR-phase) = interpretatief` | `execution_status(ρ_NPR-phase) = niet_gestart` | `validatie_status(ρ_NPR-phase) = niet_gevalideerd`
 
 3 هو المحور، 6 هو النمط، 9 هو العودة. معًا يشكلون طبقة التحقق الثلاثية.
 ३ अक्षः, ६ रूपम्, ९ प्रत्यवर्तनम्। त्रीणि सङ्गतिं त्रिभाजनं चरन्ति।
@@ -158,7 +172,14 @@ J(3, 2) = 6
 > ⚠ **Punt 7:** De operator `J` gebruikt alleen `r_even` en `n_groups`. Het resultaat `r_odd = 6` is geen invoer van `J`. Formeel verbindt `J` niet beide helften; zij projecteert `DR(n_groups · r_even) = DR(2 · 3) = 6`. De uitkomst valt samen met `r_odd`, maar dit is een eigenschap van deze specifieke berekening, geen algemene tweezijdige operator.
 > Een echte tweezijdige variant zou zijn: `J'(r_odd, r_even)` met een expliciete regel die beide waarden gebruikt. Dit is nog niet gedefinieerd.
 
-> **Formele status:** `status_defined(J) = formeel (éénzijdig)` | `status_executed(J) = voltooid` | `status_validated(J) = ongetest` | `J'(r_odd, r_even)` = `undefined`
+> **Formele status:** `operator_status(J) = formeel (éénzijdig)` | `execution_status(J) = voltooid` | `validatie_status(J) = niet_gevalideerd` | `J'(r_odd, r_even)`:
+> ```
+> local_missing
+> → eerst ROUTING.md
+> → target article
+> → engine execution
+> → audit evidence
+> ```
 
 De uitkomst van de koppelregel is 6. Dit is een gekozen NPR-operator, geen noodzakelijk gevolg van de cyclus.
 
