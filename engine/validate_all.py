@@ -173,7 +173,10 @@ def main():
         print("STATUS: GEEN ENGINES UITGEVOERD")
         sys.exit(1)
     else:
-        print("STATUS: ALLE ENGINES GEPASSEERD ✅")
+        if skipped > 0:
+            print("STATUS: ALLE VERPLICHTE ENGINES GEPASSEERD ✅")
+        else:
+            print("STATUS: ALLE ENGINES GEPASSEERD ✅")
         sys.exit(0)
 
 
