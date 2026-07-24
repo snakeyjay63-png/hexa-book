@@ -36,9 +36,12 @@ def dr(n):
 
 
 # === Forward operators ===
-def byte_to_freq(B, ref_bytes):
-    """Model A: globale referentie."""
-    return 432 * B / ref_bytes
+def byte_to_freq(B, ref_bytes, base=432.0):
+    """Model A: globale referentie.
+    
+    base = 432.0 (Vedic, default) of 396.0 (Flower of Life).
+    """
+    return base * B / ref_bytes
 
 
 def hex_avg_freq(byte_val):
@@ -71,25 +74,26 @@ def E_prime(seed_freq):
     return float(seed_freq)
 
 
-def C_prime(seed_freq, ref_bytes):
+def C_prime(seed_freq, ref_bytes, base=432.0):
     """C': Signal → CInput (byte_to_freq inverse).
     
-    Inverse van byte_to_freq(B, ref) = 432 * B / ref
-    Dus: B' = seed_freq * ref / 432
+    Inverse van byte_to_freq(B, ref, base) = base * B / ref
+    Dus: B' = seed_freq * ref / base
     
     Verwacht: seed_freq van E', ref_bytes (globale referentie).
     Retourneert: bytes (C'-input).
     """
     assert seed_freq > 0, f"C': seed_freq moet positief zijn"
     assert ref_bytes > 0, f"C': ref_bytes moet positief zijn"
-    return seed_freq * ref_bytes / 432
+    assert base > 0, f"C': base moet positief zijn"
+    return seed_freq * ref_bytes / base
 
 
-def return_cycle(centroid, ref_bytes):
+def return_cycle(centroid, ref_bytes, base=432.0):
     """Volledige returnketen: ℱ → R' → E' → C'."""
     r = R_prime(centroid)
     e = E_prime(r)
-    c = C_prime(e, ref_bytes)
+    c = C_prime(e, ref_bytes, base)
     return r, e, c
 
 
@@ -145,27 +149,26 @@ def test_return_cycle():
     return passed, failed
 
 
-def test_forward_return_roundtrip():
+def test_forward_return_roundtrip(base=432.0, ref=81.75, label="432"):
     """Test forward → return roundtrip: byte → freq → R' → E' → C' → byte.
 
-    Echte roundtrip: byte_to_freq(B, ref) → R' → E' → C' → B'
+    Echte roundtrip: byte_to_freq(B, ref, base) → R' → E' → C' → B'
     Onder Model A: C'(E'(R'(byte_to_freq(B)))) = B (algebraïsch exact)
 
     V_k-invariant: DR(fwd_freq) == DR(return_seed) == DR(returned_byte)
     """
-    ref = 81.75
     passed, failed = 0, 0
 
     # Bytes to test
     bytes_to_test = [82, 66, 72, 81, 128, 255, 1, 43]
 
-    print("\n--- Forward↔Return Roundtrip ---")
+    print(f"\n--- Forward↔Return Roundtrip (base={label}) ---")
     for B in bytes_to_test:
         # Forward: B → freq
-        fwd_freq = byte_to_freq(B, ref)
+        fwd_freq = byte_to_freq(B, ref, base)
 
         # Return: fwd_freq → R' → E' → C' → B'
-        r, e, c = return_cycle(fwd_freq, ref)
+        r, e, c = return_cycle(fwd_freq, ref, base)
 
         # V_k invariant: DR(fwd_freq) == DR(return_seed) == DR(returned_byte)
         # Splitsen: byte-roundtrip is harde claim, V_k DR is soft claim
@@ -294,8 +297,11 @@ def main():
     p, f = test_return_cycle()
     results.append(("ReturnCycle", p, f))
 
-    p, f = test_forward_return_roundtrip()
-    results.append(("Roundtrip", p, f))
+    p, f = test_forward_return_roundtrip(base=432.0, ref=81.75, label="432")
+    results.append(("Roundtrip-432", p, f))
+
+    p, f = test_forward_return_roundtrip(base=396.0, ref=81.75, label="396")
+    results.append(("Roundtrip-396", p, f))
 
     # hex_phoneme is observatie — telt niet mee als test
     p, f = analyze_hex_phoneme_complementarity()
