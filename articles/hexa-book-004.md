@@ -106,7 +106,8 @@ ReturnCycle:
   validatie_status = gevalideerd_lokaal
 
 R': voltooid | E': voltooid | C': voltooid
-V_k-invariant: ✅ DR(fwd)=DR(ret) in roundtrip (8/8 bytes exact)
+V_k-invariant: ✅ DR(fwd)=DR(ret) (R' identiteit — bewust gekozen, niet emergent)
+Byte-roundtrip: ✅ C'(E'(R'(byte_to_freq(B)))) = B (8/8 bytes, |B'−B| < 10⁻⁶)
 Byte-roundtrip: ✅ C'(E'(R'(byte_to_freq(B)))) = B (8/8)
 ```
 
