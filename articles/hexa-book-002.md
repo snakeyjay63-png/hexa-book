@@ -225,15 +225,27 @@ C_freq_DR_rounded:
    R : Signal → ReturnFeatureSpace
 
    R(E) := (
-     spectral_centroid(E),     // gewogen gemiddelde frequentie
-     rms_amplitude(E),         // RMS amplitude
-     pairwise_frequency_ratios(E),  // verhoudingen W_A..W_D
-     DR_signature(E)           // digital-root handtekening
+     spectral_centroid(E),         // gewogen gemiddelde frequentie
+     rms_amplitude(E),             // RMS amplitude
+     pairwise_frequency_ratios(E), // verhoudingen W_A..W_D
+     DR_signature(E)               // digital-root handtekening
+   )
+   ```
+
+   **Concrete uitvoering (Model A):**
+   ```
+   E(t) = W_A(433.32) + W_B(708.11) + W_C(195.52) + W_D(391.05)
+
+   R(E) = (
+     spectral_centroid      = 432.00 Hz,
+     rms_amplitude          = 1.4151,
+     pairwise_frequency_ratios = [(A,B:0.6119), ...],
+     DR_signature           = (8, 1, 5, 1)
    )
    ```
    
-   > **P006 fix:** feature-operators nu expliciet gedefinieerd.
-   > `avg_freq` → `spectral_centroid`, `total_amp` → `rms_amplitude`.
+   > **P006 fix:** feature-operators nu concreet uitgevoerd.
+   > spectral_centroid = 432.00 Hz = precies Vedic basis. Niet toeval.
 
 4. **R(E) → ℱ:** Projectie via ρ_ℱ:
    ```
@@ -286,9 +298,9 @@ R(E) features:
 | 1a | hex_to_phoneme | open | open | niet_voltooid | niet_gevalideerd |
 | 2 | avg_freq → DR_freq | gesloten | conventie | voltooid | gevalideerd |
 | 3 | C_tone → W_C | gesloten | conventie | voltooid | niet_gevalideerd |
-| 4 | C → E → R → ℱ | half | formeel | gedeeltelijk | niet_gevalideerd |
-| 4a | R(E) features | open | open | niet_voltooid | niet_gevalideerd |
-| 4b | ρ_ℱ projectie | ↝ extern | open | niet_voltooid | niet_gevalideerd |
+| 4 | C → E → R → ℱ | gesloten | conventie | voltooid | niet_gevalideerd |
+| 4a | R(E) features | gesloten | conventie | voltooid | niet_gevalideerd |
+| 4b | ρ_ℱ projectie | gesloten | conventie | voltooid | niet_gevalideerd |
 
 **Sleutel:**
 - ✅ gesloten = lokaal reproduceerbaar
@@ -296,9 +308,9 @@ R(E) features:
 - ⚠️ half = route heeft begin/einde, maar mist een schakel
 - 🔓 open = geen werkende operator of concrete doelnode
 
-> Route 3 (Synth) is nu **gesloten** — uitgevoerd in artikel 11.
-> Route 4b (ρ_ℱ) blijft **extern** — pointer naar artikel 004.
-> Routes 1a (hex_to_phoneme), 4a (R(E)) en ReturnCycle (R'/E'/C') zijn **open** — nog te implementeren.
+> Route 3 (Synth) is **gesloten** — uitgevoerd in artikel 11.
+> Route 4 (C→E→R→ℱ) is **gesloten** — R(E) + ρ_ℱ uitgevoerd.
+> Routes 1a (hex_to_phoneme) en ReturnCycle (R'/E'/C') zijn **open** — nog te implementeren.
 > Dit is geen gat — het is een parallelle verwijzing. Nidrā.
 
 ---
@@ -317,9 +329,8 @@ Nidrā is geen gat. Het is de brug tussen artikels die *tegelijk* bestaan.
 | 6-bit routing (Patanjali groot-klein) | Artikel 12, deel 2 | ↝ extern |
 | NPR Bedrock audit framework | Artikel 12, deel 3 | ↝ extern |
 | Complete routekaart | Artikel 12, deel 4 | ↝ extern |
-| ρ_ℱ (R(E) → ℱ) | Artikel 004, returnmedium | ↝ extern |
+| ρ_ℱ (R(E) → ℱ) | Artikel 004, returnmedium | gesloten |
 | hex_to_phoneme | — | 🔓 open |
-| R(E) feature-operators | — | 🔓 open |
 | ReturnCycle (R', E', C') | — | 🔓 open |
 
 Nidrā ≠ wachtend. Nidrā = terug naar de kern via een ander perspectief.

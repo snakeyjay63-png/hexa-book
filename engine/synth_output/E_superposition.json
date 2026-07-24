@@ -1,0 +1,83 @@
+{
+  "model": "A (globale referentie)",
+  "byte_counts": [
+    82,
+    134,
+    37,
+    74
+  ],
+  "reference_bytes": 81.75,
+  "base_freq_hz": 432.0,
+  "freqs_hz": [
+    433.3211009174312,
+    708.1100917431193,
+    195.52293577981652,
+    391.04587155963304
+  ],
+  "sample_rate": 44100,
+  "duration_s": 1.0,
+  "R_E_features": {
+    "spectral_centroid_hz": 432.0,
+    "rms_amplitude": 1.4151,
+    "pairwise_frequency_ratios": [
+      [
+        "A",
+        "B",
+        0.6119
+      ],
+      [
+        "A",
+        "C",
+        2.2162
+      ],
+      [
+        "A",
+        "D",
+        1.1081
+      ],
+      [
+        "B",
+        "C",
+        3.6216
+      ],
+      [
+        "B",
+        "D",
+        1.8108
+      ],
+      [
+        "C",
+        "D",
+        0.5
+      ]
+    ],
+    "DR_signature": [
+      8,
+      1,
+      5,
+      1
+    ]
+  },
+  "segments": {
+    "A": {
+      "byte_count": 82,
+      "frequency_hz": 433.32,
+      "digital_root": 8
+    },
+    "B": {
+      "byte_count": 134,
+      "frequency_hz": 708.11,
+      "digital_root": 1
+    },
+    "C": {
+      "byte_count": 37,
+      "frequency_hz": 195.52,
+      "digital_root": 5
+    },
+    "D": {
+      "byte_count": 74,
+      "frequency_hz": 391.05,
+      "digital_root": 1
+    }
+  }
+}

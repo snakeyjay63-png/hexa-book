@@ -49,21 +49,33 @@ W_C(t) = Synth("middentoon", 437.27 Hz, 1.0, t)
 W_C(t) = 1.0 · sin(2π · 437.27 · t)
 ```
 
-#### Concrete Uitvoering
+#### Concrete Uitvoering — Model A
 
 ```
+Model A frequenties:
+  W_A: byte=82  → 433.32 Hz
+  W_B: byte=134 → 708.11 Hz
+  W_C: byte=37  → 195.52 Hz
+  W_D: byte=74  → 391.05 Hz
+
 Parameters:
-  tone_class  = "middentoon"  (DR=5)
-  freq        = 437.27 Hz     (grand_avg_freq, afgerond op 2 decimalen)
-  amplitude   = 1.0           (standaard)
+  sample_rate = 44100 Hz
+  duration    = 1.0 s
+  amplitude   = 1.0
   waveform    = sine
 
-Uitvoer:
-  W_C(t) = sin(2π · 437.27 · t)
-  sample_rate = 44100 Hz      (conventie)
-  duration    = 1.0 s         (standaard)
+Superpositie:
+  E(t) = W_A(t) + W_B(t) + W_C(t) + W_D(t)
 
-Opslag: engine/synth_output/W_C_middentoon_437.27hz.npy
+R(E) features:
+  spectral_centroid     = 432.00 Hz    ← precies Vedic basis
+  rms_amplitude         = 1.4151
+  DR_signature          = (8, 1, 5, 1)
+  pairwise_frequency_ratios = zie json
+
+Opslag:
+  engine/synth_output/E_superposition.npy
+  engine/synth_output/W_[ABCD]_*.npy
 ```
 
 > Synth is nu een werkende operator. Niet meer wachtend.
