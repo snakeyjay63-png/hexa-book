@@ -1,3 +1,17 @@
+---
+audit_metadata:
+  article: "03-artikel-e-audio"
+  source_commit: "5a13c64"
+  last_verified: "2026-07-24"
+  operator_status_model: 3D
+  engine_evidence:
+    npr_sound_engine: "engine/npr_sound_engine.py"
+    validate_return_cycle: "engine/validate_return_cycle.py"
+  route_status: "actueel"
+  supersedes: "legacy-v3 status_validated/status_executed/status_defined"
+  note: "Artikel E audit. Alle golven uitgevoerd. R_audio nu formeel + gevalideerd."
+---
+
 ## Artikel E - Audio-superpositie (uitgevoerd)
 
 لا تعدّ الخطوة الخامسة عدسة خامسة. إنها الحقل الصوتي حيث تتلاقى العدسات الأربع.

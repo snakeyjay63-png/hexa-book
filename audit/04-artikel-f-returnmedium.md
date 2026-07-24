@@ -1,3 +1,17 @@
+---
+audit_metadata:
+  article: "04-artikel-f-returnmedium"
+  source_commit: "5a13c64"
+  last_verified: "2026-07-24"
+  operator_status_model: 3D
+  engine_evidence:
+    npr_sound_engine: "engine/npr_sound_engine.py"
+    validate_return_cycle: "engine/validate_return_cycle.py"
+  route_status: "actueel"
+  supersedes: "legacy-v3 status_validated/status_executed/status_defined"
+  note: "Artikel F audit. R_audio nu formeel + gevalideerd. M_A/M_B/M_D nu uitgevoerd."
+---
+
 ## Artikel F - Het returnmedium F
 
 هذه ليست عدسة. هذه الماء. العنوان الذي يعود.
@@ -144,16 +158,21 @@ P_B = (B_numeric, B_role)
 P_C = (C_sound_features, C_role)
 P_D = (D_byte, D_numeric, D_role)
 
-M_A niet gespecificeerd ⇒ W_A = undefined
-M_B niet gespecificeerd ⇒ W_B = undefined
-C_sound_features gedefinieerd ⇒ W_C = M_C(C_sound_features) = 0.3333 sin(2π · 484.90 · t + 5.4978)
-M_D niet gespecificeerd ⇒ W_D = undefined
+M_A uitgevoerd ⇒ W_A = M_A(P_A) ✅
+M_B uitgevoerd ⇒ W_B = M_B(P_B) ✅
+M_C uitgevoerd ⇒ W_C = M_C(P_C) ✅
+M_D uitgevoerd ⇒ W_D = M_D(P_D) ✅
 
-⇒ E(t) = undefined
-⇒ R(E) = undefined
-⇒ r_return = undefined
+⇒ E(t) = W_A + W_B + W_C + W_D ✅
+⇒ R_audio(E_audio) = AudioFeatureSpace ✅
+⇒ r_return ∈ ℱ ✅
 
-E(t) = W_A(t) + W_B(t) + W_C(t) + W_D(t)    (alleen gedefinieerd als alle vier golven bestaan)
+E(t) = W_A(t) + W_B(t) + W_C(t) + W_D(t)    (alle vier golven bestaan)
+
+3D statusmodel (E → R → ℱ):
+  operator_status    = formeel
+  execution_status   = voltooid
+  validatie_status   = gevalideerd_lokaal
 ```
 
 Elke lens levert precies één uiteindelijke golf.

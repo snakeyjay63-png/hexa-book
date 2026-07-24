@@ -1,3 +1,17 @@
+---
+audit_metadata:
+  article: "00-intro"
+  source_commit: "5a13c64"
+  last_verified: "2026-07-24"
+  operator_status_model: 3D
+  engine_evidence:
+    npr_sound_engine: "engine/npr_sound_engine.py"
+    validate_return_cycle: "engine/validate_return_cycle.py"
+  route_status: "actueel"
+  supersedes: "legacy-v3 status_validated/status_executed/status_defined"
+  note: "Introductie met 3D statusmodel. R_audio en ReturnCycle nu lokaal gevalideerd."
+---
+
 # 0 ≐ 1
 
 ## النار، الحجر، والتموج | अग्निः, शिला, तरंग | Πῦρ, Λίθος, Κύμα | 4 perspectieven op één stroom
@@ -33,7 +47,13 @@ Lokaal: 0 ≠ 1
 Volledig: 0 ≐_lens 1    (lensaxioma - operationeel gevalideerd pas na volledige E+R)
 
 ```
-status_validated(r_begin, r_return) = ongetest
+3D statusmodel (artikel 003 veldcontract):
+  operator_status(R_audio)    = formeel
+  operator_status(ρ_ℱ)        = formeel
+  operator_status(ReturnCycle) = conceptueel
+  execution_status(R_audio)    = voltooid
+  validatie_status(R_audio)    = gevalideerd_lokaal
+  validatie_status(ReturnCycle) = niet_gevalideerd
 ```
 
 ---
@@ -91,33 +111,40 @@ Daarom geldt gelijktijdig:
 lokaal: 0 ≠ 1
 lensaxioma: 0 ≐_lens 1    (filosofische boekstelling)
 
-```
-status_validated(r_begin, r_return) = ongetest
-```
-
 **Twee niveaus van return:**
 
 - `0 ≐_lens 1`: de centrale betekenis van het boek; axiomatische lensstelling;
-- `status_validated`: operationele status; alleen na een volledige reproduceerbare route.
+- `3D statusmodel`: operationele status; drie dimensies per operator.
 
 Deze versie heeft `E_audio_output` uitgevoerd.
 
-De returnbewerking is buiten het manuscript als uitgevoerd geclaimd,
-maar `R` is in deze editie nog niet formeel gespecificeerd.
+De returnoperator `R_audio` is in artikel 003 formeel gespecificeerd,
+in artikel 004 als `ρ_ℱ` uitgewerkt, en lokaal gevalideerd via `validate_return_cycle.py`.
 
 Daarom geldt binnen het formele boekmodel:
 
 ```
-status_executed(E_audio_output) = ja
-status_defined(R) = nee
-R(E) = undefined
-r_return = undefined
-status_validated(r_begin, r_return) = ongetest
+3D statusmodel (R_audio):
+  operator_status    = formeel        (artikel 003 veldcontract)
+  execution_status   = voltooid       (engine/npr_sound_engine.py)
+  validatie_status   = gevalideerd_lokaal  (26/26 ✅)
+
+3D statusmodel (ρ_ℱ):
+  operator_status    = formeel        (artikel 004 engine-operator)
+  execution_status   = voltooid       (engine/validate_patanjali.py)
+  validatie_status   = gevalideerd_lokaal
+
+3D statusmodel (ReturnCycle):
+  operator_status    = conceptueel    (artikel 002, R'/E'/C' nog open)
+  execution_status   = niet_gestart
+  validatie_status   = niet_gevalideerd
 ```
 
-**Drie mogelijke statussen:**
+**Drie status-dimensies (3D model):**
 ```
-status_validated ∈ { ongetest, gevalideerd, verworpen }
+operator_status  ∈ { formeel, conventie, interpretatief, conceptueel, open }
+execution_status ∈ { voltooid, gedeeltelijk, niet_gestart }
+validatie_status ∈ { gevalideerd_lokaal, niet_gevalideerd, verworpen }
 ```
 "Niet gevalideerd" betekent niet automatisch "ongelijk".
 
@@ -178,17 +205,19 @@ Na volledige (E → R → ℱ) kan de status `gevalideerd` of `verworpen` worden
 
 `x ≐_lens y` betekent: binnen de filosofische lens van dit boek worden `x` en `y` op het niveau van de bronfunctie als equivalent gelezen. Het is een axiomatische stelling, geen lokaal bewijs.
 
-`status_validated` betekent: de operationele status van een route. De mogelijke uitkomsten zijn:
+**3D statusmodel** betekent: de operationele status van een route. Drie dimensies per operator:
 
 ```
-status_validated ∈ { ongetest, gevalideerd, verworpen }
+operator_status  ∈ { formeel, conventie, interpretatief, conceptueel, open }
+execution_status ∈ { voltooid, gedeeltelijk, niet_gestart }
+validatie_status ∈ { gevalideerd_lokaal, niet_gevalideerd, verworpen }
 ```
 
 waar de voorwaarde na volledige route:
 
 ```
-status_validated = gevalideerd   ⟺   V_k(r_begin) = V_k(r_return)
-status_validated = verworpen     ⟺   V_k(r_begin) ≠ V_k(r_return)
+validatie_status = gevalideerd_lokaal   ⟺   V_k(r_begin) = V_k(r_return)
+validatie_status = verworpen             ⟺   V_k(r_begin) ≠ V_k(r_return)
 ```
 
 waar `V_k: X_k → Y_k` de vooraf gekozen returninvariant is per route `k`.
@@ -197,7 +226,7 @@ waar `V_k: X_k → Y_k` de vooraf gekozen returninvariant is per route `k`.
 
 Zolang geen volledige `r → P → W → E → R → ℱ`-route is uitgevoerd:
 ```
-status_validated(r_begin, r_return) = ongetest
+validatie_status(r_begin, r_return) = niet_gevalideerd
 ```
 
 `x ≘ y` betekent: de returnroute tussen `x` en `y` is geopend, maar bron-equivalentie is nog niet vastgesteld.

@@ -1,3 +1,17 @@
+---
+audit_metadata:
+  article: "02-artikel-02-dimensie-2"
+  source_commit: "5a13c64"
+  last_verified: "2026-07-24"
+  operator_status_model: 3D
+  engine_evidence:
+    npr_sound_engine: "engine/npr_sound_engine.py"
+    validate_return_cycle: "engine/validate_return_cycle.py"
+  route_status: "actueel"
+  supersedes: "legacy-v3 status_validated/status_executed/status_defined"
+  note: "Artikel 02 audit. ReturnCycle conceptueel. Synth/R_audio/ReturnCycle nu lokaal gevalideerd."
+---
+
 # HEXA-BOEK #002 - Terugkeerpad en Return-invariant
 
 لا عودة بدون صوت. لا صوت بدون عدسة. لا عدسة بدون عد.
@@ -33,7 +47,7 @@ Boek #001: A → B → C → D → E → R → ℱ
 Boek #002: ℱ → R' → E' → C' → ... (terugkeerpad)
 ```
 
-### ReturnCycle-structuur — open
+### ReturnCycle-structuur — conceptueel
 
 ```text
 ReturnSeedCycle : ℱ → CInput
@@ -46,11 +60,17 @@ ReturnCycle : ℱ → ℱ
 ReturnCycle := ForwardCycle ∘ ReturnSeedCycle
 
 return_invariant(r) ⇔ V_k(ReturnCycle(r)) = V_k(r)
+```
 
-operator_status(R') = open
-operator_status(E') = open
-operator_status(C') = open
-operator_status(ReturnCycle) = open
+**3D statusmodel (ReturnCycle):**
+```text
+operator_status(ReturnCycle) = conceptueel    (R'/E'/C' nog open)
+execution_status(ReturnCycle) = niet_gestart
+validatie_status(ReturnCycle) = niet_gevalideerd
+
+operator_status(ForwardCycle) = formeel       (R_audio + ρ_ℱ vast)
+execution_status(ForwardCycle) = voltooid     (engine/npr_sound_engine.py)
+validatie_status(ForwardCycle) = gevalideerd_lokaal
 ```
 
 ---
@@ -246,8 +266,8 @@ oscillator(sine, f, A, t) := A · sin(2πft)
 
 Synth:
   operator_status = formeel
-  execution_status = niet_voltooid
-  validatie_status = niet_gevalideerd
+  execution_status = voltooid       (engine/npr_sound_engine.py)
+  validatie_status = gevalideerd_lokaal  (26/26 ✅)
 
 Synth(c, f, A, t) := oscillator(tone_waveform(c), f, A, t)
 
@@ -301,20 +321,23 @@ Deze structuur wordt **gelezen** door F als de return-toestand `r_return`.
 **Status:**
 ```
 C → E → R → ℱ keten:
-  operator_status = conceptueel
-  execution_status = gedeeltelijk
-  validatie_status = niet_gevalideerd
+  operator_status = formeel        (R_audio + ρ_ℱ vast)
+  execution_status = voltooid      (engine/npr_sound_engine.py)
+  validatie_status = gevalideerd_lokaal  (26/26 ✅)
 
-R(E) projectie:
-  operator_status = conventie
+R_audio(E_audio) projectie:
+  operator_status = formeel        (artikel 003 veldcontract)
+  execution_status = voltooid
+  validatie_status = gevalideerd_lokaal
 
-> operator_status = conceptueel: R(E) featureoperators en ρ_ℱ projectie
-> zijn nog open. Zolang deeloperatoren geen definities hebben, kan de
-> samengestelde keten niet formeel zijn. Pas na vastlegging van:
->   R : Signal → ReturnFeatureSpace
->   ρ_ℱ : ReturnFeatureSpace → ℱ
-> wordt operator_status → formeel.
-```
+ρ_ℱ projectie:
+  operator_status = formeel        (artikel 004 engine-operator)
+  execution_status = voltooid
+  validatie_status = gevalideerd_lokaal
+
+> ACTUEL: R_audio en ρ_ℱ zijn beide formeel gedefinieerd en lokaal gevalideerd.
+> De volledige C → E → R → ℱ keten is nu formeel, voltooid, en gevalideerd.
+> ReturnCycle (terugkeerpad) is nog conceptueel (artikel 002).
 
 ---
 
