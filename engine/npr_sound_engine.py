@@ -15,9 +15,10 @@ Model A:
   W_C: byte=37  → 195.52 Hz
   W_D: byte=74  → 391.05 Hz
 
-  E(t) = W_A(t) + W_B(t) + W_C(t) + W_D(t)
-  spectral_centroid = 432.00 Hz
-  DR_signature = (8, 1, 5, 1)
+  E_raw(t) = W_A(t) + W_B(t) + W_C(t) + W_D(t)
+  E_audio(t) = E_raw(t) / max(1, peak(E_raw))
+  component_centroid = 432.00 Hz
+  DR_signature = (1, 8, 1, 2)
 """
 
 import math
