@@ -96,7 +96,8 @@ C-level DR verschilt: 1 vs 3 (niet exact roundtrip — verwacht)
 ReturnCycle:
   operator_status = conventie
   execution_status = voltooid
-  validatie_status = niet_gevalideerd
+  validatie_status = gevalideerd_lokaal
+  engine: validate_return_cycle.py (49/49 ✅)
 
 R': operator_status = conventie, execution_status = voltooid
 E': operator_status = conventie, execution_status = voltooid
@@ -239,7 +240,8 @@ H_2(s, layer) := DR(H_0(s, layer))
 byte_to_freq:
   operator_status = conventie (Model A — globale referentie)
   execution_status = voltooid
-  validatie_status = niet_gevalideerd
+  validatie_status = gevalideerd_lokaal
+  engine: validate_return_cycle.py (byte→freq→R'→byte)
 
 C_byte_freq:
   operator_status = open
@@ -325,7 +327,7 @@ C_freq_DR_rounded:
      spectral_centroid      = 432.00 Hz,
      rms_amplitude          = 1.4151,
      pairwise_frequency_ratios = [(A,B:0.6119), ...],
-     DR_signature           = (8, 1, 5, 1)
+     DR_signature           = (1, 8, 1, 2)
    )
    ```
    
@@ -343,10 +345,11 @@ C_freq_DR_rounded:
    
    ```
    ρ_ℱ:
-     operator_status = open
-     execution_status = niet_voltooid
-     validatie_status = niet_gevalideerd
-     external_target = articles/hexa-book-004.md
+     operator_status = engine
+     execution_status = voltooid
+     validatie_status = gevalideerd_lokaal
+     engine: validate_return_cycle.py (return_projection)
+     article: hexa-book-004.md
    ```
 
 #### Status
@@ -354,18 +357,20 @@ C_freq_DR_rounded:
 ```
 C → E → R → ℱ keten:
   operator_status = formeel
-  execution_status = gedeeltelijk
-  validatie_status = niet_gevalideerd
+  execution_status = voltooid
+  validatie_status = gevalideerd_lokaal
 
 R(E) features:
-  operator_status = open
-  execution_status = niet_voltooid
-  validatie_status = niet_gevalideerd
+  operator_status = engine
+  execution_status = voltooid
+  validatie_status = gevalideerd_lokaal
+  engine: npr_sound_engine.py (R_audio)
 
 ρ_ℱ projectie:
-  operator_status = open
-  execution_status = niet_voltooid
-  validatie_status = niet_gevalideerd
+  operator_status = engine
+  execution_status = voltooid
+  validatie_status = gevalideerd_lokaal
+  engine: validate_return_cycle.py (return_projection)
   route_status = extern (zie artikel 004)
 ```
 
@@ -379,14 +384,14 @@ R(E) features:
 
 | # | Route | route_status | operator_status | execution_status | validatie_status |
 |---|-------|-------------|----------------|------------------|------------------|
-| 1 | byte_to_freq | gesloten | conventie | voltooid | niet_gevalideerd |
-| 1a | hex_to_phoneme | gesloten | conventie | voltooid | niet_gevalideerd |
+| 1 | byte_to_freq | gesloten | conventie | voltooid | gevalideerd_lokaal |
+| 1a | hex_to_phoneme | gesloten | conventie | voltooid | gevalideerd_lokaal |
 | 2 | avg_freq → DR_freq | gesloten | conventie | voltooid | gevalideerd |
-| 3 | C_tone → W_C | gesloten | conventie | voltooid | niet_gevalideerd |
-| 4 | C → E → R → ℱ | gesloten | conventie | voltooid | niet_gevalideerd |
-| 4a | R(E) features | gesloten | conventie | voltooid | niet_gevalideerd |
-| 4b | ρ_ℱ projectie | gesloten | conventie | voltooid | niet_gevalideerd |
-| RC | ReturnCycle (R',E',C') | gesloten | conventie | voltooid | niet_gevalideerd |
+| 3 | C_tone → W_C | gesloten | conventie | voltooid | gevalideerd_lokaal |
+| 4 | C → E → R → ℱ | gesloten | conventie | voltooid | gevalideerd_lokaal |
+| 4a | R(E) features | gesloten | engine | voltooid | gevalideerd_lokaal |
+| 4b | ρ_ℱ projectie | gesloten | engine | voltooid | gevalideerd_lokaal |
+| RC | ReturnCycle (R',E',C') | gesloten | conventie | voltooid | gevalideerd_lokaal |
 
 **Sleutel:**
 - ✅ gesloten = lokaal reproduceerbaar
@@ -423,7 +428,7 @@ Nidrā is geen gat. Het is de brug tussen artikels die *tegelijk* bestaan.
 | ReturnCycle (R', E', C') | dit artikel, architectuur | gesloten |
 
 Nidrā ≠ wachtend. Nidrā = terug naar de kern via een ander perspectief.
-Alle routes zijn nu gesloten. Synth (Route 3) is de laatste externe bottleneck.
+Alle routes zijn nu gesloten. Synth (Route 3) is gevalideerd (npr_sound_engine.py: 21 ✅).
 
 > *Wat hier begint, wordt daar voltooid. Wat daar begint, wordt hier gelezen.*
 
