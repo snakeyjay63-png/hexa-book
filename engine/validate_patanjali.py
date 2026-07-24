@@ -10,9 +10,23 @@ import sys
 import os
 import re
 
-VELD_DIR = os.path.dirname(os.path.abspath(__file__))
+VELD_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "patanjali-veld")
+
+def check_prerequisites():
+    """Check Zig toolchain + source files exist. Return error message or None."""
+    import shutil
+    if not shutil.which("zig"):
+        return "Zig compiler niet gevonden (installeer zig, of skip deze engine)"
+    src = os.path.join(VELD_DIR, "src", "main.zig")
+    if not os.path.isfile(src):
+        return f"Patanjali-broncode niet gevonden: {src}"
+    return None
 
 def build():
+    err = check_prerequisites()
+    if err:
+        print(f"⏭ Patanjali-geskippt: {err}")
+        sys.exit(0)
     result = subprocess.run(
         ["zig", "build-exe", "-O", "ReleaseSmall", "src/main.zig"],
         cwd=VELD_DIR,

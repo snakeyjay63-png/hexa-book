@@ -33,11 +33,27 @@ import hashlib
 import math
 
 # === Engine imports ===
-WORKSPACE = os.path.join(os.path.dirname(__file__), "..", "..")
-sys.path.insert(0, os.path.join(WORKSPACE, "skills", "sanskrit-frequency-bridge", "scripts"))
-sys.path.insert(0, os.path.dirname(__file__))
+# Prio 1: vendored copy (reproduceerbaar vanaf schone clone)
+# Prio 2: workspace skill (lokale development)
+# Fallback: duidelijke error bij ontbrekende dependency
+_engine_dir = os.path.dirname(__file__)
+_vendor_path = os.path.join(_engine_dir, "..", "..", "vendor", "sanskrit_frequency_bridge")
+_workspace_path = os.path.join(_engine_dir, "..", "..", "skills", "sanskrit-frequency-bridge", "scripts")
 
-from sanskrit_freq import tokenize, map_phonemes
+if os.path.isdir(_vendor_path):
+    sys.path.insert(0, _vendor_path)
+    from sanskrit_freq import tokenize, map_phonemes
+elif os.path.isdir(_workspace_path):
+    sys.path.insert(0, _workspace_path)
+    from sanskrit_freq import tokenize, map_phonemes
+else:
+    raise RuntimeError(
+        "Missing dependency: sanskrit-frequency-bridge (sanskrit_freq module). "
+        "This repo ships a vendored copy under vendor/sanskrit_frequency_bridge/. "
+        "If this is missing, check out the full repo or install the skill separately."
+    ) from None
+
+sys.path.insert(0, _engine_dir)
 import npr_sound_engine as npr
 
 # === Constants ===
@@ -138,7 +154,9 @@ def synthesize(devanagari: str, sample_rate: int = SAMPLE_RATE,
     
     # Route 6: superposition
     wave_specs = {k: {"freq": v["freq"]} for k, v in waves.items()}
-    E, individual, synth_meta = npr.superposition(wave_specs, sample_rate, duration, amplitude)
+    E_raw, E_audio, individual, synth_meta = npr.superposition(wave_specs, sample_rate, duration, amplitude)
+    # Bridge gebruikt E_audio (genormaliseerd) voor NPR-analyse
+    E = E_audio
     
     # Route 7: R_audio(E) — formele return-operator
     r_return = R_audio(E, sample_rate)
@@ -181,7 +199,7 @@ def R_audio(E: np.ndarray, sample_rate: int = SAMPLE_RATE) -> dict:
     N = len(E)
     fft_mag = np.abs(np.fft.rfft(E))
     freqs = np.fft.rfftfreq(N, d=1.0 / sample_rate)
-    centroid = npr.spectral_centroid(freqs, fft_mag)
+    centroid = npr.signal_spectral_centroid(E, sample_rate)
     
     return {
         "centroid": centroid,

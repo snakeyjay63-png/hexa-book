@@ -59,6 +59,10 @@ hexa-book/
 │   ├── 02-done/                ← 30 verwerkt
 │   └── TEMPLATE.md
 │
+├── vendor/                     ← vendored dependencies
+│   └── sanskrit_frequency_bridge/  ← sanskrit_freq.py (vendored copy)
+│
+├── requirements.txt            ← Python dependencies (numpy)
 ├── manifest/                   ← pipeline data
 └── archive/                    ← legacy backups
 ```
@@ -78,13 +82,27 @@ Elke nidrā-pointer routeert naar parallelle artikels. Ze zijn niet leeg — ze 
 - **ReturnCycle:** `byte → freq → R' → E' → C'` (dual/triple-base)
 - **ρ_ℱ:** return-projectie (`ComponentCentroid × DRSignature → ℱ`)
 
-## Snelle Import
+## Schone Clone
 
 ```bash
-# Clone de repo
+# Clone + dependencies
 git clone https://github.com/snakeyjay63-png/hexa-book.git
 cd hexa-book
+pip install -r requirements.txt
+
+# Alle engines tegelijk (5/5 ✅)
+python3 engine/validate_all.py
 ```
+
+**Afhankelijkheden:**
+- `numpy` (core — alle engines)
+- `sanskrit_freq` (vendored in `vendor/sanskrit_frequency_bridge/`)
+- `zig` (optioneel — alleen voor `validate_patanjali.py`)
+
+**Reproduceerbaarheid:**
+Alle engines zijn reproduceerbaar vanaf schone clone. De `sanskrit_freq` module
+zit vendored in de repo — geen externe workspace vereist. Patanjali kan skippen
+als `zig` niet geïnstalleerd is (exit 0 met waarschuwing).
 
 ## Artikels Lezen
 
@@ -105,23 +123,20 @@ grep -r "ReturnCycle" articles/ audit/
 ## Engine Gebruik
 
 ```bash
-# NPR Sound Engine (21 ✅)
-python3 engine/npr_sound_engine.py
+# Alle engines tegelijk (aanbevolen)
+python3 engine/validate_all.py
 
-# ReturnCycle + ρ_ℱ (49 ✅)
-python3 engine/validate_return_cycle.py
+# Of losse engines:
+python3 engine/npr_sound_engine.py        # NPR Synth (21 ✅)
+python3 engine/sanskrit_npr_bridge.py     # Sanskrit→NPR bridge (24 ✅)
+python3 engine/validate_return_cycle.py   # ReturnCycle + ρ_ℱ (26 ✅)
+python3 engine/validate_freq_lenses.py    # frequentielens
+python3 engine/validate_patanjali.py      # Patanjali veld (vereist zig)
 
-# Frequentie lenzen valideren
-python3 engine/validate_freq_lenses.py
-
-# Patanjali veld valideren
-python3 engine/validate_patanjali.py
-
-# Audit status
-python3 engine/audit_status.py
-
-# Review analyseren
-python3 engine/review_analyzer.py
+# Tools:
+python3 engine/audit_status.py            # audit status
+python3 engine/review_analyzer.py         # review pipeline
+python3 tools/audit-batcher.py status     # batch audit
 ```
 
 ## Actuele Status
