@@ -67,10 +67,10 @@ ReturnCycle-structuur — open:
 
 **Deel 1 van 4.** De route van Sanskriet-byte-telling naar frequentie in Hz.
 
-In boek #001 werden frequenties gegenereerd (397.04, 490.30, 393.39, 468.36 Hz).
-De mapping van byte-aantal naar Hz was impliciet; hier wordt deze expliciet.
+In boek #001 werden frequenties gegenereerd. De mapping van byte-aantal naar Hz
+was impliciet; hier wordt deze expliciet en reproduceerbaar gemaakt.
 
-#### Definitie
+#### Model A — Globale Referentie
 
 ```
 Segments(S) := (S_1, ..., S_n)
@@ -85,9 +85,41 @@ byte_to_freq(B, S) := 432 Hz · B / reference_bytes(S)
 
 Deze lineaire mapping schaleft het byte-aantal naar de 432 Hz referentieband.
 
-> **P004 fix:** `reference_bytes` is nu expliciet gedefinieerd als segment-gemiddelde.
-> De vier historische frequenties (397.04, 490.30, 393.39, 468.36 Hz) worden gegenereerd
-> via `byte_to_freq(B_i, S)` per segment `i`.
+#### Concrete Berekening
+
+```
+S = Patañjali 1.24–1.25
+Segments = (S_work, S_source, S_1.24, S_1.25)
+byte_counts = (82, 134, 37, 74)
+reference_bytes(S) = (82 + 134 + 37 + 74) / 4 = 81.75
+
+derived_byte_freqs :=
+  byte_to_freq(82, S)  = 432 · 82  / 81.75 = 433.32 Hz
+  byte_to_freq(134, S) = 432 · 134 / 81.75 = 708.18 Hz
+  byte_to_freq(37, S)  = 432 · 37  / 81.75 = 195.52 Hz
+  byte_to_freq(74, S)  = 432 · 74  / 81.75 = 391.05 Hz
+```
+
+#### Historische Frequenties (Aparte Dataset)
+
+```
+historical_freqs := (397.04, 490.30, 393.39, 468.36 Hz)
+```
+
+Deze frequenties zijn **niet** het resultaat van `byte_to_freq(B_i, S)` met
+`reference_bytes = 81.75`. Ze komen uit een eerdere conventie en blijven
+opgeslagen als referentie, maar worden niet meer aan deze operator toegeschreven.
+
+| Segment | B_i | derived (Model A) | historical | verschil |
+|---------|-----|-------------------|------------|----------|
+| work    | 82  | 433.32 Hz         | 397.04 Hz  | +36.28   |
+| source  | 134 | 708.18 Hz         | 490.30 Hz  | +217.88  |
+| 1.24    | 37  | 195.52 Hz         | 393.39 Hz  | -197.87  |
+| 1.25    | 74  | 391.05 Hz         | 468.36 Hz  | -77.31   |
+
+> **P004 + consistentietest:** De historische frequenties kunnen niet worden
+> gereproduceerd met één gedeelde `reference_bytes(S)`. Model A levert één
+> reproduceerbare operator. Historische waarden = aparte dataset.
 
 #### Alternatief: hex → frequentie via phonem-bridge
 
@@ -120,7 +152,7 @@ H_2(s, layer) := DR(H_0(s, layer))
 
 ```
 byte_to_freq:
-  operator_status = conventie
+  operator_status = conventie (Model A — globale referentie)
   execution_status = voltooid
   validatie_status = niet_gevalideerd
 
@@ -131,6 +163,7 @@ C_byte_freq:
 ```
 
 > `C_byte_freq` is de beoogde algemene operator. `byte_to_freq` is de huidige conventie-implementatie.
+> Historische frequenties = aparte dataset (zie `historical_freqs`).
 
 ---
 
@@ -249,7 +282,7 @@ R(E) features:
 
 | # | Route | route_status | operator_status | execution_status | validatie_status |
 |---|-------|-------------|----------------|------------------|------------------|
-| 1 | byte_to_freq | half | conventie | gedeeltelijk | niet_gevalideerd |
+| 1 | byte_to_freq | gesloten | conventie | voltooid | niet_gevalideerd |
 | 1a | hex_to_phoneme | open | open | niet_voltooid | niet_gevalideerd |
 | 2 | avg_freq → DR_freq | gesloten | conventie | voltooid | gevalideerd |
 | 3 | C_tone → W_C | ↝ extern | formeel | niet_voltooid | niet_gevalideerd |
