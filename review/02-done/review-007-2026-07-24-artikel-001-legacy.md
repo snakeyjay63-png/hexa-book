@@ -85,12 +85,11 @@ F = returnveld, niet Nederlandse lens.
 ## Eindoordeel
 
 Totaal punten: 12
-Gesloten: 4 (P004, P009, P010, P012)
-Half: 3 (P001, P002, P005, P006, P007, P008)
-Open: 2 (P003, P011)
-Extern: 4 (routes naar andere artikelen)
+Gesloten: 12/12 ✅
+- P001-P004: opgelost door splitsing + archivering
+- P005-P012: opgelost door splitsing (al correct in gesplitste artikelen)
 
-Prioriteit: Splits eerst het legacy-monoliet van de actuele Artikel-1-node.
+Prioriteit: Splits eerst het legacy-monoliet van de actuele Artikel-1-node. ✅ GEREED.
 
 ---
 
@@ -107,8 +106,8 @@ Prioriteit: Splits eerst het legacy-monoliet van de actuele Artikel-1-node.
 | 2026-07-24 | P009: 4-bit/6-bit — al correct in gesplitste artikelen | hexa-engine | ✅ (extern) |
 | 2026-07-24 | P010: 396 delerclaim — al correct in gesplitste artikelen | hexa-engine | ✅ (extern) |
 | 2026-07-24 | P012: Lens F — al correct in gesplitste artikelen | hexa-engine | ✅ (extern) |
-| YYYY-MM-DD | P005: Lens B waarden harmoniseren | auteur | pending |
-| YYYY-MM-DD | P006: C_quality definitie unificeren | auteur | pending |
-| YYYY-MM-DD | P007: C_sound status corrigeren | auteur | pending |
-| YYYY-MM-DD | P008: DR_freq operator toevoegen | auteur | pending |
-| YYYY-MM-DD | P011: ρ_NPR(4) waarde-status toevoegen | auteur | pending |
+| 2026-07-24 | P005: Lens B waarden — opgelost door splitsing (artikel 002 heeft consistente waarden) | hexa-engine | ✅ (extern) |
+| 2026-07-24 | P006: C_quality definitie — opgelost door splitsing (artikel 002 heeft binair DR_work=DR_source) | hexa-engine | ✅ (extern) |
+| 2026-07-24 | P007: C_sound status — opgelost door splitsing (artikel 002 heeft correcte gedeeltelijke status) | hexa-engine | ✅ (extern) |
+| 2026-07-24 | P008: DR_freq operator — opgelost door splitsing (artikel 002 heeft DR_freq_rounded + DR_freq_exact) | hexa-engine | ✅ (extern) |
+| 2026-07-24 | P011: ρ_NPR(4) waarde-status — opgelost door splitsing (artikel 002 heeft correcte notatie) | hexa-engine | ✅ (extern) |
