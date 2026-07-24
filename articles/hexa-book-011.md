@@ -65,17 +65,21 @@ Parameters:
   waveform    = sine
 
 Superpositie:
-  E(t) = W_A(t) + W_B(t) + W_C(t) + W_D(t)
+  E_raw(t) = W_A(t) + W_B(t) + W_C(t) + W_D(t)
+  E_audio(t) = E_raw(t) / max(1, peak(E_raw))  ← normalisatie voorkomt clipping
 
-R(E) features:
-  spectral_centroid     = 432.00 Hz    ← precies Vedic basis
-  rms_amplitude         = 1.4151
-  DR_signature          = (8, 1, 5, 1)
+R_audio(E) features:
+  component_centroid    = 432.00 Hz    ← gemiddelde oscillator-frequenties
+  signal_centroid       = 1354.75 Hz   ← FFT van gegenereerd signaal
+  rms_amplitude         = 1.4151       ← op E_raw
+  raw_peak              = 3.6136
+  normalized_peak       = 1.0000
+  DR_signature          = (1, 8, 1, 2) ← dr(82)=1, dr(134)=8, dr(37)=1, dr(74)=2
   pairwise_frequency_ratios = zie json
 
 Opslag:
-  engine/synth_output/E_superposition.npy
-  engine/synth_output/W_[ABCD]_*.npy
+  engine/synth_output/E_superposition.npy  (genormaliseerd)
+  engine/synth_output/W_[ABCD].npy
 ```
 
 > Synth is nu een werkende operator. Niet meer wachtend.
@@ -86,10 +90,21 @@ Opslag:
 Synth:
   operator_status = conventie
   execution_status = voltooid
-  validatie_status = niet_gevalideerd
+  validatie_status = gevalideerd_lokaal
+  tests = 21 ✅ | 0 ❌
 
 intended_C_sound_output := W_C(t) = 1.0 · sin(2π · 437.27 · t)
 ```
+
+#### SynthContract
+
+Formele contracten die de synth-operator definieert:
+
+1. **Nyquist**: SynthInput = {f ∈ ℝ | 0 < f < sample_rate/2} — afwijzing bij ≥ Nyquist
+2. **Normalisatie**: E_audio = E_raw / max(1, peak(E_raw)) — voorkomt clipping zonder expliciete optie
+3. **Centroid-differentiatie**: component_centroid (oscillator-gemiddelde) ≠ signal_centroid (FFT van E(t))
+4. **Deterministisch**: zelfde input → zelfde SHA256
+5. **DR_signature**: match met bytes (82,134,37,74) → (1,8,1,2)
 
 > Synth deblokkeert route 3 (C_tone → W_C) en maakt route 4 (C → E → R → ℱ) uitvoerbaar.
 

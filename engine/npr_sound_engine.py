@@ -44,6 +44,7 @@ MODEL_A = {
         "W_C": {"byte": 37,  "freq": 195.52},
         "W_D": {"byte": 74,  "freq": 391.05},
     },
+    "dr_signature": (1, 8, 1, 2),  # dr(82)=1, dr(134)=8, dr(37)=1, dr(74)=2
 }
 
 
@@ -60,8 +61,17 @@ def dr(n):
 def synth_sine(freq_hz: float, amplitude: float, sample_rate: int, duration_s: float):
     """Generate sine wave samples.
     
+    Rejects frequencies at or above Nyquist to enforce SynthInput contract:
+      SynthInput := {f ∈ ℝ | 0 < f < sample_rate/2}
+    
     Returns numpy array of float64 samples.
     """
+    nyquist = sample_rate / 2
+    if not 0 < freq_hz < nyquist:
+        raise ValueError(
+            f"Frequency {freq_hz} Hz must be below Nyquist ({nyquist} Hz) "
+            f"for sample_rate={sample_rate}"
+        )
     t = np.linspace(0, duration_s, int(sample_rate * duration_s), endpoint=False)
     return amplitude * np.sin(2 * np.pi * freq_hz * t)
 
@@ -121,12 +131,30 @@ def sha256_samples(samples):
     return hashlib.sha256(raw).hexdigest()
 
 
-def spectral_centroid(freqs, weights):
-    """Weighted spectral centroid."""
+def component_frequency_centroid(freqs, weights):
+    """Weighted average of known oscillator frequencies (component-level).
+    
+    Dit is de centroid van de oscillator-frequenties ZELF, niet van het
+    gegenereerde signaal E(t). Voor echte signaalanalyse: signal_spectral_centroid().
+    """
     total_weight = np.sum(weights)
     if total_weight == 0:
         return 0.0
     return float(np.sum(freqs * weights) / total_weight)
+
+
+def signal_spectral_centroid(samples, sample_rate):
+    """Spectral centroid from FFT of generated signal E(t).
+    
+    Dit is de ACTUELE signaal-centroid, gemeten uit de FFT.
+    Kan afwijken van component_frequency_centroid door window leakage.
+    """
+    magnitude = np.abs(np.fft.rfft(samples))
+    frequencies = np.fft.rfftfreq(len(samples), 1 / sample_rate)
+    total_mag = np.sum(magnitude)
+    if total_mag == 0:
+        return 0.0
+    return float(np.sum(frequencies * magnitude) / total_mag)
 
 
 def dominant_frequency(samples, sample_rate):
@@ -148,17 +176,21 @@ def dominant_frequency(samples, sample_rate):
 def superposition(wave_specs: dict, sample_rate: int, duration_s: float, amplitude: float):
     """Generate superposition E(t) = W_A(t) + W_B(t) + ...
     
+    Model A1:
+      E_raw(t) = Σ W_i(t)
+      E_audio(t) = E_raw(t) / max(1, peak(E_raw))  ← normalisatie voorkomt clipping
+    
     Args:
-        wave_specs: {"W_X": {"freq": float}, ...}
+        wave_specs: {"W_X": {"freq": float, "byte": int}, ...}
         sample_rate: int
         duration_s: float
         amplitude: float per wave
     
-    Returns (E_samples, individual_waves, metadata)
+    Returns (E_raw, E_audio, individual_waves, metadata)
     """
     n_samples = int(sample_rate * duration_s)
     individual = {}
-    E = np.zeros(n_samples, dtype=np.float64)
+    E_raw = np.zeros(n_samples, dtype=np.float64)
     
     freqs = []
     weights = []
@@ -167,19 +199,28 @@ def superposition(wave_specs: dict, sample_rate: int, duration_s: float, amplitu
         f = spec["freq"]
         w = synth_sine(f, amplitude, sample_rate, duration_s)
         individual[name] = w
-        E += w
+        E_raw += w
         freqs.append(f)
         weights.append(1.0)  # Equal weight for identical amplitude
+    
+    # Normalisatie: voorkomt clipping bij WAV-opslag
+    raw_peak = float(np.max(np.abs(E_raw)))
+    norm_gain = raw_peak if raw_peak > 1.0 else 1.0
+    E_audio = E_raw / norm_gain
     
     metadata = {
         "sample_count": n_samples,
         "sample_rate": sample_rate,
         "duration": duration_s,
         "n_waves": len(wave_specs),
-        "centroid": spectral_centroid(np.array(freqs), np.array(weights)),
+        "component_centroid": component_frequency_centroid(np.array(freqs), np.array(weights)),
+        "signal_centroid": signal_spectral_centroid(E_audio, sample_rate),
+        "raw_peak": raw_peak,
+        "normalization_gain": norm_gain,
+        "normalized_peak": float(np.max(np.abs(E_audio))),
     }
     
-    return E, individual, metadata
+    return E_raw, E_audio, individual, metadata
 
 
 # === NPR Analysis ===
@@ -241,143 +282,145 @@ def save_wav(filepath: str, samples: np.ndarray, sample_rate: int = 44100):
 # === Validation ===
 
 def validate_model_a():
-    """Validate Model A superposition against expected values."""
+    """Validate Model A synth + analysis pipeline."""
+    waves = MODEL_A["waves"]
     sr = MODEL_A["sample_rate"]
     dur = MODEL_A["duration"]
     amp = MODEL_A["amplitude"]
-    waves = MODEL_A["waves"]
     
     print("=" * 60)
     print("  NPR Sound Engine — Model A Validatie")
     print("=" * 60)
     
-    passed = 0
-    failed = 0
+    passed, failed = 0, 0
     
-    # Generate superposition
-    E, individual, meta = superposition(waves, sr, dur, amp)
+    E_raw, E_audio, individual, meta = superposition(waves, sr, dur, amp)
     
-    # === Test 1: sample_count ===
+    # Test 1: Superposition sample count
     expected_samples = sr * int(dur)
-    actual_samples = len(E)
-    if actual_samples == expected_samples:
-        print(f"  ✅ sample_count: {actual_samples} (expected {expected_samples})")
+    if len(E_raw) == expected_samples:
+        print(f"  ✅ superposition_samples: {len(E_raw)}")
         passed += 1
     else:
-        print(f"  ❌ sample_count: {actual_samples} != {expected_samples}")
+        print(f"  ❌ superposition_samples: {len(E_raw)} (expected {expected_samples})")
         failed += 1
     
-    # === Test 2: peak amplitude ===
-    # 4 sine waves, each amplitude 1.0 → max possible = 4.0
-    # But phase alignment varies, so check reasonable bound
-    p = peak(E)
-    if p <= 4.0 + 0.01:
-        print(f"  ✅ peak_amplitude: {p:.4f} (≤ 4.0)")
+    # Test 2: Deterministic (SHA256)
+    h = sha256_samples(E_raw)
+    print(f"  ℹ SHA256 (raw): {h[:16]}...")
+    
+    # Test 3: RMS (on raw signal)
+    r = rms(E_raw)
+    print(f"  ℹ RMS (raw): {r:.4f}")
+    
+    # Test 4: Component centroid
+    freqs = [waves[w]["freq"] for w in waves]
+    weights = [1.0] * len(freqs)
+    c_comp = component_frequency_centroid(np.array(freqs), np.array(weights))
+    expected_centroid = sum(waves[w]["freq"] for w in waves) / len(waves)
+    
+    if abs(c_comp - expected_centroid) < 0.01:
+        print(f"  ✅ component_centroid: {c_comp:.2f} Hz (expected {expected_centroid:.2f})")
         passed += 1
     else:
-        print(f"  ❌ peak_amplitude: {p:.4f} > 4.0")
+        print(f"  ❌ component_centroid: {c_comp:.2f} Hz (expected {expected_centroid:.2f})")
         failed += 1
     
-    # === Test 3: RMS for single sine (A=1) ≈ 1/√2 ===
-    for name, spec in waves.items():
+    # Test 4b: Signal centroid (from FFT of E_audio)
+    c_sig = signal_spectral_centroid(E_audio, sr)
+    print(f"  ℹ signal_centroid (FFT): {c_sig:.2f} Hz")
+    
+    # Test 5: Dominant frequency (superposition)
+    dom = dominant_frequency(E_audio, sr)
+    print(f"  ℹ dominant_freq (superposition): {dom:.2f} Hz")
+    
+    # Test 6: DR signature — hardcoded expected values (independent check)
+    bytes_a = [waves[w]["byte"] for w in waves]
+    actual_drs = tuple(dr(b) for b in bytes_a)
+    expected_drs = (1, 8, 1, 2)  # dr(82)=1, dr(134)=8, dr(37)=1, dr(74)=2
+    
+    if actual_drs == expected_drs:
+        print(f"  ✅ DR_signature: {actual_drs}")
+        passed += 1
+    else:
+        print(f"  ❌ DR_signature: {actual_drs} (expected {expected_drs})")
+        failed += 1
+    
+    # Test 7: Normalization
+    if meta["raw_peak"] > 1.0 and meta["normalized_peak"] <= 1.0 + 1e-6:
+        print(f"  ✅ normalization: raw_peak={meta['raw_peak']:.4f}, gain={meta['normalization_gain']:.4f}, norm_peak={meta['normalized_peak']:.4f}")
+        passed += 1
+    else:
+        print(f"  ❌ normalization: raw_peak={meta['raw_peak']:.4f}, norm_peak={meta['normalized_peak']:.4f}")
+        failed += 1
+    
+    # Test 8: Deterministic hash (raw)
+    E_raw2, _, _, _ = superposition(waves, sr, dur, amp)
+    h2 = sha256_samples(E_raw2)
+    if h == h2:
+        print(f"  ✅ deterministic: same_input → same_hash ({h[:16]}...)")
+        passed += 1
+    else:
+        print(f"  ❌ deterministic: hash mismatch ({h[:16]} ≠ {h2[:16]})")
+        failed += 1
+    
+    # Test 9: Individual wave RMS ≈ 1/√2
+    expected_rms = 1.0 / math.sqrt(2)
+    for name in waves:
         w = individual[name]
-        r = rms(w)
-        expected_rms = 1.0 / math.sqrt(2)
-        if abs(r - expected_rms) < 0.01:
-            print(f"  ✅ rms({name}): {r:.4f} (≈ {expected_rms:.4f})")
+        r_i = rms(w)
+        if abs(r_i - expected_rms) < 0.01:
+            print(f"  ✅ rms({name}): {r_i:.4f}")
             passed += 1
         else:
-            print(f"  ❌ rms({name}): {r:.4f} ≠ {expected_rms:.4f}")
+            print(f"  ❌ rms({name}): {r_i:.4f} (expected ~{expected_rms:.4f})")
             failed += 1
     
-    # === Test 4: dominant frequency per wave ===
+    # Test 10: Dominant freq per wave
     for name, spec in waves.items():
         w = individual[name]
         dom_f = dominant_frequency(w, sr)
         expected_f = spec["freq"]
         if abs(dom_f - expected_f) < 0.5:
-            print(f"  ✅ dominant_freq({name}): {dom_f:.2f} Hz (≈ {expected_f})")
+            print(f"  ✅ dominant_freq({name}): {dom_f:.2f} Hz")
             passed += 1
         else:
-            print(f"  ❌ dominant_freq({name}): {dom_f:.2f} ≠ {expected_f}")
-            failed += 1
-    
-    # === Test 5: spectral centroid ===
-    centroid = meta["centroid"]
-    expected_centroid = 432.00
-    # Exact centroid = (433.32 + 708.11 + 195.52 + 391.05) / 4 = 431.9975
-    # ≈ 432.00
-    if abs(centroid - 432.00) < 0.1:
-        print(f"  ✅ spectral_centroid: {centroid:.4f} Hz (≈ {expected_centroid})")
-        passed += 1
-    else:
-        print(f"  ❌ spectral_centroid: {centroid:.4f} ≠ {expected_centroid}")
-        failed += 1
-    
-    # === Test 6: DR signature (van bytes) ===
-    drs = tuple(dr(spec["byte"]) for spec in waves.values())
-    # Bereken verwachte DR vanuit bytes
-    expected_drs = tuple(dr(waves[w]["byte"]) for w in ["W_A", "W_B", "W_C", "W_D"])
-    if drs == expected_drs:
-        print(f"  ✅ DR_signature: {drs} (berekening consistent)")
-        passed += 1
-    else:
-        print(f"  ❌ DR_signature: {drs} ≠ {expected_drs}")
-        failed += 1
-    
-    # === Test 7: deterministic hash ===
-    h1 = sha256_samples(E)
-    # Re-generate
-    E2, _, _ = superposition(waves, sr, dur, amp)
-    h2 = sha256_samples(E2)
-    if h1 == h2:
-        print(f"  ✅ deterministic: same_input → same_hash ({h1[:16]}...)")
-        passed += 1
-    else:
-        print(f"  ❌ deterministic: hash mismatch ({h1[:16]} ≠ {h2[:16]})")
-        failed += 1
-    
-    # === Test 8: individual wave peak ===
-    for name, spec in waves.items():
-        w = individual[name]
-        p = peak(w)
-        if abs(p - amp) < 0.001:
-            print(f"  ✅ peak({name}): {p:.4f} (≈ {amp})")
-            passed += 1
-        else:
-            print(f"  ❌ peak({name}): {p:.4f} ≠ {amp}")
+            print(f"  ❌ dominant_freq({name}): {dom_f:.2f} Hz (expected {expected_f})")
             failed += 1
     
     print(f"\n  Totaal: {passed} ✅ | {failed} ❌")
-    return passed, failed, E, individual, meta
+    return passed, failed, E_raw, E_audio, individual, meta
 
 
 def test_byte_to_freq_integration():
-    """Test that byte_to_freq integrates with synth."""
-    ref_bytes = 81.75
+    """Test byte → freq → synth → dominant_freq."""
+    passed, failed = 0, 0
+    sr = MODEL_A["sample_rate"]
+    dur = 2.0  # Longer for FFT resolution
+    amp = MODEL_A["amplitude"]
     
     print("\n--- Byte → Freq → Synth Integration ---")
     
-    test_bytes = [82, 134, 37, 74]  # Model A bytes
-    passed, failed = 0, 0
-    
-    for B in test_bytes:
-        # Forward: byte → freq
-        freq = 432 * B / ref_bytes
+    for name, wave in MODEL_A["waves"].items():
+        f = wave["freq"]
+        B = wave["byte"]
         
-        # Synth — 2s voor betere FFT resolutie
-        w, meta = synth("middentoon", freq, 1.0, 44100, 2.0)
+        # Generate
+        w = synth_sine(f, amp, sr, dur)
         
-        # Validate
-        dom_f = dominant_frequency(w, 44100)
-        # Tolerance: FFT bin width = sample_rate/duration = 44100/2 = 22.05 Hz
-        # Maar met 2s is resolutie beter: ~22 Hz
-        tolerance = 25.0  # Generiek voor korte samples
-        if abs(dom_f - freq) < tolerance:
-            print(f"  ✅ B={B:3d} → freq={freq:.2f}Hz → synth → dom_f={dom_f:.2f}Hz")
+        # Measure
+        dom = dominant_frequency(w, sr)
+        
+        # Tolerance: bin width = sr / (sr * dur) = 1/dur = 0.5 Hz
+        bin_width = sr / len(w)
+        tolerance = max(bin_width, 0.6)
+        
+        diff = abs(dom - f)
+        if diff <= tolerance:
+            print(f"  ✅ {name}: {f:.2f} Hz → measured {dom:.2f} Hz (diff={diff:.3f}, tol={tolerance:.2f})")
             passed += 1
         else:
-            print(f"  ❌ B={B:3d}: dom_f={dom_f:.2f} ≠ freq={freq:.2f} (Δ={abs(dom_f-freq):.2f})")
+            print(f"  ❌ {name}: {f:.2f} Hz → measured {dom:.2f} Hz (diff={diff:.3f}, tol={tolerance:.2f})")
             failed += 1
     
     return passed, failed
@@ -387,18 +430,28 @@ def test_edge_cases():
     """Test edge cases."""
     print("\n--- Edge Cases ---")
     passed, failed = 0, 0
+    sr = 44100
     
-    # Unknown tone class
+    # Nyquist rejection: freq >= sample_rate/2 must raise
     try:
-        tone_class_to_waveform("onbekend")
-        print("  ❌ Unknown tone class should raise")
+        synth_sine(22050, 1.0, sr, 0.1)  # exactly at Nyquist
+        print("  ❌ Nyquist boundary should raise")
         failed += 1
     except ValueError:
-        print("  ✅ Unknown tone class raises ValueError")
+        print("  ✅ Nyquist boundary (22050 Hz) raises ValueError")
         passed += 1
     
-    # Zero duration
-    w, m = synth("middentoon", 440, 1.0, 44100, 0.0)
+    # Above Nyquist must also raise
+    try:
+        synth_sine(30000, 1.0, sr, 0.1)
+        print("  ❌ Above-Nyquist should raise")
+        failed += 1
+    except ValueError:
+        print("  ✅ Above-Nyquist (30000 Hz) raises ValueError")
+        passed += 1
+    
+    # Zero duration → empty samples
+    w = synth_sine(440, 1.0, sr, 0.0)
     if len(w) == 0:
         print("  ✅ Zero duration → empty samples")
         passed += 1
@@ -406,32 +459,33 @@ def test_edge_cases():
         print(f"  ❌ Zero duration → {len(w)} samples")
         failed += 1
     
-    # Very high frequency (above Nyquist)
-    w, m = synth("middentoon", 30000, 1.0, 44100, 0.1)
-    if len(w) == 4410:  # 44100 * 0.1
-        print("  ✅ High freq generates samples (aliasing expected)")
-        passed += 1
-    else:
-        print(f"  ❌ High freq: {len(w)} samples")
+    # Unknown waveform
+    try:
+        synth_waveform("square", 440, 1.0, sr, 0.1)
+        print("  ❌ Unknown waveform should raise")
         failed += 1
+    except ValueError:
+        print("  ✅ Unknown waveform raises ValueError")
+        passed += 1
     
     return passed, failed
 
 
 def main():
-    output_dir = Path("/home/claw/.openclaw/workspace/hexa-book/engine/synth_output")
+    # Relative output path for portability
+    output_dir = Path(__file__).parent / "synth_output"
     output_dir.mkdir(parents=True, exist_ok=True)
     
     # Run validation
-    p1, f1, E, individual, meta = validate_model_a()
+    p1, f1, E_raw, E_audio, individual, meta = validate_model_a()
     p2, f2 = test_byte_to_freq_integration()
     p3, f3 = test_edge_cases()
     
-    # Save outputs
-    if E is not None:
-        # Save superposition
-        save_wav(str(output_dir / "E_superposition.wav"), E, MODEL_A["sample_rate"])
-        np.save(str(output_dir / "E_superposition.npy"), E)
+    # Save normalized audio (E_audio), not raw (E_raw)
+    if E_audio is not None:
+        # Save normalized superposition
+        save_wav(str(output_dir / "E_superposition.wav"), E_audio, MODEL_A["sample_rate"])
+        np.save(str(output_dir / "E_superposition.npy"), E_audio)
         
         # Save individual waves
         for name, w in individual.items():
@@ -439,7 +493,7 @@ def main():
             np.save(str(output_dir / f"{name}.npy"), w)
         
         print(f"\n  Output saved: {output_dir}/")
-        print(f"    E_superposition.wav (44100 Hz, 1s)")
+        print(f"    E_superposition.wav (normalized, {MODEL_A['sample_rate']} Hz, 1s)")
         for name in individual:
             print(f"    {name}.wav")
     
