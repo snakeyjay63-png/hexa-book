@@ -10,6 +10,7 @@ __pycache__/
 hexa-book-001-E.wav
 engine/synth_output/*.npy
 engine/synth_output/*.wav
+engine/patanjali-veld/main
 
 # Test files
 test_args

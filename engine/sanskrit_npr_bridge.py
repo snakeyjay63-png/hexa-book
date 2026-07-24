@@ -171,14 +171,15 @@ def synthesize(devanagari: str, sample_rate: int = SAMPLE_RATE,
         "wave_count": len(waves),
         "frequencies": freqs,
         "bytes": bytes_out,
-        "digital_roots": drs,
-        "R": r_return,  # R_audio(E) — formele return
-        "centroid": r_return["centroid"],
-        "peak": r_return["peak"],
-        "rms": r_return["rms"],
-        "dominant_freq": r_return["dominant_freq"],
+        "phoneme_dr_signature": tuple(drs),
+        "R": r_return,  # R_audio(E_audio) — AudioFeatureSpace
+        "signal_centroid": r_return["signal_centroid"],
+        "normalized_peak": r_return["normalized_peak"],
+        "rms_normalized": r_return["rms_normalized"],
+        "dominant_frequency": r_return["dominant_frequency"],
         "sample_count": r_return["sample_count"],
-        "hash": r_return["hash"],
+        "sha256": r_return["sha256"],
+        "centroid_dr": r_return["centroid_dr"],
         "individual_waves": individual,
     }
     
@@ -186,29 +187,34 @@ def synthesize(devanagari: str, sample_rate: int = SAMPLE_RATE,
 
 
 def R_audio(E: np.ndarray, sample_rate: int = SAMPLE_RATE) -> dict:
-    """Formele return-operator: E(t) → R(E) = audio-feature-space.
+    """Formele return-operator: E_audio(t) → R_audio(E_audio) = AudioFeatureSpace.
     
-    Route 7: E(t) → R_audio(E)
+    Route 7: E_audio → R_audio(E_audio)
     
-    Bundelt de berekende audiofeatures als de formele return-operator.
-    Dit is niet NPR-text-analyse — dit is signaal-naar-retourtransformatie.
+    Canoniek contract per artikel 003 (veldcontract) en artikel 004 (consumer).
+    Retourneert exact de AudioFeatureSpace-sleutels.
     
-    Returns dict met centroid, rms, peak, dominant_freq, DR_signature.
+    AudioFeatureSpace := {
+        signal_centroid: float,
+        rms_normalized: float,
+        normalized_peak: float,
+        dominant_frequency: float,
+        sample_count: int,
+        sha256: str,
+        centroid_dr: int,
+    }
     """
-    # Spectral centroid via FFT
     N = len(E)
-    fft_mag = np.abs(np.fft.rfft(E))
-    freqs = np.fft.rfftfreq(N, d=1.0 / sample_rate)
     centroid = npr.signal_spectral_centroid(E, sample_rate)
     
     return {
-        "centroid": centroid,
-        "rms": npr.rms(E),
-        "peak": npr.peak(E),
-        "dominant_freq": npr.dominant_frequency(E, sample_rate),
-        "DR_signature": dr(centroid),
+        "signal_centroid": centroid,
+        "rms_normalized": npr.rms(E),
+        "normalized_peak": npr.peak(E),
+        "dominant_frequency": npr.dominant_frequency(E, sample_rate),
         "sample_count": N,
-        "hash": npr.sha256_samples(E),
+        "sha256": npr.sha256_samples(E),
+        "centroid_dr": dr(centroid),
     }
 
 
@@ -282,28 +288,28 @@ def validate():
         
         # Test 4: deterministic
         E2, _, _, _ = synthesize(text)
-        if meta["hash"] == npr.sha256_samples(E2):
-            print(f"  ✅ deterministic: stable ({meta['hash'][:16]}...)")
+        if meta["sha256"] == npr.sha256_samples(E2):
+            print(f"  ✅ deterministic: stable ({meta['sha256'][:16]}...)")
             passed += 1
         else:
             print(f"  ❌ deterministic: hash differs")
             failed += 1
         
-        # Test 5: DR in range
-        if all(1 <= d <= 9 for d in meta["digital_roots"]):
-            print(f"  ✅ DR_signature: {meta['digital_roots']}")
+        # Test 5: phoneme_dr_signature in range
+        if all(1 <= d <= 9 for d in meta["phoneme_dr_signature"]):
+            print(f"  ✅ phoneme_dr_signature: {meta['phoneme_dr_signature']}")
             passed += 1
         else:
-            print(f"  ❌ DR out of range: {meta['digital_roots']}")
+            print(f"  ❌ DR out of range: {meta['phoneme_dr_signature']}")
             failed += 1
         
         # Test 6: peak bounded
         max_possible = meta["wave_count"] * 1.0
-        if meta["peak"] <= max_possible + 0.01:
-            print(f"  ✅ peak_bounded: {meta['peak']:.4f} ≤ {max_possible}")
+        if meta["normalized_peak"] <= max_possible + 0.01:
+            print(f"  ✅ peak_bounded: {meta['normalized_peak']:.4f} ≤ {max_possible}")
             passed += 1
         else:
-            print(f"  ❌ peak: {meta['peak']:.4f} > {max_possible}")
+            print(f"  ❌ peak: {meta['normalized_peak']:.4f} > {max_possible}")
             failed += 1
     
     print(f"\n{'=' * 60}")

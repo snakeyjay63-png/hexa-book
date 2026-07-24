@@ -124,24 +124,35 @@ entry := {
 #### Routes
 
 ```
-Route 5a: Devanagari → tokenize           (C_phoneme)
-Route 5b: tokenize → phoneme_freq         (C_phoneme → C_freq)
-Route 6a: C_freq → C_byte                 (return cycle forward)
-Route 6b: C_byte → C_freq                 (return cycle inverse)
-Route 6:  C_wave → E(t)                   (superposition)
-Route 7:  E(t) → R_audio(E)              (formele return-operator)
+Route 5a: Devanagari → tokenize             (C_phoneme)
+Route 5b: tokenize → phoneme_freq           (C_phoneme → C_freq)
+Route 6a: C_freq → C_byte                   (return cycle forward)
+Route 6b: C_byte → C_freq                   (return cycle inverse)
+Route 6:  phonemes → E_raw → Normalize → E_audio  (superposition)
+Route 7:  E_audio → R_audio(E_audio)        (AudioFeatureSpace)
 ```
 
-**Route 7-opmerking:** `R_audio(E)` is de formele signaal-naar-retouroperator.
+**Route 7-opmerking:** `R_audio(E_audio)` is de formele signaal-naar-retouroperator.
 `npr_analysis(text)` is een aparte text-gebaseerde NPR-analyse.
 Beide zijn gesloten, maar opereren op verschillende domeinen:
 
 ```
-R_audio(E)      := signaal → {centroid, rms, peak, dominant_freq, DR_signature}
-npr_analysis(t) := Devanagari → NPR-result (tekstlengte-gebasseerd)
+R_audio(E_audio) := signaal → AudioFeatureSpace
+                   AudioFeatureSpace = {
+                       signal_centroid: float,
+                       rms_normalized: float,
+                       normalized_peak: float,
+                       dominant_frequency: float,
+                       sample_count: int,
+                       sha256: str,
+                       centroid_dr: int,
+                   }
+npr_analysis(t) := Devanagari → NPR-result (tekstlengte-gebaseerd)
 ```
 
-Route 7 is `R_audio(E)`, niet `npr_analysis(text)`.
+Route 7 is `R_audio(E_audio)`, niet `npr_analysis(text)`.
+
+**AudioFeatureSpace:** canoniek contract per artikel 003 (veldcontract).
 
 #### Return Cycle Integratie
 
@@ -166,11 +177,15 @@ Voorbeelden:
 #### Superposition
 
 ```
-E(t) = Σ PH_i(t)    voor alle synth-able phonemes
-       i=0..n-1
+E_raw(t) = Σ PH_i(t)    voor alle synth-able phonemes
+           i=0..n-1
+
+E_audio(t) = E_raw(t) / max(1, peak(E_raw))
 
 waar PH_i(t) = synth_sine(freq_i, amplitude=1.0, t) × ADSR_i(t)
 ```
+
+**Normalisatie:** Bridge gebruikt `E_audio` voor Route 7 (`R_audio(E_audio)`).
 
 Effect-tekens (visarga `ः`, anusvāra `ं`, chandra `ँ`) worden **niet** gesynthetiseerd als golf — ze zijn post-processing effecten.
 
@@ -192,9 +207,9 @@ Test-input:
 Tests per input (6 per input, 4 inputs = 24 totaal):
   ✅ sample_count: 44100
   ✅ byte_roundtrip: freq → byte → freq binnen 0.01 Hz
-  ✅ deterministic: herhaalde runs → identieke hash
-  ✅ DR_signature: allemaal binnen 1-9
-  ✅ peak_bounded: peak(E) ≤ N × amplitude (max constructieve interferentie)
+  ✅ deterministic: herhaalde runs → identieke sha256
+  ✅ phoneme_dr_signature: allemaal binnen 1-9
+  ✅ peak_bounded: normalized_peak(E_audio) ≤ N × amplitude
 
 Totaal: 24 ✅ | 0 ❌
 Status: gevalideerd_lokaal
