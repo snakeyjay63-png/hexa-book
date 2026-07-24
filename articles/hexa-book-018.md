@@ -129,8 +129,19 @@ Route 5b: tokenize → phoneme_freq         (C_phoneme → C_freq)
 Route 6a: C_freq → C_byte                 (return cycle forward)
 Route 6b: C_byte → C_freq                 (return cycle inverse)
 Route 6:  C_wave → E(t)                   (superposition)
-Route 7:  E(t) → NPR_analysis → R(E)      (Noise→Pattern→Return)
+Route 7:  E(t) → R_audio(E)              (formele return-operator)
 ```
+
+**Route 7-opmerking:** `R_audio(E)` is de formele signaal-naar-retouroperator.
+`npr_analysis(text)` is een aparte text-gebaseerde NPR-analyse.
+Beide zijn gesloten, maar opereren op verschillende domeinen:
+
+```
+R_audio(E)      := signaal → {centroid, rms, peak, dominant_freq, DR_signature}
+npr_analysis(t) := Devanagari → NPR-result (tekstlengte-gebasseerd)
+```
+
+Route 7 is `R_audio(E)`, niet `npr_analysis(text).
 
 #### Return Cycle Integratie
 
@@ -184,7 +195,7 @@ Tests per input (6 per input, 4 inputs = 24 totaal):
   ✅ deterministic: herhaalde runs → identieke hash
   ✅ DR_signature: allemaal binnen 1-9
   ✅ peak_bounded: ≤ N × amplitude
-  ✅ freq_range: binnen 55-1108 Hz (hörbaar)
+  ✅ peak_bounded: peak(E) ≤ N × amplitude (max constructieve interferentie)
 
 Totaal: 24 ✅ | 0 ❌
 Status: gevalideerd_lokaal

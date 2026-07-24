@@ -140,7 +140,9 @@ def synthesize(devanagari: str, sample_rate: int = SAMPLE_RATE,
     wave_specs = {k: {"freq": v["freq"]} for k, v in waves.items()}
     E, individual, synth_meta = npr.superposition(wave_specs, sample_rate, duration, amplitude)
     
-    # Route 7: metadata
+    # Route 7: R_audio(E) — formele return-operator
+    r_return = R_audio(E, sample_rate)
+    
     freqs = [v["freq"] for v in waves.values()]
     bytes_out = [v["byte"] for v in waves.values()]
     drs = [dr(int(round(b))) for b in bytes_out]
@@ -152,22 +154,51 @@ def synthesize(devanagari: str, sample_rate: int = SAMPLE_RATE,
         "frequencies": freqs,
         "bytes": bytes_out,
         "digital_roots": drs,
-        "centroid": synth_meta["centroid"],
-        "peak": npr.peak(E),
-        "rms": npr.rms(E),
-        "dominant_freq": npr.dominant_frequency(E, sample_rate),
-        "sample_count": len(E),
-        "hash": npr.sha256_samples(E),
+        "R": r_return,  # R_audio(E) — formele return
+        "centroid": r_return["centroid"],
+        "peak": r_return["peak"],
+        "rms": r_return["rms"],
+        "dominant_freq": r_return["dominant_freq"],
+        "sample_count": r_return["sample_count"],
+        "hash": r_return["hash"],
         "individual_waves": individual,
     }
     
     return E, waves, phoneme_map, metadata
 
 
-def npr_analysis(devanagari: str) -> dict:
-    """Route 7: NPR analysis of input text.
+def R_audio(E: np.ndarray, sample_rate: int = SAMPLE_RATE) -> dict:
+    """Formele return-operator: E(t) → R(E) = audio-feature-space.
     
-    Noise → Pattern → Return on token lengths.
+    Route 7: E(t) → R_audio(E)
+    
+    Bundelt de berekende audiofeatures als de formele return-operator.
+    Dit is niet NPR-text-analyse — dit is signaal-naar-retourtransformatie.
+    
+    Returns dict met centroid, rms, peak, dominant_freq, DR_signature.
+    """
+    # Spectral centroid via FFT
+    N = len(E)
+    fft_mag = np.abs(np.fft.rfft(E))
+    freqs = np.fft.rfftfreq(N, d=1.0 / sample_rate)
+    centroid = npr.spectral_centroid(freqs, fft_mag)
+    
+    return {
+        "centroid": centroid,
+        "rms": npr.rms(E),
+        "peak": npr.peak(E),
+        "dominant_freq": npr.dominant_frequency(E, sample_rate),
+        "DR_signature": dr(centroid),
+        "sample_count": N,
+        "hash": npr.sha256_samples(E),
+    }
+
+
+def npr_analysis(devanagari: str) -> dict:
+    """NPR-text-analysis: Noise → Pattern → Return on token lengths.
+    
+    Let op: dit is text-gebaseerde NPR, NIET R_audio(E).
+    R_audio(E) opereert op signaal; deze functie opereert op tekst.
     """
     return npr.npr_analysis(devanagari)
 
