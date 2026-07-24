@@ -2,15 +2,27 @@
 ../
 !.openclaw/
 
-# Build artifacts
-.zig-cache/
+# Python
 __pycache__/
-*.pyc
-*.o
-hexa-book-001-E.wav
-engine/synth_output/*.npy
-engine/synth_output/*.wav
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Zig
+.zig-cache/
+zig-cache/
+zig-out/
 engine/patanjali-veld/main
+
+# Engine runtime output
+engine/synth_output/*
+!engine/synth_output/.gitkeep
+
+# Audio output
+hexa-book-001-E.wav
 
 # Test files
 test_args
@@ -18,8 +30,9 @@ test_args2
 test_args3
 test_args4
 
-# Editor
+# Editor / OS
 .vscode/
 .idea/
 *.swp
 *~
+.DS_Store
