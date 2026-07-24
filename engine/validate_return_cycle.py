@@ -303,6 +303,9 @@ def main():
     p, f = test_forward_return_roundtrip(base=396.0, ref=81.75, label="396")
     results.append(("Roundtrip-396", p, f))
 
+    p, f = test_forward_return_roundtrip(base=440.0, ref=81.75, label="440")
+    results.append(("Roundtrip-440", p, f))
+
     # hex_phoneme is observatie — telt niet mee als test
     p, f = analyze_hex_phoneme_complementarity()
     results.append(("hex_phoneme", "obs", 0))
