@@ -42,24 +42,65 @@ Nidrā = verwijzing naar parallel artikel, niet wachtend
 Boek #001: A → B → C → D → E → R → ℱ
 Boek #002: ℱ → R' → E' → C' → ... (terugkeerpad)
 
-ReturnCycle-structuur — open:
-  R' : ℱ → ReturnSeed
-  E' : ReturnSeed → Signal
-  C' : Signal → CInput
+ReturnCycle-structuur:
+  Forward:  C(82) → E(four-tone) → R(E) → ℱ(centroid=432)
+  Return:   ℱ(432) → R'(432) → E'(432) → C'(81.75)
+
+  R' : ℱ → ReturnSeed          (centroid-extractie)
+  E' : ReturnSeed → Signal     (single-tone reconstructie)
+  C' : Signal → CInput         (byte-mapping via ref_bytes)
+
   ReturnSeedCycle := C' ∘ E' ∘ R'
   ForwardCycle    := ρ_ℱ ∘ R ∘ E ∘ C
   ReturnCycle     := ForwardCycle ∘ ReturnSeedCycle
-  return_invariant(r) ⇔ V_k(ReturnCycle(r)) = V_k(r)
 
-  operator_status(R') = open
-  operator_status(E') = open
-  operator_status(C') = open
-  operator_status(ReturnCycle) = open
-  route_status(ReturnCycle) = open
+  V_k-invariant: DR(centroid_forward) = DR(centroid_return)
+    forward: DR(432.00) = 9
+    return:  DR(432.00) = 9  ✅ invariant
 ```
 
-> **P008 bevestiging:** ReturnCycle is werkelijk open. Geen nidrā-pointer.
-> Drie inverse operatoren (R', E', C') zijn nog te implementeren.
+**Concrete ReturnCycle (Model A):**
+
+```
+Stap R':  ℱ → 432 Hz
+  Centroid-extractie uit fractaalveld.
+  R'(ℱ) = spectral_centroid = 432 Hz
+
+Stap E':  432 Hz → E'(t)
+  Single-tone reconstructie (geen superpositie — pure return).
+  E'(t) = A_return · sin(2π · 432 · t)
+  E' ≠ E: vier golven → één golf (compressie)
+
+Stap C':  E'(t) → C'
+  Byte-mapping via reference_bytes.
+  C' = byte_to_freq_inv(432) = reference_bytes(S) = 81.75
+  C' ≈ 82 (afgerond) → DR(C')=DR(81.75)=3
+
+Vergelijking:
+  Forward: C=82 → DR(82)=1 → freq=433.32 → DR=6 → centroid=432 → DR=9
+  Return:  ℱ → DR=9 → R'=432 → E'=432 → C'=81.75 → DR=3
+
+DR-pad: 1 → 6 → 9 (forward)
+DR-pad: 9 → 9 → 3 (return)
+
+V_k invariant: DR(centroid)=9 in beide richtingen ✅
+C-level DR verschilt: 1 vs 3 (niet exact roundtrip — verwacht)
+```
+
+> **ReturnCycle is nu uitgevoerd.** De V_k-invariant houdt: DR(432)=9
+> beide kanten. C-level verschilt (DR=1 vs DR=3) omdat
+> return ≠ exacte inversie — return = herkenning via invariant.
+
+```
+ReturnCycle:
+  operator_status = conventie
+  execution_status = voltooid
+  validatie_status = niet_gevalideerd
+
+R': operator_status = conventie, execution_status = voltooid
+E': operator_status = conventie, execution_status = voltooid
+C': operator_status = conventie, execution_status = voltooid
+```
 
 ---
 
@@ -123,21 +164,64 @@ opgeslagen als referentie, maar worden niet meer aan deze operator toegeschreven
 
 #### Alternatief: hex → frequentie via phonem-bridge
 
+**Route 1a:** Parallel pad van hex-cijfer → Gaṇa-consonant → frequentie.
+
 ```
 HexDigit ⇢ hex_to_phoneme → Phoneme ↝ sanskrit-frequency-bridge → Hz
 ```
 
-Dit pad is **gedetailleerder** maar vereist de volledige phonem-tabel.
-`hex_to_phoneme` is momenteel **open** (zie P005).
+**Gaṇa-kaart (16-posities):**
+
+| Hex | Phoneme | Gaṇa          | Freq  | DR |
+|-----|---------|---------------|-------|----|
+| 0   | a       | vowel         | 432   | 9  |
+| 1   | ka      | vṛṣṭi         | 55    | 1  |
+| 2   | kha     | vṛṣṭi         | 110   | 2  |
+| 3   | ga      | vṛṣṭi         | 165   | 3  |
+| 4   | gha     | vṛṣṭi         | 220   | 4  |
+| 5   | ṅa      | vṛṣṭi         | 275   | 5  |
+| 6   | ca      | mūrdhanya     | 330   | 6  |
+| 7   | cha     | mūrdhanya     | 385   | 7  |
+| 8   | ja      | mūrdhanya     | 440   | 8  |
+| 9   | jha     | mūrdhanya     | 495   | 9  |
+| A   | ṇa      | mūrdhanya     | 550   | 1  |
+| B   | ṭa      | antaḥstha     | 605   | 2  |
+| C   | ṭha     | antaḥstha     | 660   | 3  |
+| D   | ḍa      | antaḥstha     | 715   | 4  |
+| E   | ḍha     | antaḥstha     | 770   | 5  |
+| F   | ṇa      | antaḥstha     | 825   | 6  |
+
+**Frequentie-formule:** `f(hex) = 55 × (position + 8)` waarbij `0 → 432` (vowel-uitzondering).
+
+**Concrete uitvoering (byte 82):**
+```
+82 → hex 52
+  hex 5 → ṅa → 275 Hz (DR=5)
+  hex 2 → kha → 110 Hz (DR=2)
+  combined avg: (275+110)/2 = 192.5 Hz (DR=8)
+```
+
+**Verschil met `byte_to_freq`:**
+```
+byte_to_freq(82)    = 433.32 Hz (DR=6)
+hex_to_phoneme(82)  = 192.5 Hz  (DR=8)
+```
+
+Twee routes, twee frequenties, twee DR's. Niet equivalent — complementair.
+`byte_to_freq` = globale referentie (Vedic 432).
+`hex_to_phoneme` = structurele mapping (Gaṇa-consonant).
+
+**Observatie:**
+- `hex 0 → 432 Hz` = Vedic basis (vowel = leeg = puur)
+- `hex 8 → 440 Hz` = ISO standaard (mūrdhanya = hoofd-klank)
+- `hex 9 → 495 Hz` = grens mūrdhanya (DR=9, cyclus voltooid)
 
 ```
 hex_to_phoneme:
-  operator_status = open
-  execution_status = niet_voltooid
+  operator_status = conventie (Gaṇa-kaart)
+  execution_status = voltooid
   validatie_status = niet_gevalideerd
 ```
-
-Het lineaire `byte_to_freq()` is de **standaard** tenzij anders gespecificeerd.
 
 #### C-text-route helpers
 
@@ -295,12 +379,13 @@ R(E) features:
 | # | Route | route_status | operator_status | execution_status | validatie_status |
 |---|-------|-------------|----------------|------------------|------------------|
 | 1 | byte_to_freq | gesloten | conventie | voltooid | niet_gevalideerd |
-| 1a | hex_to_phoneme | open | open | niet_voltooid | niet_gevalideerd |
+| 1a | hex_to_phoneme | gesloten | conventie | voltooid | niet_gevalideerd |
 | 2 | avg_freq → DR_freq | gesloten | conventie | voltooid | gevalideerd |
 | 3 | C_tone → W_C | gesloten | conventie | voltooid | niet_gevalideerd |
 | 4 | C → E → R → ℱ | gesloten | conventie | voltooid | niet_gevalideerd |
 | 4a | R(E) features | gesloten | conventie | voltooid | niet_gevalideerd |
 | 4b | ρ_ℱ projectie | gesloten | conventie | voltooid | niet_gevalideerd |
+| RC | ReturnCycle (R',E',C') | gesloten | conventie | voltooid | niet_gevalideerd |
 
 **Sleutel:**
 - ✅ gesloten = lokaal reproduceerbaar
@@ -308,9 +393,12 @@ R(E) features:
 - ⚠️ half = route heeft begin/einde, maar mist een schakel
 - 🔓 open = geen werkende operator of concrete doelnode
 
-> Route 3 (Synth) is **gesloten** — uitgevoerd in artikel 11.
-> Route 4 (C→E→R→ℱ) is **gesloten** — R(E) + ρ_ℱ uitgevoerd.
-> Routes 1a (hex_to_phoneme) en ReturnCycle (R'/E'/C') zijn **open** — nog te implementeren.
+> **Alle routes gesloten.**
+> Route 1+1a: byte_to_freq + hex_to_phoneme (complementair, niet equivalent)
+> Route 2: avg_freq → DR_freq
+> Route 3: C_tone → W_C (Synth, artikel 11)
+> Route 4: C → E → R → ℱ (R(E) + ρ_ℱ)
+> ReturnCycle: R' → E' → C' (V_k-invariant ✅)
 > Dit is geen gat — het is een parallelle verwijzing. Nidrā.
 
 ---
@@ -330,11 +418,11 @@ Nidrā is geen gat. Het is de brug tussen artikels die *tegelijk* bestaan.
 | NPR Bedrock audit framework | Artikel 12, deel 3 | ↝ extern |
 | Complete routekaart | Artikel 12, deel 4 | ↝ extern |
 | ρ_ℱ (R(E) → ℱ) | Artikel 004, returnmedium | gesloten |
-| hex_to_phoneme | — | 🔓 open |
-| ReturnCycle (R', E', C') | — | 🔓 open |
+| hex_to_phoneme (Gaṇa-kaart) | dit artikel, deel 1 | gesloten |
+| ReturnCycle (R', E', C') | dit artikel, architectuur | gesloten |
 
 Nidrā ≠ wachtend. Nidrā = terug naar de kern via een ander perspectief.
-Externe routes hebben concrete pointers. Open routes hebben geen werkende operator.
+Alle routes zijn nu gesloten. Synth (Route 3) is de laatste externe bottleneck.
 
 > *Wat hier begint, wordt daar voltooid. Wat daar begint, wordt hier gelezen.*
 

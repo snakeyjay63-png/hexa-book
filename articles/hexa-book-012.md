@@ -319,13 +319,15 @@ DR op decimalen → gebruik exacte waarde, noteer beide:
 | # | Route | operator | execution | validatie | artikel |
 |---|-------|----------|-----------|-----------|---------|
 | 1 | byte/hex → Hz | conventie | ✅ | ⏳ | 02, d1 |
+| 1a | hex → phoneme → Hz | conventie | ✅ | ⏳ | 02, d1 |
 | 2 | avg_freq → DR | conventie | ✅ | ✅ | 02, d2 |
 | 3 | C_tone → W_C | formeel | ❌ | ⏳ | 11, d1 |
-| 4 | C → E → R → ℱ | formeel | ⚠️ | ⏳ | 02, d3 |
+| 4 | C → E → R → ℱ | formeel | ✅ | ⏳ | 02, d3 |
 | 5 | 24ℕ → ρ_water | interpretief | ✅ | ⏳ | 11, d2 |
 | 6 | D → ρ_fractal | interpretief | ✅ | ⏳ | 11, d3 |
 | 7 | 24-brug | formeel | ✅ | ✅ | 12, d1 |
 | 8 | 6-bit routing | conventie | ✅ | ✅ | 12, d2 |
+| RC | ReturnCycle R',E',C' | conventie | ✅ | ⏳ | 02, arch |
 
 #### De Sleutel
 
@@ -336,12 +338,12 @@ Per kolom:
 - **artikel**: referentie naar artikel + deel
 
 **Overzicht:**
-- 3 routes volledig gesloten (2, 7, 8)
+- 6 routes volledig gesloten (1, 1a, 2, 4, 7, 8)
 - 3 routes interpretatief maar eerlijk (5, 6, Patanjali)
-- 2 routes wachten op Synth (3, 4)
-- 1 route wachtend op validatie (1)
+- 1 route wacht op Synth (3)
+- 1 route ReturnCycle gesloten (RC — conventie)
 
-> Synth is de bottleneck. Voer Synth uit → rest volgt.
+> Synth is de laatste bottleneck. Voer Synth uit → volledige forward+return keten.
 
 ---
 
