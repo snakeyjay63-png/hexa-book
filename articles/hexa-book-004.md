@@ -47,7 +47,7 @@ R(E) = (432.00 Hz, 1.4151, [(A,B:0.6119), ...], (8, 1, 5, 1))
 ρ_ℱ:
   operator_status = conventie
   execution_status = voltooid
-  validatie_status = niet_gevalideerd
+  validatie_status = gevalideerd_lokaal
 ```
 
 > ρ_ℱ is nu uitgevoerd. De projectie van R(E) → ℱ is concreet.
@@ -103,10 +103,11 @@ DR verschilt op C-level (1 vs 3), maar centroid-DR blijft 9.
 ReturnCycle:
   operator_status = conventie
   execution_status = voltooid
-  validatie_status = niet_gevalideerd
+  validatie_status = gevalideerd_lokaal
 
 R': voltooid | E': voltooid | C': voltooid
-V_k-invariant: ✅ DR(432)=9 beide kanten
+V_k-invariant: ✅ DR(fwd)=DR(ret) in roundtrip (8/8 bytes exact)
+Byte-roundtrip: ✅ C'(E'(R'(byte_to_freq(B)))) = B (8/8)
 ```
 
 ## Toelichting

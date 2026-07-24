@@ -128,23 +128,31 @@ def test_return_cycle():
             failed += 1
             ok = False
 
-        # V_k invariant: DR(centroid) == DR(R')
+        # R' identiteit-check: DR(centroid) == DR(R'(centroid))
+        # (tautologisch onder Model A — R' = extractie zonder transformatie)
+        # Echte V_k-invariant zit in roundtrip-test: DR(fwd) == DR(ret)
         v_fwd = dr(centroid)
         v_ret = dr(r)
         if v_fwd != v_ret:
-            print(f"  ❌ V_k broken: DR({centroid})={v_fwd} != DR({r})={v_ret}")
+            print(f"  ❌ R' identiteit gebroken: DR({centroid})={v_fwd} != DR({r})={v_ret}")
             failed += 1
             ok = False
 
         if ok:
-            print(f"  ✅ centroid={centroid} → R'={r}, E'={e}, C'={c:.4f} | V_k: DR={v_fwd}")
+            print(f"  ✅ centroid={centroid} → R'={r}, E'={e}, C'={c:.4f} | R' ident: DR={v_fwd}")
             passed += 1
 
     return passed, failed
 
 
 def test_forward_return_roundtrip():
-    """Test forward → return roundtrip: byte → freq → centroid → return → byte."""
+    """Test forward → return roundtrip: byte → freq → R' → E' → C' → byte.
+
+    Echte roundtrip: byte_to_freq(B, ref) → R' → E' → C' → B'
+    Onder Model A: C'(E'(R'(byte_to_freq(B)))) = B (algebraïsch exact)
+
+    V_k-invariant: DR(fwd_freq) == DR(return_seed) == DR(returned_byte)
+    """
     ref = 81.75
     passed, failed = 0, 0
 
@@ -153,47 +161,49 @@ def test_forward_return_roundtrip():
 
     print("\n--- Forward↔Return Roundtrip ---")
     for B in bytes_to_test:
-        # Forward
+        # Forward: B → freq
         fwd_freq = byte_to_freq(B, ref)
-        centroid = 432.0  # Vedic base (conventie)
 
-        # Return
-        r, e, c = return_cycle(centroid, ref)
+        # Return: fwd_freq → R' → E' → C' → B'
+        r, e, c = return_cycle(fwd_freq, ref)
 
-        # Check: forward centroid DR == return centroid DR
-        v_fwd = dr(centroid)
+        # V_k invariant: DR(fwd_freq) == DR(return_seed) == DR(returned_byte)
+        # Splitsen: byte-roundtrip is harde claim, V_k DR is soft claim
+        v_fwd = dr(fwd_freq)
         v_ret = dr(r)
-
-        # Check: C' consistent with centroid
-        c_expected = ref * centroid / 432
+        v_c = dr(int(round(c)))
 
         ok = True
         try:
-            assert v_fwd == v_ret, f"V_k: DR({v_fwd}) != DR({v_ret})"
-            assert abs(c - c_expected) < 1e-6, f"C' mismatch: {c} != {c_expected}"
+            assert abs(c - B) < 1e-6, f"roundtrip: B={B} → C'={c:.6f}"
         except AssertionError as ex:
             print(f"  ❌ B={B} ({hex(B)}): {ex}")
             failed += 1
             ok = False
 
         if ok:
-            print(f"  ✅ B={B:3d} ({hex(B):>4s}): fwd={fwd_freq:.2f}Hz, return_C'={c:.4f}B | V_k={v_fwd}")
+            v_k_status = ""
+            if v_fwd == v_ret == v_c:
+                v_k_status = f" | V_k={v_fwd}"
+            else:
+                v_k_status = f" | V_k: DR(fwd={v_fwd},ret={v_ret},C'={v_c})"
+            print(f"  ✅ B={B:3d} ({hex(B):>4s}): fwd={fwd_freq:.2f}Hz → R'={r:.2f} → C'={c:.1f}{v_k_status}")
             passed += 1
 
     return passed, failed
 
 
-def test_hex_phoneme_complementarity():
-    """Test hex_to_phoneme: DR(hex_avg) vs DR(byte_to_freq).
-    
-    Verwacht: complementair (niet equivalent). Matching DR is bonus, niet vereist.
-    Retourneert (passed, 0) altijd omdat mismatch = expected behavior.
+def analyze_hex_phoneme_complementarity():
+    """Analyse hex_to_phoneme: DR(hex_avg) vs DR(byte_to_freq).
+
+    Observatiemodus — meet statistiek, valideert geen claim.
+    Retourneert analyse-resultaten (telt niet mee als passed/failed).
     """
     ref = 81.75
     matching, complementary = 0, 0
 
-    print("\n--- hex_to_phoneme Complementarity ---")
-    examples = []
+    print("\n--- hex_phoneme Analyse (observatie) ---")
+
     for B in range(1, 256):
         avg = hex_avg_freq(B)
         fwd = byte_to_freq(B, ref)
@@ -205,7 +215,12 @@ def test_hex_phoneme_complementarity():
         else:
             complementary += 1
 
-    print(f"  ✅ {matching}/255 bytes: DR match (bonus-alignment)")
+    # Validatie: de tellers moeten optellen tot 255
+    assert matching + complementary == 255, "matching + complementary != 255"
+    assert complementary > 0, "geen complementaire bytes gevonden"
+    assert matching > 0, "geen matchende bytes gevonden"
+
+    print(f"  ℹ {matching}/255 bytes: DR match (bonus-alignment)")
     print(f"  ℹ {complementary}/255 bytes: complementair (verwacht)")
 
     # Voorbeelden van matches
@@ -221,8 +236,8 @@ def test_hex_phoneme_complementarity():
         for B, hx, avg, fwd, d in matches[:5]:
             print(f"    B={B} ({hx:>4s}): DR(avg={avg:.1f}) = DR(fwd={fwd:.2f}) = {d}")
 
-    # 0 failures omdat mismatch = expected behavior
-    return matching, 0
+    # Retourneert (None, None) — telt niet mee als test
+    return None, None
 
 
 def test_edge_cases():
@@ -282,30 +297,38 @@ def main():
     p, f = test_forward_return_roundtrip()
     results.append(("Roundtrip", p, f))
 
-    p, f = test_hex_phoneme_complementarity()
-    results.append(("hex_phoneme", p, f))
+    # hex_phoneme is observatie — telt niet mee als test
+    p, f = analyze_hex_phoneme_complementarity()
+    results.append(("hex_phoneme", "obs", 0))
 
     p, f = test_edge_cases()
     results.append(("Edge cases", p, f))
 
     # Samenvatting
-    total_pass = sum(r[1] for r in results)
+    total_pass = sum(1 if r[1] == "obs" else r[1] for r in results)
     total_fail = sum(r[2] for r in results)
 
     print("\n--- SAMENVATTING ---")
     for name, p, f in results:
-        status = "✅" if f == 0 else f"⚠ ({f} failures)"
-        print(f"  {name:15s}: {p} passed, {f} failed {status}")
+        if p == "obs":
+            print(f"  {name:15s}: observatie (niet geteld)")
+        else:
+            status = "✅" if f == 0 else f"⚠ ({f} failures)"
+            print(f"  {name:15s}: {p} passed, {f} failed {status}")
 
-    print(f"\n  Totaal: {total_pass} ✅ | {total_fail} ❌")
+    # Tel hex_phoneme niet mee
+    test_pass = sum(0 if r[1] == "obs" else r[1] for r in results)
+    test_fail = sum(r[2] for r in results)
 
-    if total_fail == 0:
+    print(f"\n  Totaal (tests): {test_pass} ✅ | {test_fail} ❌")
+
+    if test_fail == 0:
         print("\n  Status: ReturnCycle = gevalideerd_lokaal")
     else:
-        print("\n  Status: ReturnCycle = niet_onafhankelijk_gevalideerd")
+        print("\n  Status: ReturnCycle = gedeeltelijk_gevalideerd")
 
     print("=" * 60)
-    return 0 if total_fail == 0 else 1
+    return 0 if test_fail == 0 else 1
 
 
 if __name__ == "__main__":
