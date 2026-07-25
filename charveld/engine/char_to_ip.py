@@ -53,6 +53,26 @@ def chars_to_ipv6(chars):
     return ":".join(words)
 
 
+def klankveld_lichaam(freq_hz):
+    """Bepaal of frequentie binnen Mendelsche limieten valt.
+    
+    Lichaam als filter:
+    - horen: 20Hz – 20kHz
+    - maken: 80Hz – 1kHz
+    
+    Retourneert dict met hoorbaar/makbaar status.
+    """
+    hoorbaar = 20 <= freq_hz <= 20000
+    maakbaar = 80 <= freq_hz <= 1000
+    
+    return {
+        "freq": freq_hz,
+        "hoorbaar": hoorbaar,
+        "maakbaar": maakbaar,
+        "filter": "lichaam",
+    }
+
+
 def char_to_token(char):
     """Char → 24-bit token: 23-bit vibratie + 1-bit vertraging.
     
@@ -93,10 +113,14 @@ def char_to_token(char):
 
 
 def char_full_route(char, freq_mode="432"):
-    """Volledige route voor één teken → char → token → frequentie."""
+    """Volledige route voor één teken → char → token → frequentie → lichaam."""
     token = char_to_token(char)
     byte_val = token["byte"]
     fs = FREQ_SYSTEMS[freq_mode]
+    freq = round(byte_to_freq(byte_val, fs["ref"], fs["base"]), 2)
+    
+    # Klankveld als lichaam-filter
+    lichaam = klankveld_lichaam(freq)
     
     return {
         "char": token["char"],
@@ -108,10 +132,11 @@ def char_full_route(char, freq_mode="432"):
         "vertraging_1": token["vertraging_1"],
         "hexa4": token["hexa4"],
         "klankveld": char_to_klankveld(byte_val),
-        "freq": round(byte_to_freq(byte_val, fs["ref"], fs["base"]), 2),
+        "freq": freq,
         "freq_system": fs["name"],
         "ticks": token["ticks"],
         "utf8_bytes": token["utf8_bytes"],
+        "lichaam": lichaam,  # Mendelsche filter: horen/maken
     }
 
 

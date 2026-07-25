@@ -167,6 +167,20 @@ elke 0 → {3, 6, 9} (3 opties per positie)
 
 **Niet gelimiteerd in ticks.** Het pad kiest zijn eigen ritme.
 
+### Klankveld En Het Lichaam
+
+Het klankveld van een char is gekoppeld aan het Mendelsche lichaam — aan wat het lichaam kan *horen* en *maken*.
+
+```
+char → frequentie → klankveld (64 bands) → lichaam
+                                              ↓
+                                        horen (20Hz–20kHz)
+                                        maken (80Hz–1kHz)
+```
+
+Niet elke frequentie is hoorbaar. Niet elke klank is maakbaar.
+Het klankveld is de filter tussen oneindige frequentie en eindig lichaam.
+
 ### Ticks als Tijd
 
 ```

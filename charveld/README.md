@@ -63,6 +63,27 @@ char → 24-bit token → 20-bit hexa → 0.0.0.0
 ```n chars → n tokens (24-bit) → n × 24 bits totaal
 ```
 
+## Klankveld — Het Lichaam als Filter
+
+Het klankveld van een char is gekoppeld aan het Mendelsche lichaam — aan wat het lichaam kan *horen* en *maken*.
+
+```
+char → frequentie → klankveld → lichaam
+                                ↓
+                          horen (20Hz – 20kHz)
+                          maken (80Hz – 1kHz)
+```
+
+**Het klankveld is de filter tussen oneindige frequentie en eindig lichaam.**
+
+| Klankveld | Horen | Maken | Opmerking |
+|-----------|-------|-------|-----------|
+| 0–63 (64 bands) | ✓ | beperkt | lichaam filtert |
+| 64 bands | 20Hz–20kHz | 80Hz–1kHz | Mendelsche limiet |
+
+Niet elke frequentie is hoorbaar. Niet elke klank is maakbaar.
+Het klankveld is de brug tussen abstracte frequentie en levend lichaam.
+
 ## Ticks — Vertraging per Char
 
 Elk teken heeft vertraging — wat een klank *is*, niet hoe snel het gaat.
