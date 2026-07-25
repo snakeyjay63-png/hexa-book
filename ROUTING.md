@@ -79,6 +79,7 @@ Elk artikel krijgt een audit-bestand. Artikel 02 is opgesplitst in 02 + 11 + 12.
 | `hexa-book-014.md` | Dimensie 11: eka routing | → 001, 012, 017 | ✅ |
 | `hexa-book-015.md` | Dimensie 12: logos | → 002, 001, 017 | ✅ |
 | `hexa-book-016.md` | Dimensie 13: taal, veld, soevereiniteit | → 001, 017, 012 | ✅ |
+| `hexa-book-019.md` | Genre als Interface-Taal | → 002, 011, 012 | ✅ |
 
 **Koppeling:** Audit filename → artikel nummer (`02-` = artikel 002).
 

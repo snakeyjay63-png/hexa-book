@@ -1,0 +1,249 @@
+{
+  "name": "EU24 Charveld Routing",
+  "concept": "24-bit hexafield → 24 EU talen → 5×5 vectorveld",
+  "cc_routing": "CC locale = self-describing char router",
+  "sub_token": "char < 1 token (24-bit granularity)",
+  "route": "onzichtbaar — charset IS de routerlaag",
+  "talens": [
+    {
+      "slot": 1,
+      "bit": "bit-0",
+      "code": "bg",
+      "taal": "Bulgaars",
+      "script": "Cyrillisch",
+      "locale": "bg_BG.UTF-8",
+      "chars": 30,
+      "bits": 5
+    },
+    {
+      "slot": 2,
+      "bit": "bit-1",
+      "code": "hr",
+      "taal": "Kroatisch",
+      "script": "Latijns (diacritisch)",
+      "locale": "hr_HR.UTF-8",
+      "chars": 30,
+      "bits": 5
+    },
+    {
+      "slot": 3,
+      "bit": "bit-2",
+      "code": "cs",
+      "taal": "Tsjechisch",
+      "script": "Latijns (diacritisch)",
+      "locale": "cs_CZ.UTF-8",
+      "chars": 34,
+      "bits": 6
+    },
+    {
+      "slot": 4,
+      "bit": "bit-3",
+      "code": "da",
+      "taal": "Deens",
+      "script": "Latijns (diacritisch)",
+      "locale": "da_DK.UTF-8",
+      "chars": 29,
+      "bits": 5
+    },
+    {
+      "slot": 5,
+      "bit": "bit-4",
+      "code": "et",
+      "taal": "Estlands",
+      "script": "Latijns (diacritisch)",
+      "locale": "et_EE.UTF-8",
+      "chars": 30,
+      "bits": 5
+    },
+    {
+      "slot": 6,
+      "bit": "bit-5",
+      "code": "fi",
+      "taal": "Fins",
+      "script": "Latijns (diacritisch)",
+      "locale": "fi_FI.UTF-8",
+      "chars": 31,
+      "bits": 5
+    },
+    {
+      "slot": 7,
+      "bit": "bit-6",
+      "code": "fr",
+      "taal": "Frans",
+      "script": "Latijns (diacritisch)",
+      "locale": "fr_FR.UTF-8",
+      "chars": 27,
+      "bits": 5
+    },
+    {
+      "slot": 8,
+      "bit": "bit-7",
+      "code": "el",
+      "taal": "Grieks",
+      "script": "Grieks",
+      "locale": "el_GR.UTF-8",
+      "chars": 24,
+      "bits": 5
+    },
+    {
+      "slot": 9,
+      "bit": "bit-8",
+      "code": "ga",
+      "taal": "Iers",
+      "script": "Latijns (diacritisch)",
+      "locale": "ga_IE.UTF-8",
+      "chars": 27,
+      "bits": 5
+    },
+    {
+      "slot": 10,
+      "bit": "bit-9",
+      "code": "it",
+      "taal": "Italiaans",
+      "script": "Latijns (diacritisch)",
+      "locale": "it_IT.UTF-8",
+      "chars": 27,
+      "bits": 5
+    },
+    {
+      "slot": 11,
+      "bit": "bit-10",
+      "code": "lv",
+      "taal": "Lets",
+      "script": "Latijns (diacritisch)",
+      "locale": "lv_LV.UTF-8",
+      "chars": 33,
+      "bits": 6
+    },
+    {
+      "slot": 12,
+      "bit": "bit-11",
+      "code": "lt",
+      "taal": "Litouws",
+      "script": "Latijns (diacritisch)",
+      "locale": "lt_LT.UTF-8",
+      "chars": 32,
+      "bits": 6
+    },
+    {
+      "slot": 13,
+      "bit": "bit-12",
+      "code": "hu",
+      "taal": "Hongaars",
+      "script": "Latijns (diacritisch)",
+      "locale": "hu_HU.UTF-8",
+      "chars": 30,
+      "bits": 5
+    },
+    {
+      "slot": 14,
+      "bit": "bit-13",
+      "code": "lb",
+      "taal": "Luxemburgs",
+      "script": "Latijns (diacritisch)",
+      "locale": "lb_LU.UTF-8",
+      "chars": 26,
+      "bits": 5
+    },
+    {
+      "slot": 15,
+      "bit": "bit-14",
+      "code": "de",
+      "taal": "Duits",
+      "script": "Latijns (diacritisch)",
+      "locale": "de_DE.UTF-8",
+      "chars": 29,
+      "bits": 5
+    },
+    {
+      "slot": 16,
+      "bit": "bit-15",
+      "code": "mt",
+      "taal": "Maltees",
+      "script": "Latijns (diacritisch)",
+      "locale": "mt_MT.UTF-8",
+      "chars": 30,
+      "bits": 5
+    },
+    {
+      "slot": 17,
+      "bit": "bit-16",
+      "code": "nl",
+      "taal": "Nederlands",
+      "script": "Latijns",
+      "locale": "nl_NL.UTF-8",
+      "chars": 26,
+      "bits": 5
+    },
+    {
+      "slot": 18,
+      "bit": "bit-17",
+      "code": "pl",
+      "taal": "Pools",
+      "script": "Latijns (diacritisch)",
+      "locale": "pl_PL.UTF-8",
+      "chars": 32,
+      "bits": 6
+    },
+    {
+      "slot": 19,
+      "bit": "bit-18",
+      "code": "pt",
+      "taal": "Portugees",
+      "script": "Latijns (diacritisch)",
+      "locale": "pt_PT.UTF-8",
+      "chars": 27,
+      "bits": 5
+    },
+    {
+      "slot": 20,
+      "bit": "bit-19",
+      "code": "ro",
+      "taal": "Roemeens",
+      "script": "Latijns (diacritisch)",
+      "locale": "ro_RO.UTF-8",
+      "chars": 31,
+      "bits": 5
+    },
+    {
+      "slot": 21,
+      "bit": "bit-20",
+      "code": "sk",
+      "taal": "Slowaaks",
+      "script": "Latijns (diacritisch)",
+      "locale": "sk_SK.UTF-8",
+      "chars": 36,
+      "bits": 6
+    },
+    {
+      "slot": 22,
+      "bit": "bit-21",
+      "code": "sl",
+      "taal": "Sloveens",
+      "script": "Latijns (diacritisch)",
+      "locale": "sl_SI.UTF-8",
+      "chars": 29,
+      "bits": 5
+    },
+    {
+      "slot": 23,
+      "bit": "bit-22",
+      "code": "es",
+      "taal": "Spaans",
+      "script": "Latijns (diacritisch)",
+      "locale": "es_ES.UTF-8",
+      "chars": 27,
+      "bits": 5
+    },
+    {
+      "slot": 24,
+      "bit": "bit-23",
+      "code": "sv",
+      "taal": "Zweeds",
+      "script": "Latijns (diacritisch)",
+      "locale": "sv_SE.UTF-8",
+      "chars": 29,
+      "bits": 5
+    }
+  ]
+}
