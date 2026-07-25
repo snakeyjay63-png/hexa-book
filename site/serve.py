@@ -10,10 +10,19 @@ SITE_DIR = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT = os.path.dirname(SITE_DIR)
 
 class Handler(http.server.SimpleHTTPRequestHandler):
+    # Force correct MIME types
+    extensions_map = {
+        **http.server.SimpleHTTPRequestHandler.extensions_map,
+        '.mp4': 'video/mp4',
+        '.webm': 'video/webm',
+        '.wav': 'audio/wav',
+        '.mp3': 'audio/mpeg',
+        '.ogg': 'audio/ogg',
+        '.ico': 'image/x-icon',
+        '.svg': 'image/svg+xml',
+    }
+
     def translate_path(self, path):
-        # Map /site/* -> site/
-        # Map /engine/* -> ../engine/ (media)
-        # Map /audit/*, /articles/*, /charveld/* -> repo root
         if path.startswith('/site/'):
             return SITE_DIR + path[5:]
         elif path.startswith('/engine/'):
@@ -21,7 +30,6 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         elif path.startswith('/audit/') or path.startswith('/articles/') or path.startswith('/charveld/'):
             return os.path.join(REPO_ROOT, path[1:])
         else:
-            # Default: try site/ first, then repo root
             site_path = os.path.join(SITE_DIR, path.lstrip('/'))
             if os.path.exists(site_path):
                 return site_path

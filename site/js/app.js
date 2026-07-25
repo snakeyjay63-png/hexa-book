@@ -238,9 +238,11 @@
   async function showMedia() {
     const media = sitemap.media || [];
     let cards = media.map(m => {
+      const mime = m.file.endsWith('.webm') ? 'video/webm' : 'video/mp4';
+      const audioMime = m.file.endsWith('.mp3') ? 'audio/mpeg' : m.file.endsWith('.ogg') ? 'audio/ogg' : 'audio/wav';
       const mediaTag = m.type === 'video'
-        ? `<video controls><source src="/${m.file}" type="video/mp4">Niet ondersteund</video>`
-        : `<audio controls><source src="/${m.file}" type="audio/wav">Niet ondersteund</audio>`;
+        ? `<video controls><source src="/${m.file}" type="${mime}">Niet ondersteund</video>`
+        : `<audio controls><source src="/${m.file}" type="${audioMime}">Niet ondersteund</audio>`;
       return `
         <div class="media-card">
           ${mediaTag}

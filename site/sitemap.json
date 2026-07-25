@@ -595,34 +595,40 @@
   ],
   "media": [
     {
+      "file": "engine/hexa-psy-24s.webm",
+      "name": "hexa-psy-24s.webm",
+      "size": "4.2MB",
+      "type": "video"
+    },
+    {
       "file": "engine/hexa-psy-24s.mp4",
       "name": "hexa-psy-24s.mp4",
       "size": "18.6MB",
-      "type": "audio"
+      "type": "video"
     },
     {
       "file": "engine/sunya-birds-60s-visual.mp4",
       "name": "sunya-birds-60s-visual.mp4",
       "size": "445KB",
-      "type": "audio"
+      "type": "video"
     },
     {
       "file": "engine/sunya-birds-60s.mp4",
       "name": "sunya-birds-60s.mp4",
       "size": "296KB",
-      "type": "audio"
+      "type": "video"
     },
     {
       "file": "engine/sunya-birds.mp4",
       "name": "sunya-birds.mp4",
       "size": "517KB",
-      "type": "audio"
+      "type": "video"
     },
     {
       "file": "engine/vogels-boom.mp4",
       "name": "vogels-boom.mp4",
       "size": "1.4MB",
-      "type": "audio"
+      "type": "video"
     },
     {
       "file": "engine/hexa-psy-multilayer-3min.wav",

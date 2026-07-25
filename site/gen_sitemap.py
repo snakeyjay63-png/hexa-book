@@ -49,12 +49,12 @@ def gen():
         talen.append({'file': f, 'name': name, 'title': title})
 
     media = []
-    for ext in ['*.mp4', '*.wav', '*.mp3', '*.ogg']:
+    for ext in ['*.webm', '*.mp4', '*.wav', '*.mp3', '*.ogg']:
         for f in sorted(glob.glob('engine/' + ext)):
             name = os.path.basename(f)
             size = os.path.getsize(f)
             size_str = f'{size/1024:.0f}KB' if size < 1024*1024 else f'{size/1024/1024:.1f}MB'
-            media_type = 'video' if ext == '.mp4' else 'audio'
+            media_type = 'video' if ext in ('*.webm', '*.mp4') else 'audio'
             media.append({'file': f, 'name': name, 'size': size_str, 'type': media_type})
 
     sitemap = {
