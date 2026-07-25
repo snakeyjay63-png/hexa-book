@@ -179,7 +179,6 @@
     document.getElementById('page-container').innerHTML =
       '<div style="margin-bottom:20px"><a href="#" data-page="home" style="color:var(--accent);text-decoration:none;">← Terug</a></div>' +
       renderMd(content);
-    bindNav();
   }
 
   async function showAudit(id) {
@@ -206,7 +205,6 @@
         '<div style="margin-bottom:20px"><a href="#" data-page="audit-index" style="color:var(--accent);text-decoration:none;">← Audit-overzicht</a></div>' +
         '<div class="md">' + renderMd(content).replace('<div class="md">', '') + zigBlock + '</div>';
     }
-    bindNav();
   }
 
   async function showAuditIndex() {
@@ -228,7 +226,6 @@
     document.getElementById('page-container').innerHTML =
       '<div class="md"><h2>Audit-overzicht</h2><p>' + audits.length + ' audits, ' + zigs.length + ' Zig implementaties</p></div>' +
       '<div id="audit-rows">' + rows + '</div>';
-    bindNav();
   }
 
   async function showCharveld() {
@@ -246,7 +243,6 @@
     document.getElementById('page-container').innerHTML =
       '<div class="md"><h2>Charveld — Taal & Karakter</h2><p>' + talen.length + ' talen gemappt</p></div>' +
       '<div class="media-grid">' + cards + '</div>';
-    bindNav();
   }
 
   async function showStupas() {
@@ -264,7 +260,6 @@
     document.getElementById('page-container').innerHTML =
       '<div class="md"><h2>Stupas</h2><p>' + stupas.length + ' artikelen als stapels</p></div>' +
       '<div class="media-grid">' + cards + '</div>';
-    bindNav();
   }
 
   async function showStupa(id) {
@@ -296,7 +291,6 @@
     document.getElementById('page-container').innerHTML =
       '<div style="margin-bottom:20px"><a href="#" data-page="charveld" style="color:var(--accent);text-decoration:none;">← Terug</a></div>' +
       renderMd(content);
-    bindNav();
   }
 
   async function showMedia() {
@@ -385,7 +379,6 @@
       link.style.fontSize = '0.82rem';
       articleList.appendChild(link);
     });
-    bindNav();
 
     // Audits (top-level only)
     const auditList = document.getElementById('audit-list');
@@ -400,7 +393,6 @@
       link.style.fontSize = '0.82rem';
       auditList.appendChild(link);
     });
-    bindNav();
   }
 
   // ── Init ──
