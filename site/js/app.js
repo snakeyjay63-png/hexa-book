@@ -22,17 +22,6 @@
       }
     });
     bc.innerHTML = html;
-    // Re-bind nav links in breadcrumb
-    bc.querySelectorAll('[data-page]').forEach(el => {
-      el.addEventListener('click', function(e) {
-        e.preventDefault();
-        const page = this.getAttribute('data-page');
-        if (page !== currentPage) {
-          setActive(page);
-          navigate(page);
-        }
-      });
-    });
   }
 
   // ── Markdown rendering (lightweight) ──
@@ -368,17 +357,15 @@
     else if (page.startsWith('taal-')) await showTaals(page.slice(5));
   }
 
-  // ── Nav binding ──
-  function bindNav() {
-    document.querySelectorAll('[data-page]').forEach(el => {
-      el.addEventListener('click', function(e) {
-        e.preventDefault();
-        const page = this.getAttribute('data-page');
-        setActive(page);
-        navigate(page);
-      });
-    });
-  }
+  // ── Nav binding (event delegation — één listener op document) ──
+  document.addEventListener('click', function(e) {
+    const target = e.target.closest('[data-page]');
+    if (!target) return;
+    e.preventDefault();
+    const page = target.getAttribute('data-page');
+    setActive(page);
+    navigate(page);
+  });
 
   function setActive(page) {
     document.querySelectorAll('.nav-section a').forEach(a => a.classList.remove('active'));
