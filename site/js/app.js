@@ -239,8 +239,8 @@
     const media = sitemap.media || [];
     let cards = media.map(m => {
       const mediaTag = m.type === 'video'
-        ? `<video controls poster=""><source src="../${m.file}" type="video/mp4">Niet ondersteund</video>`
-        : `<audio controls><source src="../${m.file}" type="audio/wav">Niet ondersteund</audio>`;
+        ? `<video controls><source src="/${m.file}" type="video/mp4">Niet ondersteund</video>`
+        : `<audio controls><source src="/${m.file}" type="audio/wav">Niet ondersteund</audio>`;
       return `
         <div class="media-card">
           ${mediaTag}
