@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HEXA-BOEK — Volledige Route</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0a0f;
+    color: #e0e0e0;
+    font-family: 'Courier New', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  h1 {
+    font-size: 1.2rem;
+    color: #888;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .subtitle {
+    font-size: 0.8rem;
+    color: #555;
+    margin-bottom: 2rem;
+  }
+  .diagram {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    max-width: 900px;
+    width: 100%;
+  }
+  .stage {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    border: 1px solid #222;
+    border-radius: 8px;
+    background: #111118;
+    min-width: 700px;
+    position: relative;
+    transition: border-color 0.3s;
+  }
+  .stage:hover { border-color: #444; }
+  .stage-label {
+    min-width: 180px;
+    text-align: right;
+  }
+  .stage-name {
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--color);
+  }
+  .stage-type {
+    font-size: 0.7rem;
+    color: #666;
+    margin-top: 2px;
+  }
+  .stage-arrow {
+    color: var(--color);
+    font-size: 1.5rem;
+    min-width: 40px;
+    text-align: center;
+  }
+  .stage-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .status-row {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.7rem;
+  }
+  .status-tag {
+    padding: 2px 8px;
+    border-radius: 3px;
+    border: 1px solid #333;
+    background: #1a1a22;
+    color: #aaa;
+  }
+  .status-tag.ok { border-color: #2a5a2a; color: #4a4; background: #0a1a0a; }
+  .status-tag.half { border-color: #5a5a2a; color: #aa4; background: #1a1a0a; }
+  .connector {
+    width: 2px;
+    height: 24px;
+    background: #333;
+    position: relative;
+  }
+  .connector::after {
+    content: '▼';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #444;
+    font-size: 0.6rem;
+  }
+  .axiom-box {
+    margin: 1.5rem 0;
+    padding: 1rem 2rem;
+    border: 1px solid #2a2a3a;
+    border-radius: 6px;
+    background: #0d0d16;
+    text-align: center;
+    min-width: 700px;
+  }
+  .axiom-formula {
+    font-size: 1.4rem;
+    color: #a0a0c0;
+    margin-bottom: 0.3rem;
+  }
+  .axiom-label {
+    font-size: 0.7rem;
+    color: #666;
+  }
+  .engine-ref {
+    margin-top: 2rem;
+    padding: 0.8rem 1.5rem;
+    border: 1px solid #1a1a2a;
+    border-radius: 4px;
+    background: #0a0a12;
+    font-size: 0.7rem;
+    color: #555;
+    min-width: 700px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .engine-ref span { color: #8a8; }
+  .route-label {
+    font-size: 0.65rem;
+    color: #444;
+    text-align: center;
+    margin: 0.5rem 0;
+  }
+</style>
+</head>
+<body>
+
+<h1>HEXA-BOEK — Volledige Route</h1>
+<p class="subtitle">E_audio → R_audio → ρ_ℱ → ℱ &nbsp;|&nbsp; Model A &nbsp;|&nbsp; 2026-07-24</p>
+
+<div class="diagram">
+
+  <!-- Stage 1: E_audio -->
+  <div class="stage" style="--color: #4a8">
+    <div class="stage-label">
+      <div class="stage-name">E_audio</div>
+      <div class="stage-type">SignalAudio</div>
+    </div>
+    <div class="stage-arrow">→</div>
+    <div class="stage-details">
+      <div class="status-row">
+        <span class="status-tag ok">formeel</span>
+        <span class="status-tag ok">voltooid</span>
+        <span class="status-tag ok">gevalideerd_lokaal</span>
+      </div>
+      <div style="font-size:0.7rem;color:#555;">
+        E_raw → Normalize → E_audio &nbsp;(artikel 003)
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"></div>
+  <div class="route-label">engine/npr_sound_engine.py — 21/21 ✅</div>
+
+  <!-- Stage 2: R_audio -->
+  <div class="stage" style="--color: #48a">
+    <div class="stage-label">
+      <div class="stage-name">R_audio(E)</div>
+      <div class="stage-type">AudioFeatureSpace</div>
+    </div>
+    <div class="stage-arrow">→</div>
+    <div class="stage-details">
+      <div class="status-row">
+        <span class="status-tag ok">formeel</span>
+        <span class="status-tag ok">voltooid</span>
+        <span class="status-tag ok">gevalideerd_lokaal</span>
+      </div>
+      <div style="font-size:0.7rem;color:#555;">
+        component_centroid · rms · peak · dominant_freq · DR_signature
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"></div>
+  <div class="route-label">selectie: (component_centroid, DR_signature)</div>
+
+  <!-- Stage 3: ρ_ℱ -->
+  <div class="stage" style="--color: #84a">
+    <div class="stage-label">
+      <div class="stage-name">ρ_ℱ</div>
+      <div class="stage-type">ReturnProjectie</div>
+    </div>
+    <div class="stage-arrow">→</div>
+    <div class="stage-details">
+      <div class="status-row">
+        <span class="status-tag ok">formeel</span>
+        <span class="status-tag ok">voltooid</span>
+        <span class="status-tag ok">gevalideerd_lokaal</span>
+      </div>
+      <div style="font-size:0.7rem;color:#555;">
+        domein: ComponentCentroid × DRSignature &nbsp;(artikel 004)
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"></div>
+  <div class="route-label">engine/validate_return_cycle.py — 26/26 ✅</div>
+
+  <!-- Stage 4: ℱ -->
+  <div class="stage" style="--color: #a4a">
+    <div class="stage-label">
+      <div class="stage-name">ℱ</div>
+      <div class="stage-type">ReturnMedium</div>
+    </div>
+    <div class="stage-arrow">→</div>
+    <div class="stage-details">
+      <div class="status-row">
+        <span class="status-tag half">conventie</span>
+        <span class="status-tag ok">voltooid</span>
+        <span class="status-tag ok">gevalideerd_lokaal</span>
+      </div>
+      <div style="font-size:0.7rem;color:#555;">
+        r_return = ρ_ℱ(R_audio(E)) &nbsp;model_scope: Model A
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Lens Axiom -->
+<div class="axiom-box">
+  <div class="axiom-formula">0 ≐<sub>lens</sub> 1</div>
+  <div class="axiom-label">formele lensrelatie (lensaxioma) — operationele instantiatie per model</div>
+</div>
+
+<!-- Engine References -->
+<div class="engine-ref">
+  <span>npr_sound_engine.py</span>
+  <span>21/21 ✅</span>
+  <span>validate_return_cycle.py</span>
+  <span>26/26 ✅</span>
+  <span>sanskrit_npr_bridge.py</span>
+  <span>24/24 ✅</span>
+</div>
+
+</body>
+</html>

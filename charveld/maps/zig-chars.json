@@ -1,0 +1,71 @@
+{
+  "taal": "Zig",
+  "versie": "0.16",
+  "char_type": "u8",
+  "chars": 256,
+  "bits": 8,
+  "encoding": "UTF-8 compatible",
+  "notes": "Zig 0.16: std.ascii functions for char classification",
+  "categories": {
+    "digits": {
+      "range": "0-9",
+      "bytes": "48-57",
+      "hex": "0x30-0x39",
+      "count": 10,
+      "zig_fn": "std.ascii.isDigit"
+    },
+    "lowercase": {
+      "range": "a-z",
+      "bytes": "97-122",
+      "hex": "0x61-0x7A",
+      "count": 26,
+      "zig_fn": "std.ascii.isASCIIAlphabet"
+    },
+    "uppercase": {
+      "range": "A-Z",
+      "bytes": "65-90",
+      "hex": "0x41-0x5A",
+      "count": 26,
+      "zig_fn": "std.ascii.isASCIIAlphabet"
+    },
+    "hex_digits": {
+      "range": "0-9,a-f,A-F",
+      "count": 22,
+      "zig_fn": "std.ascii.isHex"
+    },
+    "whitespace": {
+      "chars": "space,tab,cr,lf",
+      "bytes": "9,10,13,32",
+      "zig_fn": "std.ascii.isWhitespace"
+    },
+    "printable": {
+      "range": "32-126",
+      "count": 95,
+      "zig_fn": "std.ascii.isPrint"
+    }
+  },
+  "version_limits": {
+    "0.13": {
+      "string_ops": "limited",
+      "char_funcs": "basic",
+      "available": "256 (u8 but limited std lib)"
+    },
+    "0.16": {
+      "string_ops": "full",
+      "char_funcs": "comprehensive",
+      "available": "256 (full std.ascii)"
+    }
+  },
+  "ipv4_example": {
+    "woord": "void",
+    "letters": ["v", "o", "i", "d"],
+    "bytes": [118, 111, 105, 100],
+    "ipv4": "118.111.105.100",
+    "hexa32": "0x766F6964"
+  },
+  "ipv6_example": {
+    "woord": "const std.ArrayList",
+    "letters": 16,
+    "ipv6": "636F:6E73:7420:7374:642E:416C:6C6F:436C"
+  }
+}

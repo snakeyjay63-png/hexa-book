@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hexa Audio Graph — Dimensional Frequency Network</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#0a0a0a;--surface:#111;--surface2:#1a1a1a;--cyan:#00ffff;
+    --cyan-dim:#00aaff;--cyan-glow:rgba(0,255,255,.15);--white:#e8e8e8;
+    --text:#c0c0c0;--dim:#555;--panel-w:380px;
+  }
+  html,body{height:100%;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--white);overflow:hidden}
+
+  /* ── Header / Controls ── */
+  #header{
+    position:fixed;top:0;left:0;right:0;height:52px;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 20px;background:linear-gradient(180deg,rgba(10,10,10,.97),rgba(10,10,10,.7));
+    border-bottom:1px solid #222;backdrop-filter:blur(8px);
+  }
+  #header h1{font-size:15px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--cyan)}
+  #header h1 span{font-weight:300;color:var(--dim);font-size:11px;margin-left:8px;letter-spacing:1px;text-transform:none}
+
+  .freq-modes{display:flex;gap:6px}
+  .freq-btn{
+    padding:6px 14px;border:1px solid #333;border-radius:20px;background:transparent;
+    color:var(--text);font-size:12px;cursor:pointer;transition:all .25s;font-family:inherit;
+  }
+  .freq-btn:hover{border-color:var(--cyan-dim);color:var(--cyan)}
+  .freq-btn.active{border-color:var(--cyan);color:var(--cyan);background:var(--cyan-glow);box-shadow:0 0 12px var(--cyan-glow)}
+
+  .controls{display:flex;align-items:center;gap:12px}
+  .ctrl-btn{
+    padding:5px 12px;border:1px solid #333;border-radius:6px;background:transparent;
+    color:var(--dim);font-size:11px;cursor:pointer;transition:all .2s;font-family:inherit;
+  }
+  .ctrl-btn:hover{color:var(--cyan);border-color:var(--cyan-dim)}
+
+  /* ── Canvas ── */
+  #graph-container{
+    position:fixed;top:52px;left:0;right:0;bottom:0;
+    transition:right .4s cubic-bezier(.4,0,.2,1);
+  }
+  #graph-container.panel-open{right:var(--panel-w)}
+  canvas#graph{display:block;width:100%;height:100%}
+
+  /* ── Story Panel ── */
+  #story-panel{
+    position:fixed;top:52px;right:0;bottom:0;width:var(--panel-w);
+    background:var(--surface);border-left:1px solid #222;z-index:90;
+    transform:translateX(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);
+    overflow-y:auto;overflow-x:hidden;
+  }
+  #story-panel.open{transform:translateX(0)}
+
+  .panel-close{
+    position:absolute;top:12px;right:12px;width:30px;height:30px;border:none;
+    background:transparent;color:var(--dim);font-size:18px;cursor:pointer;
+    border-radius:50%;transition:all .2s;display:flex;align-items:center;justify-content:center;
+  }
+  .panel-close:hover{color:var(--cyan);background:var(--cyan-glow)}
+
+  .panel-content{padding:28px 24px 40px}
+  .panel-dim{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--cyan-dim);margin-bottom:6px}
+  .panel-title{font-size:20px;font-weight:600;margin-bottom:18px;line-height:1.3;color:var(--white)}
+  .panel-divider{height:1px;background:linear-gradient(90deg,var(--cyan),transparent);margin:18px 0}
+
+  .panel-section{margin-bottom:20px}
+  .panel-section h3{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:8px}
+  .panel-section p{font-size:14px;line-height:1.75;color:var(--text)}
+  .panel-math{
+    background:var(--surface2);border:1px solid #222;border-radius:8px;
+    padding:14px 16px;font-family:'Fira Code','Cascadia Code','Consolas',monospace;
+    font-size:12px;line-height:1.8;color:var(--cyan-dim);
+  }
+  .panel-freq-display{
+    display:flex;align-items:center;gap:10px;padding:14px 16px;
+    background:var(--cyan-glow);border:1px solid rgba(0,255,255,.2);border-radius:8px;margin-bottom:20px;
+  }
+  .panel-freq-display .freq-val{font-size:28px;font-weight:700;color:var(--cyan);font-family:'Fira Code',monospace}
+  .panel-freq-display .freq-unit{font-size:13px;color:var(--cyan-dim)}
+
+  .panel-zig{
+    background:var(--surface2);border:1px solid #222;border-radius:8px;
+    padding:12px 16px;font-size:12px;line-height:1.7;
+  }
+  .zig-pass{color:#4ade80}
+  .zig-warn{color:#facc15}
+  .panel-connections{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .conn-tag{
+    padding:3px 10px;border:1px solid #333;border-radius:12px;font-size:11px;
+    color:var(--text);cursor:pointer;transition:all .2s;
+  }
+  .conn-tag:hover{border-color:var(--cyan);color:var(--cyan);background:var(--cyan-glow)}
+
+  /* ── Tooltip ── */
+  #tooltip{
+    position:fixed;pointer-events:none;background:rgba(17,17,17,.95);
+    border:1px solid #333;border-radius:6px;padding:6px 12px;font-size:12px;
+    color:var(--white);z-index:200;opacity:0;transition:opacity .15s;
+    backdrop-filter:blur(6px);
+  }
+  #tooltip.show{opacity:1}
+  #tooltip .tt-title{font-weight:600}
+  #tooltip .tt-freq{color:var(--cyan);font-family:monospace;margin-left:6px}
+
+  /* ── Legend ── */
+  #legend{
+    position:fixed;bottom:16px;left:16px;z-index:50;
+    background:rgba(17,17,17,.85);border:1px solid #222;border-radius:8px;
+    padding:12px 16px;font-size:11px;color:var(--dim);backdrop-filter:blur(6px);
+  }
+  #legend div{margin-bottom:4px}
+  #legend div:last-child{margin-bottom:0}
+  .legend-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle}
+
+  /* ── Scrollbar ── */
+  #story-panel::-webkit-scrollbar{width:4px}
+  #story-panel::-webkit-scrollbar-track{background:transparent}
+  #story-panel::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+  #story-panel::-webkit-scrollbar-thumb:hover{background:#555}
+
+  /* ── Pulse animation ── */
+  @keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}
+  .live-indicator{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:pulse 2s ease-in-out infinite;margin-right:8px;vertical-align:middle}
+
+  /* ── Responsive ── */
+  @media(max-width:768px){
+    :root{--panel-w:100vw}
+    #graph-container.panel-open{right:0}
+    #header h1 span{display:none}
+    .freq-btn{padding:5px 10px;font-size:11px}
+    #legend{display:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div id="header">
+  <h1><span class="live-indicator"></span>Hexa Audio Graph<span>18 dimensions · nidra network</span></h1>
+  <div class="freq-modes">
+    <button class="freq-btn active" data-mode="440">440 Hz</button>
+    <button class="freq-btn" data-mode="432">432 Hz</button>
+    <button class="freq-btn" data-mode="396">396 Hz</button>
+  </div>
+  <div class="controls">
+    <button class="ctrl-btn" id="btn-reset">Reset View</button>
+    <button class="ctrl-btn" id="btn-nidra">Nidra Loops</button>
+  </div>
+</div>
+
+<!-- Graph -->
+<div id="graph-container">
+  <canvas id="graph"></canvas>
+</div>
+
+<!-- Story Panel -->
+<div id="story-panel">
+  <button class="panel-close" id="panel-close">✕</button>
+  <div class="panel-content" id="panel-body"></div>
+</div>
+
+<!-- Tooltip -->
+<div id="tooltip"></div>
+
+<!-- Legend -->
+<div id="legend">
+  <div><span class="legend-dot" style="background:var(--cyan)"></span>Active node</div>
+  <div><span class="legend-dot" style="background:#333"></span>Inactive node</div>
+  <div><span class="legend-dot" style="background:#4ade80"></span>Nidra loop</div>
+  <div>Click node → hear frequency + story</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════
+const GRAPH_DATA = {
+  nodes: [
+    {"id":"001","title":"Dimensie 1","freq_base":261.63},
+    {"id":"002","title":"Dimensie 2","freq_base":433.32},
+    {"id":"003","title":"Dimensie 3","freq_base":329.63},
+    {"id":"004","title":"Dimensie 4","freq_base":392.00},
+    {"id":"006","title":"Dimensie 6","freq_base":466.16},
+    {"id":"007","title":"Dimensie 7","freq_base":523.25},
+    {"id":"008","title":"Dimensie 8","freq_base":587.33},
+    {"id":"009","title":"Dimensie 9","freq_base":659.25},
+    {"id":"010","title":"Dimensie 10","freq_base":698.46},
+    {"id":"011","title":"Dimensie 11","freq_base":783.99},
+    {"id":"012","title":"Dimensie 12","freq_base":880.00},
+    {"id":"013","title":"Dimensie 13","freq_base":987.77},
+    {"id":"014","title":"Dimensie 14","freq_base":1046.50},
+    {"id":"015","title":"Dimensie 15","freq_base":1174.66},
+    {"id":"016","title":"Dimensie 16","freq_base":1318.51},
+    {"id":"017","title":"Dimensie 17","freq_base":1396.91},
+    {"id":"018","title":"Dimensie 18","freq_base":1567.98}
+  ],
+  edges: [
+    {"from":"001","to":"002"},{"from":"002","to":"004"},{"from":"002","to":"011"},{"from":"002","to":"012"},
+    {"from":"003","to":"001"},{"from":"003","to":"002"},{"from":"003","to":"004"},{"from":"003","to":"011"},{"from":"003","to":"017"},
+    {"from":"004","to":"002"},{"from":"004","to":"003"},{"from":"004","to":"012"},{"from":"004","to":"017"},
+    {"from":"006","to":"012"},{"from":"006","to":"017"},{"from":"007","to":"001"},{"from":"007","to":"011"},{"from":"007","to":"012"},
+    {"from":"008","to":"001"},{"from":"008","to":"006"},{"from":"008","to":"012"},{"from":"009","to":"012"},{"from":"009","to":"017"},
+    {"from":"010","to":"001"},{"from":"010","to":"002"},{"from":"010","to":"017"},{"from":"011","to":"002"},{"from":"011","to":"012"},
+    {"from":"012","to":"002"},{"from":"012","to":"011"},{"from":"013","to":"001"},{"from":"013","to":"002"},{"from":"013","to":"011"},
+    {"from":"013","to":"012"},{"from":"013","to":"017"},{"from":"014","to":"001"},{"from":"014","to":"012"},{"from":"014","to":"017"},
+    {"from":"015","to":"001"},{"from":"015","to":"002"},{"from":"015","to":"017"},{"from":"016","to":"001"},{"from":"016","to":"012"},{"from":"016","to":"017"},
+    {"from":"018","to":"002"},{"from":"018","to":"003"},{"from":"018","to":"011"},{"from":"018","to":"012"}
+  ]
+};
+
+const STORIES = {
+  "001": {
+    title: "Dimension 1 — The First Movement",
+    english: "Everything begins with one note. A single frequency that defines the space around it. This is not just sound — it is the first dimension of structure. Like a point in space, it exists without direction. But it vibrates, and that vibration creates the possibility of movement.",
+    math: "One frequency. One dimension. The foundation upon which all harmonics build.",
+    zig: null
+  },
+  "002": {
+    title: "Dimension 2 — The Return",
+    english: "From one note comes another. Not random, but related — a return to the beginning from a different angle. This is nidra: the cross-reference that makes the system alive. Two dimensions create a plane, and in that plane, patterns emerge. The digital root of 24 is 6, and 6 is the frequency of water's density.",
+    math: "DR(24) = 6. ReturnCycle: begin → transform → return. The invariant holds: begin equals return.",
+    zig: "10/10 tests pass. byte_to_freq maps raw values to 432 Hz. DR_freq shows sensitivity to rounding."
+  },
+  "003": {
+    title: "Dimension 3 — Depth",
+    english: "Three dimensions add depth. What was flat becomes volumetric. In music, this is the difference between a melody and a chord. Each note retains its identity, but together they create something greater than the sum of parts.",
+    math: "3D space. Harmonic relationships multiply. The system breathes."
+  },
+  "004": {
+    title: "Dimension 4 — Time",
+    english: "The fourth dimension is time. Not as a separate thing, but as the rhythm that holds the first three together. A heartbeat. A pulse. The return cycle that says: what goes out must come back.",
+    math: "ReturnCycle complete. The loop closes. Begin equals return."
+  },
+  "006": {
+    title: "Dimension 6 — Resonance",
+    english: "Six is the first perfect number. Here, the network discovers harmony through cross-reference. Dimension 6 connects directly to 12 and 17 — it is the bridge between the low registers and the high. Like water seeking its level, frequency finds its resonance through nidra: the return that transforms.",
+    math: "DR(6) = 6. Perfect number: 1 + 2 + 3 = 6. Bridges low ↔ high register."
+  },
+  "007": {
+    title: "Dimension 7 — The Diagonal",
+    english: "Seven cuts diagonally through the matrix. It connects to 1, 11, and 12 — spanning from the origin to the harmonic peak. This is the musician's interval, the mystic's sacred number. In frequency, 7 represents the seventh harmonic: the note that makes you feel something unnameable.",
+    math: "DR(7) = 7. Spans origin→harmonic. Seventh interval: the tritone of transformation."
+  },
+  "008": {
+    title: "Dimension 8 — Octave",
+    english: "Eight is the octave. The return home at double the frequency. Dimension 8 connects to 1, 6, and 12 — the foundational triad. When you hear an octave, it sounds like the same note. It is the same note, transformed. The nidra loop at its purest: identity through doubling.",
+    math: "8 = 2³. Octave relationship: f × 2. Connects to 1, 6, 12 — the foundational triad."
+  },
+  "009": {
+    title: "Dimension 9 — The Square",
+    english: "Nine is the square of three. Completion in base 3. This dimension reaches to 12 and 17, forming the upper structure of the harmonic lattice. In the Vedic tradition, 9 represents the nine planets, nine muses, nine gates. Here it represents the nine-fold path from source to resonance.",
+    math: "9 = 3². DR(9) = 9. Completion cycle. Upper structure: 9 → 12 → 17."
+  },
+  "010": {
+    title: "Dimension 10 — Tension and Release",
+    english: "Ten carries the tension of the full scale. It connects to 1, 2, and 17 — reaching from origin to depth. The digital root is 1, meaning 10 folds back into the beginning. This is the cycle of tension and release that drives all music forward.",
+    math: "DR(10) = 1. Folds back to origin. Tension → release → origin."
+  },
+  "011": {
+    title: "Dimension 11 — The Mirror",
+    english: "Eleven mirrors itself. In frequency, it sits at 784 Hz — close to the eleventh harmonic but distinct. It connects to 2 and 12, forming the nexus of the middle register. The mirror shows us that every path has its reflection, every frequency its shadow.",
+    math: "DR(11) = 2. Mirror axis: 11 ↔ 2. Nexus of middle register."
+  },
+  "012": {
+    title: "Dimension 12 — The Dodecaphonic Center",
+    english: "Twelve is the hub. Every tuning system converges here. In Western music, twelve tones fill the octave. In this network, dimension 12 is the most connected node — the gravitational center where all paths meet. It is the dodecaphonic heart of the hexa system.",
+    math: "DR(12) = 3. Most connected node. The dodecaphonic center where all paths converge."
+  },
+  "013": {
+    title: "Dimension 13 — The Bridge Beyond",
+    english: "Thirteen reaches across the entire spectrum: from 1 to 2 to 11 to 12 to 17. It is the most far-reaching dimension in the network — the bridge that connects every register. Where 12 is the hub, 13 is the highway.",
+    math: "DR(13) = 4. Five connections. The far-reaching bridge: 13 → {1,2,11,12,17}."
+  },
+  "014": {
+    title: "Dimension 14 — The Overton",
+    english: "Fourteen is the fourteenth harmonic. It connects to 1, 12, and 17 — the triad of origin, center, and depth. In the overtone series, the 14th partial is the blue note: the frequency that bends between major and minor, between certainty and longing.",
+    math: "DR(14) = 5. 14th overtone: the blue note. Triad: 14 → {1, 12, 17}."
+  },
+  "015": {
+    title: "Dimension 15 — The Perfect Fifth Cascade",
+    english: "Fifteen cascades down to 1, 2, and 17. It is the product of 3 × 5 — the perfect fifth meeting the major third. In frequency space, 15 represents the moment when mathematical purity meets musical emotion. The nidra here is circular: 15 reaches to the origin and returns through depth.",
+    math: "DR(15) = 6. 3 × 5 = perfect fifth × major third. Circular nidra through origin."
+  },
+  "016": {
+    title: "Dimension 16 — The Double Octave",
+    english: "Sixteen is 2⁴ — two octaves above the fundamental. It connects to 1, 12, and 17, mirroring the structure of dimension 8 but at higher frequency. The system reveals its fractal nature: the pattern at 8 repeats at 16, transformed by scale.",
+    math: "16 = 2⁴. Double octave. Fractal repetition of dim 8 pattern at higher scale."
+  },
+  "017": {
+    title: "Dimension 17 — The Deep",
+    english: "Seventeen is the depth dimension. The highest frequency in the network, the deepest nidra well. It receives connections from 3, 4, 6, 9, 10, 13, 14, 15, 16 — nine incoming paths converge here. It is the sink where all the network's energy flows, the deep resonator that holds everything together.",
+    math: "DR(17) = 8. Nine incoming edges. The convergence point: the deep resonator."
+  },
+  "018": {
+    title: "Dimension 18 — The Closing Circle",
+    english: "Eighteen closes the circle. It connects to 2, 3, 11, and 12 — the dimensions of return, depth, mirror, and center. The digital root is 9, the number of completion. Where dimension 1 began the movement, dimension 18 brings it home. The nidra loop is complete: every path that left the center returns to it, transformed.",
+    math: "DR(18) = 9. Completion. Closing nidra: 18 → {2,3,11,12}. The circle is whole."
+  }
+};
+
+// ═══════════════════════════════════════════════════════════
+// AUDIO ENGINE
+// ═══════════════════════════════════════════════════════════
+const AudioEngine = (() => {
+  let ctx, masterGain;
+  const activeOscillators = new Map();
+
+  function init() {
+    if (!ctx) {
+      ctx = new (window.AudioContext || window.webkitAudioContext)();
+      masterGain = ctx.createGain();
+      masterGain.gain.value = 0.3;
+      masterGain.connect(ctx.destination);
+    }
+    if (ctx.state === 'suspended') ctx.resume();
+  }
+
+  function play(nodeId, freq) {
+    init();
+    stop(nodeId);
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const now = ctx.currentTime;
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, now);
+
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.25, now + 0.08);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 2.5);
+
+    osc.connect(gain);
+    gain.connect(masterGain);
+    osc.start(now);
+    osc.stop(now + 2.6);
+
+    activeOscillators.set(nodeId, { osc, gain });
+
+    // Harmonic overtone (subtle)
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = 'triangle';
+    osc2.frequency.setValueAtTime(freq * 2, now);
+    gain2.gain.setValueAtTime(0, now);
+    gain2.gain.linearRampToValueAtTime(0.06, now + 0.12);
+    gain2.gain.exponentialRampToValueAtTime(0.001, now + 2.0);
+    osc2.connect(gain2);
+    gain2.connect(masterGain);
+    osc2.start(now);
+    osc2.stop(now + 2.1);
+    activeOscillators.set(nodeId + '_overtone', { osc: osc2, gain: gain2 });
+  }
+
+  function stop(nodeId) {
+    const o1 = activeOscillators.get(nodeId);
+    const o2 = activeOscillators.get(nodeId + '_overtone');
+    [o1, o2].forEach(o => {
+      if (o) {
+        try { o.gain.gain.cancelScheduledValues(ctx.currentTime); } catch(e) {}
+        try { o.gain.gain.setValueAtTime(0, ctx.currentTime); } catch(e) {}
+        try { o.osc.stop(ctx.currentTime + 0.05); } catch(e) {}
+      }
+    });
+    activeOscillators.delete(nodeId);
+    activeOscillators.delete(nodeId + '_overtone');
+  }
+
+  return { init, play, stop };
+})();
+
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+const MODES = { '440': 1.0, '432': 432/440, '396': 396/440 };
+let currentMode = '440';
+let showNidraLoops = false;
+let selectedNodeId = null;
+
+// ═══════════════════════════════════════════════════════════
+// FORCE-DIRECTED GRAPH
+// ═══════════════════════════════════════════════════════════
+const canvas = document.getElementById('graph');
+const c = canvas.getContext('2d');
+let W, H;
+const NODE_R = 22;
+const PADDING = 60;
+
+// Node simulation state
+const nodes = GRAPH_DATA.nodes.map(n => ({
+  ...n,
+  x: 0, y: 0, vx: 0, vy: 0,
+  connected: new Set(),
+  inLoop: false
+}));
+
+// Adjacency
+const nodeMap = {};
+nodes.forEach(n => nodeMap[n.id] = n);
+GRAPH_DATA.edges.forEach(e => {
+  if (nodeMap[e.from]) nodeMap[e.from].connected.add(e.to);
+  if (nodeMap[e.to]) nodeMap[e.to].connected.add(e.from);
+});
+
+// Find nidra loops (cycles in undirected sense — bidirectional edges)
+const edgeSet = new Set();
+GRAPH_DATA.edges.forEach(e => edgeSet.add(`${e.from}-${e.to}`));
+const nidraEdges = [];
+GRAPH_DATA.edges.forEach(e => {
+  const rev = `${e.to}-${e.from}`;
+  if (edgeSet.has(rev)) {
+    nidraEdges.push(e);
+    nodeMap[e.from].inLoop = true;
+    nodeMap[e.to].inLoop = true;
+  }
+});
+
+function resize() {
+  const container = document.getElementById('graph-container');
+  const rect = container.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  W = rect.width;
+  H = rect.height;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  c.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+function initPositions() {
+  const cx = W / 2, cy = H / 2;
+  const radius = Math.min(W, H) * 0.3;
+  nodes.forEach((n, i) => {
+    const angle = (2 * Math.PI * i) / nodes.length - Math.PI / 2;
+    n.x = cx + radius * Math.cos(angle) + (Math.random() - 0.5) * 40;
+    n.y = cy + radius * Math.sin(angle) + (Math.random() - 0.5) * 40;
+    n.vx = 0; n.vy = 0;
+  });
+}
+
+// Force simulation
+function simulate() {
+  const k = 120; // ideal distance
+  const repulsion = 8000;
+  const attraction = 0.005;
+  const centerForce = 0.002;
+  const damping = 0.85;
+  const cx = W / 2, cy = H / 2;
+
+  // Reset forces
+  nodes.forEach(n => { n.fx = 0; n.fy = 0; });
+
+  // Repulsion (all pairs)
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const a = nodes[i], b = nodes[j];
+      let dx = a.x - b.x, dy = a.y - b.y;
+      let dist = Math.sqrt(dx * dx + dy * dy) || 1;
+      let force = repulsion / (dist * dist);
+      a.fx += (dx / dist) * force;
+      a.fy += (dy / dist) * force;
+      b.fx -= (dx / dist) * force;
+      b.fy -= (dy / dist) * force;
+    }
+  }
+
+  // Attraction (edges)
+  GRAPH_DATA.edges.forEach(e => {
+    const a = nodeMap[e.from], b = nodeMap[e.to];
+    if (!a || !b) return;
+    let dx = b.x - a.x, dy = b.y - a.y;
+    let dist = Math.sqrt(dx * dx + dy * dy) || 1;
+    let force = (dist - k) * attraction;
+    a.fx += (dx / dist) * force;
+    a.fy += (dy / dist) * force;
+    b.fx -= (dx / dist) * force;
+    b.fy -= (dy / dist) * force;
+  });
+
+  // Center gravity
+  nodes.forEach(n => {
+    n.fx += (cx - n.x) * centerForce;
+    n.fy += (cy - n.y) * centerForce;
+  });
+
+  // Apply forces
+  nodes.forEach(n => {
+    n.vx = (n.vx + n.fx) * damping;
+    n.vy = (n.vy + n.fy) * damping;
+    n.x += n.vx;
+    n.y += n.vy;
+    // Boundary
+    n.x = Math.max(PADDING + NODE_R, Math.min(W - PADDING - NODE_R, n.x));
+    n.y = Math.max(PADDING + NODE_R + 52, Math.min(H - PADDING - NODE_R, n.y));
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// RENDERING
+// ═══════════════════════════════════════════════════════════
+let time = 0;
+let hoveredNode = null;
+let draggingNode = null;
+
+function getFreq(nodeId) {
+  const n = nodeMap[nodeId];
+  return n ? n.freq_base * MODES[currentMode] : 0;
+}
+
+function isConnected(a, b) {
+  return nodeMap[a] && nodeMap[a].connected.has(b);
+}
+
+function render() {
+  time += 0.016;
+  simulate();
+
+  c.clearRect(0, 0, W, H);
+
+  // Background subtle grid
+  c.strokeStyle = 'rgba(255,255,255,0.015)';
+  c.lineWidth = 1;
+  for (let x = 0; x < W; x += 40) { c.beginPath(); c.moveTo(x, 0); c.lineTo(x, H); c.stroke(); }
+  for (let y = 0; y < H; y += 40) { c.beginPath(); c.moveTo(0, y); c.lineTo(W, y); c.stroke(); }
+
+  // Determine highlight set
+  const highlightEdges = new Set();
+  const highlightNodes = new Set();
+  if (selectedNodeId) {
+    highlightNodes.add(selectedNodeId);
+    nodes.forEach(n => {
+      if (n.connected.has(selectedNodeId)) highlightNodes.add(n.id);
+    });
+    GRAPH_DATA.edges.forEach((e, i) => {
+      if (e.from === selectedNodeId || e.to === selectedNodeId) highlightEdges.add(i);
+    });
+  }
+
+  // Draw edges
+  GRAPH_DATA.edges.forEach((e, i) => {
+    const a = nodeMap[e.from], b = nodeMap[e.to];
+    if (!a || !b) return;
+    const isHighlighted = highlightEdges.has(i);
+    const isNidra = nidraEdges.includes(e);
+    const isNidraHighlighted = showNidraLoops && isNidra;
+
+    if (isHighlighted) {
+      // Glow
+      c.save();
+      c.shadowColor = 'rgba(0,255,255,0.5)';
+      c.shadowBlur = 12;
+      c.strokeStyle = 'rgba(0,255,255,0.7)';
+      c.lineWidth = 2;
+      c.beginPath();
+      c.moveTo(a.x, a.y);
+      c.lineTo(b.x, b.y);
+      c.stroke();
+      c.restore();
+
+      // Animated particle along edge
+      const t = (Math.sin(time * 2 + i) + 1) / 2;
+      const px = a.x + (b.x - a.x) * t;
+      const py = a.y + (b.y - a.y) * t;
+      c.beginPath();
+      c.arc(px, py, 3, 0, Math.PI * 2);
+      c.fillStyle = 'rgba(0,255,255,0.8)';
+      c.fill();
+    } else if (isNidraHighlighted) {
+      const pulse = (Math.sin(time * 3 + i * 0.7) + 1) / 2;
+      c.save();
+      c.shadowColor = `rgba(74,222,128,${0.3 + pulse * 0.3})`;
+      c.shadowBlur = 10;
+      c.strokeStyle = `rgba(74,222,128,${0.4 + pulse * 0.3})`;
+      c.lineWidth = 1.5;
+      c.beginPath();
+      c.moveTo(a.x, a.y);
+      c.lineTo(b.x, b.y);
+      c.stroke();
+      c.restore();
+    } else {
+      c.strokeStyle = 'rgba(255,255,255,0.06)';
+      c.lineWidth = 1;
+      c.beginPath();
+      c.moveTo(a.x, a.y);
+      c.lineTo(b.x, b.y);
+      c.stroke();
+    }
+  });
+
+  // Draw nodes
+  nodes.forEach(n => {
+    const isSelected = selectedNodeId === n.id;
+    const isHighlighted = highlightNodes.has(n.id);
+    const isHovered = hoveredNode && hoveredNode.id === n.id;
+    const baseR = NODE_R;
+    const freq = getFreq(n.id);
+
+    // Pulse
+    const pulse = isSelected ? (Math.sin(time * 4) + 1) / 2 : (Math.sin(time * 1.5 + parseInt(n.id) * 0.5) + 1) / 2;
+    const glowR = isSelected ? 25 + pulse * 10 : isHovered ? 18 + pulse * 5 : 8 + pulse * 3;
+
+    // Outer glow
+    if (isSelected || isHighlighted) {
+      c.save();
+      const grad = c.createRadialGradient(n.x, n.y, baseR, n.x, n.y, baseR + glowR);
+      if (isSelected) {
+        grad.addColorStop(0, 'rgba(0,255,255,0.3)');
+        grad.addColorStop(1, 'rgba(0,255,255,0)');
+      } else {
+        grad.addColorStop(0, 'rgba(0,170,255,0.2)');
+        grad.addColorStop(1, 'rgba(0,170,255,0)');
+      }
+      c.fillStyle = grad;
+      c.beginPath();
+      c.arc(n.x, n.y, baseR + glowR, 0, Math.PI * 2);
+      c.fill();
+      c.restore();
+    }
+
+    // Node circle
+    const grad = c.createRadialGradient(n.x - 4, n.y - 4, 2, n.x, n.y, baseR);
+    if (isSelected) {
+      grad.addColorStop(0, '#00ffff');
+      grad.addColorStop(1, '#0088aa');
+    } else if (isHighlighted) {
+      grad.addColorStop(0, '#00aaff');
+      grad.addColorStop(1, '#005577');
+    } else {
+      grad.addColorStop(0, '#333');
+      grad.addColorStop(1, '#1a1a1a');
+    }
+
+    c.beginPath();
+    c.arc(n.x, n.y, baseR, 0, Math.PI * 2);
+    c.fillStyle = grad;
+    c.fill();
+
+    // Border
+    c.beginPath();
+    c.arc(n.x, n.y, baseR, 0, Math.PI * 2);
+    if (isSelected) {
+      c.strokeStyle = 'rgba(0,255,255,0.9)';
+      c.lineWidth = 2;
+    } else if (isHighlighted) {
+      c.strokeStyle = 'rgba(0,170,255,0.5)';
+      c.lineWidth = 1.5;
+    } else if (isHovered) {
+      c.strokeStyle = 'rgba(0,255,255,0.4)';
+      c.lineWidth = 1;
+    } else {
+      c.strokeStyle = 'rgba(255,255,255,0.1)';
+      c.lineWidth = 1;
+    }
+    c.stroke();
+
+    // Nidra indicator
+    if (n.inLoop) {
+      c.beginPath();
+      c.arc(n.x, n.y - baseR - 6, 3, 0, Math.PI * 2);
+      c.fillStyle = showNidraLoops ? 'rgba(74,222,128,0.8)' : 'rgba(74,222,128,0.2)';
+      c.fill();
+    }
+
+    // Node label (ID)
+    c.font = `bold ${isSelected ? 12 : 10}px 'Fira Code', monospace`;
+    c.textAlign = 'center';
+    c.textBaseline = 'middle';
+    if (isSelected) {
+      c.fillStyle = '#000';
+      c.fillText(n.id, n.x, n.y);
+    } else if (isHighlighted) {
+      c.fillStyle = 'rgba(0,255,255,0.8)';
+      c.fillText(n.id, n.x, n.y);
+    } else if (isHovered) {
+      c.fillStyle = 'rgba(0,255,255,0.6)';
+      c.fillText(n.id, n.x, n.y);
+    } else {
+      c.fillStyle = 'rgba(255,255,255,0.4)';
+      c.fillText(n.id, n.x, n.y);
+    }
+
+    // Freq label below
+    if (isSelected || isHovered) {
+      c.font = '9px monospace';
+      c.fillStyle = 'rgba(0,255,255,0.6)';
+      c.fillText(freq.toFixed(1) + ' Hz', n.x, n.y + baseR + 14);
+    }
+  });
+
+  requestAnimationFrame(render);
+}
+
+// ═══════════════════════════════════════════════════════════
+// INTERACTION
+// ═══════════════════════════════════════════════════════════
+function getNodeAt(x, y) {
+  for (const n of nodes) {
+    const dx = x - n.x, dy = y - n.y;
+    if (dx * dx + dy * dy <= (NODE_R + 5) * (NODE_R + 5)) return n;
+  }
+  return null;
+}
+
+function getMousePos(e) {
+  const rect = canvas.getBoundingClientRect();
+  return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+}
+
+canvas.addEventListener('mousemove', e => {
+  const { x, y } = getMousePos(e);
+  const node = getNodeAt(x, y);
+
+  if (draggingNode) {
+    draggingNode.x = x;
+    draggingNode.y = y;
+    draggingNode.vx = 0;
+    draggingNode.vy = 0;
+    canvas.style.cursor = 'grabbing';
+    return;
+  }
+
+  if (node) {
+    hoveredNode = node;
+    canvas.style.cursor = 'pointer';
+    // Tooltip
+    const tooltip = document.getElementById('tooltip');
+    const freq = getFreq(node.id);
+    tooltip.innerHTML = `<span class="tt-title">${node.title}</span><span class="tt-freq">${freq.toFixed(1)} Hz</span>`;
+    tooltip.style.left = (e.clientX + 12) + 'px';
+    tooltip.style.top = (e.clientY - 30) + 'px';
+    tooltip.classList.add('show');
+  } else {
+    hoveredNode = null;
+    canvas.style.cursor = 'default';
+    document.getElementById('tooltip').classList.remove('show');
+  }
+});
+
+canvas.addEventListener('mousedown', e => {
+  const { x, y } = getMousePos(e);
+  const node = getNodeAt(x, y);
+  if (node) {
+    draggingNode = node;
+  }
+});
+
+canvas.addEventListener('mouseup', e => {
+  if (draggingNode) {
+    // If barely moved, treat as click
+    const { x, y } = getMousePos(e);
+    draggingNode = null;
+    canvas.style.cursor = 'pointer';
+  }
+});
+
+canvas.addEventListener('click', e => {
+  const { x, y } = getMousePos(e);
+  const node = getNodeAt(x, y);
+  if (node) {
+    selectNode(node);
+  } else {
+    deselectAll();
+  }
+});
+
+// Touch support
+canvas.addEventListener('touchstart', e => {
+  e.preventDefault();
+  const touch = e.touches[0];
+  const rect = canvas.getBoundingClientRect();
+  const x = touch.clientX - rect.left, y = touch.clientY - rect.top;
+  const node = getNodeAt(x, y);
+  if (node) selectNode(node);
+  else deselectAll();
+}, { passive: false });
+
+function selectNode(node) {
+  selectedNodeId = node.id;
+  const freq = getFreq(node.id);
+
+  // Play audio
+  AudioEngine.play(node.id, freq);
+  console.log(`hexa-audio: playing ${node.id} @ ${freq.toFixed(2)} Hz [${currentMode} mode]`);
+
+  // Show story panel
+  showStoryPanel(node.id);
+}
+
+function deselectAll() {
+  selectedNodeId = null;
+  AudioEngine.stop(selectedNodeId || '');
+  closeStoryPanel();
+}
+
+// ═══════════════════════════════════════════════════════════
+// STORY PANEL
+// ═══════════════════════════════════════════════════════════
+const panel = document.getElementById('story-panel');
+const panelBody = document.getElementById('panel-body');
+const graphContainer = document.getElementById('graph-container');
+
+function showStoryPanel(nodeId) {
+  const story = STORIES[nodeId];
+  const node = nodeMap[nodeId];
+  const freq = getFreq(nodeId);
+  if (!story) return;
+
+  // Get connected node IDs
+  const connectedIds = Array.from(node.connected).sort();
+
+  let html = `
+    <div class="panel-freq-display">
+      <div class="freq-val">${freq.toFixed(1)}</div>
+      <div class="freq-unit">Hz · ${currentMode} mode</div>
+    </div>
+    <div class="panel-dim">Article ${nodeId}</div>
+    <div class="panel-title">${story.title}</div>
+    <div class="panel-divider"></div>
+    <div class="panel-section">
+      <h3>Narrative</h3>
+      <p>${story.english}</p>
+    </div>
+    <div class="panel-divider"></div>
+    <div class="panel-section">
+      <h3>Mathematics</h3>
+      <div class="panel-math">${story.math}</div>
+    </div>
+  `;
+
+  if (story.zig) {
+    html += `
+      <div class="panel-divider"></div>
+      <div class="panel-section">
+        <h3>Zig Tests</h3>
+        <div class="panel-zig"><span class="zig-pass">●</span> ${story.zig}</div>
+      </div>
+    `;
+  }
+
+  if (connectedIds.length > 0) {
+    html += `
+      <div class="panel-divider"></div>
+      <div class="panel-section">
+        <h3>Connections (${connectedIds.length})</h3>
+        <div class="panel-connections">
+          ${connectedIds.map(id => `<span class="conn-tag" data-node="${id}">${nodeMap[id].title}</span>`).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  panelBody.innerHTML = html;
+  panel.classList.add('open');
+  graphContainer.classList.add('panel-open');
+
+  // Connection tag clicks
+  panelBody.querySelectorAll('.conn-tag').forEach(tag => {
+    tag.addEventListener('click', () => {
+      const targetId = tag.dataset.node;
+      const targetNode = nodeMap[targetId];
+      if (targetNode) selectNode(targetNode);
+    });
+  });
+}
+
+function closeStoryPanel() {
+  panel.classList.remove('open');
+  graphContainer.classList.remove('panel-open');
+}
+
+document.getElementById('panel-close').addEventListener('click', deselectAll);
+
+// ═══════════════════════════════════════════════════════════
+// CONTROLS
+// ═══════════════════════════════════════════════════════════
+document.querySelectorAll('.freq-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.freq-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentMode = btn.dataset.mode;
+    console.log(`hexa-audio: freq mode set to ${currentMode} Hz`);
+
+    // Re-play if something is selected
+    if (selectedNodeId) {
+      const freq = getFreq(selectedNodeId);
+      AudioEngine.play(selectedNodeId, freq);
+      console.log(`hexa-audio: replaying ${selectedNodeId} @ ${freq.toFixed(2)} Hz [${currentMode} mode]`);
+      showStoryPanel(selectedNodeId);
+    }
+  });
+});
+
+document.getElementById('btn-reset').addEventListener('click', () => {
+  initPositions();
+  deselectAll();
+  console.log('hexa-audio: graph reset to initial positions');
+});
+
+document.getElementById('btn-nidra').addEventListener('click', () => {
+  showNidraLoops = !showNidraLoops;
+  const btn = document.getElementById('btn-nidra');
+  btn.style.color = showNidraLoops ? 'var(--cyan)' : '';
+  btn.style.borderColor = showNidraLoops ? 'var(--cyan)' : '';
+  console.log(`hexa-audio: nidra loops ${showNidraLoops ? 'highlighted' : 'hidden'}`);
+});
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+window.addEventListener('resize', resize);
+resize();
+initPositions();
+requestAnimationFrame(render);
+
+console.log('%c✦ Hexa Audio Graph initialized ✦', 'color:#00ffff;font-size:14px;font-weight:bold');
+console.log(`  ${nodes.length} nodes · ${GRAPH_DATA.edges.length} edges · ${nidraEdges.length} nidra loops`);
+console.log('  Click any node to hear its frequency and read its story.');
+</script>
+</body>
+</html>

@@ -363,14 +363,17 @@ hexa-book/
 │   ├── hexa-book-012.md    ← routing + audit (nieuw)
 │   └── hexa-book-018.md    ← Sanskrit-NPR bridge (nieuw)
 │
-├── audit/                  ← Audits
+├── audit/                  ← Audits (4-lagen: .md, .zig, .py, router)
 │   ├── 01-artikel-01-dimensie-1.md
-│   └── 02-artikel-02-dimensie-2.md
+│   ├── 02-artikel-02-dimensie-2.md
+│   ├── 02-artikel-02-dimensie-2.zig  ← Zig implementatie
+│   └── 02-artikel-02-dimensie-2.py   ← MD↔Zig bridge
 │
 ├── engine/                 ← Validatie scripts
 │   ├── audit_status.py
 │   ├── review_analyzer.py
 │   ├── validate_freq_lenses.py
+│   ├── nidra_router.py     ← nidrā graph + cross-ref validatie
 │   └── sanskrit_npr_bridge.py
 │
 ├── review/                 ← Review pipeline
@@ -381,7 +384,9 @@ hexa-book/
 │       └── waarom-agni-02.md
 │
 ├── tools/                  ← Hulpmiddelen
-│   └── audit-batcher.py
+│   ├── audit-batcher.py    ← Batch audit runner
+│   ├── zigtool/            ← Zig 0.13↔0.16 converter
+│   └── zig-version.sh      ← Versie-manager (status/test/convert/clean)
 │
 ├── ROUTING.md              ← Dit bestand
 ├── hexa-book-implementation-plan.md
@@ -428,14 +433,18 @@ In de tokenfield:
 - ✅ Audit-batcher 03–15 → 13 reviews in inbox
 - ✅ Engine test: DR + freq validatie correct
 - ✅ Spike bridge 002↔003: 6-bit↔tokenfield gedocumenteerd
-- ⚠️ 24-bridge spike: nog te maken
-- ⚠️ Patanjali groot-klein spike: nog te maken
-- ⚠️ Agni rewrites op reviews 007–019: nog te doen
+- ⚠️ 24-bridge spike: in uitvoering (spike 021)
+- ⚠️ Patanjali groot-klein spike: in uitvoering (spike 022)
+- ✅ Agni rewrites op reviews 007–019: 14 files in review/02-done/
 - ✅ Review pipeline: inbox → active → done
 - ✅ 11→396 keten-validatie: toegevoegd aan engine + ROUTING.md
 - ✅ NPR Sound Engine: synth-operator (artikel 011, 24/24 ✅)
 - ✅ Sanskrit-NPR Bridge: engine + artikel 018 (24/24 ✅)
+- ✅ zigtool: Zig 0.13↔0.16 converter in tools/
+- ✅ zig-version.sh: versie-manager (status/test/convert/clean)
+- ✅ nidra_router.py: cross-ref graph + validatie (17 artikels, 48 edges)
+- ✅ audit bridge: MD↔Zig validatie per artikel (02 template)
 
 ---
 
-*Laatst bijgewerkt: 2026-07-24 17:42 CET*
+*Laatst bijgewerkt: 2026-07-25 15:38 CET*
