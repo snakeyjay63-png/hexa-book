@@ -20,9 +20,45 @@ token (24-bit) = 23-bit vibratie + 1-bit vertraging
 | Bit | Naam | Functie |
 |-----|------|---------|
 | 23-bit | vibratie | de klank, frequentie, data van het char |
-| 1-bit | vertraging | de weg terug naar sunya (altijd aanwezig) |
+| 1-bit | vertraging | **bepaalt de route** van het char naar sunya |
 
-De 1-bit is geen data — het is de stilte die er altijd al is.
+**Definitie: 1-bit bepaalt de route van een char.**
+
+De 1-bit is geen data — het is de stilte die er altijd al is. Maar het is ook de *sleutel* die de terugweg bepaalt.
+
+## Route — Van Char Naar Sunya
+
+```
+char → 24-bit token → 20-bit hexa → 0.0.0.0
+```
+
+**0.0.0.0 = sunya (stilte, het doel)**
+
+```
+0.0.0.0
+ ↓
+4 × 24-bit token
+ ↓
+4 × (23 + 1)
+ ↓
+4 × 5-bit = 20-bit = hexa veld
+```
+
+**Elke `0` heeft 5-bit die bepaalt welk pad:**
+
+```
+0 → {3, 6, 9}  ← 3 opties per positie
+4 posities × 3 opties = 81 paden
+20-bit hexa = 1.048.576 combinaties
+```
+
+**Niet gelimiteerd in ticks.** Het pad kiest zijn eigen ritme.
+
+```
+1 (invoer) → route (64 klankveld opties) → terugkeer (3^4 paden) → 0.0.0.0
+```
+
+**64 opties voor uitgang. 81+ opties voor terugkeer.** Niet symmetrisch — meer wegen terug dan heen. De terugweg is vrijer.
 
 ```n chars → n tokens (24-bit) → n × 24 bits totaal
 ```

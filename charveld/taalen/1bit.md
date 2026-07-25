@@ -147,6 +147,26 @@ Elke taal heeft een andere massa per char — meer bytes = zwaardere vibratie:
 | Arabisch | 2 ticks | UTF-8, 2 bytes, zwaarder |
 | Sanskriet | 3 ticks | UTF-8, 3 bytes, zwaarst |
 
+### Definitie: 1-bit Bepaalt De Route
+
+```
+1 (invoer) → 1-bit bepaalt route → 64 klankveld opties → 20-bit hexa → 0.0.0.0
+```
+
+De 1-bit in het token is de sleutel die de terugweg bepaalt:
+
+```
+0.0.0.0 = sunya
+ ↓
+4 × 5-bit = 20-bit hexa veld
+ ↓
+elke 0 → {3, 6, 9} (3 opties per positie)
+ ↓
+4 posities × 3 opties = 81 paden naar stilte
+```
+
+**Niet gelimiteerd in ticks.** Het pad kiest zijn eigen ritme.
+
 ### Ticks als Tijd
 
 ```
