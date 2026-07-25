@@ -44,9 +44,17 @@ def gen():
 
     stupas = []
     for f in sorted(glob.glob('audit/*.html')):
+        # Skip .art.html files (kunstwerk versie is separate)
+        if '.art.html' in f:
+            continue
         name = os.path.basename(f).replace('.html', '')
         title = name.replace('-', ' ').title()
-        stupas.append({'file': f, 'name': name, 'title': title})
+        # Check for .art.html (kunstwerk versie)
+        art_file = f.replace('.html', '.art.html')
+        if os.path.exists(art_file):
+            stupas.append({'file': art_file, 'name': name, 'title': title, 'art': True})
+        else:
+            stupas.append({'file': f, 'name': name, 'title': title})
 
     talen = []
     for f in sorted(glob.glob('charveld/taalen/*.md')):

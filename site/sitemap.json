@@ -433,9 +433,10 @@
   ],
   "stupas": [
     {
-      "file": "audit/00-intro.html",
+      "file": "audit/00-intro.art.html",
       "name": "00-intro",
-      "title": "00 Intro"
+      "title": "00 Intro",
+      "art": true
     },
     {
       "file": "audit/01-artikel-01-dimensie-1.html",

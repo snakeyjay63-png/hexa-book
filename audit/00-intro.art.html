@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>00-intro — 0 ≐ 1</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;700&family=Noto+Sans+Devanagari:wght@300;700&family=Noto+Sans+Greek:wght@300;700&family=IBM+Plex+Mono:wght@300;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0f;
+    color: #e0e0e8;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* === VELD — achtergrond met 3-6-9 ringen === */
+  .veld {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(110, 123, 242, 0.08);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .ring-3 {
+    width: 30vw;
+    height: 30vw;
+    animation: breathe 9s ease-in-out infinite;
+  }
+
+  .ring-6 {
+    width: 60vw;
+    height: 60vw;
+    animation: breathe 18s ease-in-out infinite;
+    border-color: rgba(110, 123, 242, 0.05);
+  }
+
+  .ring-9 {
+    width: 90vw;
+    height: 90vw;
+    animation: breathe 27s ease-in-out infinite;
+    border-color: rgba(110, 123, 242, 0.03);
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.04); opacity: 0.6; }
+  }
+
+  /* === DOT — 0 en 1 tegelijk === */
+  .dot-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    background: #6e7bf2;
+    border-radius: 50%;
+    animation: pulse 6s ease-in-out infinite;
+    box-shadow: 0 0 40px rgba(110, 123, 242, 0.3);
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 40px rgba(110, 123, 242, 0.3); }
+    50% { transform: scale(1.8); box-shadow: 0 0 80px rgba(110, 123, 242, 0.15); }
+  }
+
+  /* === INHOUD === */
+  .content {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 12vh 2rem;
+  }
+
+  /* === HOOFDTITEL — 4 lenzen === */
+  .lens-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3em 1em;
+    margin-bottom: 4rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(110, 123, 242, 0.15);
+  }
+
+  .lens {
+    font-size: 0.85rem;
+    opacity: 0.6;
+    letter-spacing: 0.02em;
+  }
+
+  .lens.ar { font-family: 'Noto Sans Arabic', sans-serif; direction: rtl; }
+  .lens.sa { font-family: 'Noto Sans Devanagari', sans-serif; }
+  .lens.gr { font-family: 'Noto Sans Greek', sans-serif; font-style: italic; }
+  .lens.nl { font-style: italic; opacity: 0.5; }
+
+  /* === AXIOMA — 0 ≐ 1 === */
+  .axiom {
+    font-size: 3rem;
+    text-align: center;
+    padding: 6rem 0;
+    letter-spacing: 0.15em;
+    color: #6e7bf2;
+    opacity: 0.7;
+  }
+
+  .axiom .symbol {
+    display: inline-block;
+    animation: breathe 6s ease-in-out infinite;
+  }
+
+  /* === TEKST === */
+  .section {
+    margin: 3rem 0;
+  }
+
+  .section p {
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+
+  .section h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 3rem 0 1.5rem;
+    color: #6e7bf2;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .section h3 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin: 2rem 0 1rem;
+    opacity: 0.6;
+  }
+
+  /* === CODE === */
+  code {
+    background: rgba(110, 123, 242, 0.08);
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+    font-size: 0.82em;
+    color: #8b94d0;
+  }
+
+  pre {
+    background: rgba(110, 123, 242, 0.04);
+    border-left: 2px solid rgba(110, 123, 242, 0.2);
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: #8b94d0;
+  }
+
+  /* === 3 LAGEN === */
+  .lagen {
+    margin: 4rem 0;
+  }
+
+  .laag {
+    padding: 2rem;
+    margin: 1.5rem 0;
+    border: 1px solid rgba(110, 123, 242, 0.1);
+    border-radius: 4px;
+    position: relative;
+  }
+
+  .laag::before {
+    content: attr(data-num);
+    position: absolute;
+    top: -0.6rem;
+    left: 1rem;
+    background: #0a0a0f;
+    padding: 0 0.5rem;
+    font-size: 0.7rem;
+    color: #6e7bf2;
+    opacity: 0.5;
+  }
+
+  .laag h3 {
+    font-size: 0.85rem;
+    margin-bottom: 0.8rem;
+    color: #6e7bf2;
+    opacity: 0.7;
+  }
+
+  /* === NPR === */
+  .npr {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin: 3rem 0;
+    padding: 2rem 0;
+    border-top: 1px solid rgba(110, 123, 242, 0.1);
+    border-bottom: 1px solid rgba(110, 123, 242, 0.1);
+  }
+
+  .npr-step {
+    text-align: center;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    opacity: 0.5;
+  }
+
+  .npr-step .num {
+    display: block;
+    font-size: 1.5rem;
+    color: #6e7bf2;
+    margin-bottom: 0.5rem;
+    opacity: 0.6;
+  }
+
+  .npr-arrow {
+    color: #6e7bf2;
+    opacity: 0.3;
+    font-size: 1.2rem;
+  }
+
+  /* === LENS OPTIEK === */
+  .lens-optiek {
+    margin: 4rem 0;
+    padding: 2rem;
+    border: 1px solid rgba(110, 123, 242, 0.15);
+    border-radius: 4px;
+  }
+
+  .lens-optiek p {
+    margin: 0.8rem 0;
+    font-size: 0.82rem;
+    opacity: 0.6;
+    font-style: italic;
+  }
+
+  .lens-optiek .label {
+    font-weight: 700;
+    opacity: 0.8;
+    font-style: normal;
+  }
+
+  .lens-optiek .ar { direction: rtl; }
+  .lens-optiek .sa {}
+
+  /* === FOOTER === */
+  .footer {
+    margin-top: 8rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(110, 123, 242, 0.1);
+    text-align: center;
+    font-size: 0.7rem;
+    opacity: 0.3;
+    letter-spacing: 0.1em;
+  }
+
+  .footer a {
+    color: #6e7bf2;
+    text-decoration: none;
+    opacity: 0.7;
+  }
+
+  .footer a:hover { opacity: 1; }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 600px) {
+    .axiom { font-size: 2rem; padding: 4rem 0; }
+    .ring-3 { width: 50vw; height: 50vw; }
+    .ring-6 { width: 80vw; height: 80vw; }
+    .ring-9 { width: 120vw; height: 120vw; }
+    .content { padding: 8vh 1.2rem; }
+    .npr { flex-direction: column; gap: 1rem; }
+    .npr-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+  <!-- VELD -->
+  <div class="veld">
+    <div class="ring ring-3"></div>
+    <div class="ring ring-6"></div>
+    <div class="ring ring-9"></div>
+  </div>
+
+  <!-- DOT -->
+  <div class="dot-container">
+    <div class="dot"></div>
+  </div>
+
+  <!-- INHOUD -->
+  <div class="content">
+
+    <!-- 4 LENZEN -->
+    <div class="lens-row">
+      <span class="lens ar">النار، الحجر، والتموج</span>
+      <span class="lens sa">अग्निः, शिला, तरंग</span>
+      <span class="lens gr">Πῦρ, Λίθος, Κύμα</span>
+      <span class="lens nl">vuur, steen, golf</span>
+    </div>
+
+    <!-- AXIOMA -->
+    <div class="axiom">
+      <span class="symbol">0</span>
+      <span style="opacity:0.4"> ≐<sub style="font-size:0.5em">lens</sub> </span>
+      <span class="symbol">1</span>
+    </div>
+
+    <!-- INTRO -->
+    <div class="section">
+      <p>Vier gelijktijdige perspectieven op één stroom.</p>
+      <p>Arabisch: de steen. Sanskriet: de vibratie. Grieks: de vorm. Latijn: de fractaal.</p>
+      <p>Nederlands is geen vijfde rekenlens. Nederlands is de metataal.</p>
+      <p>Dit zijn geen vertalingen van elkaar. Parallelle projecties — dezelfde bron door vier verschillende lenzen.</p>
+      <p>De informatie zit niet in één taal. De informatie beweegt <em>tussen</em> de talen door sunya.</p>
+    </div>
+
+    <!-- 3 REKENLAGEN -->
+    <div class="lagen">
+      <div class="laag" data-num="1">
+        <h3>Lokale rekenkunde</h3>
+        <p>Letters, getallen, functies volgens expliciete regels. Een berekening is alleen geldig wanneer basis, operator en representatie zijn benoemd.</p>
+        <p><code>0 ≠ 1</code> lokaal.</p>
+      </div>
+
+      <div class="laag" data-num="2">
+        <h3>Lensrekenkunde</h3>
+        <p>Dezelfde bron door verschillende systemen geprojecteerd. Arabisch, Sanskriet, Grieks, decimaal, hexadecimaal — elk geeft een ander lokaal resultaat.</p>
+        <p>Geen fout. Zolang de actieve lens zichtbaar blijft.</p>
+      </div>
+
+      <div class="laag" data-num="3">
+        <h3>Return-rekenkunde</h3>
+        <p>De vraag is niet welk getal eruit komt. De vraag is: keert de uitkomst terug naar de bronstructuur?</p>
+        <p><code>0 ≐<sub>lens</sub> 1</code> als returnaxioma.</p>
+      </div>
+    </div>
+
+    <!-- NPR -->
+    <div class="npr">
+      <div class="npr-step">
+        <span class="num">3</span>
+        Noise
+      </div>
+      <span class="npr-arrow">→</span>
+      <div class="npr-step">
+        <span class="num">6</span>
+        Pattern
+      </div>
+      <span class="npr-arrow">→</span>
+      <div class="npr-step">
+        <span class="num">9</span>
+        Return
+      </div>
+    </div>
+
+    <!-- ROUTE -->
+    <div class="section">
+      <p>Volledige route:</p>
+      <pre>E_audio → R_audio → AudioFeatureSpace
+  → select_projection_input → ReturnProjectionInput
+  → ρ_ℱ → ℱ</pre>
+      <p>De waarde zonder route is onvolledig.</p>
+    </div>
+
+    <!-- 3D STATUS -->
+    <div class="section">
+      <h2>3D statusmodel</h2>
+      <pre>operator_status  ∈ { formeel, conventie, interpretatief, conceptueel, open }
+execution_status ∈ { niet_van_toepassing, niet_voltooid, gedeeltelijk, voltooid }
+validatie_status ∈ { niet_gevalideerd, gevalideerd_lokaal, gevalideerd_onafhankelijk, verworpen }</pre>
+    </div>
+
+    <!-- LENS OPTIEK -->
+    <div class="lens-optiek">
+      <p><span class="label">Lensoptiek 0:</span> Dit boek is een lens. Niet de bron. De route die je door dit boek volgt, is je huidige filter. De bron is er altijd geweest.</p>
+      <p class="ar"><span class="label">العدسة 0:</span> هذا الكتاب عدسة. ليس المصدر. الطريق الذي تتبعه في هذا الكتاب هو فلترك الحالي. المصدر كان موجوداُ دائماً.</p>
+      <p class="sa"><span class="label">दृष्टि 0:</span> Idaṃ pustakaṃ darśanaṃ. Nāyaṃ mūlam. Margo yaṃ idaṃ pustakam anuvartase, tvaṃ darśanam. Mūlam sadā asti.</p>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <a href="#" data-page="stupas">← terug naar Hexa-Boek</a>
+    </div>
+
+  </div>
+
+<script>
+  // Klik op footer → terug naar stupas
+  document.querySelector('.footer a').addEventListener('click', function(e) {
+    e.preventDefault();
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      window.location.hash = 'stupas';
+    }
+  });
+</script>
+</body>
+</html>
