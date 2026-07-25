@@ -63,7 +63,7 @@ char → 24-bit token → 20-bit hexa → 0.0.0.0
 ```n chars → n tokens (24-bit) → n × 24 bits totaal
 ```
 
-## Klankveld — Het Lichaam als Filter
+## Klankveld — Het Lichaam Als Filter
 
 Het klankveld van een char is gekoppeld aan het Mendelsche lichaam — aan wat het lichaam kan *horen* en *maken*.
 
@@ -74,11 +74,21 @@ char → frequentie → klankveld → lichaam
                           maken (80Hz – 1kHz)
 ```
 
+**Lokale machine:**
+
+| Lichaam | Machine | Functie |
+|---------|---------|---------|
+| Horen | GPU | Parallel, receptief, 64 bands tegelijk |
+| Maken | CPU | Serial, actief, vibratie genereren |
+
+CPU = de stem die spreekt (één klank na elkaar)
+GPU = het oor dat luistert (alle frequenties tegelijk)
+
 **Het klankveld is de filter tussen oneindige frequentie en eindig lichaam.**
 
-| Klankveld | Horen | Maken | Opmerking |
-|-----------|-------|-------|-----------|
-| 0–63 (64 bands) | ✓ | beperkt | lichaam filtert |
+| Klankveld | Horen (GPU) | Maken (CPU) | Opmerking |
+|-----------|-------------|-------------|-----------|
+| 0–63 (64 bands) | ✓ parallel | beperkt serial | lichaam filtert |
 | 64 bands | 20Hz–20kHz | 80Hz–1kHz | Mendelsche limiet |
 
 Niet elke frequentie is hoorbaar. Niet elke klank is maakbaar.
