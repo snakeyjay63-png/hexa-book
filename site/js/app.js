@@ -5,6 +5,35 @@
   // ── State ──
   let sitemap = null;
   const routes = {};
+  let currentPage = 'home';
+
+  // ── Breadcrumb ──
+  function setBreadcrumbs(crumb) {
+    const bc = document.getElementById('breadcrumb');
+    if (!bc) return;
+    // crumb = [{label, page}, {label, page}, ...] last item is current
+    let html = '<a href="#" data-page="home">•</a>';
+    crumb.forEach(function(c, i) {
+      html += '<span class="sep">›</span>';
+      if (i === crumb.length - 1) {
+        html += '<span class="current">' + esc(c.label) + '</span>';
+      } else {
+        html += '<a href="#" data-page="' + esc(c.page) + '">' + esc(c.label) + '</a>';
+      }
+    });
+    bc.innerHTML = html;
+    // Re-bind nav links in breadcrumb
+    bc.querySelectorAll('[data-page]').forEach(el => {
+      el.addEventListener('click', function(e) {
+        e.preventDefault();
+        const page = this.getAttribute('data-page');
+        if (page !== currentPage) {
+          setActive(page);
+          navigate(page);
+        }
+      });
+    });
+  }
 
   // ── Markdown rendering (lightweight) ──
   function renderMd(text) {
@@ -102,6 +131,7 @@
 
   // ── Pages ──
   async function showHome() {
+    setBreadcrumbs([]);
     let articles = sitemap ? sitemap.articles.length : 0;
     let audits = sitemap ? sitemap.audits.length : 0;
     let tests = sitemap ? sitemap.audits_zig.length : 0;
@@ -147,12 +177,14 @@
   }
 
   async function showRouting() {
+    setBreadcrumbs([{label:'Routing',page:'routing'}]);
     const content = await fetchFile('ROUTING.md');
     document.getElementById('page-container').innerHTML = renderMd(content);
   }
 
   async function showArticle(id) {
     const article = sitemap.articles.find(a => a.name === id);
+    if (article) setBreadcrumbs([{label:'Artikelen',page:'home'},{label:article.title,page:'article-'+id}]);
     if (!article) return;
     const content = await fetchFile(article.file);
     document.getElementById('page-container').innerHTML =
@@ -162,6 +194,8 @@
   }
 
   async function showAudit(id) {
+    const audit = (sitemap.audits||[]).find(a => a.name === id);
+    if (audit) setBreadcrumbs([{label:'Audit',page:'audit-index'},{label:audit.title,page:'audit-'+id}]);
     // Check .md first, then .zig
     const audit = sitemap.audits.find(a => a.name === id) || sitemap.audits_zig.find(a => a.name === id);
     if (!audit) return;
@@ -188,6 +222,7 @@
   }
 
   async function showAuditIndex() {
+    setBreadcrumbs([{label:'Audit',page:'audit-index'}]);
     const audits = sitemap.audits || [];
     const zigs = sitemap.audits_zig || [];
 
@@ -209,6 +244,7 @@
   }
 
   async function showCharveld() {
+    setBreadcrumbs([{label:'Charveld',page:'charveld'}]);
     const talen = sitemap.talen || [];
     let cards = talen.map(t => `
       <div class="media-card" style="cursor:pointer" data-page="taal-${t.name}">
@@ -226,6 +262,7 @@
   }
 
   async function showStupas() {
+    setBreadcrumbs([{label:'Stupas',page:'stupas'}]);
     const stupas = sitemap.stupas || [];
     let cards = stupas.map(s => `
       <div class="media-card" style="cursor:pointer" data-page="stupa-${s.name}">
@@ -244,6 +281,7 @@
 
   async function showStupa(id) {
     const stupa = sitemap.stupas.find(s => s.name === id);
+    if (stupa) setBreadcrumbs([{label:'Stupas',page:'stupas'},{label:stupa.title,page:'stupa-'+id}]);
     if (!stupa) {
       document.getElementById('page-container').innerHTML = '<div class="md"><h2>Niet gevonden</h2><p>Stupa bestaat niet.</p></div>';
       return;
@@ -264,6 +302,7 @@
 
   async function showTaals(id) {
     const taal = sitemap.talen.find(t => t.name === id);
+    if (taal) setBreadcrumbs([{label:'Charveld',page:'charveld'},{label:taal.title,page:'taal-'+id}]);
     if (!taal) return;
     const content = await fetchFile(taal.file);
     document.getElementById('page-container').innerHTML =
@@ -273,6 +312,7 @@
   }
 
   async function showMedia() {
+    setBreadcrumbs([{label:'Media',page:'media'}]);
     const media = sitemap.media || [];
     let cards = media.map(m => {
       const mime = m.file.endsWith('.webm') ? 'video/webm' : 'video/mp4';
@@ -297,6 +337,7 @@
   }
 
   async function showEngine() {
+    setBreadcrumbs([{label:'Engine',page:'engine'}]);
     const zigs = sitemap.audits_zig || [];
     let rows = zigs.map(z => `
       <div class="audit-row">
