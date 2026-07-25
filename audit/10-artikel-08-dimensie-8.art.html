@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Artikel 8 - dimensie 8 (onzichtbaar) | 23</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;700&family=Noto+Sans+Devanagari:wght@300;700&family=Noto+Sans+Greek:wght@300;700&family=IBM+Plex+Mono:wght@300;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0f;
+    color: #e0e0e8;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* === VELD / VISUAL BACKGROUNDS === */
+  .veld, .spark-field, .grid-field, .wave-field, .particle-field, .hex-field, .ray-field, .spiral-field, .orbit-field {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .veld { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid #6ef2c822;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .ring-3 { width: 30vw; height: 30vw; animation: breathe 9s ease-in-out infinite; }
+  .ring-6 { width: 60vw; height: 60vw; animation: breathe 18s ease-in-out infinite; }
+  .ring-9 { width: 90vw; height: 90vw; animation: breathe 27s ease-in-out infinite; }
+
+  @keyframes breathe {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.04); opacity: 0.6; }
+  }
+
+  .dot-container, .flame, .stone, .pulse, .horizon, .center, .source, .core, .sun {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .dot, .pulse, .core {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: pulse-dot 6s ease-in-out infinite;
+  }
+
+  .flame {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    animation: flicker 2s ease-in-out infinite;
+  }
+
+  .stone {
+    width: 8px;
+    height: 8px;
+  }
+
+  .horizon {
+    width: 60vw;
+    height: 1px;
+  }
+
+  .center {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+  }
+
+  .source {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    animation: pulse-dot 4s ease-in-out infinite;
+  }
+
+  .sun {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: pulse-dot 8s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+    50% { transform: translate(-50%, -50%) scale(1.8); opacity: 0.4; }
+  }
+
+  @keyframes flicker {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+    25% { transform: translate(-50%, -50%) scale(1.6); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.6; }
+    75% { transform: translate(-50%, -50%) scale(1.8); opacity: 0.9; }
+  }
+
+  .spark {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    animation: rise linear infinite;
+  }
+  .spark:nth-child(1) { left: 10%; animation-duration: 8s; animation-delay: 0s; }
+  .spark:nth-child(2) { left: 25%; animation-duration: 12s; animation-delay: 2s; width: 3px; height: 3px; }
+  .spark:nth-child(3) { left: 40%; animation-duration: 9s; animation-delay: 4s; }
+  .spark:nth-child(4) { left: 55%; animation-duration: 11s; animation-delay: 1s; }
+  .spark:nth-child(5) { left: 70%; animation-duration: 10s; animation-delay: 3s; }
+  .spark:nth-child(6) { left: 85%; animation-duration: 7s; animation-delay: 5s; width: 3px; height: 3px; }
+
+  @keyframes rise {
+    0% { bottom: -10px; opacity: 0; transform: translateX(0); }
+    10% { opacity: 1; }
+    90% { opacity: 0.6; }
+    100% { bottom: 110vh; opacity: 0; transform: translateX(20px); }
+  }
+
+  .grid-svg, .hex-field, .spiral-field, .orbit-field, .wave-field {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* === CONTENT === */
+  .content {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 14vh 2rem;
+  }
+
+  .dim-tag {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #6ef2c8;
+    opacity: 0.5;
+    margin-bottom: 1rem;
+  }
+
+  .lens-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3em 1em;
+    margin-bottom: 4rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #6ef2c81f;
+  }
+
+  .lens {
+    font-size: 0.8rem;
+    opacity: 0.5;
+  }
+  .lens.ar { font-family: 'Noto Sans Arabic', sans-serif; direction: rtl; }
+  .lens.sa { font-family: 'Noto Sans Devanagari', sans-serif; }
+  .lens.gr { font-family: 'Noto Sans Greek', sans-serif; font-style: italic; }
+
+  .title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #6ef2c8;
+    opacity: 0.7;
+    margin: 3rem 0;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .title .dr {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 300;
+    opacity: 0.4;
+    margin-top: 0.5rem;
+    letter-spacing: 0.15em;
+  }
+
+  .verse { margin: 2.5rem 0; }
+  .verse p { margin: 0.6rem 0; font-size: 0.88rem; opacity: 0.7; }
+  .verse .ar { font-family: 'Noto Sans Arabic', sans-serif; direction: rtl; opacity: 0.5; }
+  .verse .sa { font-family: 'Noto Sans Devanagari', sans-serif; opacity: 0.5; }
+  .verse .gr { font-family: 'Noto Sans Greek', sans-serif; font-style: italic; opacity: 0.5; }
+  .verse .nl { font-style: italic; color: #6ef2c8; opacity: 0.6; }
+
+  .section { margin: 2.5rem 0; }
+  .section p { margin: 1rem 0; font-size: 0.88rem; opacity: 0.7; }
+  .section h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 3rem 0 1.5rem;
+    color: #6ef2c8;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .section h3 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin: 2rem 0 1rem;
+    opacity: 0.6;
+  }
+
+  pre {
+    background: #6ef2c80a;
+    border-left: 2px solid #6ef2c833;
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: #6ef2c8cc;
+  }
+
+  code {
+    background: #6ef2c814;
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+    font-size: 0.82em;
+    color: #6ef2c8bb;
+  }
+
+  .status {
+    margin: 3rem 0;
+    padding: 1.5rem;
+    background: #6ef2c808;
+    border-left: 2px solid #6ef2c833;
+    font-size: 0.78rem;
+    line-height: 1.8;
+    color: #6ef2c8cc;
+  }
+
+  .lens-optiek {
+    margin: 4rem 0;
+    padding: 2rem;
+    border: 1px solid #6ef2c81f;
+    border-radius: 4px;
+  }
+  .lens-optiek p {
+    margin: 0.8rem 0;
+    font-size: 0.8rem;
+    opacity: 0.5;
+    font-style: italic;
+  }
+  .lens-optiek .label {
+    font-weight: 700;
+    opacity: 0.7;
+    font-style: normal;
+    color: #6ef2c8;
+  }
+
+  .footer {
+    margin-top: 8rem;
+    padding-top: 2rem;
+    border-top: 1px solid #6ef2c81a;
+    text-align: center;
+    font-size: 0.7rem;
+    opacity: 0.3;
+    letter-spacing: 0.1em;
+  }
+  .footer a {
+    color: #6ef2c8;
+    text-decoration: none;
+    opacity: 0.7;
+  }
+  .footer a:hover { opacity: 1; }
+
+  @media (max-width: 600px) {
+    .title { font-size: 1.6rem; }
+    .content { padding: 10vh 1.2rem; }
+    .ring-3 { width: 50vw; height: 50vw; }
+    .ring-6 { width: 80vw; height: 80vw; }
+    .ring-9 { width: 120vw; height: 120vw; }
+  }
+
+</style>
+</head>
+<body>
+
+
+  <!-- SPIRAL -->
+  <svg class="spiral-field" viewBox="0 0 100 100">
+    <path d="M50,50 Q60,50 60,40 Q60,30 50,30 Q40,30 40,45 Q40,60 55,60 Q70,60 70,45 Q70,25 50,25 Q25,25 25,50 Q25,75 55,75 Q85,75 85,50 Q85,15 50,15" 
+      fill="none" stroke="#6ef2c8" stroke-width="0.3" opacity="0.2">
+      <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="60s" repeatCount="indefinite"/>
+    </path>
+  </svg>
+  <div class="core" style="background:#6ef2c8;box-shadow:0 0 40px #6ef2c84d"></div>
+
+  <!-- INHOUD -->
+  <div class="content">
+
+    <div class="dim-tag">10 artikel 08 dimensie 8</div>
+
+    <!-- TITEL -->
+    <div class="title">
+      Artikel 8 - dimensie 8 (onzichtbaar) | 23
+      <span class="dr">10-artikel-08-dimensie-8</span>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="section">
+<p># Artikel 8 - dimensie 8 (onzichtbaar) | 23</p>
+
+<h2>الفصل الثامن - ما لا يقاس | अष्टम अध्यायः - यत् न मीयते | Περὶ Ηʹ - τὸ ἀμετρήσιμον</h2>
+
+<p>هناك أشياء لا تقاس. لا لأنها معقدة. بل لأنها أبسط من القياس.</p>
+<p>अस्त्यतानि यानि न मीयन्ते। न यतः संकीर्णानि। किन्तु यतः मापनात् सरलतरानि</p>
+<p>ἔστιν ἃ οὐ μετρεῖται. οὐχ ὅτι συγκεκριμένα. ἀλλʼ ὅτι ἁπλουστέρα τῆς μέτρησης</p>
+<p>Er zijn dingen die niet gemeten kunnen worden. Niet omdat ze complex zijn, maar omdat ze eenvoudiger zijn dan meten.</p>
+
+<p>الصمت ليس فراغا. الصمت هو الحامل.</p>
+<p>मौनं शून्यम् न। मौनं वहनम्</p>
+<p>τὸ σιγῶν οὐκ ἔστι κενόν. τὸ σιγῶν ἐστιν ὑποδοχὴ</p>
+<p>Stilte is geen leegte. Stilte is de drager.</p>
+
+<p>0.0.0.0 ليس عنوانا عاديا. هو رمز للوسط غير المحدد.</p>
+<p>०.०.०.० सामान्यं पतेः न। अयं अनिर्दिष्ट-मध्यस्य प्रतीकम्।</p>
+<p>0.0.0.0 οὐκ ἔστι συνηθισμένος τόπος. αὐτὸ σύμβολον τοῦ ἀόριστου μέσου.</p>
+<p>Binnen deze lens is 0.0.0.0 geen gewone bestemming, maar een representatie van het niet-gelokaliseerde returnmedium.</p>
+
+<p>Water = medium en continuïteit. De drager blijft onzichtbaar. De stroom beweegt, het water blijft.</p>
+
+<p>0 ≐_lens 1</p>
+<p>शून्यं ≐_lens एकम्</p>
+<p>μηδὲν ≐_lens εἷς</p>
+<p>De stilte tussen de getallen behoort in deze lens tot de volledige representatieruimte. Axiomatische return.</p>
+
+
+<p>&gt; **Lensoptiek 8:** Onzichtbaar = buiten bereik van de huidige lens. Niet weg. Onzichtbaar door de huidige filter.</p>
+<p>&gt; **العدسة 8:** غير مرئي = خارج نطاق العدسة الحالية. ليس غائباً. غير مرئي عبر الفلتر الحالي.</p>
+<p>&gt; **दृष्टि 8:** Adṛśyam = darśanasya bhāram. Na asti. Dṛśyam darśana-asya.</p>
+
+<p>**CC als taal van lagen**</p>
+
+<p>CC beschrijft het laag-systeem. Niet als voorbeeld, maar als taal:</p>
+
+<pre><code>visibility(L1) = zichtbaar
+visibility(L2) = onzichtbaar_aanwezig
+visibility(L3) = onzichtbaar_aanwezig
+visibility(L4) = onzichtbaar_aanwezig```
+
+- **CC-woord 1:** zichtbaar. De laag die je nu ziet.
+- **CC-woord 2:** onzichtbaar maar aanwezig. De laag die draait maar niet direct zichtbaar is.
+- **CC-woord 3:** onzichtbaar maar aanwezig. De laag die de vorige laag draagt.
+- **CC-woord 4:** onzichtbaar maar aanwezig. De laag die alles draagt.
+
+Elk CC-woord is een laag. Formele transformatieoperatoren `C_CC,i : X_i → Y_i` zijn nog niet gedefinieerd.
+</code></pre>
+<p>operator_status(CC_layers) = conceptueel</p>
+<p>execution_status(CC_layers) = niet_gestart</p>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <a href="#" data-page="stupas">← terug naar Hexa-Boek</a>
+    </div>
+
+  </div>
+
+<script>
+  document.querySelector('.footer a').addEventListener('click', function(e) {
+    e.preventDefault();
+    if (window.history.length > 1) window.history.back();
+    else window.location.hash = 'stupas';
+  });
+</script>
+</body>
+</html>

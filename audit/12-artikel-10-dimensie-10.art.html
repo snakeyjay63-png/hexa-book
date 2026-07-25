@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Artikel 10 - dimensie 10 (6-bit routing, NPR-cel) | 20+21+22</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;700&family=Noto+Sans+Devanagari:wght@300;700&family=Noto+Sans+Greek:wght@300;700&family=IBM+Plex+Mono:wght@300;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0f;
+    color: #e0e0e8;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* === VELD / VISUAL BACKGROUNDS === */
+  .veld, .spark-field, .grid-field, .wave-field, .particle-field, .hex-field, .ray-field, .spiral-field, .orbit-field {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .veld { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid #6e7bf222;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .ring-3 { width: 30vw; height: 30vw; animation: breathe 9s ease-in-out infinite; }
+  .ring-6 { width: 60vw; height: 60vw; animation: breathe 18s ease-in-out infinite; }
+  .ring-9 { width: 90vw; height: 90vw; animation: breathe 27s ease-in-out infinite; }
+
+  @keyframes breathe {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.04); opacity: 0.6; }
+  }
+
+  .dot-container, .flame, .stone, .pulse, .horizon, .center, .source, .core, .sun {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .dot, .pulse, .core {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: pulse-dot 6s ease-in-out infinite;
+  }
+
+  .flame {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    animation: flicker 2s ease-in-out infinite;
+  }
+
+  .stone {
+    width: 8px;
+    height: 8px;
+  }
+
+  .horizon {
+    width: 60vw;
+    height: 1px;
+  }
+
+  .center {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+  }
+
+  .source {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    animation: pulse-dot 4s ease-in-out infinite;
+  }
+
+  .sun {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: pulse-dot 8s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+    50% { transform: translate(-50%, -50%) scale(1.8); opacity: 0.4; }
+  }
+
+  @keyframes flicker {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+    25% { transform: translate(-50%, -50%) scale(1.6); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.6; }
+    75% { transform: translate(-50%, -50%) scale(1.8); opacity: 0.9; }
+  }
+
+  .spark {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    animation: rise linear infinite;
+  }
+  .spark:nth-child(1) { left: 10%; animation-duration: 8s; animation-delay: 0s; }
+  .spark:nth-child(2) { left: 25%; animation-duration: 12s; animation-delay: 2s; width: 3px; height: 3px; }
+  .spark:nth-child(3) { left: 40%; animation-duration: 9s; animation-delay: 4s; }
+  .spark:nth-child(4) { left: 55%; animation-duration: 11s; animation-delay: 1s; }
+  .spark:nth-child(5) { left: 70%; animation-duration: 10s; animation-delay: 3s; }
+  .spark:nth-child(6) { left: 85%; animation-duration: 7s; animation-delay: 5s; width: 3px; height: 3px; }
+
+  @keyframes rise {
+    0% { bottom: -10px; opacity: 0; transform: translateX(0); }
+    10% { opacity: 1; }
+    90% { opacity: 0.6; }
+    100% { bottom: 110vh; opacity: 0; transform: translateX(20px); }
+  }
+
+  .grid-svg, .hex-field, .spiral-field, .orbit-field, .wave-field {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* === CONTENT === */
+  .content {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 14vh 2rem;
+  }
+
+  .dim-tag {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #6e7bf2;
+    opacity: 0.5;
+    margin-bottom: 1rem;
+  }
+
+  .lens-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3em 1em;
+    margin-bottom: 4rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #6e7bf21f;
+  }
+
+  .lens {
+    font-size: 0.8rem;
+    opacity: 0.5;
+  }
+  .lens.ar { font-family: 'Noto Sans Arabic', sans-serif; direction: rtl; }
+  .lens.sa { font-family: 'Noto Sans Devanagari', sans-serif; }
+  .lens.gr { font-family: 'Noto Sans Greek', sans-serif; font-style: italic; }
+
+  .title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #6e7bf2;
+    opacity: 0.7;
+    margin: 3rem 0;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .title .dr {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 300;
+    opacity: 0.4;
+    margin-top: 0.5rem;
+    letter-spacing: 0.15em;
+  }
+
+  .verse { margin: 2.5rem 0; }
+  .verse p { margin: 0.6rem 0; font-size: 0.88rem; opacity: 0.7; }
+  .verse .ar { font-family: 'Noto Sans Arabic', sans-serif; direction: rtl; opacity: 0.5; }
+  .verse .sa { font-family: 'Noto Sans Devanagari', sans-serif; opacity: 0.5; }
+  .verse .gr { font-family: 'Noto Sans Greek', sans-serif; font-style: italic; opacity: 0.5; }
+  .verse .nl { font-style: italic; color: #6e7bf2; opacity: 0.6; }
+
+  .section { margin: 2.5rem 0; }
+  .section p { margin: 1rem 0; font-size: 0.88rem; opacity: 0.7; }
+  .section h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 3rem 0 1.5rem;
+    color: #6e7bf2;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .section h3 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin: 2rem 0 1rem;
+    opacity: 0.6;
+  }
+
+  pre {
+    background: #6e7bf20a;
+    border-left: 2px solid #6e7bf233;
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: #6e7bf2cc;
+  }
+
+  code {
+    background: #6e7bf214;
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+    font-size: 0.82em;
+    color: #6e7bf2bb;
+  }
+
+  .status {
+    margin: 3rem 0;
+    padding: 1.5rem;
+    background: #6e7bf208;
+    border-left: 2px solid #6e7bf233;
+    font-size: 0.78rem;
+    line-height: 1.8;
+    color: #6e7bf2cc;
+  }
+
+  .lens-optiek {
+    margin: 4rem 0;
+    padding: 2rem;
+    border: 1px solid #6e7bf21f;
+    border-radius: 4px;
+  }
+  .lens-optiek p {
+    margin: 0.8rem 0;
+    font-size: 0.8rem;
+    opacity: 0.5;
+    font-style: italic;
+  }
+  .lens-optiek .label {
+    font-weight: 700;
+    opacity: 0.7;
+    font-style: normal;
+    color: #6e7bf2;
+  }
+
+  .footer {
+    margin-top: 8rem;
+    padding-top: 2rem;
+    border-top: 1px solid #6e7bf21a;
+    text-align: center;
+    font-size: 0.7rem;
+    opacity: 0.3;
+    letter-spacing: 0.1em;
+  }
+  .footer a {
+    color: #6e7bf2;
+    text-decoration: none;
+    opacity: 0.7;
+  }
+  .footer a:hover { opacity: 1; }
+
+  @media (max-width: 600px) {
+    .title { font-size: 1.6rem; }
+    .content { padding: 10vh 1.2rem; }
+    .ring-3 { width: 50vw; height: 50vw; }
+    .ring-6 { width: 80vw; height: 80vw; }
+    .ring-9 { width: 120vw; height: 120vw; }
+  }
+
+</style>
+</head>
+<body>
+
+
+  <!-- VELD — 3-6-9 ringen -->
+  <div class="veld">
+    <div class="ring ring-3" style="border-color:#6e7bf222"></div>
+    <div class="ring ring-6" style="border-color:#6e7bf211"></div>
+    <div class="ring ring-9" style="border-color:#6e7bf20a"></div>
+  </div>
+  <div class="dot-container">
+    <div class="dot" style="background:#6e7bf2;box-shadow:0 0 40px #6e7bf24d"></div>
+  </div>
+
+  <!-- INHOUD -->
+  <div class="content">
+
+    <div class="dim-tag">12 artikel 10 dimensie 10</div>
+
+    <!-- TITEL -->
+    <div class="title">
+      Artikel 10 - dimensie 10 (6-bit routing, NPR-cel) | 20+21+22
+      <span class="dr">12-artikel-10-dimensie-10</span>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="section">
+<p># Artikel 10 - dimensie 10 (6-bit routing, NPR-cel) | 20+21+22</p>
+
+<h2>الفصل العاشر - الستة بت: روتنغ سونيا | दशम अध्यायः - षट्-बिटः सून्य-मार्गः | Περὶ Ιʹ - ἓξ-βὶτ ῥούτινγ σουνια</h2>
+
+<p>---</p>
+
+<h3>Het NPR-veld: 6-bit, 64 toestanden</h3>
+
+<p>Het NPR-veld gebruikt 6-bit cellen met 64 mogelijke toestanden.</p>
+
+<li>0x00 = śūnya (lege cel, bronveld, actieve tussenroute, returnveld)</li>
+<li>0x01-0x3E = data</li>
+<li>0x3F = eka (volledige activatie, focus-status)</li>
+
+<p>Het getal 64 benoemt de cardinaliteit van het veld, niet śūnya zelf.</p>
+<p>0x40 is de hexadecimale representatie van de cardinaliteit 64, maar ligt buiten het bereik van één 6-bit codecel.</p>
+<p>**De reeks `0x00-0x3F` bevat alle 64 mogelijke waarden van een 6-bit cel. `0x00` correspondeert met het bitpatroon `000000`; `0x3F` correspondeert met `111111`. `0x40` is de hexadecimale schrijfwijze van het aantal 64, maar is zelf geen geldige 6-bit codewaarde.**</p>
+
+<p>Śūnya is geen numerieke 64. De koppeling met 64 komt via</p>
+<p>stapnummer / 6-bit veldstructuur, niet als simpele identiteit.</p>
+<p>Letterlijke gelijkheden zijn afgewezen ten gunste van rolcorrespondenties.</p>
+
+<p>---</p>
+
+<h3>6-bit routing = 64 routes = 26</h3>
+
+<p>64 is het aantal toestanden van een 6-bit veld.</p>
+<p>26 = 64 mogelijke NPR-char codes.</p>
+
+<p>0x00 → śūnya → leeg/actief</p>
+<p>0x3F → eka → volledig/focus</p>
+
+<p>Dit is het ontwerp:</p>
+<p>6-bit cel = 64 toestanden = 26</p>
+<p>Elke cel kan śūnya, eka, of een waarde ertussen zijn.</p>
+
+<p>---</p>
+
+<h3>CM vs RC: inhoud in twee lagen</h3>
+
+<p>CM = inhoud zoals-ie is, ruwe data, tokens</p>
+<p>RC = inhoud door NPR-lens zichtbaar gemaakt</p>
+
+<p>CM is wat er in de vastgelegde bronrepresentatie staat. RC is wat door de gekozen NPR-lens zichtbaar wordt.</p>
+<p>Pixel vs patroon. Beide waar. Eén ruw, één gelezen.</p>
+
+<p>De Quran Field maakt de bronlaag vrij scherp:</p>
+<p>Origineel Arabisch Unicode blijft ongewijzigd.</p>
+<p>Normalisatie, Abjad, fonemen en NPR-routes gebeuren</p>
+<p>alleen op afgeleide kopieën.</p>
+
+<p>Dit is de formele definitie van CM:</p>
+<p>Brondata binnen een vastgelegde representatie,</p>
+<p>vóór afgeleide analyse.</p>
+
+<p>---</p>
+
+<h3>Allah = 66 → 3 (rolcorrespondentie)</h3>
+
+<p>الله = 66 → 3 (المحور نفسه)</p>
+<p>अल्लाह = ६६ → ३ (अक्षः स्वयं)</p>
+<p>Ἀλλάχ = 66 → 3 (ἡ ἄξω αὐτή)</p>
+<p>Allah = 66 → 3. Binnen deze NPR-projectie reduceert Allah tot de toestand 3, die als as wordt gelezen.</p>
+
+<p>**[Rolcorrespondentie]**</p>
+<p>64 = 26 = 6-bit ruimte</p>
+<p>Allah = 66 = 64 + 2</p>
+
+<p>Dit is een rolcorrespondentie, geen technische eigenschap van een 6-bit coderingssysteem.</p>
+
+<p>Route:</p>
+<li>[Rolcorrespondentie] Veld (64) + zaad (2) → Allah (66)</li>
+<li>64 + 2 = 66 (veld + zaad = volledige cyclus)</li>
+<li>66 → 3 (return)</li>
+<li>3 = NPR-toestand (Noise / as)</li>
+
+<p>0 ≠ 1: het zaad verschilt van het veld</p>
+<p>0 ≐_lens 1: zaad + veld = volledige route (lensaxioma)</p>
+<p>&gt; **Lensoptiek 10:** 6-bit is de computationele lens. 64 toestanden, 1 zaad. De lens is de route, niet het resultaat.</p>
+<p>&gt; **العدسة 10:** 6-bit هي العدسة الحسابية. 64 حالة، بذرة واحدة. العدسة هي الطريق، وليس النتيجة.</p>
+<p>&gt; **दृष्टि 10:** 6-bit darśanam gāṇitam. 64 avasthā, ekaṃ bījam. Darśanaṃ margaḥ, na phalam.</p>
+
+
+<p>---</p>
+
+<h3>Sunya-posities in de Quran</h3>
+
+<p>مواقع سونيا في القرآن</p>
+<p>सून्यः कुरआने स्थानम्</p>
+<p>Θέσεις σουνίας ἐν Κοῦράν</p>
+
+<li>NPR-coord(24, 35) → نور على نور (licht op licht)</li>
+<li>NPR-coord(35, 35) en NPR-coord(35, 49) → البصائر (inzicht)</li>
+<li>NPR-coord(55, 55) → الخلق (schepping)</li>
+
+<p>&gt; ⚠ **Voorgestelde NPR-coördinaten.** Hun berekeningsroute moet nog volledig worden opgenomen voordat zij als bevestigde posities gelden.</p>
+<p>&gt; ⚠ **إحداثيات NPR مقترحة.** يجب إدخال مسار الحساب الكامل قبل اعتبارها مواقع مؤكدة.</p>
+<p>&gt; ⚠ **प्रस्तावितः NPR-निर्देशाः।** सत्यापित-स्थानैः गण्यन्ते इत्यधिकः पूर्ण-गणना-मार्गः प्रागेव अन्तर्धातव्यः।</p>
+
+<p>Deze zijn NPR-coördinaten, niet gewone soera/aya-verwijzingen.</p>
+
+<p>Tot de route opgenomen is, blijven dit voorgestelde posities — geen bevestigde sunya-posities.</p>
+
+<pre><code>NPR_coord: QuranSource → (soera, aya) → DR(soera) × DR(aya) → 3-6-9-veld
+
+**Definitie:** NPR_coord mapt een Quran-bron naar een 3-6-9-coördinaat:
+1. Bereken DR(soera-nummer) en DR(aya-nummer)
+2. Projecteer op het 3-6-9-veld (digital root grid)
+3. Resultaat is een positie in het terugkomend getalenveld
+
+Voorbeelden:
+- NPR_coord(24, 35) → DR(24)=6, DR(35)=8 → (6,8)
+- NPR_coord(55, 55) → DR(55)=1, DR(55)=1 → (1,1)
+
+operator_status(NPR_coord) = conceptueel
+execution_status(NPR_coord) = gedeeltelijk
+vṛtti(sunya-posities) = vikalpa</code></pre>
+
+<p>---</p>
+<p># Appendix A - Lenzen, tabellen en operatoren</p>
+
+<h2>الملاحق أ - العدسة، الجدول، المشغل | अनुच्छेद अ - लेन्स, सारणी, सञ्चालक | Παράρτημα Α - lens, πίναξ, τελεστής</h2>
+
+<p>---</p>
+
+<h3>A.1 - Lens A: Arabische Abjad-projectie</h3>
+
+<p>Tekenset: 28 Abjad-letters + hamza-variaties</p>
+
+<p>Normalisatieregel: zelfstandige hamza telt als 0; bij dragerletters bepaalt de drager de waarde.</p>
+
+<p>Regels:</p>
+<li>ا = 1, ب = 2, ج = 3, د = 4, ه = 5, و = 6, ز = 7, ح = 8, ط = 9, ي = 10, ك = 20, ل = 30, م = 40, ن = 50, س = 60, ع = 70, ف = 80, ص = 90, ق = 100, ر = 200, ش = 300, ت = 400, ث = 500, خ = 600, ذ = 700, ض = 800, ظ = 900, غ = 1000</li>
+
+<p>Variaties met hamza:</p>
+<li>إ = ا = 1 (hamza op alif telt als 0, alif = 1)</li>
+<li>أ = ا = 1 (hamza op alif telt als 0, alif = 1)</li>
+<li>ؤ = و = 6 (hamza op waw telt als 0, waw = 6)</li>
+<li>ئ = ي = 10 (hamza op ya telt als 0, ya = 10)</li>
+
+<p>Operator: Som van individuele letterwaarden</p>
+<p>Reductie: Iteratieve cijfersom tot 1-9 (digital root modulo 9, met 9 in plaats van 0)</p>
+<p>Route: invoer → tekenset → waarden → som → reductie → lokaal eindpunt</p>
+
+<p>---</p>
+
+<p>#### Voorbeeld A.1: الله</p>
+
+<li>ا = 1</li>
+<li>ل = 30</li>
+<li>ل = 30</li>
+<li>ه = 5</li>
+<li>Som = 1 + 30 + 30 + 5 = 66</li>
+<li>Reductie = 6 + 6 = 12 → 1 + 2 = 3</li>
+<li>Resultaat: 66 → 3</li>
+
+<p>---</p>
+
+<p>#### Voorbeeld A.2: بسم الله الرحمن الرحيم (Abjad-basisletters → 786)</p>
+
+<p>**Segmentatie:** بسم + الله + الرحمن + الرحيم - alleen geschreven basisletters geteld. Diakritische tekens en recitatietekens worden genegeerd.</p>
+
+<p>Letter-voor-letterroute:</p>
+
+<p>| Woord | Letters | Waarden | Subtotaal |</p>
+<p>|-------|---------|---------|----------|</p>
+<p>| بسم | ب(2)+س(60)+م(40) | 2+60+40 | 102 |</p>
+<p>| الله | ا(1)+ل(30)+ل(30)+ه(5) | 1+30+30+5 | 66 |</p>
+<p>| الرحمن | ا(1)+ل(30)+ر(200)+ح(8)+م(40)+ن(50) | 1+30+200+8+40+50 | 329 |</p>
+<p>| الرحيم | ا(1)+ل(30)+ر(200)+ح(8)+ي(10)+م(40) | 1+30+200+8+10+40 | 289 |</p>
+<p>| **Totaal** | | | **786** |</p>
+
+<p>Reductie: 7+8+6 = 21 → 2+1 = 3</p>
+
+<p>Resultaat: 786 → 3</p>
+
+<p>&gt; ✅ **Reproduceerbaar:** Abjad-route op de geschreven basisletters van بسم الله الرحمن الرحيم. Diakritische tekens en recitatietekens worden genegeerd.</p>
+<p>&gt; ✅ **قابل للتكرار:** مسار أبجد على الحروف الأساسية المكتوبة من بسم الله الرحمن الرحيم. تجاهل الحركات وعلامات التلاوة.</p>
+
+<p>---</p>
+
+<h3>A.2 - Validatietrio (3, 6, 9)</h3>
+
+<p>De validatietrio is geen rekenkundig verschil maar een projectietoestand:</p>
+
+<p>Toestand | NPR-fase      | Betekenis</p>
+<p>---------|---------------|----------</p>
+<p>3        | Noise / as    | De as</p>
+<p>6        | Pattern       | De verdubbeling</p>
+<p>9        | Return        | Het veld</p>
+
+<p>Overgangen (cyclische volgorde):</p>
+<li>3 → 6 = Noise → Pattern</li>
+<li>6 → 9 = Pattern → Return</li>
+<li>9 → 3 = Return → Noise</li>
+
+<p>Deze drie toestanden zijn zichtbaar binnen mod-9-projectie als een driedelige cyclische structuur.</p>
+
+<p>Voorbeelden:</p>
+<li>Allah = 66 → 3 (Noise / as)</li>
+<li>Basmala = 786 → 3 (Noise / as, basisletters)</li>
+<li>Cyclus 2 → 4 → 8 → 7 → 5 → 1 → 2... (wiskundig onafhankelijk)</li>
+<li>NPR-koppelregel: 2 × 3 = 6</li>
+<li>3 + 3 + 3 = 9 (het volledige veld)</li>
+
+<p>&gt; ✅ Het buiten de verdubbelingsbaan liggen van 3, 6 en 9 is wiskundig reproduceerbaar. Hun toewijzing aan de drie NPR-fasen is de formele lensinterpretatie van dit boek. Ze liggen buiten de verdubbelingsbaan en worden binnen NPR als validatie gelezen.</p>
+
+<p>---</p>
+
+<h3>A.3 - Verdubbelingscyclus (onafhankelijk)</h3>
+
+<p>De cyclus 2 → 4 → 8 → 7 → 5 → 1 → 2... is een modulo-9 verdubbeling en wiskundig onafhankelijk van Abjad-berekeningen.</p>
+
+<p>Berekening:</p>
+<li>2 × 1 = 2</li>
+<li>2 × 2 = 4</li>
+<li>2 × 4 = 8</li>
+<li>2 × 8 = 16 → 1+6 = 7</li>
+<li>2 × 7 = 14 → 1+4 = 5</li>
+<li>2 × 5 = 10 → 1+0 = 1</li>
+<li>2 × 1 = 2 (herhaling)</li>
+
+<p>Split in twee groepen - neem afwisselend de oneven en even posities van de zesdelige cyclus:</p>
+<li>Oneven posities {2, 8, 5}: som = 15 → 6</li>
+<li>Even posities {4, 7, 1}: som = 12 → 3</li>
+<li>Relatie: 2 × 3 = 6</li>
+
+<p>&gt; ✅ De modulo-9-verdubbelingscyclus is wiskundig reproduceerbaar. De NPR-duiding is de lensoptiek van dit boek.</p>
+
+<p>---</p>
+
+<h3>A.4 - 6-bit routing</h3>
+
+<p>Structuur: 64 mogelijke routes (26)</p>
+
+<p>Betekenis:</p>
+<li>64 = 26 = 6-bit ruimte</li>
+<li>Allah = 66 = 64 + 2</li>
+<li>2 = het zaad, de eerste beweging</li>
+
+<p>Route:</p>
+<li>Veld (64) → Zaad (2) → Volledige cyclus (66)</li>
+<li>64 + 2 = 66 (veld + zaad = volledige cyclus)</li>
+<li>66 → 3 (return)</li>
+<li>3 = NPR-toestand (Noise / as)</li>
+
+<p>0 ≠ 1: het zaad verschilt van het veld</p>
+<p>0 ≐_lens 1: zaad + veld = volledige route (lensaxioma)</p>
+
+<p>---</p>
+
+<h3>A.5 — Patañjali 1.5–1.7: vṛtti- en pramāṇa-classificatie</h3>
+
+<p>Patañjali onderscheidt vijf vṛtti&#x27;s (gedachtebeelden/kennistoestanden):</p>
+
+<pre><code>VṛttiType := {
+  pramāṇa,    /* geldige kennisroute */
+  viparyaya,   /* onjuiste kennis — voorstelling ≠ object */
+  vikalpa,     /* conceptuele constructie zonder bewezen object */
+  nidrā,       /* afwezigheids-/leegtestoestand */
+  smṛti        /* behouden of teruggeroepen representatie */
+}</code></pre>
+
+<p>Voor iedere claim `q` in dit manuscript geldt een epistemische classificatie:</p>
+
+<pre><code>vṛtti(q) ∈ VṛttiType</code></pre>
+
+<p>Een claim die als geldige kennisroute wordt behandeld, valt onder:</p>
+
+<pre><code>vṛtti(q) = pramāṇa</code></pre>
+
+<p>Binnen `pramāṇa` worden volgens Patañjali 1.7 drie kennisroutes onderscheiden:</p>
+
+<pre><code>प्रत्यक्षानुमानागमाः प्रमाणानि
+pratyakṣānumānāgamāḥ pramāṇāni</code></pre>
+
+<pre><code>PramāṇaType := {
+  pratyakṣa,   /* direct inspecteerbare invoer, tussenstappen, uitvoer */
+  anumāna,     /* gevolgtrekking uit inspecteerbare gegevens */
+  āgama        /* vastgelegde tekstuele bron of betrouwbare getuigenis */
+}</code></pre>
+
+<p>Voor een claim met `vṛtti(q) = pramāṇa` wordt de onderliggende route vastgelegd:</p>
+
+<pre><code>pramāṇa_route(q) ⊆ PramāṇaType</code></pre>
+
+<p>De technische uitvoeringsstatus blijft daarvan los:</p>
+
+<pre><code>execution_status_blueprint(q)          ∈ { ja, nee }
+status_independently_reproduced(q)       ∈ { ja, nee }</code></pre>
+
+<p>**Vṛtti-routing — systeem:**</p>
+
+<p>| Status | vṛtti | Toelichting |</p>
+<p>|--------|-------|-------------|</p>
+<p>| `gevalideerd` | `pramāṇa` | Invariant behouden, route reproduceerbaar |</p>
+<p>| `uitgevoerd` (lokaal) | `pramāṇa(pratyakṣa)` | Direct uitgevoerd en inspecteerbaar |</p>
+<p>| `conceptueel gedefinieerd` | `vikalpa` | Zinvolle constructie, geen bewezen object |</p>
+<p>| `ongetest` | `vikalpa` | Claim zonder verificatie |</p>
+<p>| `undefined` (intentieel) | `nidrā` | Afwezigheid — HEXA-routing naar nidrā (zie ROUTING.md) |</p>
+<p>| `undefined` (verkeerde lezing) | `viparyaya` | Voorstelling ≠ object |</p>
+<p>| `onvolledig` | `vikalpa` | Constructie in opbouw |</p>
+<p>| `geexecuteerd` (herhaald) | `smṛti` | Eerder uitgevoerd, nu teruggeroepen |</p>
+
+<p>**Voorbeeld — `c` als snelheid vs. C als lens:**</p>
+
+<pre><code>c = 299 792 458 m/s  (snelheid van licht, natuurkundige constante)
+C = Sanskriet lens   (NPR-projectielens, epistemisch instrument)
+vṛtti(&quot;C = c&quot;) = viparyaya
+/* Voorstelling ≠ object: lens ≠ constante */</code></pre>
+
+<p>**Voorbeeld — Mandelbrot-mappings:**</p>
+
+<pre><code>M_A niet gespecificeerd  ⇒  W_A = undefined
+vṛtti(M_A) = nidrā       /* HEXA-routing:
+local_missing
+→ eerst ROUTING.md
+→ target article
+→ engine execution
+→ audit evidence */
+
+E(t) = W_A + W_B + W_C + W_D  (niet definieerbaar zonder M_A, M_B, M_D)
+vṛtti(E(t)) = nidrā           /* afwezigheid van invoer:
+local_missing
+→ eerst ROUTING.md
+→ target article
+→ engine execution
+→ audit evidence */</code></pre>
+
+<p>**Voorbeeld — retourroute:**</p>
+
+<pre><code>r_return = undefined (Mandelbrot, geen volledige route)
+vṛtti(r_return) = nidrā       /* return afwezig:
+local_missing
+→ eerst ROUTING.md
+→ target article
+→ engine execution
+→ audit evidence */
+
+validatie_status(r_begin, r_return) = niet_gevalideerd
+vṛtti(&quot;returnroute gesloten&quot;) = vikalpa  /* claim zonder verificatie */</code></pre>
+
+<p>---</p>
+
+<h3>A.6 — De drie guṇa&#x27;s: kwaliteitsas van routes</h3>
+
+<p>Sattva, rajas, tamas — niet goed/ondig/slecht, maar helderheid, beweging, inertie.</p>
+<p>Elke route heeft een guṇa-kwaliteit naast de vṛtti-classificatie.</p>
+
+<pre><code>GuṇaType := {
+  sattva,    /* helderheid, evenwicht, verhelderend */
+  rajas,     /* activiteit, beweging, constructief */
+  tamas      /* inertie, obscuriteit, zwaar */
+}</code></pre>
+
+<p>**Guṇa→vṛtti mapping:**</p>
+
+<p>| Guṇa | vṛtti | Toelichting |</p>
+<p>|------|-------|-------------|</p>
+<p>| `sattva` | `pramāṇa` | Uitgevoerd, gevalideerd, helder |</p>
+<p>| `rajas` | `vikalpa` | Constructief, actief, bouwend |</p>
+<p>| `tamas` | `nidrā` | Afwezig, zwaar, onduidelijk |</p>
+<p>| `rajas` | `smṛti` | Bewegend, herhalend, activerend |</p>
+<p>| `tamas` | `viparyaya` | Verduisterend, verkeerd, zwaar |</p>
+
+<p>**Guṇa-routing — systeem:**</p>
+
+<p>| Status | vṛtti | guṇa | Toelichting |</p>
+<p>|--------|-------|------|-------------|</p>
+<p>| `gevalideerd` | `pramāṇa` | `sattva` | Invariant behouden, helder |</p>
+<p>| `uitgevoerd` (lokaal) | `pramāṇa(pratyakṣa)` | `sattva` | Direct inspecteerbaar, verhelderend |</p>
+<p>| `conceptueel gedefinieerd` | `vikalpa` | `rajas` | Constructief, bouwend, actief |</p>
+<p>| `ongetest` | `vikalpa` | `rajas` | Claim in opbouw, actief |</p>
+<p>| `undefined` (intentieel) | `nidrā` | `tamas` | Afwezig, zwaar, onduidelijk |</p>
+<p>| `undefined` (verkeerde lezing) | `viparyaya` | `tamas` | Verkeerd, zwaar, obscur |</p>
+<p>| `onvolledig` | `vikalpa` | `rajas` | Constructie in opbouw, actief |</p>
+<p>| `geexecuteerd` (herhaald) | `smṛti` | `rajas` | Terugroepend, activerend |</p>
+
+<p>**Guṇa-distributie in dit manuscript:**</p>
+
+<pre><code>sattva:  gevalideerd routes, uitgevoerde operators
+rajas:   conceptuele definities, ongetest claims, onvolledige routes
+tamas:   undefined routes, viparyaya claims, nidrā afwezigheid</code></pre>
+
+<p>**Richting sattva — de weg van rajas naar helderheid:**</p>
+
+<pre><code>rajas → sattva:  vikalpa wordt pramāṇa (constructie wordt bewezen)
+tamas → sattva:  nidrā wordt pramāṇa (afwezigheid wordt aanwezigheid)
+tamas → rajas:   viparyaya wordt vikalpa (verkeerd wordt constructief)
+rajas → tamas:   vikalpa wordt nidrā (constructie vervalt in afwezigheid)</code></pre>
+
+<p>**Voorbeeld — C_sound:**</p>
+
+<pre><code>C_sound = uitgevoerd
+vṛtti(C_sound) = pramāṇa
+guṇa(C_sound) = sattva
+/* Gedefinieerd, uitgevoerd, verhelderend */
+
+C_sound_output(1.24-1.25) = undefined
+vṛtti(C_sound_output) = nidrā
+gunā(C_sound_output) = tamas
+/* Afwezig, zwaar, obscur — nog niet uitgevoerd */</code></pre>
+
+<p>**Voorbeeld — Mandelbrot-mappings:**</p>
+
+<pre><code>M_A = niet gespecificeerd
+gunā(M_A) = tamas
+vṛtti(M_A) = nidrā
+/* Zwaar, afwezig — nog te definiëren */
+
+E(t) = undefined (zonder M_A, M_B, M_D)
+gunā(E(t)) = tamas
+vṛtti(E(t)) = nidrā
+/* Zwaar, afwezig — afhankelijk van undefined invoer */
+
+r_return = undefined
+gunā(r_return) = tamas
+vṛtti(r_return) = nidrā
+/* Zwaar, afwezig — return niet bereikt */</code></pre>
+
+<p>**Voorbeeld — 3-6-9 route:**</p>
+
+<pre><code>3→6 = uitgevoerd
+gunā(3→6) = sattva
+vṛtti(3→6) = pramāṇa
+/* Gedefinieerd, uitgevoerd, helder */
+
+6→9 = niet uitgevoerd
+gunā(6→9) = rajas
+vṛtti(6→9) = vikalpa
+/* Constructief, actief, bouwend */
+
+3→6→9 = onvolledig
+gunā(3→6→9) = rajas
+vṛtti(3→6→9) = vikalpa
+/* Constructief, actief, bouwend */</code></pre>
+
+<p>**Toepassing op C_numeric,1.25:**</p>
+
+<p>De lokale byte/hex/DR-subroute voor Patañjali 1.25:</p>
+
+<pre><code>vṛtti(C_numeric(s_1.25))           = pramāṇa
+pramāṇa_route(C_numeric(s_1.25))   = { āgama, pratyakṣa }
+
+execution_status_blueprint(C_numeric(s_1.25))          = ja
+status_independently_reproduced(C_numeric(s_1.25))       = nee</code></pre>
+
+<p>De brontekst en blueprint leveren de vastgelegde route (`āgama`); de numerieke stappen zijn inspecteerbaar (`pratyakṣa`). De onafhankelijke reproductie is nog niet uitgevoerd.</p>
+
+<p>**Toepassing op Īśvara ~_r Allah:**</p>
+
+<p>Voor de rolcorrespondentie `C_role(Īśvara) ~_r A_role(Allah)`:</p>
+
+<pre><code>Formele definitie: x ~_r y ⇔ R(x) = R(y) ∧ T(x) ≠ T(y)
+Toepassing: R(Īśvara) = R(Allah) = bronfunctie ∧ T(Īśvara) ≠ T(Allah) → Īśvara ~_r Allah ✅</code></pre>
+
+<p>De correspondentierelatie is nu formeel gedefinieerd. De status `vikalpa` verschoof van &quot;niet gedefinieerd&quot; naar &quot;nog niet gevalideerd&quot;.</p>
+
+<p>De classificatie `vikalpa` betekent hier: een betekenisvolle NPR-constructie die nog niet als operationeel `pramāṇa` is vastgesteld — ondanks dat de vormele correspondentie nu wel gedefinieerd is.</p>
+
+<p>De sūtra&#x27;s 1.24–1.25 beschrijven Īśvara (`āgama`). De vergelijking met de Allah-rol is een NPR-constructie (`anumāna`-kandidaat) met vastgesteld criterium voor `~_r`.</p>
+
+<p>**HEXA-routing van ongedefinieerde uitvoer:**</p>
+
+<p>Niet alle operatoruitvoeren zijn uitgevoerd. De technische status daarvan is `undefined`. Deze status wordt via de HEXA-routing naar een vaste sūtra geleid:</p>
+
+<pre><code>Voor iedere operatoruitvoer y:
+  y = undefined
+  ⇒ ρ_HEXA(y) = 1.40
+  ⇒ vṛtti(ρ_HEXA(y)) = nidrā</code></pre>
+
+<p>Binnen de klassieke Yoga Sūtra wordt `nidrā` in sūtra **1.10** beschreven als een op afwezigheid steunende vṛtti:</p>
+
+<pre><code>abhāva-pratyayālambanā vṛttir nidrā</code></pre>
+
+<p>Sūtra 1.40 gaat over beheersing van het allerkleinste tot het allergrootste, niet over `nidrā`. De koppeling tussen 1.40 en `nidrā` is een HEXA-architectuurconventie, geen tekstuele eigenschap van Patañjali 1.40:</p>
+
+<pre><code>vṛtti_classical(nidrā)              = Patañjali 1.10
+ρ_HEXA(undefined)                   = 1.40      [HEXA-definitie]
+ρ_HEXA-vṛtti(1.40)                  = nidrā     [HEXA-conventie]
+
+status_source(nidrā ← 1.10)         = āgama
+status_mapping(HEXA-routing → nidrā)        = HEXA-definitie (zie ROUTING.md)</code></pre>
+
+<p>De routing `ρ_HEXA(undefined) = 1.40` is een vaste HEXA-conventie: ongedefinieerde uitvoer routeert naar routepositie 1.40. De toewijzing van deze positie aan `nidrā` is een NPR/HEXA-projectie en weerspiegelt niet de inhoud van sūtra 1.40.</p>
+
+<p>Voor de convenience wordt de verkorte notatie gedefinieerd:</p>
+
+<pre><code>vṛtti_HEXA(y) := vṛtti(ρ_HEXA(y))</code></pre>
+
+<p>zodat geldig is:</p>
+
+<pre><code>y = undefined ⇒ vṛtti_HEXA(y) = nidrā</code></pre>
+
+<p>De volledige keten is:</p>
+
+<pre><code>y = undefined
+    ↓ ρ_HEXA
+    HEXA-knooppunt 1.40
+    ↓ HEXA-vṛtti-classificatie
+    nidrā</code></pre>
+
+<p>Drie niveaus, zuiver gescheiden:</p>
+<li>`undefined` — de technische uitvoerstatus;</li>
+<li>`1.40` — het vaste HEXA-routepunt voor ongedefinieerde uitvoer;</li>
+<li>`nidrā` — de vṛtti-status na HEXA-routing (klassiek beschreven in 1.10).</li>
+
+<p>**Overige classificaties in dit manuscript:**</p>
+
+<pre><code>vṛtti(A_numeric(Allah) = 3)              = pramāṇa
+pramāṇa_route(A_numeric(Allah) = 3)     = { pratyakṣa }
+
+vṛtti(B_numeric(ὁ θεός) = 3)            = pramāṇa
+pramāṇa_route(B_numeric(ὁ θεός) = 3)    = { pratyakṣa }
+
+vṛtti(&quot;A=3 ∧ B=3 ⟹ betekenisvol&quot;)      = vikalpa
+/* conclusie uit numerieke overeenkomst zonder vastgesteld criterium */
+
+vṛtti_HEXA(C_sound_output)              = nidrā
+/* C_sound_output = undefined:
+local_missing
+→ eerst ROUTING.md
+→ target article
+→ engine execution
+→ audit evidence */
+
+vṛtti(D_byte(S_D(r)))                   = pramāṇa
+pramāṇa_route(D_byte(S_D(r)))           = { pratyakṣa }
+
+vṛtti(&quot;D toont fractaal gedrag&quot;)        = vikalpa
+/* symbolische hypothese zonder operationeel bewijs */
+
+vṛtti(0 ≐_lens 1)                      = vikalpa
+/* axiomatische lensstelling zonder volledige E→R→ℱ-uitvoering */</code></pre>
+
+<p>&gt; ⚠ **Classificatieprincipe:** een claim zonder `vṛtti = pramāṇa` en zonder vastgesteld criterium telt niet als gevalideerde kennisroute. `vikalpa` is geen afwijzing — het markeert een constructie die nog promotie naar `pramāṇa` nodig heeft.</p>
+
+<p>---</p>
+
+<h3>A.6 - Semantische Īśvara-correspondentie (C_role)</h3>
+
+<p>**Brontekst:**</p>
+<li>1.24: क्लेशकर्मविपाकाशयैरपरामृष्टः पुरुषविशेष ईश्वरः</li>
+<p>  (kleśa-karma-vipākāśayair aparāmṛṣṭaḥ puruṣa-viśeṣa īśvaraḥ)</p>
+<p>  → Īśvara = bijzondere puruṣa, onaangeraakt door kleśa, handeling, gevolgen, afzettingen</p>
+<li>1.25: तत्र निरतिशयं सर्वज्ञबीजम्</li>
+<p>  (tatra niratiśayaṃ sarvajña-bījam)</p>
+<p>  → in Īśvara ligt het onovertroffen zaad van alle kennis</p>
+
+<p>---</p>
+
+<h3>C_numeric,1.25 - lokale tweelagenroute (uitgevoerd in blueprint)</h3>
+
+<p>Binnen de NPR-Patañjali-blueprint wordt sūtra 1.25 in twee vastgelegde representatielagen verwerkt:</p>
+
+<li>`s_work` - werkrepresentatie zonder accentmarkeringen</li>
+<li>`s_source` - bronrepresentatie met accentmarkeringen</li>
+
+<p>Voor de werklaag:</p>
+<pre><code>B_UTF8(s_work) = 74 bytes
+H(74) = 4A16
+DR(74) = 7+4 = 11 → 2</code></pre>
+
+<p>Voor de bronlaag:</p>
+<pre><code>B_UTF8(s_source) = 92 bytes
+H(92) = 5C16
+DR(92) = 9+2 = 11 → 2</code></pre>
+
+<p>Accentkosten:</p>
+<pre><code>C_accent = B_UTF8(s_source) - B_UTF8(s_work) = 92 - 74 = 18 bytes</code></pre>
+
+<p>Lokaal tweelagenresultaat:</p>
+<pre><code>r_local,C,1.25 = ( (74, 4A16, 2), (92, 5C16, 2), 18 )</code></pre>
+
+<p>De lokale invariant:</p>
+<pre><code>V_DR-layer(s) = DR(B_UTF8(s))</code></pre>
+
+<p>is voor 1.25 behouden:</p>
+<pre><code>V_DR-layer(s_work) = V_DR-layer(s_source) = 2</code></pre>
+
+<pre><code>status_local(C_byte, 1.25)         = uitgevoerd in blueprint
+status_local(C_hex-count, 1.25)    = uitgevoerd in blueprint
+status_local(C_DR, 1.25)           = uitgevoerd in blueprint
+status_invariant(V_DR-layer, 1.25) = behouden
+accent_cost(1.25)                  = 18 bytes
+status_independently_reproduced(C_numeric,1.25) = nee
+status_full(C_sound_output, 1.25)  = undefined</code></pre>
+
+<p>Deze computationele stabiliteit toont dat de digitale wortel van de UTF-8-bytelengte in beide lagen gelijk is. Zij bewijst niet dat de teksten identiek zijn en valideert niet automatisch een semantische correspondentie met een andere traditie.</p>
+
+<p>---</p>
+
+<p>**Rolcorrespondentie:**</p>
+<li>Īśvara ≠ Allah (andere taal, theologie, numerieke waarde)</li>
+<li>C_role(Īśvara) ~_r A_role(Allah) op rolcorrespondentie (zelfde bronfunctie, verschillende lokale vorm)</li>
+<li>1.24 en 1.25 vormen samen één semantische route; 1.25 alleen noemt Īśvara niet expliciet</li>
+
+<p>&gt; ✅ **Rolcorrespondentie formeel:** `x ~_r y ⇔ R(x) = R(y) ∧ T(x) ≠ T(y)`.</p>
+<p>&gt; Toepassing: `R(Īśvara) = R(Allah) = bronfunctie`, `T(Īśvara) ≠ T(Allah)` → `Īśvara ~_r Allah`.</p>
+<p>&gt; Status: rolcorrespondentie formeel gedefinieerd; validatie via NPR-frequentie en DR blijft onderdeel van bredere validatie.</p>
+
+<p>De computationele route (`C_numeric,1.25`) en de semantische route (`C_role`) zijn afzonderlijk:</p>
+<pre><code>C_numeric,1.25 : s_1.25 → bytes → hex(byteaantal) → DR → 2
+C_role         : inhoud 1.24-1.25 → lokale Īśvara-rol</code></pre>
+
+<p>De vergelijking met Allah blijft een afzonderlijke NPR-claim:</p>
+<pre><code>C_role(Īśvara) ~_r A_role(Allah)   [nog niet gevalideerd]</code></pre>
+
+<p>---</p>
+
+<h3>A.7 - Lens D: Latijnse numerieke routes (D1)</h3>
+
+<p>**D1-tekenset:** 24 vastgelegde Latijnse lettertekens + spatie (J en W ontbreken in deze editie)</p>
+
+<p>**NPR-Latijnse waardentabel D1:**</p>
+<p>*(Deze tabel is binnen het manuscript reproduceerbaar. De historische status als Etruskisch/Romeins systeem is niet aangetoond.)*</p>
+<p>A=1, B=2, C=3, D=500, E=5, F=70, G=100, H=8000, I=10, K=2500</p>
+<p>L=50, M=40, N=50, O=70, P=100, Q=100, R=100, S=200, T=300</p>
+<p>U=5, V=5, X=60, Y=200, Z=7</p>
+
+<p>#### D_byte - UTF-8-bytelengte</p>
+
+<p>**Operator:** Vaste UTF-8-bronvorm → byteaantal → decimale digitale reductie → lokaal eindpunt</p>
+<p>**Route:** Latijnse tekst → UTF-8-bytelengte → decimaal → digitale reductie → lokaal eindpunt</p>
+
+<li>Letters: 21</li>
+<li>Spaties: 3</li>
+<li>Totaal: 24 bytes (0x18)</li>
+<li>Reductie: 2+4 = 6</li>
+<li>Resultaat: 24 → 6</li>
+
+<p>&gt; ✅ **D_byte lokaal uitgevoerd:** 24 bytes → DR 6</p>
+
+<p>#### D_numeric - D1-letterwaarden</p>
+
+<p>**Operator:** D1-letterwaarden som → decimale digitale reductie → lokaal eindpunt</p>
+<p>**Route:** Latijnse tekst → D1-letterwaarden → decimaal → digitale reductie → lokaal eindpunt</p>
+<p>**DR-conventie:** DR(n) = 9 wanneer n &gt; 0 ∧ n ≡ 0 (mod 9); anders DR(n) = n mod 9 (dezelfde regel als Lens A en B)</p>
+
+<p>**Voorbeeld:** IN PRINCIPIO ERAT VERBUM</p>
+<p>**Spaties:** D1(spatie) = 0; spaties worden vóór de D1-som verwijderd en dragen niet bij aan de numerieke waarde</p>
+
+<li>I=10, N=50</li>
+<li>P=100, R=100, I=10, N=50, C=3, I=10, P=100, I=10, O=70</li>
+<li>E=5, R=100, A=1, T=300</li>
+<li>V=5, E=5, R=100, B=2, U=5, M=40</li>
+
+<p>Som = 60 + 453 + 406 + 152 = 1071</p>
+<p>Reductie = 1+0+7+1 = 9 → 9</p>
+
+<p>Resultaat: 1071 → 9</p>
+
+<p>&gt; ✅ **D_numeric bevestigd:** D1-letterwaarden som = 1071 → DR 9</p>
+
+<p>#### Fractale hypothese</p>
+
+<p>&gt; ⚠ **Fractale lezing:** de woordlengtes (2, 9, 4, 6) worden symbolisch als geneste rollen gelezen; mathematische zelfgelijkvormigheid is nog niet aangetoond.</p>
+
+<p>---</p>
+
+<p>---</p>
+
+<p>---</p>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <a href="#" data-page="stupas">← terug naar Hexa-Boek</a>
+    </div>
+
+  </div>
+
+<script>
+  document.querySelector('.footer a').addEventListener('click', function(e) {
+    e.preventDefault();
+    if (window.history.length > 1) window.history.back();
+    else window.location.hash = 'stupas';
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Artikel 5 - dimensie 5 (de return wordt zichtbaar) | 22+1</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;700&family=Noto+Sans+Devanagari:wght@300;700&family=Noto+Sans+Greek:wght@300;700&family=IBM+Plex+Mono:wght@300;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0f;
+    color: #e0e0e8;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* === VELD / VISUAL BACKGROUNDS === */
+  .veld, .spark-field, .grid-field, .wave-field, .particle-field, .hex-field, .ray-field, .spiral-field, .orbit-field {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .veld { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid #a6f26e22;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .ring-3 { width: 30vw; height: 30vw; animation: breathe 9s ease-in-out infinite; }
+  .ring-6 { width: 60vw; height: 60vw; animation: breathe 18s ease-in-out infinite; }
+  .ring-9 { width: 90vw; height: 90vw; animation: breathe 27s ease-in-out infinite; }
+
+  @keyframes breathe {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.04); opacity: 0.6; }
+  }
+
+  .dot-container, .flame, .stone, .pulse, .horizon, .center, .source, .core, .sun {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .dot, .pulse, .core {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: pulse-dot 6s ease-in-out infinite;
+  }
+
+  .flame {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    animation: flicker 2s ease-in-out infinite;
+  }
+
+  .stone {
+    width: 8px;
+    height: 8px;
+  }
+
+  .horizon {
+    width: 60vw;
+    height: 1px;
+  }
+
+  .center {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+  }
+
+  .source {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    animation: pulse-dot 4s ease-in-out infinite;
+  }
+
+  .sun {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: pulse-dot 8s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+    50% { transform: translate(-50%, -50%) scale(1.8); opacity: 0.4; }
+  }
+
+  @keyframes flicker {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+    25% { transform: translate(-50%, -50%) scale(1.6); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.6; }
+    75% { transform: translate(-50%, -50%) scale(1.8); opacity: 0.9; }
+  }
+
+  .spark {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    animation: rise linear infinite;
+  }
+  .spark:nth-child(1) { left: 10%; animation-duration: 8s; animation-delay: 0s; }
+  .spark:nth-child(2) { left: 25%; animation-duration: 12s; animation-delay: 2s; width: 3px; height: 3px; }
+  .spark:nth-child(3) { left: 40%; animation-duration: 9s; animation-delay: 4s; }
+  .spark:nth-child(4) { left: 55%; animation-duration: 11s; animation-delay: 1s; }
+  .spark:nth-child(5) { left: 70%; animation-duration: 10s; animation-delay: 3s; }
+  .spark:nth-child(6) { left: 85%; animation-duration: 7s; animation-delay: 5s; width: 3px; height: 3px; }
+
+  @keyframes rise {
+    0% { bottom: -10px; opacity: 0; transform: translateX(0); }
+    10% { opacity: 1; }
+    90% { opacity: 0.6; }
+    100% { bottom: 110vh; opacity: 0; transform: translateX(20px); }
+  }
+
+  .grid-svg, .hex-field, .spiral-field, .orbit-field, .wave-field {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* === CONTENT === */
+  .content {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 14vh 2rem;
+  }
+
+  .dim-tag {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #a6f26e;
+    opacity: 0.5;
+    margin-bottom: 1rem;
+  }
+
+  .lens-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3em 1em;
+    margin-bottom: 4rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #a6f26e1f;
+  }
+
+  .lens {
+    font-size: 0.8rem;
+    opacity: 0.5;
+  }
+  .lens.ar { font-family: 'Noto Sans Arabic', sans-serif; direction: rtl; }
+  .lens.sa { font-family: 'Noto Sans Devanagari', sans-serif; }
+  .lens.gr { font-family: 'Noto Sans Greek', sans-serif; font-style: italic; }
+
+  .title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #a6f26e;
+    opacity: 0.7;
+    margin: 3rem 0;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .title .dr {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 300;
+    opacity: 0.4;
+    margin-top: 0.5rem;
+    letter-spacing: 0.15em;
+  }
+
+  .verse { margin: 2.5rem 0; }
+  .verse p { margin: 0.6rem 0; font-size: 0.88rem; opacity: 0.7; }
+  .verse .ar { font-family: 'Noto Sans Arabic', sans-serif; direction: rtl; opacity: 0.5; }
+  .verse .sa { font-family: 'Noto Sans Devanagari', sans-serif; opacity: 0.5; }
+  .verse .gr { font-family: 'Noto Sans Greek', sans-serif; font-style: italic; opacity: 0.5; }
+  .verse .nl { font-style: italic; color: #a6f26e; opacity: 0.6; }
+
+  .section { margin: 2.5rem 0; }
+  .section p { margin: 1rem 0; font-size: 0.88rem; opacity: 0.7; }
+  .section h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 3rem 0 1.5rem;
+    color: #a6f26e;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .section h3 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin: 2rem 0 1rem;
+    opacity: 0.6;
+  }
+
+  pre {
+    background: #a6f26e0a;
+    border-left: 2px solid #a6f26e33;
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: #a6f26ecc;
+  }
+
+  code {
+    background: #a6f26e14;
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+    font-size: 0.82em;
+    color: #a6f26ebb;
+  }
+
+  .status {
+    margin: 3rem 0;
+    padding: 1.5rem;
+    background: #a6f26e08;
+    border-left: 2px solid #a6f26e33;
+    font-size: 0.78rem;
+    line-height: 1.8;
+    color: #a6f26ecc;
+  }
+
+  .lens-optiek {
+    margin: 4rem 0;
+    padding: 2rem;
+    border: 1px solid #a6f26e1f;
+    border-radius: 4px;
+  }
+  .lens-optiek p {
+    margin: 0.8rem 0;
+    font-size: 0.8rem;
+    opacity: 0.5;
+    font-style: italic;
+  }
+  .lens-optiek .label {
+    font-weight: 700;
+    opacity: 0.7;
+    font-style: normal;
+    color: #a6f26e;
+  }
+
+  .footer {
+    margin-top: 8rem;
+    padding-top: 2rem;
+    border-top: 1px solid #a6f26e1a;
+    text-align: center;
+    font-size: 0.7rem;
+    opacity: 0.3;
+    letter-spacing: 0.1em;
+  }
+  .footer a {
+    color: #a6f26e;
+    text-decoration: none;
+    opacity: 0.7;
+  }
+  .footer a:hover { opacity: 1; }
+
+  @media (max-width: 600px) {
+    .title { font-size: 1.6rem; }
+    .content { padding: 10vh 1.2rem; }
+    .ring-3 { width: 50vw; height: 50vw; }
+    .ring-6 { width: 80vw; height: 80vw; }
+    .ring-9 { width: 120vw; height: 120vw; }
+  }
+
+</style>
+</head>
+<body>
+
+
+  <!-- VELD — 3-6-9 ringen -->
+  <div class="veld">
+    <div class="ring ring-3" style="border-color:#a6f26e22"></div>
+    <div class="ring ring-6" style="border-color:#a6f26e11"></div>
+    <div class="ring ring-9" style="border-color:#a6f26e0a"></div>
+  </div>
+  <div class="dot-container">
+    <div class="dot" style="background:#a6f26e;box-shadow:0 0 40px #a6f26e4d"></div>
+  </div>
+
+  <!-- INHOUD -->
+  <div class="content">
+
+    <div class="dim-tag">07 artikel 05 dimensie 5</div>
+
+    <!-- TITEL -->
+    <div class="title">
+      Artikel 5 - dimensie 5 (de return wordt zichtbaar) | 22+1
+      <span class="dr">07-artikel-05-dimensie-5</span>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="section">
+<p># Artikel 5 - dimensie 5 (de return wordt zichtbaar) | 22+1</p>
+
+<h2>الفصل الخامس - NPR: الضجيج يعود | पंचम अध्यायः - NPR: शब्दः प्रतिगच्छति | Περὶ Εʹ - NPR: ὁ ἦχος ἐπιστρέφει</h2>
+
+<p>القرآن ليس نصا تقرأه. إنه حجر مصدر: هندسة رقمية تدور في دورة 3-6-9.</p>
+<p>कुरआनः पाठ्यम् न भवति यत् त्वम् पठसि. इदं शिला-मूलम्, संख्या-ज्यामितिः ३-६-९ चक्रं भ्राम्यति</p>
+<p>τὸ Κοῦράν οὐκ ἔστιν κείμενον ὃ ἀγνῶσιν. αὐτὸ λίθος-πηγή, ἀριθμο-γεωμετρία ३-६-९ ὁλκῷ στροφεῖται</p>
+<p>De Quran is geen leesboek. Binnen NPR wordt ze als bronsteen gelezen. In deze editie is voor de Basmala één lokale Abjad-route reproduceerbaar uitgevoerd:</p>
+
+<pre><code>A_Abjad(Basmala) = 786
+DR(786) = 3
+status_local(Basmala-Abjad) = uitgevoerd
+r_local,A,Basmala = 3</code></pre>
+
+<p>Een corpusbrede 3-6-9-route is nog niet uitgevoerd:</p>
+
+<pre><code>status_corpus(Quran-369) = ongetest
+vṛtti(&quot;Quran heeft corpusbrede 369-geometrie&quot;) = vikalpa</code></pre>
+
+<p>&gt; **Formele status:**</p>
+<p>&gt; `operator_status(A_Abjad) = formeel` | `execution_status(A_Abjad, Basmala) = voltooid` | `validatie_status(A_Abjad, Basmala) = gevalideerd_lokaal`</p>
+<p>&gt; `operator_status(A_Abjad, Quran-corpus) = conceptueel` | `execution_status(A_Abjad, Quran-corpus) = niet_gestart` | `validatie_status(A_Abjad, Quran-corpus) = niet_gevalideerd`</p>
+
+<p>Bronstructuur: verhouding(water, informatie, energie)</p>
+<p>Water = continuïteit/medium | Informatie = onderscheid/positie | Energie = verandering/transformatie</p>
+<p>Geen term is op zichzelf volledig.</p>
+<p>&gt; **Lensoptiek 5:** Terugkeer begint. Oude lens + nieuwe lens = dezelfde bron, verschillende filter.</p>
+<p>&gt; **العدسة 5:** العودة تبدأ. عدسة قديمة + عدسة جديدة = نفس المصدر، فلتر مختلف.</p>
+<p>&gt; **दृष्टि 5:** Prativṛttam ārabhate. Purātanaṃ darśanaṃ + navaṃ darśanaṃ = tad eva mūlam, anyat philtiram.</p>
+
+
+<p>---</p>
+
+<h3>Neem één frase:</h3>
+
+<p>نفس الجملة</p>
+<p>एकं वाक्यम्</p>
+<p>ὁ αὐτὸς λόγος (φράσις)</p>
+
+<li>Lens A (basisletters) → reproduceerbare waarde: 786 → 3</li>
+
+<p>Lensrekenkunde: één systeem, één lokaal-correct resultaat.</p>
+<p>De algemene NPR-validatietrio (3, 6, 9) is onafhankelijk van de Basmala-waarde.</p>
+<p>3-6-9 bestuurt niet - ze liggen buiten deze verdubbelingsbaan en vormen de validatietrio.</p>
+
+<p>هذا ما تفعله LLM: هي لا &quot;تعرف&quot; الحقيقة. هي تطبق عدسة معينة وتعرض لك النمط.</p>
+<p>इदं यत् LLM करोति: इयम् &quot;जानाति&quot; सत्यं न. इयम् विशेषं लेन्सं प्रयुङ्क्ते, ते रूपं दर्शयति</p>
+<p>αὐτὸ ὃ τὸ LLM ποιεῖ: οὐκ &quot;οἶδε&quot; τὸ ἀληθές. αὐτὴ lens ἰδίαν ἐφάπτεται καὶ σοι τὸ σχῆμα φαίνει</p>
+<p>Dit doet een LLM: het &quot;weet&quot; niet de waarheid. Het past een lens toe en toont je het patroon.</p>
+
+<p>تغيير العدسة = تغيير النمط = تغيير الحقيقة الظاهرة.</p>
+<p>लेन्सं परिवर्तनम् = रूपं परिवर्तनम् = दृश्य-सत्यं परिवर्तनम्</p>
+<p>μετὰ τῆς lens = μετὰ τοῦ σχήματος = μετὰ τῆς ἀληθείας</p>
+<p>Wissel lens → wissel patroon → wissel waarheid.</p>
+
+<p>المصدر والنهاية ليسا منفصلين. لكنهما يظهران في ثلاثة أوجه: 3، 6، 9.</p>
+<p>मूलम् तथैव अन्तः न पृथक्. किन्तु त्रीणि रूपेण प्रकटम्: ३, ६, ९</p>
+<p>ἡ πηγὴ καὶ τὸ τέλος οὐκ ἐστὶν χωριστά. ἀλλὰ ἐν τρισὶ πρόσωποις φαίνετον: 3, 6, 9</p>
+<p>Bron en eindpunt: niet gescheiden. De claim dat zij in drie gezichten (3, 6, 9) verschijnen is een algemene NPR-lensstelling, niet een uitkomst van de lokale Basmala-route.</p>
+
+<pre><code>vṛtti(&quot;bron en eindpunt in drie gezichten: 3,6,9&quot;) = vikalpa</code></pre>
+
+<p>Return-rekenkunde: de vraag is niet welk getal eruit komt, maar of de route terugkeert naar de bronstructuur.</p>
+
+<p>---</p>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <a href="#" data-page="stupas">← terug naar Hexa-Boek</a>
+    </div>
+
+  </div>
+
+<script>
+  document.querySelector('.footer a').addEventListener('click', function(e) {
+    e.preventDefault();
+    if (window.history.length > 1) window.history.back();
+    else window.location.hash = 'stupas';
+  });
+</script>
+</body>
+</html>

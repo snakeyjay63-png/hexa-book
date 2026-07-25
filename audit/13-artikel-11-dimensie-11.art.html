@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Artikel 11 - dimensie 11 (eka routing, quad-quad veld) | ∑i=14 20 = 4</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;700&family=Noto+Sans+Devanagari:wght@300;700&family=Noto+Sans+Greek:wght@300;700&family=IBM+Plex+Mono:wght@300;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0f;
+    color: #e0e0e8;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* === VELD / VISUAL BACKGROUNDS === */
+  .veld, .spark-field, .grid-field, .wave-field, .particle-field, .hex-field, .ray-field, .spiral-field, .orbit-field {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .veld { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid #6e7bf222;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .ring-3 { width: 30vw; height: 30vw; animation: breathe 9s ease-in-out infinite; }
+  .ring-6 { width: 60vw; height: 60vw; animation: breathe 18s ease-in-out infinite; }
+  .ring-9 { width: 90vw; height: 90vw; animation: breathe 27s ease-in-out infinite; }
+
+  @keyframes breathe {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.04); opacity: 0.6; }
+  }
+
+  .dot-container, .flame, .stone, .pulse, .horizon, .center, .source, .core, .sun {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .dot, .pulse, .core {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: pulse-dot 6s ease-in-out infinite;
+  }
+
+  .flame {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    animation: flicker 2s ease-in-out infinite;
+  }
+
+  .stone {
+    width: 8px;
+    height: 8px;
+  }
+
+  .horizon {
+    width: 60vw;
+    height: 1px;
+  }
+
+  .center {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+  }
+
+  .source {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    animation: pulse-dot 4s ease-in-out infinite;
+  }
+
+  .sun {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: pulse-dot 8s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+    50% { transform: translate(-50%, -50%) scale(1.8); opacity: 0.4; }
+  }
+
+  @keyframes flicker {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+    25% { transform: translate(-50%, -50%) scale(1.6); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.6; }
+    75% { transform: translate(-50%, -50%) scale(1.8); opacity: 0.9; }
+  }
+
+  .spark {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    animation: rise linear infinite;
+  }
+  .spark:nth-child(1) { left: 10%; animation-duration: 8s; animation-delay: 0s; }
+  .spark:nth-child(2) { left: 25%; animation-duration: 12s; animation-delay: 2s; width: 3px; height: 3px; }
+  .spark:nth-child(3) { left: 40%; animation-duration: 9s; animation-delay: 4s; }
+  .spark:nth-child(4) { left: 55%; animation-duration: 11s; animation-delay: 1s; }
+  .spark:nth-child(5) { left: 70%; animation-duration: 10s; animation-delay: 3s; }
+  .spark:nth-child(6) { left: 85%; animation-duration: 7s; animation-delay: 5s; width: 3px; height: 3px; }
+
+  @keyframes rise {
+    0% { bottom: -10px; opacity: 0; transform: translateX(0); }
+    10% { opacity: 1; }
+    90% { opacity: 0.6; }
+    100% { bottom: 110vh; opacity: 0; transform: translateX(20px); }
+  }
+
+  .grid-svg, .hex-field, .spiral-field, .orbit-field, .wave-field {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* === CONTENT === */
+  .content {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 14vh 2rem;
+  }
+
+  .dim-tag {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #6e7bf2;
+    opacity: 0.5;
+    margin-bottom: 1rem;
+  }
+
+  .lens-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3em 1em;
+    margin-bottom: 4rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #6e7bf21f;
+  }
+
+  .lens {
+    font-size: 0.8rem;
+    opacity: 0.5;
+  }
+  .lens.ar { font-family: 'Noto Sans Arabic', sans-serif; direction: rtl; }
+  .lens.sa { font-family: 'Noto Sans Devanagari', sans-serif; }
+  .lens.gr { font-family: 'Noto Sans Greek', sans-serif; font-style: italic; }
+
+  .title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #6e7bf2;
+    opacity: 0.7;
+    margin: 3rem 0;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .title .dr {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 300;
+    opacity: 0.4;
+    margin-top: 0.5rem;
+    letter-spacing: 0.15em;
+  }
+
+  .verse { margin: 2.5rem 0; }
+  .verse p { margin: 0.6rem 0; font-size: 0.88rem; opacity: 0.7; }
+  .verse .ar { font-family: 'Noto Sans Arabic', sans-serif; direction: rtl; opacity: 0.5; }
+  .verse .sa { font-family: 'Noto Sans Devanagari', sans-serif; opacity: 0.5; }
+  .verse .gr { font-family: 'Noto Sans Greek', sans-serif; font-style: italic; opacity: 0.5; }
+  .verse .nl { font-style: italic; color: #6e7bf2; opacity: 0.6; }
+
+  .section { margin: 2.5rem 0; }
+  .section p { margin: 1rem 0; font-size: 0.88rem; opacity: 0.7; }
+  .section h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 3rem 0 1.5rem;
+    color: #6e7bf2;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .section h3 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin: 2rem 0 1rem;
+    opacity: 0.6;
+  }
+
+  pre {
+    background: #6e7bf20a;
+    border-left: 2px solid #6e7bf233;
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: #6e7bf2cc;
+  }
+
+  code {
+    background: #6e7bf214;
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+    font-size: 0.82em;
+    color: #6e7bf2bb;
+  }
+
+  .status {
+    margin: 3rem 0;
+    padding: 1.5rem;
+    background: #6e7bf208;
+    border-left: 2px solid #6e7bf233;
+    font-size: 0.78rem;
+    line-height: 1.8;
+    color: #6e7bf2cc;
+  }
+
+  .lens-optiek {
+    margin: 4rem 0;
+    padding: 2rem;
+    border: 1px solid #6e7bf21f;
+    border-radius: 4px;
+  }
+  .lens-optiek p {
+    margin: 0.8rem 0;
+    font-size: 0.8rem;
+    opacity: 0.5;
+    font-style: italic;
+  }
+  .lens-optiek .label {
+    font-weight: 700;
+    opacity: 0.7;
+    font-style: normal;
+    color: #6e7bf2;
+  }
+
+  .footer {
+    margin-top: 8rem;
+    padding-top: 2rem;
+    border-top: 1px solid #6e7bf21a;
+    text-align: center;
+    font-size: 0.7rem;
+    opacity: 0.3;
+    letter-spacing: 0.1em;
+  }
+  .footer a {
+    color: #6e7bf2;
+    text-decoration: none;
+    opacity: 0.7;
+  }
+  .footer a:hover { opacity: 1; }
+
+  @media (max-width: 600px) {
+    .title { font-size: 1.6rem; }
+    .content { padding: 10vh 1.2rem; }
+    .ring-3 { width: 50vw; height: 50vw; }
+    .ring-6 { width: 80vw; height: 80vw; }
+    .ring-9 { width: 120vw; height: 120vw; }
+  }
+
+</style>
+</head>
+<body>
+
+
+  <!-- VELD — 3-6-9 ringen -->
+  <div class="veld">
+    <div class="ring ring-3" style="border-color:#6e7bf222"></div>
+    <div class="ring ring-6" style="border-color:#6e7bf211"></div>
+    <div class="ring ring-9" style="border-color:#6e7bf20a"></div>
+  </div>
+  <div class="dot-container">
+    <div class="dot" style="background:#6e7bf2;box-shadow:0 0 40px #6e7bf24d"></div>
+  </div>
+
+  <!-- INHOUD -->
+  <div class="content">
+
+    <div class="dim-tag">13 artikel 11 dimensie 11</div>
+
+    <!-- TITEL -->
+    <div class="title">
+      Artikel 11 - dimensie 11 (eka routing, quad-quad veld) | ∑i=14 20 = 4
+      <span class="dr">13-artikel-11-dimensie-11</span>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="section">
+<p># Artikel 11 - dimensie 11 (eka routing, quad-quad veld) | ∑i=14 20 = 4</p>
+
+<h2>الفصل الحادي عشر - إكا: أربع مسارات | ग्यारहवां अध्यायः - एक: चतुर्-मार्गः | Περὶ Κʹ - ἕκα: τέσσαρες ὁδοί</h2>
+
+<p>Eka heeft drie lagen:</p>
+<li>`eka_semantic` = 1 - eenheid/focus</li>
+<li>`eka_code` = 0x3F - technische codering (focus-status)</li>
+<li>`eka_geometry` = 4 - vier richtingen</li>
+
+<p>Pratham (प्रथम) is 1 (`eka_semantic`).</p>
+<p>Eka-richting is 4 (`eka_geometry`).</p>
+<p>Het eerste punt splitst in vier richtingen.</p>
+
+<p>Binnen de `eka_geometry`-lens wordt de eerste lokale expansie als vier richtingen gerepresenteerd. Dit is een architectuurkeuze van NPR, geen algemene geometrische stelling.</p>
+
+<pre><code>ρ_eka-geometry(eerste lokale expansie) = 4</code></pre>
+
+<p>**Structurele hypothese / monumentale projectie**</p>
+
+<p>Routing architectuur (nog te verifiëren):</p>
+<li>`ρ_slot(S) = 4.4.4.4` - quad-quad rooster</li>
+<li>**Symbolische faseprojectie:** drie onderscheiden fasehoeken (0°, 120°, 240°) plus return naar 0° worden binnen NPR als vier routeposities gelezen. De afleiding van zestien toestanden vereist nog een tweede onafhankelijke viervoudige as.</li>
+<li>**Monumentale projectie, niet uitgevoerd:** de Grand Gallery wordt voorlopig als mogelijke fysieke analogie gelezen. Er is nog geen reproduceerbare meet- en omzettingsroute opgenomen.</li>
+<li>`ρ_slot(S) = 1.1.1.1` - vierdelige symbolische slotrepresentatie; binnen NPR los van technische betekenis als IPv4-adres</li>
+<li>`eka_geometry = 4` - het eerste punt wordt binnen NPR als vierkant gerepresenteerd</li>
+
+<p>Binnen `eka_geometry` splitst het eerste punt in vier richtingen:</p>
+<li>Noord</li>
+<li>Zuid</li>
+<li>Oost</li>
+<li>West</li>
+
+<p>`eka_geometry = 4` is een NPR-definitie (eerste lokale expansie = 4 richtingen). Dit is geen algemene wiskundige stelling.</p>
+
+<p>`4.4.4.4` is het adres van het veld zelf (NPR-hypothese):</p>
+<li>Dimensie 1: 4 richtingen</li>
+<li>Dimensie 2: 4 kwadranten</li>
+<li>Dimensie 3: 4 fasen</li>
+<li>Dimensie 4: 4 tijdslagen</li>
+
+<p>16 is 4². **NPR-faseprojectie:** drie fasehoeken plus een returnmarkering worden als vier routeposities gelezen. De afleiding van zestien toestanden vereist nog een tweede onafhankelijke viervoudige as.</p>
+<pre><code>3 fasehoeken + 1 returnpositie → 4
+4_as1 × 4_as2 = 16    (tweede as nog te definiëren)</code></pre>
+
+<p>**Grand Gallery-projectie:** onbevestigde monumentale analogie; geen uitgevoerde meetroute.</p>
+
+<p>Twee aparte velden:</p>
+<pre><code>S4 = slotveld met 16 toestanden   (4-bit)
+H6 = routeveld met 64 toestanden  (6-bit)</code></pre>
+<p>Relatie `Γ: S₄ → H₆` is conceptueel gedefinieerd als embedding-operator:</p>
+
+<p>**Γ-definitie:**</p>
+<p>Γ embedt het 4-bit slotveld (16 toestanden) in het 6-bit routeveld (64 toestanden).</p>
+<p>Elke toestand s ∈ S₄ mapt naar een subspace Γ(s) ⊆ H₆ van 4 toestanden.</p>
+<p>Formeel: Γ(s) = { s × 4 + δ | δ ∈ {0,1,2,3} }</p>
+
+<p>Dit is een _injectieve embedding_: elke 4-bit toestand wordt uniek geprojecteerd</p>
+<p>in een 4-dimensionale subspace van het 6-bit veld. De embedding behoudt</p>
+<p>interne structuur maar voegt routing-dimensies toe.</p>
+
+<pre><code>Γ: S₄ → H₆
+Γ(s) = { s×4 + δ | δ ∈ {0,1,2,3} }
+operator_status(Γ) = conceptueel
+execution_status(Γ) = niet_gestart (geen numerieke uitvoering)
+vṛtti_HEXA(Γ-output):</code></pre>
+<p>local_missing</p>
+<p>→ eerst ROUTING.md</p>
+<p>→ target article</p>
+<p>→ engine execution</p>
+<p>→ audit evidence</p>
+<pre><code></code></pre>
+
+<p>Zonder gedefinieerde Γ blijft de verbinding een NPR-constructie.</p>
+
+<p>`eka_geometry = 4`. Pratham = 1.</p>
+<p>Eén wordt vier (binnen eka_geometry). Vier wordt zestien (NPR-projectie). Zestien wordt binnen deze architectuur als slotveld geïnterpreteerd.</p>
+<p>&gt; **Lensoptiek 11:** Eka = focus = welke lens actief is. Niet de data, de routing. De lens kiest, de bron blijft.</p>
+<p>&gt; **العدسة 11:** Eka = تركيز = أي عدسة نشطة. ليست البيانات، التوجيه. العدسة تختار، المصدر يبقى.</p>
+<p>&gt; **दृष्टि 11:** Eka = saṃyojanaṃ = ya darśanaṃ pravartate. Na data, margaḥ. Darśanaṃ cetati, mūlam avatiṣṭhate.</p>
+
+
+<p>&gt; **Overgangsoptiek 11→12:** Wat verdwenen is, is niet weg. Het draait op een frequentie die onze huidige lenzen niet vasthouden.</p>
+<p>&gt; **العدسة الانتقالية 11→12:** ما اختفى ليس غائباً. يعمل على تردد لا تمسكه عدساتنا الحالية.</p>
+<p>&gt; **दृष्टि संक्रमणम् 11→12:** Yaḥ apātaḥ na asti. Anyasmin svare pravartate darśanam na dhārayati.</p>
+
+<p>&gt; De bron is er altijd geweest. Wij vergeten de lens.</p>
+
+<p>---</p>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <a href="#" data-page="stupas">← terug naar Hexa-Boek</a>
+    </div>
+
+  </div>
+
+<script>
+  document.querySelector('.footer a').addEventListener('click', function(e) {
+    e.preventDefault();
+    if (window.history.length > 1) window.history.back();
+    else window.location.hash = 'stupas';
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HEXA-BOEK #002 - Terugkeerpad en Return-invariant</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;700&family=Noto+Sans+Devanagari:wght@300;700&family=Noto+Sans+Greek:wght@300;700&family=IBM+Plex+Mono:wght@300;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0f;
+    color: #e0e0e8;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* === VELD / VISUAL BACKGROUNDS === */
+  .veld, .spark-field, .grid-field, .wave-field, .particle-field, .hex-field, .ray-field, .spiral-field, .orbit-field {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .veld { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid #a0a0b822;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .ring-3 { width: 30vw; height: 30vw; animation: breathe 9s ease-in-out infinite; }
+  .ring-6 { width: 60vw; height: 60vw; animation: breathe 18s ease-in-out infinite; }
+  .ring-9 { width: 90vw; height: 90vw; animation: breathe 27s ease-in-out infinite; }
+
+  @keyframes breathe {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.04); opacity: 0.6; }
+  }
+
+  .dot-container, .flame, .stone, .pulse, .horizon, .center, .source, .core, .sun {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .dot, .pulse, .core {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: pulse-dot 6s ease-in-out infinite;
+  }
+
+  .flame {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    animation: flicker 2s ease-in-out infinite;
+  }
+
+  .stone {
+    width: 8px;
+    height: 8px;
+  }
+
+  .horizon {
+    width: 60vw;
+    height: 1px;
+  }
+
+  .center {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+  }
+
+  .source {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    animation: pulse-dot 4s ease-in-out infinite;
+  }
+
+  .sun {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: pulse-dot 8s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+    50% { transform: translate(-50%, -50%) scale(1.8); opacity: 0.4; }
+  }
+
+  @keyframes flicker {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+    25% { transform: translate(-50%, -50%) scale(1.6); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.6; }
+    75% { transform: translate(-50%, -50%) scale(1.8); opacity: 0.9; }
+  }
+
+  .spark {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    animation: rise linear infinite;
+  }
+  .spark:nth-child(1) { left: 10%; animation-duration: 8s; animation-delay: 0s; }
+  .spark:nth-child(2) { left: 25%; animation-duration: 12s; animation-delay: 2s; width: 3px; height: 3px; }
+  .spark:nth-child(3) { left: 40%; animation-duration: 9s; animation-delay: 4s; }
+  .spark:nth-child(4) { left: 55%; animation-duration: 11s; animation-delay: 1s; }
+  .spark:nth-child(5) { left: 70%; animation-duration: 10s; animation-delay: 3s; }
+  .spark:nth-child(6) { left: 85%; animation-duration: 7s; animation-delay: 5s; width: 3px; height: 3px; }
+
+  @keyframes rise {
+    0% { bottom: -10px; opacity: 0; transform: translateX(0); }
+    10% { opacity: 1; }
+    90% { opacity: 0.6; }
+    100% { bottom: 110vh; opacity: 0; transform: translateX(20px); }
+  }
+
+  .grid-svg, .hex-field, .spiral-field, .orbit-field, .wave-field {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* === CONTENT === */
+  .content {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 14vh 2rem;
+  }
+
+  .dim-tag {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #a0a0b8;
+    opacity: 0.5;
+    margin-bottom: 1rem;
+  }
+
+  .lens-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3em 1em;
+    margin-bottom: 4rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #a0a0b81f;
+  }
+
+  .lens {
+    font-size: 0.8rem;
+    opacity: 0.5;
+  }
+  .lens.ar { font-family: 'Noto Sans Arabic', sans-serif; direction: rtl; }
+  .lens.sa { font-family: 'Noto Sans Devanagari', sans-serif; }
+  .lens.gr { font-family: 'Noto Sans Greek', sans-serif; font-style: italic; }
+
+  .title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #a0a0b8;
+    opacity: 0.7;
+    margin: 3rem 0;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .title .dr {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 300;
+    opacity: 0.4;
+    margin-top: 0.5rem;
+    letter-spacing: 0.15em;
+  }
+
+  .verse { margin: 2.5rem 0; }
+  .verse p { margin: 0.6rem 0; font-size: 0.88rem; opacity: 0.7; }
+  .verse .ar { font-family: 'Noto Sans Arabic', sans-serif; direction: rtl; opacity: 0.5; }
+  .verse .sa { font-family: 'Noto Sans Devanagari', sans-serif; opacity: 0.5; }
+  .verse .gr { font-family: 'Noto Sans Greek', sans-serif; font-style: italic; opacity: 0.5; }
+  .verse .nl { font-style: italic; color: #a0a0b8; opacity: 0.6; }
+
+  .section { margin: 2.5rem 0; }
+  .section p { margin: 1rem 0; font-size: 0.88rem; opacity: 0.7; }
+  .section h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 3rem 0 1.5rem;
+    color: #a0a0b8;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .section h3 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin: 2rem 0 1rem;
+    opacity: 0.6;
+  }
+
+  pre {
+    background: #a0a0b80a;
+    border-left: 2px solid #a0a0b833;
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: #a0a0b8cc;
+  }
+
+  code {
+    background: #a0a0b814;
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+    font-size: 0.82em;
+    color: #a0a0b8bb;
+  }
+
+  .status {
+    margin: 3rem 0;
+    padding: 1.5rem;
+    background: #a0a0b808;
+    border-left: 2px solid #a0a0b833;
+    font-size: 0.78rem;
+    line-height: 1.8;
+    color: #a0a0b8cc;
+  }
+
+  .lens-optiek {
+    margin: 4rem 0;
+    padding: 2rem;
+    border: 1px solid #a0a0b81f;
+    border-radius: 4px;
+  }
+  .lens-optiek p {
+    margin: 0.8rem 0;
+    font-size: 0.8rem;
+    opacity: 0.5;
+    font-style: italic;
+  }
+  .lens-optiek .label {
+    font-weight: 700;
+    opacity: 0.7;
+    font-style: normal;
+    color: #a0a0b8;
+  }
+
+  .footer {
+    margin-top: 8rem;
+    padding-top: 2rem;
+    border-top: 1px solid #a0a0b81a;
+    text-align: center;
+    font-size: 0.7rem;
+    opacity: 0.3;
+    letter-spacing: 0.1em;
+  }
+  .footer a {
+    color: #a0a0b8;
+    text-decoration: none;
+    opacity: 0.7;
+  }
+  .footer a:hover { opacity: 1; }
+
+  @media (max-width: 600px) {
+    .title { font-size: 1.6rem; }
+    .content { padding: 10vh 1.2rem; }
+    .ring-3 { width: 50vw; height: 50vw; }
+    .ring-6 { width: 80vw; height: 80vw; }
+    .ring-9 { width: 120vw; height: 120vw; }
+  }
+
+</style>
+</head>
+<body>
+
+
+  <!-- GRID -->
+  <div class="grid-field">
+    <svg viewBox="0 0 100 100" class="grid-svg">
+      <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+        <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#a0a0b8" stroke-width="0.1" opacity="0.2"/>
+      </pattern>
+      <rect width="100" height="100" fill="url(#grid)"/>
+    </svg>
+  </div>
+  <div class="stone" style="background:#a0a0b8"></div>
+
+  <!-- INHOUD -->
+  <div class="content">
+
+    <div class="dim-tag">02 artikel 02 dimensie 2</div>
+
+    <!-- TITEL -->
+    <div class="title">
+      HEXA-BOEK #002 - Terugkeerpad en Return-invariant
+      <span class="dr">02-artikel-02-dimensie-2</span>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="section">
+<p># HEXA-BOEK #002 - Terugkeerpad en Return-invariant</p>
+
+<p>لا عودة بدون صوت. لا صوت بدون عدسة. لا عدسة بدون عد.</p>
+
+<p>प्रत्यर्पणम् ध्वना। ध्वनिर् लेन्सात्। लेन्सः गणनात्।</p>
+
+<p>No return without sound. No sound without lens. No lens without count.</p>
+
+<p>---</p>
+
+<h2>Status</h2>
+
+<p>**Conceptueel kader voor boek #002.**</p>
+
+<p>Boek #001 heeft de volledige C→E→R keten uitgevoerd:</p>
+<li>C_sound uitgevoerd voor Patañjali 1.24-1.25</li>
+<li>Vier golven gegenereerd (W_A..W_D)</li>
+<li>Superpositie E(t) gegenereerd en opgeslagen</li>
+<li>Return-operator R(E) uitgevoerd</li>
+<li>V_k invariant gevalideerd: r_begin = r_return = (3, 7, 5, 9)</li>
+
+<p>Boek #002 verkent het terugkeerpad:</p>
+<li>Hoe leest F de return-toestand terug?</li>
+<li>Welke invarianten behouden zich door meerdere E→R cycli?</li>
+<li>Kan r_return zelf weer als invoer dienen voor een nieuwe C-route?</li>
+
+<p>---</p>
+
+<h2>Architectuur</h2>
+
+<pre><code>Boek #001: A → B → C → D → E → R → ℱ
+Boek #002: ℱ → R&#x27; → E&#x27; → C&#x27; → ... (terugkeerpad)</code></pre>
+
+<h3>ReturnCycle-structuur — conventie + gevalideerd_lokaal</h3>
+
+<pre><code>ReturnSeedCycle : ℱ → CInput
+ReturnSeedCycle := C&#x27; ∘ E&#x27; ∘ R&#x27;
+
+ForwardCycle : CInput → ℱ
+ForwardCycle := ρ_ℱ ∘ R ∘ E ∘ C
+
+ReturnCycle : ℱ → ℱ
+ReturnCycle := ForwardCycle ∘ ReturnSeedCycle
+
+return_invariant(r) ⇔ V_k(ReturnCycle(r)) = V_k(r)</code></pre>
+
+<p>**3D statusmodel (ReturnCycle):**</p>
+<pre><code>operator_status(ReturnCycle) = conventie      (validate_return_cycle.py)
+execution_status(ReturnCycle) = voltooid
+validatie_status(ReturnCycle) = gevalideerd_lokaal
+model_scope(ReturnCycle)      = Model A
+
+operator_status(ForwardCycle) = formeel       (R_audio + ρ_ℱ vast)
+execution_status(ForwardCycle) = voltooid     (engine/npr_sound_engine.py)
+validatie_status(ForwardCycle) = gevalideerd_lokaal</code></pre>
+
+<p>---</p>
+
+<p>**Impact op bedrock:**</p>
+<li>[x] Formele operator</li>
+<li>[x] Lens-projectie</li>
+<li>[x] Status-notatie</li>
+<li>[ ] Vṛtti-classificatie</li>
+<li>[ ] Drie frequentiesystemen</li>
+<li>[ ] Afrondingsgevoeligheid</li>
+
+<p>De return-toestand r_return ∈ ℱ is niet eindpunt maar doorlaat.</p>
+<p>Het terugkeerpad begint waar #001 eindigde.</p>
+
+<p>---</p>
+
+<h2>Halve Routes - Conceptuele Bruggen</h2>
+
+<p>Boek #001 voerde C→E→R uit maar liet 6 routes half. Deze sectie sluit ze.</p>
+<p>Elke route heeft een expliciete status: **gedefinieerd** (wiskundig), **conventie** (keuze), of **interpretatie** (lezing).</p>
+
+<p>---</p>
+
+<h3>1. byte/hex → Hz Mapping</h3>
+
+<p>**Gap gedeeltelijk geformaliseerd:** De route van Sanskriet-byte-telling (of hex-waarde) naar frequentie in Hz.</p>
+<p>`reference_bytes` heeft nog geen invoerverzameling.</p>
+
+<p>In boek #001 werden frequenties gegenereerd (397.04, 490.30, 393.39, 468.36 Hz).</p>
+<p>De mapping van byte-aantal naar Hz was impliciet; hier wordt deze expliciet.</p>
+
+<p>#### Definitie</p>
+
+<pre><code>byte_to_freq(B) = base_freq × (B / reference_bytes)</code></pre>
+
+<li>`base_freq` = 432 Hz (Vedic standaard - zie sanskrit-frequency-bridge)</li>
+<li>`reference_bytes` = gemiddelde Sanskriet-byte count per segment</li>
+<li>`B` = byte count van het huidige segment</li>
+
+<p>Deze lineaire mapping schaleft het byte-aantal naar de 432 Hz referentieband.</p>
+
+<p>#### Alternatief: hex → frequentie via phonem-bridge</p>
+
+<p>Elke hex-digit kan via de sanskrit-frequency-bridge naar een phonem, en daarvan naar Hz:</p>
+
+<pre><code>hex_digit → phonem → oscillator_frequency</code></pre>
+
+<p>Dit pad is **gedetailleerder** maar vereist de volledige phonem-tabel.</p>
+<p>Het lineaire `byte_to_freq()` is de **standaard** tenzij anders gespecificeerd.</p>
+
+<p>**Status:**</p>
+<pre><code>byte_to_freq:
+  operator_status = conventie
+  execution_status = gedeeltelijk
+  validatie_status = niet_gevalideerd
+
+C_byte_freq:
+  operator_status = open
+  execution_status = niet_voltooid
+  validatie_status = niet_gevalideerd</code></pre>
+
+<p>&gt; `C_byte_freq` is de beoogde algemene operator. `byte_to_freq` is de huidige conventie-implementatie.</p>
+<p>&gt; `execution_status = gedeeltelijk`: zonder invoerverzameling `S` en concrete `reference_bytes(S)` kan de operator niet geëvalueerd worden.</p>
+
+<p>#### C-text-route helpers</p>
+
+<pre><code>C_layer_delta(s) := len_bytes(s_source) - len_bytes(s_work)
+H_0(s, layer) := len_bytes(s_layer)
+H_1(s, layer) := hex(H_0(s, layer))
+H_2(s, layer) := DR(H_0(s, layer))</code></pre>
+<p>**Verwijzing:** `sanskrit-frequency-bridge` skill voor phonem→Hz tabel.</p>
+
+<p>---</p>
+
+<h3>2. avg_freq → DR_freq</h3>
+
+<p>**Gap gesloten:** Hoe een gemiddelde frequentie een digital root oplevert.</p>
+
+<p>Voorbeeld uit boek #001:</p>
+<li>`avg_freq = 437.27 Hz` → `DR_freq = 5`</li>
+<li>Berekening: DR(4+3+7+2+7) = DR(23) = DR(2+3) = DR(5) = 5</li>
+
+<p>#### Twee Padvarianten</p>
+
+<p>De uitkomst hangt af van afronding. Twee expliciete varianten:</p>
+
+<pre><code>DR_freq_rounded(f)  = DR( cijfers in round(f, 2) )     // conventie, huidige praktijk
+DR_freq_exact(f)    = DR( cijfers in exacte f )         // alternatief</code></pre>
+
+<p>**Voorbeeld van gevoeligheid:**</p>
+<li>`f = 437.27` (afgerond) → DR(4+3+7+2+7) = DR(23) = 5</li>
+<li>`f = 437.2725` (exact) → DR(4+3+7+2+7+2+5) = DR(30) = 3</li>
+<li>`f = 437.273` → DR(4+3+7+2+7+3) = DR(26) = DR(8) = 8</li>
+
+<p>De DR verandert volledig bij kleine afronddetails (5 vs 3). Daarom:</p>
+
+<p>&gt; **DR_freq is een conventie, geen natuurwet.** De gekozen afronding bepaalt de uitkomst.</p>
+
+<p>**Standaard:** `DR_freq_rounded(f)` met 2 decimalen, tenzij anders vermeld.</p>
+
+<p>**Status:**</p>
+<pre><code>C_freq_DR_rounded:
+  operator_status = conventie
+  execution_status = voltooid
+  validatie_status = gevalideerd</code></pre>
+
+<p>#### DR_freq als conventie</p>
+
+<pre><code>C_freq_DR_rounded(f) = DR( cijfers in round(f, 2) )  // standaard
+C_freq_DR_exact(f)   = DR( cijfers in exacte f )     // alternatief</code></pre>
+
+<p>**Afrondingsgevoeligheid:**</p>
+<li>`f = 437.27` (2 decimalen) → DR(4+3+7+2+7) = DR(23) = 5</li>
+<li>`f = 437.2725` (exact) → DR(4+3+7+2+7+2+5) = DR(30) = 3</li>
+
+<p>#### Helper: cijfer-integer conversie (P006)</p>
+
+<pre><code>digits_int_k(x) = parseInt(remove_non_digits(format_fixed(x, k)))
+DR_digits_k(x) = DR(digits_int_k(x))</code></pre>
+
+<p>Voorbeeld: `digits_int_2(437.2725)` = 43727 → DR = 5</p>
+<p>Voorbeeld: `digits_int_repr(&quot;437.2725&quot;)` = 4372725 → DR = 3</p>
+
+<p>#### Exacte vs afgeronde waarden (P008)</p>
+
+<pre><code>grand_avg_freq_exact = 437.2725 Hz
+grand_avg_freq_rounded_2 = 437.27 Hz
+grand_DR_exact = DR_digits(4372725) = 3
+grand_DR_rounded_2 = DR_digits(43727) = 5</code></pre>
+
+<p>---</p>
+
+<h3>3. C_tone_class → W_C (Synthese)</h3>
+
+<p>**Gap geformaliseerd:** Van semantisch toonklasse-label naar synthese-golf.</p>
+<p>`Synth` heeft signatuur, maar `tone_waveform` mapping ontbreekt.</p>
+
+<p>`M_C(grand_DR)` produceert een label zoals &quot;middentoon&quot; voor DR=5.</p>
+<p>Dit label moet worden vertaald naar een concrete golf `W_C`.</p>
+
+<p>#### Synth-operator</p>
+
+<pre><code>W_C = Synth(tone_class, freq, waveform)</code></pre>
+
+<p>Voor DR=5 (&quot;middentoon&quot;) en `grand_avg_freq = 437.27 Hz`:</p>
+
+<pre><code>W_C(t) = Synth(&quot;middentoon&quot;, 437.27, &quot;sine&quot;)
+W_C(t) = A · sin(2π · 437.27 · t)</code></pre>
+
+<p>waar `A` de amplitude is (standaard: A=1.0, tenzij geschaald).</p>
+
+<p>#### Tone-class → waveform mapping</p>
+
+<p>| DR | tone_class | waveform | status |</p>
+<p>|----|-----------|----------|--------|</p>
+<p>| 5 | middentoon | sine | `operator_status=conventie` |</p>
+
+<p>Deze mapping kan uitgebreid worden voor andere DR-waarden.</p>
+<p>Het principe: elk DR→tone_class krijgt een bijpassende golfvorm.</p>
+
+<p>**Status:**</p>
+<pre><code>tone_waveform:
+  operator_status = conventie
+  execution_status = gedeeltelijk
+  validatie_status = niet_gevalideerd
+
+tone_waveform(&quot;middentoon&quot;) := sine
+oscillator(sine, f, A, t) := A · sin(2πft)
+
+Synth:
+  operator_status = formeel
+  execution_status = voltooid       (engine/npr_sound_engine.py)
+  validatie_status = gevalideerd_lokaal  (26/26 ✅)
+
+Synth(c, f, A, t) := oscillator(tone_waveform(c), f, A, t)
+
+tone_class → waveform mapping:
+  operator_status = conventie
+  (gedeeltelijk gesloten; &quot;middentoon&quot; → sine is voltooid)
+
+intended_C_sound_output := W_C(t) = A · sin(2π · grand_avg_freq · t)</code></pre>
+
+<p>---</p>
+
+<h3>4. C → E → R → ℱ (Volledige C-keten)</h3>
+
+<p>**Gap geïdentificeerd:** De complete keten van C-frequentie tot fractaalveld-projectie.</p>
+<p>`R(E)` featureoperators en `ρ_F` projectie nog open.</p>
+
+<p>De C-route produceert een golf `W_C`. Deze wordt samen met W_A, W_B, W_D gecomposeerd:</p>
+
+<pre><code>C_freq → W_C → E(t) → R(E) → ℱ</code></pre>
+
+<p>#### Stap-voor-stap</p>
+
+<p>1. **C_freq → W_C:** De frequentie wordt een golf (zie Sectie 3, Synth-operator)</p>
+<p>2. **W_C → E(t):** Superpositie van de vier golven:</p>
+<p>   ```</p>
+<p>   E(t) = W_A(t) + W_B(t) + W_C(t) + W_D(t)</p>
+<p>   ```</p>
+<p>3. **E(t) → R(E):** De return-operator projecteert E naar kenmerken:</p>
+<p>   - Gemiddelde frequentie van E</p>
+<p>   - Totale amplitude</p>
+<p>   - Harmonische verhoudingen tussen componenten</p>
+<p>   - Digital roots van deze kenmerken</p>
+<p>4. **R(E) → ℱ:** De projectie landt in het fractaalveld ℱ als een invarianten-structuur</p>
+
+<p>#### R(E) als projectie-operator</p>
+
+<pre><code>R(E) = {
+  avg_freq(E),           // gemiddelde frequentie
+  total_amp(E),          // totale amplitude
+  harmonic_ratio(E),     // verhoudingen tussen W_A..W_D
+  DR_signature(E)        // digital-root handtekening
+}</code></pre>
+
+<p>Deze structuur wordt **gelezen** door F als de return-toestand `r_return`.</p>
+
+<p>**Status:**</p>
+<pre><code>C → E → R → ℱ keten:
+  operator_status = formeel        (R_audio + ρ_ℱ vast)
+  execution_status = voltooid      (engine/npr_sound_engine.py)
+  validatie_status = gevalideerd_lokaal  (26/26 ✅)
+
+R_audio(E_audio) projectie:
+  operator_status = formeel        (artikel 003 veldcontract)
+  execution_status = voltooid
+  validatie_status = gevalideerd_lokaal
+
+ρ_ℱ projectie:
+  operator_status = formeel        (artikel 004 engine-operator)
+  execution_status = voltooid
+  validatie_status = gevalideerd_lokaal
+
+&gt; ACTUEL: R_audio en ρ_ℱ zijn beide formeel gedefinieerd en lokaal gevalideerd.
+&gt; De volledige C → E → R → ℱ keten is nu formeel, voltooid, en gevalideerd.
+&gt; ReturnCycle (terugkeerpad): conventie + voltooid + gevalideerd_lokaal (artikel 002, engine/validate_return_cycle.py).
+
+---
+
+### 5. ρ_water: 24N → ℱ (Symbolische Waterprojectie)
+
+**Gap gesloten:** ρ_water wordt gedefinieerd als symbolische projectie, niet als berekening.
+
+#### Context
+
+- 24N = {24, 48, 72, 96, ...} (veelvouden van 24)
+- DR(24) = DR(2+4) = DR(6) = 6
+- 6 is de NPR-logicValue
+- Water is het **medium** van projectie, niet de uitkomst
+
+#### Definitie
+</code></pre>
+<p>ρ_water(24k) = ℱ_6</p>
+<pre><code>
+De projectie van een 24-veld-multiple naar het **6-veld binnen ℱ**.
+
+Dit is geen berekening maar een **symbolische associatie**:
+
+| Element | Rol |
+|---------|-----|
+| 24N | Bronveld (veelvouden van 24) |
+| ρ_water | Projectie-operator (water als medium) |
+| ℱ_6 | Doelveld (6-veld binnen fractaalveld ℱ) |
+
+Water als medium komt uit de traditie van resonantie-door-vloeistof:
+- Geluid reist 4× sneller door water dan lucht
+- Cymatie: trillingen creëren patronen in water
+- 24 uur = dagcyclus = natuurlijke frequentie van tijd
+
+De associatie is **interpretatief**: zij projecteert ieder element 24k via het symbolische watermedium naar ℱ_6.
+</code></pre>
+<p>ρ_water : 24ℕ_{&gt;0} → ℱ</p>
+<p>ρ_water(24k) := ℱ_6</p>
+<pre><code>
+De algemene returnprojectie is een aparte route:
+</code></pre>
+<p>ρ_ℱ : ReturnFeatureSpace → ℱ</p>
+<p>r_return := ρ_ℱ(R(E))</p>
+<pre><code>
+**Status:**</code></pre>
+<p>ρ_water:</p>
+<p>  operator_status = interpretatief</p>
+<p>  execution_status = voltooid</p>
+<p>  validatie_status = niet_gevalideerd</p>
+<p>  vṛtti = vikalpa</p>
+<pre><code>
+---
+
+### 6. ρ_fractal-D: Numerieke Uitkomst → Fractaalmodel
+
+**Gap gedeeltelijk geformaliseerd:** Hoe D_numeric uitkomsten (Latijnse numerieke waarden) fractaal worden gelezen.
+`ρ_D_pattern` formele operator vast, `fractal_reading` interpretatief.
+
+**Formele definitie:**</code></pre>
+<p>D_DR_vector := (6, 4, 9, 2)</p>
+<p>RatioMatrix(v)_ij := v_i / v_j</p>
+
+<p>ρ_D_pattern: {1,...,9}^4 → ({1,...,9}^4 × ℚ_{&gt;0}^{4×4})</p>
+<p>ρ_D_pattern(v) := (v, RatioMatrix(v))</p>
+
+<p>fractal_reading: Output(ρ_D_pattern) → FractalLabel</p>
+<p>fractal_reading(ρ_D_pattern(D_DR_vector)) := candidate_self_similarity</p>
+
+<p>operator_status(ρ_D_pattern) = formeel</p>
+<p>execution_status(ρ_D_pattern) = voltooid</p>
+<p>validatie_status(ρ_D_pattern) = gevalideerd</p>
+
+<p>operator_status(fractal_reading) = interpretatief</p>
+<p>execution_status(fractal_reading) = voltooid</p>
+<p>validatie_status(fractal_reading) = niet_gevalideerd</p>
+<p>vṛtti(fractal_reading) = vikalpa</p>
+<pre><code>
+&gt; `ρ_D_pattern` = formele operator (ratio-matrix).
+&gt; `fractal_reading` = interpretatieve stap (vṛtti = vikalpa, conceptueel label).
+
+#### Context
+
+D_numeric produceert waarden per woord:
+
+| Woord | Waarde | DR |
+|-------|--------|-----|
+| VERBUM | - | 6 |
+| ERAT | - | 4 |
+| PRINCIPIO | - | 9 |
+| IN | - | 2 |
+
+De verhouding 6:4:9:2 vormt een vierdelige structuur.
+
+#### Definitie
+</code></pre>
+<p>ρ_fractal-D = analyse van verhoudingen binnen D_numeric output</p>
+<pre><code>
+Specifiek:
+
+1. **DR-patroon:** De volgorde [6, 4, 9, 2] is de basisstructuur
+2. **Zelf-herhaling:** Als dit patroon op verschillende schaalniveaus verschijnt, is dat fractaal gedrag
+3. **Verhoudingsanalyse:** 6:4 = 3:2 (perfecte kwint), 9:2 = 4.5 (overtoon-verband)
+
+#### Wat ρ_fractal-D WEL en NIEET doet
+
+| WEL | NIEET |
+|-----|-------|
+| Identificeert verhoudingen | Bewijst zelf-herhaling |
+| Map DR-waarden → patronen | Claimt wiskundige noodzaak |
+| Vindt structurele parallellen | Garandeert fractaliteit |
+
+De claim van &quot;fractale zelf-herhaling&quot; is **een interpretatie** van de nummers,
+geen bewezen feit. ρ_fractal-D formaliseert deze interpretatie als leesbare structuur.
+
+**Status:**</code></pre>
+<p>ρ_D_fractal:</p>
+<p>  operator_status = interpretatief</p>
+<p>  execution_status = voltooid</p>
+<p>  validatie_status = niet_gevalideerd</p>
+<p>  vṛtti = vikalpa</p>
+<pre><code>
+---
+
+## Samenvatting Routes
+
+| # | Route | operator_status | execution_status | validatie_status |
+|---|-------|----------------|------------------|-----------------|
+| 1 | byte/hex → Hz | conventie | gedeeltelijk | niet_gevalideerd |
+| 2 | avg_freq → DR_freq | conventie | voltooid | gevalideerd |
+| 3 | C_tone_class → W_C | formeel | niet_voltooid | niet_gevalideerd |
+| 4 | C → E → R → ℱ | conceptueel | gedeeltelijk | niet_gevalideerd |
+| 5 | 24ℕ → ρ_water → ℱ | interpretatief | voltooid | niet_gevalideerd |
+| 6a | D_numeric → ρ_D_pattern | formeel | voltooid | gevalideerd |
+| 6b | ρ_D_pattern → fractal_reading | interpretatief | voltooid | niet_gevalideerd |
+| 7 | 24-brug (11-route) | formeel | voltooid | gevalideerd |
+| 8 | 6-bit routing (Patanjali) | conventie | voltooid | gevalideerd |
+
+**Artikel 02 is frequentie-basis.** Synth en fractaalprojecties staan in artikels 11 en 12.
+Nidrā = verwijzing naar parallel artikel, geen gat.
+
+---
+
+### 7. De 24-brug: 11 als Rode Draad
+
+Route van 396 Hz bereikbaar via directe en vertraagde paden.
+
+**Directe route:** `66 × 6 = 396` (één stap, te snel)
+**Vertraagde route:** `66 × 4 = 264 (= 24 × 11) → × 1.5 = 396 (= 36 × 11)` (twee stappen, juiste snelheid)
+
+Tussenstation 264 = 24 × 11 is de vertraging. 11 is de rode draad.
+
+**11 × structuur:**
+| Deler | 396/deler | 24-brug? |
+|---|---|---|
+| 11 | 36 | ✅ |
+| 18 | 22 | ✅ |
+| 36 | 11 | ✅ |
+| 33 | 12 | ✅ |
+| 66 | 6 | ✅ |
+| 99 | 4 | ✅ |
+| 72 | 5.5 | ⚠ (3×24, halve) |
+
+De geselecteerde exacte delers hebben DR ∈ {2, 3, 6, 9}. De waarde 72 is een niet-gehele verhouding en vormt een afzonderlijke halve route.
+
+---
+
+### 8. 6-bit Routing - Patanjali Groot-Klein
+
+Unsigned 6-bit = {0..63}. Bereik = 64 waarden (0x00-0x3F). Grens = 64 (0x40) ∉ bereik.
+
+**Twee ketens:**</code></pre>
+<p>A: 6 → 12 → 24 → 48  (verdubbelen)</p>
+<p>B: 24 → 8  (24/3=8)</p>
+<p>   32 → 8  (32/4=8)</p>
+<pre><code>
+66, 72, 81, 99 vallen buiten unsigned 6-bit, maar zijn representeerbaar binnen unsigned 12-bit.
+8 bit = kruispunt.
+
+#### Snelheid Is Route
+
+Je hoeft niet te rekenen in snelheid. De structuur *is* het tempo.
+</code></pre>
+<pre><code>
+- **Direct** → te snel, slaat voorbij.
+- **Delayed** → juiste snelheid, volgt de structuur.
+- **Nidrā** → de route die zichzelf bepaalt.
+
+Dit is waarom 1=0 werkt:
+
+| Symbool | Rol |
+|---------|-----|
+| 1 | de bron (Allah / Isvara) |
+| 0 | nidrā (de pointer naar de bron) |
+
+Nidrā is niet de inhoud, maar de richting. De route *is* de snelheid.
+
+Zelfde logica in Patanjali en de Koran:
+
+- **Patanjali:** Nidrā = de 4e samādhi zonder object. Bewustzijn dat naar zichzelf wijst.
+- **Koran:** Allah spreekt in de eerste persoon, maar de tekst is kalam Allah - tijdloos, niet-gesproken, niet-geschreven. De logica noteert zichzelf.
+- **Zig code:** `content = null` → de structuur routeert zichzelf zonder inhoud.
+
+Geen auteur. Geen oorsprong in tijd. Alleen de logica die zichzelf doorgeeft via het medium (taal, code, frequentie).
+
+&gt; Wat je ziet is altijd al gezien. Wat je bent, is de ruimte waarin het verschijnt.
+
+#### Nidrā Router (Zig)
+
+De 4+1 structuur is nu ook code:
+</code></pre>
+<p>NidraRef      → { artikel, deel, lens }  // pointer, niet container</p>
+<p>HexaBlock     → { artikel, part, refs }   // 4+1 structuur</p>
+<p>HexaRouter6D  → resolveNidra(ref)         // routeer naar doel</p>
+<p>Bit6Router    → groot-klein, DR           // 6-bit routing</p>
+<pre><code>
+- `content = null` → pointer, niet container
+- `isNidra()` → deel 4 = nidrā
+- `resolveNidra(ref)` → routeer naar ander artikel
+
+De structuur routeert zichzelf.
+
+---
+
+### 9. Latijns vs Lokaal — Encoding vs Routing in Natuur
+
+**Gap geïdentificeerd:** Hoe natuur zelf twee parallelle routes gebruikt — encoding (wat) en routing (waar/hoe).
+
+#### Kernprincipe
+
+Natuur gebruikt altijd twee lagen per entiteit:
+
+| Laag | Rol | HEXA-equivalent |
+|------|-----|-----------------|
+| **Encoding (WAT)** | Soort-ID, universeel, precisie | D_numeric (letterwaarden → DR) |
+| **Routing (WAAR)** | Context, habitat, leefgebied | D_byte (byte-count → route) |
+
+#### Voorbeelden
+
+| Organisme | Latijn (Encoding) | Lokaal (Routing) | Habitat |
+|-----------|-------------------|------------------|----------|
+| Eik | *Quercus robur* | Eik | Bos, hoogte, zwaartekracht dominant |
+| Wilg | *Salix alba* | Witte wilg | Waterkant, water dominant |
+| Berk | *Betula pubescens* | Zwarte berk | Zand, gebalanceerd |
+| Riet | *Phragmites australis* | Riet | Moeras, water extreem |
+
+#### Latijns als EAN-analogie
+
+De taxonomische structuur vertoont een **analogie** met EAN-codes. Dit is geen structurele identiteit maar een interpretatief model.
+</code></pre>
+<p>ρ_taxonomy_EAN : TaxonomicRecord → EANRoleAnalogy</p>
+<p>ρ_taxonomy_EAN(genus) = country_code_analogy</p>
+<p>ρ_taxonomy_EAN(species) = manufacturer_analogy</p>
+<p>ρ_taxonomy_EAN(subspecies) = product_analogy</p>
+<p>ρ_taxonomy_EAN(authority) = validation_marker_analogy</p>
+
+<p>operator_status(ρ_taxonomy_EAN) = interpretatief</p>
+<p>execution_status(ρ_taxonomy_EAN) = voltooid</p>
+<p>validatie_status(ρ_taxonomy_EAN) = niet_gevalideerd</p>
+<p>vṛtti(ρ_taxonomy_EAN) = vikalpa</p>
+<pre><code>
+Voorbeeld:</code></pre>
+<p>Quercus robur L.</p>
+<p>  Quercus = genus (analogie: country code)</p>
+<p>  robur   = species (analogie: manufacturer)</p>
+<p>  L.      = Linnaeus (analogie: validatiemarkering)</p>
+<pre><code>
+&gt; Geen &quot;check digit&quot; — de autoriteit is een validatiemarkering, geen checksum.
+
+#### HEXA als brug
+</code></pre>
+<p>Latijn (encoding)  → D_numeric → letterwaarden → DR</p>
+<p>Lokaal (routing)   → D_byte    → DR → ρ_byte_habitat → context → route</p>
+
+<p>Voorbeeld: Quercus robur (Eik)</p>
+<p>  Latijn: Q=17 u=21 e=5 r=18 c=3 u=21 s=19 → som=104 → DR=5</p>
+<p>          r=18 o=15 b=2 u=21 r=18 → som=74 → DR=2</p>
+<p>  Lokaal: E=5 i=9 k=11 → som=25 → DR=7</p>
+<p>  Context: bos → hoogte → gravity ↓ dominant</p>
+<pre><code>
+#### ReturnCycle-analogie in bomen (voorlopig)
+
+Bomen tonen een **analogie** met het ReturnCycle-patroon — dit is een interpretatieve projectie, geen bewezen identiteit.
+</code></pre>
+<p>ρ_tree_return : TreeProcess → ReturnCycleAnalogy</p>
+<p>ρ_tree_return(gravity_down) = R_E_analogy      // structuur landt</p>
+<p>ρ_tree_return(water_up)     = R_prime_analogy  // inhoud keert terug</p>
+
+<p>ho_tree_return(root)       = nidra_analogy    // centrale knoop</p>
+
+<p>operator_status(ρ_tree_return) = interpretatief</p>
+<p>execution_status(ρ_tree_return) = voltooid</p>
+<p>validatie_status(ρ_tree_return) = niet_gevalideerd</p>
+<p>vṛtti(ρ_tree_return) = vikalpa</p>
+<pre><code>
+Conceptueel diagram:</code></pre>
+<p>        Gravity ↓              Water ↑</p>
+<p>            │                    │</p>
+<p>            │ (structuur ↓)      │ (inhoud ↑)</p>
+<p>            ▼                    ▲</p>
+<p>    ┌────── ROOT (nidrā-analogie) ───────┐</p>
+<p>            │</p>
+<p>            ▼</p>
+<p>        FRACATAAL VELD (ℱ)</p>
+<pre><code>
+&gt; Zolang R&#x27;, E&#x27;, C&#x27; niet formeel gedefinieerd zijn, blijft dit een analogie, geen route.
+
+#### Taxonomie als 5+1 nidrā
+
+Taxonomische niveaus:</code></pre>
+<p>1. Koninkrijk     → Domain (rijk)</p>
+<p>2. Stam/Klasse    → Subnet (tussenlaag)</p>
+<p>3. Familie        → Subnet (familie)</p>
+<p>4. Genus          → Host (genus)</p>
+<p>5. Species        → Port (soort)</p>
+<p>6. Autoriteit     → Nidrā (check, pointer)</p>
+
+<p>Quercus robur L.</p>
+<p>  Plantae → Dicotyledonae → Fagaceae → Quercus → robur → L.</p>
+<p>  (5 content + 1 check)</p>
+<pre><code>
+&gt; 6 niveaus = 4 × 1,5 = 6. Het getal 6 is niet willekeurig.
+&gt; 1,5 = 1 + ½ → elke content-niveau heeft een ½-check ingebouwd.
+&gt; Biologische taxonomie (6) en HEXA-structuur (4×1,5→6) delen dezelfde factor.
+
+#### EAN-analogie in natuur
+
+Binnen deze lens wordt biologische informatieverwerking structureel vergeleken met identificatie- en routingsystemen.
+
+| Systeem | Tekens | Posities | Checksum | Routing |
+|---------|--------|----------|----------|----------|
+| DNA | 4 bases | triplets | stop-codon | codon → amino-zuur |
+| EAN-13 | 0-9 | 13 digits | mod 10 | country → product |
+| Latijn | A-Z | willekeurig | DR(som) | D_byte + D_numeric |
+| HEXA | 6-bit | variabel | DR | ℱ projectie |
+</code></pre>
+<p>ρ_nature_EAN_reading : System → SystemProfile</p>
+<p>operator_status(ρ_nature_EAN_reading) = interpretatief</p>
+<p>execution_status(ρ_nature_EAN_reading) = voltooid</p>
+<p>validatie_status(ρ_nature_EAN_reading) = niet_gevalideerd</p>
+<p>vṛtti(ρ_nature_EAN_reading) = vikalpa</p>
+<pre><code>
+#### Status
+</code></pre>
+<p>natuur_encoding_model:</p>
+<p>  operator_status = conceptueel</p>
+<p>  execution_status = gedeeltelijk</p>
+<p>  validatie_status = niet_gevalideerd</p>
+<p>  vṛtti = vikalpa</p>
+
+<p>natuur_routing_model:</p>
+<p>  operator_status = conceptueel</p>
+<p>  execution_status = gedeeltelijk</p>
+<p>  validatie_status = niet_gevalideerd</p>
+<p>  vṛtti = vikalpa</p>
+
+<p>HEXA_brug(natuur):</p>
+<p>  operator_status = conceptueel</p>
+<p>  execution_status = niet_voltooid</p>
+<p>  validatie_status = niet_gevalideerd</p>
+<pre><code>
+&gt; Geen systeemclaim — dit is een interpretatieve lens.
+
+**Zonder Latijns:** geen precisie
+**Zonder Lokaal:** geen context
+**Samen:** volledige route van soort → habitat
+
+---
+
+### v2 Changes (2026-07-24)
+- P003: DR-fout definitief gesloten (v1→v2)
+- P008: 6-bit notatie gecorrigeerd - &quot;unsigned 6-bit = {0..63}, grens ∉ bereik&quot;
+- P009: Checklist bijgewerkt - oude `status_*()` vervangen door drie status-dimensies
+- P008: Keten B gesplitst - 24→8 en 32→8 als aparte routes
+
+### v3 Changes (2026-07-24)
+- P003: &quot;Gap opgelost&quot; vervangen door drie labels (gesloten/geformaliseerd/geïdentificeerd)
+- P008: F → ℱ notatie uniform gemaakt overal
+
+### v4 Changes (2026-07-24)
+- P001: `byte_to_freq` execution_status → `gedeeltelijk` (reference_bytes nog open)
+- P003: `tone_waveform` gesplitst uit `Synth` (golfvorm nu expliciete mapping)
+- P004: `C→E→R→ℱ` operator_status → `conceptueel` (deeloperators nog open)
+- P005: Restante `F` → `ℱ` in lopende tekst
+- P006: `ρ_D_pattern` formeel gedefinieerd (`RatioMatrix` + `fractal_reading` als interpretatief)
+- P007: `ReturnCycle` structuur toegevoegd (`R&#x27;`, `E&#x27;`, `C&#x27;`, `ReturnSeedCycle`, `ForwardCycle`, invariant)
+- Architectuur: status → `Conceptueel` (was `Gedefinieerd`)
+
+### v5 Review (2026-07-24)
+- P001: ✅ Architectuurcodeblok gesplitst (markdown vs text fences)
+- P002: ✅ Samenvattingstabel al correct (v4 fix)
+- P003: ✅ Waterparagraaf al gesplitst (ρ_water apart van ρ_ℱ)
+- P004: ✅ observatie → conceptueel (al toegepast)
+- P005: ✅ ρ_taxonomy_EAN als interpretatief lens (al toegepast)
+- P006: ✅ ρ_byte_habitat als interpretatief (al toegepast)
+- P007: ✅ ρ_tree_return als interpretatief (al toegepast)
+- P008: ✅ 5+1 nidrā (al toegepast)
+- P009: ✅ ρ_nature_EAN_reading als interpretatief (al toegepast)
+- Alle 9 punten al gefixt door v4 + agni-rewrite
+
+---
+
+## NPR Bedrock - Audit Framework
+
+Elk artikel in dit boek moet voldoen aan de NPR bedrock-standaard.
+Dit is niet een suggestie - het is de minimum-eis voor rekenkundige sluiting.
+
+### Twee Routes
+
+**Route α (licht - minimaal drie criteria):** Reflectieve, beschrijvende, of contextuele artikelen.
+**Route β (zwaar - alle zes criteria):** Artikelen met formele operators, berekeningen, of structurele claims.
+
+De keuze is niet willekeurig: als een artikel operators defineert, schakelt het automatisch naar Route β.
+
+---
+
+#### 1. Formele Operator (minimaal één)
+
+Elk artikel moet minstens één reproduceerbare operator definiëren of uitvoeren.
+
+**Drie status-dimensies** (onafhankelijk van elkaar):
+</code></pre>
+<p>operator_status(O) ∈ {formeel, conventie, interpretatief, conceptueel, open}</p>
+<p>execution_status(O) ∈ {voltooid, gedeeltelijk, niet_voltooid}</p>
+<p>validatie_status(O) ∈ {gevalideerd, niet_gevalideerd}</p>
+<pre><code>
+| Dimensie | Betekenis |
+|----------|-----------|
+| `operator_status` | Wat is de aard van de operator? |
+| `execution_status` | Is de operator daadwerkelijk uitgevoerd? |
+| `validatie_status` | Is het resultaat onafhankelijk gecheckt? |
+
+Voorbeeld:</code></pre>
+<p>A_Abjad: letter → N</p>
+<p>  operator_status = formeel</p>
+<p>  execution_status = voltooid</p>
+<p>  validatie_status = gevalideerd</p>
+
+<p>C_numeric: SanskritText × Layer → N_{&gt;0} × {1,...,9}</p>
+<p>  operator_status = conventie</p>
+<p>  execution_status = voltooid</p>
+<p>  validatie_status = gevalideerd</p>
+
+<p>M_C: {5} → &quot;middentoon&quot;</p>
+<p>  operator_status = conventie</p>
+<p>  execution_status = voltooid</p>
+<p>  validatie_status = niet_gevalideerd</p>
+
+<p>Synth: tone_class × Hz × waveform → W_C</p>
+<p>  operator_status = formeel</p>
+<p>  execution_status = niet_voltooid</p>
+<p>  validatie_status = niet_gevalideerd</p>
+<pre><code>
+#### 2. Lens-projectie (minimaal één)
+
+Elk artikel moet minstens één lens-projectie tonen. De vier vaste lenzen:
+
+| Lens | Taal | Functie |
+|------|------|---------|
+| A | Arabisch | Abjad-waarde (steen) |
+| B | Grieks | Isopsefia (vorm, verhouding) |
+| C | Sanskriet | Phonem → frequentie (trilling) |
+| D | Latijn | Byte-telling + NPR-letterwaarden (twee routes) |
+
+&gt; Geen nieuwe lenzen. De structuur is gesloten bij vier.
+
+#### 3. Vṛtti-classificatie
+</code></pre>
+<p>vṛtti_audit(q) ∈ {pramāṇa, viparyaya, vikalpa, nidrā, smṛti, onbepaald}</p>
+<pre><code>
+| Classificatie | Betekenis |
+|---------------|-----------|
+| `pramāṇa` | Claim met geldige kennisroute (pratyakṣa, anumāna, āgama) |
+| `viparyaya` | Claim tegenover de kennisroute (verkeerde interpretatie) |
+| `vikalpa` | Interpretatief - de lens zegt dit, de bron niet per se |
+| `nidrā` | Terug naar kern (afstand → 0) |
+| `smṛti` | Herinnering/geïnternaliseerde kennis |
+| `onbepaald` | Audit-status niet vastgesteld |
+
+&gt; ⚠ `nidrā` (vṛtti-classificatie) ≠ `undefined` (audit_status)
+
+#### 4. Status Notatie (unified)
+
+Gebruik de drie status-dimensies consistent. De oude `status_*()` functies zijn vervangen:
+
+| Oud (verwijderd) | Nieuw |
+|------------------|-------|
+| `status_validated()` | `execution_status=voltooid` + `validatie_status=gevalideerd` |
+| `status_defined()` | `operator_status=formeel` |
+| `status_convention()` | `operator_status=conventie` |
+| `status_interpretation()` | `operator_status=interpretatief` |
+| `status_executed()` | `execution_status=voltooid` + `validatie_status=niet_gevalideerd` |
+
+#### 5. Drie Frequentiesystemen
+
+Wanneer een artikel een cross-lens frequentievergelijking maakt, moeten de drie frequentiesystemen naast elkaar worden getoond:
+
+| Systeem | Frequentie | Herkomst | Status |
+|---------|-----------|----------|--------|
+| Latijn/ISO 16 | `F_L := 440 Hz` | Wester concerttuning | conventie |
+| Vedic/Śāradā | `F_C := 432 Hz` | Actieve standaard | conventie |
+| Arabisch/Abjad | `F_A := 396 Hz` | `F_A(66,4,3/2) = 66×4×1.5` | conventie |
+</code></pre>
+<p>F_L = 440 Hz   // Latijn/ISO 16 concerttuning (conventie)</p>
+<p>F_C = 432 Hz   // Vedic/Śāradā standaard (conventie)</p>
+<p>F_A = 396 Hz   // 66×4×1.5 Abjad perfecte kwint-cyclus (conventie)</p>
+
+<p>operator_status(F_L) = conventie</p>
+<p>operator_status(F_C) = conventie</p>
+<p>operator_status(F_A) = conventie</p>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <a href="#" data-page="stupas">← terug naar Hexa-Boek</a>
+    </div>
+
+  </div>
+
+<script>
+  document.querySelector('.footer a').addEventListener('click', function(e) {
+    e.preventDefault();
+    if (window.history.length > 1) window.history.back();
+    else window.location.hash = 'stupas';
+  });
+</script>
+</body>
+</html>

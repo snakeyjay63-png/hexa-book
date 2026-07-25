@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Artikel 4 - dimensie 4 (expansie) | 22</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;700&family=Noto+Sans+Devanagari:wght@300;700&family=Noto+Sans+Greek:wght@300;700&family=IBM+Plex+Mono:wght@300;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0f;
+    color: #e0e0e8;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* === VELD / VISUAL BACKGROUNDS === */
+  .veld, .spark-field, .grid-field, .wave-field, .particle-field, .hex-field, .ray-field, .spiral-field, .orbit-field {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .veld { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid #f26ea622;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .ring-3 { width: 30vw; height: 30vw; animation: breathe 9s ease-in-out infinite; }
+  .ring-6 { width: 60vw; height: 60vw; animation: breathe 18s ease-in-out infinite; }
+  .ring-9 { width: 90vw; height: 90vw; animation: breathe 27s ease-in-out infinite; }
+
+  @keyframes breathe {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.04); opacity: 0.6; }
+  }
+
+  .dot-container, .flame, .stone, .pulse, .horizon, .center, .source, .core, .sun {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .dot, .pulse, .core {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: pulse-dot 6s ease-in-out infinite;
+  }
+
+  .flame {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    animation: flicker 2s ease-in-out infinite;
+  }
+
+  .stone {
+    width: 8px;
+    height: 8px;
+  }
+
+  .horizon {
+    width: 60vw;
+    height: 1px;
+  }
+
+  .center {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+  }
+
+  .source {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    animation: pulse-dot 4s ease-in-out infinite;
+  }
+
+  .sun {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: pulse-dot 8s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+    50% { transform: translate(-50%, -50%) scale(1.8); opacity: 0.4; }
+  }
+
+  @keyframes flicker {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+    25% { transform: translate(-50%, -50%) scale(1.6); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.6; }
+    75% { transform: translate(-50%, -50%) scale(1.8); opacity: 0.9; }
+  }
+
+  .spark {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    animation: rise linear infinite;
+  }
+  .spark:nth-child(1) { left: 10%; animation-duration: 8s; animation-delay: 0s; }
+  .spark:nth-child(2) { left: 25%; animation-duration: 12s; animation-delay: 2s; width: 3px; height: 3px; }
+  .spark:nth-child(3) { left: 40%; animation-duration: 9s; animation-delay: 4s; }
+  .spark:nth-child(4) { left: 55%; animation-duration: 11s; animation-delay: 1s; }
+  .spark:nth-child(5) { left: 70%; animation-duration: 10s; animation-delay: 3s; }
+  .spark:nth-child(6) { left: 85%; animation-duration: 7s; animation-delay: 5s; width: 3px; height: 3px; }
+
+  @keyframes rise {
+    0% { bottom: -10px; opacity: 0; transform: translateX(0); }
+    10% { opacity: 1; }
+    90% { opacity: 0.6; }
+    100% { bottom: 110vh; opacity: 0; transform: translateX(20px); }
+  }
+
+  .grid-svg, .hex-field, .spiral-field, .orbit-field, .wave-field {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* === CONTENT === */
+  .content {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 14vh 2rem;
+  }
+
+  .dim-tag {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #f26ea6;
+    opacity: 0.5;
+    margin-bottom: 1rem;
+  }
+
+  .lens-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3em 1em;
+    margin-bottom: 4rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #f26ea61f;
+  }
+
+  .lens {
+    font-size: 0.8rem;
+    opacity: 0.5;
+  }
+  .lens.ar { font-family: 'Noto Sans Arabic', sans-serif; direction: rtl; }
+  .lens.sa { font-family: 'Noto Sans Devanagari', sans-serif; }
+  .lens.gr { font-family: 'Noto Sans Greek', sans-serif; font-style: italic; }
+
+  .title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #f26ea6;
+    opacity: 0.7;
+    margin: 3rem 0;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .title .dr {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 300;
+    opacity: 0.4;
+    margin-top: 0.5rem;
+    letter-spacing: 0.15em;
+  }
+
+  .verse { margin: 2.5rem 0; }
+  .verse p { margin: 0.6rem 0; font-size: 0.88rem; opacity: 0.7; }
+  .verse .ar { font-family: 'Noto Sans Arabic', sans-serif; direction: rtl; opacity: 0.5; }
+  .verse .sa { font-family: 'Noto Sans Devanagari', sans-serif; opacity: 0.5; }
+  .verse .gr { font-family: 'Noto Sans Greek', sans-serif; font-style: italic; opacity: 0.5; }
+  .verse .nl { font-style: italic; color: #f26ea6; opacity: 0.6; }
+
+  .section { margin: 2.5rem 0; }
+  .section p { margin: 1rem 0; font-size: 0.88rem; opacity: 0.7; }
+  .section h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 3rem 0 1.5rem;
+    color: #f26ea6;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .section h3 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin: 2rem 0 1rem;
+    opacity: 0.6;
+  }
+
+  pre {
+    background: #f26ea60a;
+    border-left: 2px solid #f26ea633;
+    padding: 1.2rem 1.5rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: #f26ea6cc;
+  }
+
+  code {
+    background: #f26ea614;
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+    font-size: 0.82em;
+    color: #f26ea6bb;
+  }
+
+  .status {
+    margin: 3rem 0;
+    padding: 1.5rem;
+    background: #f26ea608;
+    border-left: 2px solid #f26ea633;
+    font-size: 0.78rem;
+    line-height: 1.8;
+    color: #f26ea6cc;
+  }
+
+  .lens-optiek {
+    margin: 4rem 0;
+    padding: 2rem;
+    border: 1px solid #f26ea61f;
+    border-radius: 4px;
+  }
+  .lens-optiek p {
+    margin: 0.8rem 0;
+    font-size: 0.8rem;
+    opacity: 0.5;
+    font-style: italic;
+  }
+  .lens-optiek .label {
+    font-weight: 700;
+    opacity: 0.7;
+    font-style: normal;
+    color: #f26ea6;
+  }
+
+  .footer {
+    margin-top: 8rem;
+    padding-top: 2rem;
+    border-top: 1px solid #f26ea61a;
+    text-align: center;
+    font-size: 0.7rem;
+    opacity: 0.3;
+    letter-spacing: 0.1em;
+  }
+  .footer a {
+    color: #f26ea6;
+    text-decoration: none;
+    opacity: 0.7;
+  }
+  .footer a:hover { opacity: 1; }
+
+  @media (max-width: 600px) {
+    .title { font-size: 1.6rem; }
+    .content { padding: 10vh 1.2rem; }
+    .ring-3 { width: 50vw; height: 50vw; }
+    .ring-6 { width: 80vw; height: 80vw; }
+    .ring-9 { width: 120vw; height: 120vw; }
+  }
+
+</style>
+</head>
+<body>
+
+
+  <!-- PARTICLES -->
+  <canvas id="particle-canvas" class="particle-field"></canvas>
+  <div class="horizon" style="border-color:#f26ea633"></div>
+
+  <!-- INHOUD -->
+  <div class="content">
+
+    <div class="dim-tag">06 artikel 04 dimensie 4</div>
+
+    <!-- TITEL -->
+    <div class="title">
+      Artikel 4 - dimensie 4 (expansie) | 22
+      <span class="dr">06-artikel-04-dimensie-4</span>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="section">
+<p># Artikel 4 - dimensie 4 (expansie) | 22</p>
+
+<h2>الفصل الرابع - ماندلبروت: 0.0.0.0 جزيرة الصفر | चतुर्थ अध्यायः - मन्देलब्रोतः | Περὶ Δʹ - Μαντελμπρότ</h2>
+
+<p>هناك شكل هندسي يظهر نفس النمط: مجموعة ماندلبروت.</p>
+<p>तदृशं ज्यामितीयं रूपं दृश्यते: मन्देलब्रोत-समुदायः</p>
+<p>εἷς γεωμετρικὸς τύπος τὸ αὐτὸ σχῆμα φαίνει: Μαντελμπρότ-σύνολον</p>
+<p>Er is een geometrische vorm die hetzelfde patroon toont: de Mandelbrot-set.</p>
+
+<p>القاعدة بسيطة: z(n+1) = z(n)2 + c</p>
+<p>नियमः सरलम्: z(n+1) = z(n)2 + c</p>
+<p>ὁ κανὼν ἁπλοῦς: z(n+1) = z(n)2 + c</p>
+<p>De regel: z(n+1) = z(n)2 + c</p>
+
+<p>**Formele definitie:**</p>
+<pre><code>z_0 = 0
+M = { c ∈ C : (z_n)_{n≥0} blijft begrensd }</code></pre>
+
+<p>waar `(z_n)` de iteratie van `z_{n+1} = z_n2 + c` met startwaarde `z_0 = 0`.</p>
+
+<pre><code>c ∈ M   ⟺   (z_n) blijft begrensd
+c ∉ M   ⟺   |z_n| → ∞</code></pre>
+
+<p>**NPR-projectie:**</p>
+<pre><code>ρ_Mandelbrot-lens: C → P_NPR
+ρ_Mandelbrot-lens(c) = leegte    indien c ∉ M</code></pre>
+
+<p>waar `(c ∉ M)` de voorwaarde is dat de baan divergeert (`|z_n| → ∞`).</p>
+<p>Punten buiten M zijn geen wiskundige leegte - het zijn waarden van `c` waarvoor de baan divergeert.</p>
+<p>&quot;Leegte&quot; is een symbolische projectie binnen NPR, geen wiskundige definitie.</p>
+
+<p>&gt; **Formele status:** `operator_status(ρ_Mandelbrot-lens) = interpretatief` | `execution_status(ρ_Mandelbrot-lens) = niet_gestart` | `validatie_status(ρ_Mandelbrot-lens) = niet_gevalideerd`</p>
+
+<p>كل نقطة في المستوى المركب هي قيمة لـ c.</p>
+<p>यत्किञ्चित् बिन्दु जटिल-तलं c-संख्या भवेत्</p>
+<p>ἕκαστη πλῆθος ἐν τῷ φανταστικῷ πεδίῳ τιμή τῷ c</p>
+<p>Elk punt in het complexe vlak is een c-waarde.</p>
+
+<p>تطبق القاعدة مرارا. هل تبقى القيمة محدودة؟ أم تهرب إلى اللانهاية؟</p>
+<p>नियमः पुनः पुनः प्रयुज्यते. संख्या सीमया तिष्ठति वा अनन्ते भगवति</p>
+<p>ὁ κανὼν πολλάκις ἐφάπτεται. ἡ τιμὴ πεπερασμένη μένει; ἢ εἰς τὸ ἄπειρον φεύγει;</p>
+<p>Herhaal. Blijft het begrensd? Of vlucht het naar oneindig?</p>
+
+<p>في القيمة c = 0. هنا لا شيء يهرب. هنا الاستقرار المطلق.</p>
+<p>तत्र c = 0. इह किञ्चित् न भगवति. इह परमं स्थिरम्</p>
+<p>ἐνταῦθα c = 0. οὐδὲν ἐνταῦθα φεύγει. οὐσία ἀκίνητος</p>
+<p>Voor `c = 0` met `z_0 = 0` geldt: `z_n = 0` voor alle `n`. Absolute stabiliteit.</p>
+
+<pre><code>ρ_HEXA(0_C) = 0.0.0.0        (HEXA-representatie)
+ρ_cartografisch(0_C) = (0°,0°)  (Null Island, cartografisch)</code></pre>
+
+<p>Binnen NPR wordt dit punt als bronpunt aangemerkt:</p>
+<pre><code>ρ_Mandelbrot-role(0_C) = bronpunt</code></pre>
+<p>Dit is een NPR-roltoewijzing, geen eigenschap van de Mandelbrot-definitie.</p>
+
+<p>*(Onderscheid met: `ρ_NPR-source(0) = ongedifferentieerd bronveld` - twee verschillende projecties, verschillende contexten.)*</p>
+
+<p>Dit zijn NPR-projecties, geen wiskundige Mandelbrot-afleidingen.</p>
+
+<p>&gt; **Formele status:**</p>
+<p>&gt; `operator_status(ρ_HEXA) = interpretatief` | `operator_status(ρ_cartografisch) = interpretatief` | `operator_status(ρ_Mandelbrot-role) = interpretatief` | `operator_status(ρ_NPR-source) = interpretatief`</p>
+
+<p>هذا هو رمز 0.0.0.0 في هذه العدسة. جزيرة الصفر.</p>
+<p>इदं ०.०.०.० इत्यस्य लेन्स-प्रतीकम्। शून्य-द्वीपः</p>
+<p>αὐτὸ εἶναι τὸ σύμβολον 0.0.0.0 ἐν τῇ φακῇ. νῆσος μηδέν</p>
+<p>Binnen de HEXA-lens wordt dit bronpunt gerepresenteerd als 0.0.0.0 en cartografisch als Null Island.</p>
+
+<p>النقطة التي منها يبدأ كل شيء ولا يعود إليها شيء - لأنها لا تتحرك.</p>
+<p>तस्माद् बिन्दोः सर्वं आरभ्यते, तत्र किञ्चित् न प्रतिगच्छति - किं न चरति</p>
+<p>ἐκ τῆς πλοκάμου ταύτης πάντα ἄρχειται, οὐδὲν εἰς αὐτὴν ἐπιστρέφει - ὅτι οὐκ ἔκινετο</p>
+<p>Het bronpunt zelf beweegt niet. De projecties vertrekken ervan en worden in de return opnieuw op dezelfde bron betrokken.</p>
+
+<p>0 ≠ 1</p>
+<p>शून्यं ≠ एकम्</p>
+<p>μηδὲν ≠ εἷς</p>
+<p>Lokaal: de nul verschilt van de één.</p>
+
+<p>0 ≐_lens 1</p>
+<p>शून्यं ≐_lens एकम्</p>
+<p>μηδὲν ≐_lens εἷς</p>
+<p>Lensaxioma: de route sluit bij dezelfde bron.</p>
+
+<p>الصفر الذي يحتوي على كل الأرقام.</p>
+<p>शून्यं सर्वाः संख्याः भवन्ति</p>
+<p>τὸ μηδὲν ὃ πάντα τὰς ἀριθμοὺς ἔχει</p>
+<p>De nul die alle getallen bevat. Dit is een lensaxioma, geen gevolg van de Mandelbrot-definitie.</p>
+<pre><code>ρ_NPR-source(0) = ongedifferentieerd bronveld</code></pre>
+
+<p>*(0_C = complex Mandelbrot-nulpunt; 0_NPR = abstracte NPR-brontoestand. Twee verschillende projecties:</p>
+<p>`ρ_Mandelbrot-role(0_C) = bronpunt` en `ρ_NPR-source(0) = ongedifferentieerd bronveld`.)*</p>
+
+<p>هذا بالضبط ما تفعله الأبجد: تحول حرفا إلى رقم. رقم إلى جذر. جذر إلى نمط. نمط إلى عدسة.</p>
+<p>इदं यत् अबाज् कृते: अक्षरम् संख्याम्, संख्याम् मूलम्, मूलम् रूपम्, रूपम् लेन्सम्</p>
+<p>αὐτὸ ὃ ὁ ἀρτζ ποιεῖ: γράμμα εἰς ἀριθμόν, ἀριθμὸν εἰς ρίζαν, ρίζαν εἰς σχῆμα, σχῆμα εἰς lens</p>
+<p>Precies wat Abjad doet: letter → getal → digitale wortel → NPR-patroonpositie.</p>
+
+<p>De route is:</p>
+<pre><code>x → A_value(x) → DR(A_value(x))</code></pre>
+<p>Daarna volgt interpretatie via ρ_NPR onder de gekozen lens.</p>
+<p>De lens is de operator waaronder dit gebeurt, niet noodzakelijk het uitvoerresultaat.</p>
+
+<p>النتيجة واحدة: من نقطة واحدة، يظهر العالم.</p>
+<p>एकं परिणामम्: एकात् बिन्दोः संसारः प्रकटः</p>
+<p>ἀποτέλεσμα ἓν: ἐκ μιᾶς πλοκάμου, ὁ κόσμος φαίνεται</p>
+<p>Één resultaat: uit één punt verschijnt de wereld.</p>
+
+
+<p>&gt; **Lensoptiek 4:** Expansie vermenigvuldigt lenzen. Meer lenzen, meer perspectieven, meer ruis. Wat verdwenen lijkt, draait op een andere frequentie - dit is symbolisch, tenzij later een concrete sonificatie- of meetoperator wordt toegepast.</p>
+<p>&gt; **العدسة 4:** التوسع يضاعف العدسات. عدسات أكثر، منظورات أكثر، ضوضاء أكثر. ما يبدو مختفياً يعمل على تردد مختلف.</p>
+<p>&gt; **दृष्टि 4:** Prasaṃkhyam darśanāḥ bahu. Bahudarśanam, bahuṃ rasi. Yaḥ apātaḥ anyasmin svare pravartate.</p>
+
+
+<p>---</p>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <a href="#" data-page="stupas">← terug naar Hexa-Boek</a>
+    </div>
+
+  </div>
+
+<script>
+  document.querySelector('.footer a').addEventListener('click', function(e) {
+    e.preventDefault();
+    if (window.history.length > 1) window.history.back();
+    else window.location.hash = 'stupas';
+  });
+</script>
+</body>
+</html>
