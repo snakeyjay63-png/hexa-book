@@ -241,8 +241,8 @@
       const mime = m.file.endsWith('.webm') ? 'video/webm' : 'video/mp4';
       const audioMime = m.file.endsWith('.mp3') ? 'audio/mpeg' : m.file.endsWith('.ogg') ? 'audio/ogg' : 'audio/wav';
       const mediaTag = m.type === 'video'
-        ? `<video controls><source src="/${m.file}" type="${mime}">Niet ondersteund</video>`
-        : `<audio controls><source src="/${m.file}" type="${audioMime}">Niet ondersteund</audio>`;
+        ? `<video controls preload="metadata" playsinline><source src="/${m.file}" type="${mime}">Niet ondersteund</video>`
+        : `<audio controls preload="metadata"><source src="/${m.file}" type="${audioMime}">Niet ondersteund</audio>`;
       return `
         <div class="media-card">
           ${mediaTag}

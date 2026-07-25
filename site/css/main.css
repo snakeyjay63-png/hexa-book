@@ -55,7 +55,8 @@ body {
   border-radius: 3px;
 }
 
-#sidebar::-webkit-scrollbar-thumb:hover {
+#sidebar::-webkit-scrollbar-thumb:hover,
+#sidebar::-webkit-scrollbar-thumb:active {
   background: var(--text-dim);
 }
 
