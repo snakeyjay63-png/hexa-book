@@ -31,7 +31,7 @@ body {
 /* ── Sidebar ── */
 #sidebar {
   width: 280px;
-  min-height: 100vh;
+  height: 100vh;
   background: var(--bg2);
   border-right: 1px solid var(--border);
   padding: 24px 0;
@@ -40,6 +40,23 @@ body {
   top: 0;
   left: 0;
   z-index: 100;
+}
+
+#sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+#sidebar::-webkit-scrollbar-track {
+  background: var(--bg2);
+}
+
+#sidebar::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+#sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--text-dim);
 }
 
 .nav-brand h1 {
@@ -73,9 +90,12 @@ body {
   display: block;
   color: var(--text);
   text-decoration: none;
-  font-size: 0.88rem;
-  padding: 6px 20px 6px 28px;
+  font-size: 0.84rem;
+  padding: 5px 20px 5px 28px;
   transition: all 0.15s;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .nav-section a:hover {
