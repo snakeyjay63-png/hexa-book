@@ -194,10 +194,9 @@
   }
 
   async function showAudit(id) {
-    const audit = (sitemap.audits||[]).find(a => a.name === id);
-    if (audit) setBreadcrumbs([{label:'Audit',page:'audit-index'},{label:audit.title,page:'audit-'+id}]);
     // Check .md first, then .zig
     const audit = sitemap.audits.find(a => a.name === id) || sitemap.audits_zig.find(a => a.name === id);
+    if (audit) setBreadcrumbs([{label:'Audit',page:'audit-index'},{label:audit.title,page:'audit-'+id}]);
     if (!audit) return;
     const content = await fetchFile(audit.file);
 
