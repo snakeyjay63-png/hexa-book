@@ -431,6 +431,153 @@
       "title": "Template Genre"
     }
   ],
+  "stupas": [
+    {
+      "file": "audit/00-intro.html",
+      "name": "00-intro",
+      "title": "00 Intro"
+    },
+    {
+      "file": "audit/01-artikel-01-dimensie-1.html",
+      "name": "01-artikel-01-dimensie-1",
+      "title": "01 Artikel 01 Dimensie 1"
+    },
+    {
+      "file": "audit/02-artikel-02-dimensie-2.html",
+      "name": "02-artikel-02-dimensie-2",
+      "title": "02 Artikel 02 Dimensie 2"
+    },
+    {
+      "file": "audit/03-artikel-e-audio.html",
+      "name": "03-artikel-e-audio",
+      "title": "03 Artikel E Audio"
+    },
+    {
+      "file": "audit/04-artikel-f-returnmedium.html",
+      "name": "04-artikel-f-returnmedium",
+      "title": "04 Artikel F Returnmedium"
+    },
+    {
+      "file": "audit/05-artikel-03-dimensie-3.html",
+      "name": "05-artikel-03-dimensie-3",
+      "title": "05 Artikel 03 Dimensie 3"
+    },
+    {
+      "file": "audit/06-artikel-04-dimensie-4.html",
+      "name": "06-artikel-04-dimensie-4",
+      "title": "06 Artikel 04 Dimensie 4"
+    },
+    {
+      "file": "audit/07-artikel-05-dimensie-5.html",
+      "name": "07-artikel-05-dimensie-5",
+      "title": "07 Artikel 05 Dimensie 5"
+    },
+    {
+      "file": "audit/08-artikel-06-dimensie-6.html",
+      "name": "08-artikel-06-dimensie-6",
+      "title": "08 Artikel 06 Dimensie 6"
+    },
+    {
+      "file": "audit/09-artikel-07-dimensie-7.html",
+      "name": "09-artikel-07-dimensie-7",
+      "title": "09 Artikel 07 Dimensie 7"
+    },
+    {
+      "file": "audit/10-artikel-08-aarde-event-horizon.html",
+      "name": "10-artikel-08-aarde-event-horizon",
+      "title": "10 Artikel 08 Aarde Event Horizon"
+    },
+    {
+      "file": "audit/10-artikel-08-dimensie-8.html",
+      "name": "10-artikel-08-dimensie-8",
+      "title": "10 Artikel 08 Dimensie 8"
+    },
+    {
+      "file": "audit/11-artikel-09-dimensie-9.html",
+      "name": "11-artikel-09-dimensie-9",
+      "title": "11 Artikel 09 Dimensie 9"
+    },
+    {
+      "file": "audit/11-artikel-09-genre-interface.html",
+      "name": "11-artikel-09-genre-interface",
+      "title": "11 Artikel 09 Genre Interface"
+    },
+    {
+      "file": "audit/12-artikel-10-dimensie-10.html",
+      "name": "12-artikel-10-dimensie-10",
+      "title": "12 Artikel 10 Dimensie 10"
+    },
+    {
+      "file": "audit/12-full-on.html",
+      "name": "12-full-on",
+      "title": "12 Full On"
+    },
+    {
+      "file": "audit/13-artikel-11-dimensie-11.html",
+      "name": "13-artikel-11-dimensie-11",
+      "title": "13 Artikel 11 Dimensie 11"
+    },
+    {
+      "file": "audit/13-progressive-psy.html",
+      "name": "13-progressive-psy",
+      "title": "13 Progressive Psy"
+    },
+    {
+      "file": "audit/14-artikel-12-dimensie-12.html",
+      "name": "14-artikel-12-dimensie-12",
+      "title": "14 Artikel 12 Dimensie 12"
+    },
+    {
+      "file": "audit/14-dark-psy.html",
+      "name": "14-dark-psy",
+      "title": "14 Dark Psy"
+    },
+    {
+      "file": "audit/15-artikel-13-dimensie-13.html",
+      "name": "15-artikel-13-dimensie-13",
+      "title": "15 Artikel 13 Dimensie 13"
+    },
+    {
+      "file": "audit/15-forest-psy.html",
+      "name": "15-forest-psy",
+      "title": "15 Forest Psy"
+    },
+    {
+      "file": "audit/16-artikel-014-dimensie-14.html",
+      "name": "16-artikel-014-dimensie-14",
+      "title": "16 Artikel 014 Dimensie 14"
+    },
+    {
+      "file": "audit/16-hi-tech.html",
+      "name": "16-hi-tech",
+      "title": "16 Hi Tech"
+    },
+    {
+      "file": "audit/17-artikel-015-dimensie-15.html",
+      "name": "17-artikel-015-dimensie-15",
+      "title": "17 Artikel 015 Dimensie 15"
+    },
+    {
+      "file": "audit/17-slot-return-terminal.html",
+      "name": "17-slot-return-terminal",
+      "title": "17 Slot Return Terminal"
+    },
+    {
+      "file": "audit/18-artikel-016-dimensie-16.html",
+      "name": "18-artikel-016-dimensie-16",
+      "title": "18 Artikel 016 Dimensie 16"
+    },
+    {
+      "file": "audit/19-artikel-017-cc-construct.html",
+      "name": "19-artikel-017-cc-construct",
+      "title": "19 Artikel 017 Cc Construct"
+    },
+    {
+      "file": "audit/20-artikel-018-sanskrit-npr-bridge.html",
+      "name": "20-artikel-018-sanskrit-npr-bridge",
+      "title": "20 Artikel 018 Sanskrit Npr Bridge"
+    }
+  ],
   "talen": [
     {
       "file": "charveld/taalen/1bit.md",

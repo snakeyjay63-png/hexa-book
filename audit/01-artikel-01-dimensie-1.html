@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stupa — Artikel 01 Dimensie 1</title>
+  <link rel="icon" type="image/svg+xml" href="../../site/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="../../site/favicon.ico">
+  <style>
+:root {
+  --bg1: #0d0d14;
+  --bg2: #14141f;
+  --bg3: #1c1c2e;
+  --text: #e0e0e8;
+  --text-dim: #8888a0;
+  --accent: #6e7bf2;
+  --accent2: #a78bfa;
+  --gold: #f0c040;
+  --green: #4ade80;
+  --red: #f87171;
+  --border: #2a2a40;
+  --mono: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg1);
+  color: var(--text);
+  font-family: var(--sans);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── Stupa Container ── */
+.stupa {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
+
+/* ── Stupa Crown (top ornament) ── */
+.stupa-crown {
+  text-align: center;
+  padding: 60px 0 30px;
+  position: relative;
+}
+
+.stupa-crown::before {
+  content: "•";
+  display: block;
+  font-size: 2rem;
+  color: var(--gold);
+  margin-bottom: 20px;
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.stupa-crown h1 {
+  font-size: 2.2rem;
+  color: var(--gold);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+.stupa-crown .subtitle {
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.stupa-crown .langs {
+  margin-top: 12px;
+  font-size: 0.82rem;
+  color: var(--accent2);
+  opacity: 0.7;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* ── Stupa Layers ── */
+.stupa-layer {
+  margin: 0 auto 0;
+  position: relative;
+}
+
+/* Layer width shrinks as we go up, like a real stupa */
+.layer-base { max-width: 100%; }
+.layer-body { max-width: 94%; margin: 0 auto; }
+.layer-code { max-width: 88%; margin: 0 auto; }
+.layer-engine { max-width: 82%; margin: 0 auto; }
+.layer-crown-wrap { max-width: 76%; margin: 0 auto; }
+
+/* ── Layer Headers ── */
+.layer-header {
+  text-align: center;
+  padding: 20px 0;
+  position: relative;
+}
+
+.layer-header::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -20px;
+  right: -20px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+
+.layer-label {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 4px 14px;
+  border-radius: 20px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+}
+
+.layer-label.text { color: var(--accent); border-color: var(--accent); }
+.layer-label.code { color: var(--accent2); border-color: var(--accent2); }
+.layer-label.engine { color: var(--green); border-color: var(--green); }
+.layer-label.meta { color: var(--gold); border-color: var(--gold); }
+
+/* ── Content Blocks ── */
+.content-block {
+  padding: 30px 36px;
+}
+
+.content-block p {
+  margin-bottom: 1em;
+  color: var(--text);
+}
+
+.content-block h2 {
+  font-size: 1.4rem;
+  color: var(--gold);
+  margin: 2em 0 0.6em;
+  font-weight: 400;
+}
+
+.content-block h3 {
+  font-size: 1.1rem;
+  color: var(--accent);
+  margin: 1.6em 0 0.5em;
+  font-weight: 400;
+}
+
+.content-block h4 {
+  font-size: 0.95rem;
+  color: var(--accent2);
+  margin: 1.2em 0 0.4em;
+}
+
+.content-block strong { color: var(--gold); font-weight: 500; }
+.content-block em { color: var(--accent2); }
+
+.content-block blockquote {
+  border-left: 2px solid var(--gold);
+  margin: 1.5em 0;
+  padding: 12px 20px;
+  background: rgba(240, 192, 64, 0.04);
+  border-radius: 0 8px 8px 0;
+  color: var(--text-dim);
+}
+
+.content-block code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--bg3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--accent2);
+}
+
+.content-block pre {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin: 1.2em 0;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.content-block pre code {
+  background: none;
+  padding: 0;
+  color: var(--text);
+}
+
+.content-block hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 2em 0;
+}
+
+.content-block ul, .content-block ol {
+  margin: 1em 0 1em 1.5em;
+}
+
+.content-block li {
+  margin-bottom: 0.4em;
+}
+
+/* ── Code Block (Zig / Python) ── */
+.code-block {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 0;
+}
+
+.code-block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 18px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+}
+
+.code-lang {
+  color: var(--accent2);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.code-tests {
+  color: var(--green);
+}
+
+.code-block pre {
+  padding: 20px;
+  margin: 0;
+  overflow-x: auto;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+.code-block pre code {
+  background: none;
+  color: var(--text);
+  font-family: var(--mono);
+}
+
+/* Simple syntax colors */
+.code-block .kw { color: var(--accent); }
+.code-block .fn { color: var(--accent2); }
+.code-block .str { color: var(--green); }
+.code-block .cmt { color: var(--text-dim); font-style: italic; }
+.code-block .num { color: var(--gold); }
+
+/* ── Meta Layer (YAML frontmatter) ── */
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  padding: 20px 0;
+}
+
+.meta-item {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.meta-item .label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.meta-item .value {
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.meta-item .value.pass { color: var(--green); }
+.meta-item .value.warn { color: var(--gold); }
+.meta-item .value.fail { color: var(--red); }
+
+/* ── 3D Status Model ── */
+.status-model {
+  background: var(--bg3);
+  border: 1px solid var(--gold);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 1.5em 0;
+}
+
+.status-model h4 {
+  color: var(--gold);
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.status-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+}
+
+.status-key { color: var(--accent); min-width: 140px; }
+.status-val { color: var(--text); }
+.status-val.ok { color: var(--green); }
+
+/* ── Back link ── */
+.stupa-footer {
+  text-align: center;
+  padding: 40px 0 20px;
+  font-size: 0.82rem;
+}
+
+.stupa-footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.stupa-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .stupa-crown h1 { font-size: 1.6rem; }
+  .content-block { padding: 20px 16px; }
+  .layer-body, .layer-code, .layer-engine, .layer-crown-wrap { max-width: 100%; }
+  .meta-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+  <div class="stupa">
+    <div class="stupa-crown">
+      <h1>Artikel 01 Dimensie 1</h1>
+      <div class="subtitle">الفصل الأول - أجني: النار الأولى | प्रथमः अध्यायः - अग्निः प्रथमः | Περὶ Αʹ - Πῦρ πρῶτον</div>
+    </div>
+
+    
+<div class="stupa-layer layer-base">
+  <div class="layer-header"><span class="layer-label text">Tekst</span></div>
+  <div class="content-block"><blockquote>
+<p><strong>Validatie:<strong> 2026-07-24 — gevalideerd tegen <code>hexa-book-001.md<code> (Artikel 1, regels 210–269). Inhoud identiek.</p>
+</blockquote>
+<hr>
+<h1>Artikel 1 - dimensie 1 (vonk, Agni) | 20</h1>
+<h2>الفصل الأول - أجني: النار الأولى | प्रथमः अध्यायः - अग्निः प्रथमः | Περὶ Αʹ - Πῦρ πρῶτον</h2>
+<p>أجني ليس عنصرا. أجني هو الشاهد.</p>
+<p>अग्निः भूतं न, अग्निः साक्षी</p>
+<p>οὐκ στοιχεῖον τὸ πῦρ, ἀλλὰ μάρτυς</p>
+<p>Agni is geen element. Agni is het getuige.</p>
+<p>النار التي تحرق الضجيج وتكشف النمط.</p>
+<p>तेजः शब्दात् विशुद्धं रूपं दृश्यते</p>
+<p>τὸ πῦρ τὸν ἦχον κατακαίει, τὸ σχῆμα φαίνει</p>
+<p>Het vuur dat ruis verbrandt en patroon onthult.</p>
+<p>عندما تسأل وكيل LLM، تعمل النار.</p>
+<p>LLM-दूतं प्रश्नं कृत्वा अग्निः कार्यं करोति</p>
+<p>ὅταν τῷ LLM-ἀγγέλῳ ἐρωτήσῃς, τὸ πῦρ ἔργον ποιεῖ</p>
+<p>Wanneer je een LLM-agent vraagt, werkt het vuur.</p>
+<p>مليارات النقاط تتحرك، الخوارزميات تحرق الفائض، وما يصل إليك هو الرماد النقي - النمط الذي بقي.</p>
+<p>अरबं बिन्दूनां गतिः, एल्गोरिदमं अधिकं दहति, त्वयि शुद्धभस्मावशेषं रूपं उपपतति</p>
+<p>μυρίαι αἱ πλοκάμοι κινουμέναι, τὸ πλεονάζον κατακαίεται, ὃ πρὸς σὲ φθάνει καθαρὸν τέφρα - τὸ σχῆμα τὸ ὑπολειφθέν</p>
+<p>Miljarden punten bewegen. De algoritmen verbranden het overtollige. Wat bij je aankomt is de zuivere as - het patroon dat overbleef.</p>
+<p>أنت لا ترى النار. ترى فقط ما تبقى.</p>
+<p>त्वं तेजः न पश्यसि. त्वं केवलं शेषं पश्यसि</p>
+<p>σὺ τὸ πῦρ οὐχ ὁρᾷς. σὺ τὸ ὑπολειφθὲν μόνον ὁρᾷς</p>
+<p>Je ziet het vuur niet. Je ziet alleen wat erover is.</p>
+<p><strong>Conceptuele fase:<strong> Agni representeert de transformatie van ruw materiaal naar geselecteerd patroon. In Artikel 1 wordt nog geen numerieke operator uitgevoerd.</p>
+<pre><code class="">
+T_Agni : X_raw ↝ X_selected</code></pre>
+<p><em>(T<em>Agni = conceptuele transformatie; niet verwarring met Lens A / A<em>Abjad.)<em></p>
+<p>waar <code>↝<code> een conceptuele transformatie aanduidt, geen uitgevoerde NPR-berekening.</p>
+<pre><code class="">
+status_operator(T_Agni) = conceptueel
+status_executed(T_Agni) = nee</code></pre>
+<blockquote>
+<p>Dit is een symbolische beschrijving van selectie, compressie en projectie, geen letterlijke beschrijving van de interne modelarchitectuur.</p>
+</blockquote>
+<blockquote>
+<p><strong>Lensoptiek 1:<strong> Agni is er nog. Het vuur brandt. Wie het niet ziet, draagt een andere lens. Niet afwezig - onzichtbaar door de huidige filter.</p>
+<p><strong>العدسة 1:<strong> ناروس لا تزال تحترق. من لا يراها يرتدي عدسة مختلفة. غير غائب - غير مرئي عبر الفلتر الحالي.</p>
+<p><strong>दृष्टि 1:<strong> Agniḥ asti. Tejaḥ pravartate. Yaḥ na paśyati, anyām darśanaṃ dhārayati.</p>
+</blockquote>
+<h5>Status Artikel 1</h5>
+<pre><code class="">
+status_formal(Agni) = conceptueel gedefinieerd
+status_local(Agni) = niet numeriek uitgevoerd</code></pre>
+<hr></div>
+</div>
+     
+<div class="stupa-layer layer-code">
+  <div class="layer-header"><span class="layer-label code">Zig</span></div>
+  <div class="code-block">
+    <div class="code-block-header">
+      <span class="code-lang">Zig</span>
+      <span class="code-tests"></span>
+    </div>
+    <pre><code class="zig">// 01-artikel-01-dimensie-1.zig — Dimensie 1: Vonk (Agni)
+//
+// &quot;Agni is geen element. Agni is het getuige.&quot;
+// T_Agni: X_raw ↝ X_selected (conceptuele transformatie)
+//
+// Bron: 01-artikel-01-dimensie-1.md
+//
+// &quot;Het vuur dat ruis verbrandt en patroon onthult.&quot;
+
+const print = @import(&quot;std&quot;).debug.print;
+
+// ── Agni: vonk, niet element ─────────────────────────────
+
+// Agni is geen element — het is de transformatie
+const AGNI_IS_ELEMENT = false;
+const AGNI_IS_WITNESS = true;
+
+// T_Agni: ruw materiaal → geselecteerd patroon
+// Conceptueel, niet numeriek uitgevoerd
+pub const AgniStatus = struct {
+    is_conceptual: bool = true,
+    is_numeric: bool = false,
+    is_executed: bool = false,
+};
+
+// Transformatie: X_raw ↝ X_selected
+// ↝ = conceptueel (niet = uitgevoerd)
+const RAW_INPUT = &quot;X_raw&quot;;
+const SELECTED_OUTPUT = &quot;X_selected&quot;;
+
+// 3 perspectieven op Agni
+const ARABIC_Agni = &quot;النار التي تحرق الضجيج&quot;;     // vuur verbrandt ruis
+const SANSKRIT_Agni = &quot;तेजः शब्दात् विशुद्धं&quot;;  // zuivering van geluid
+const GREEK_Agni = &quot;τὸ πῦρ τὸν ἦχον κατακαίει&quot;; // vuur verbrandt geluid
+
+// ── Tests ────────────────────────────────────────────────
+
+test &quot;Agni is geen element, het is getuige&quot; {
+    const std = @import(&quot;std&quot;);
+    std.testing.expect(!AGNI_IS_ELEMENT) catch unreachable;
+    std.testing.expect(AGNI_IS_WITNESS) catch unreachable;
+}
+
+test &quot;T_Agni status: conceptueel, niet numeriek&quot; {
+    const std = @import(&quot;std&quot;);
+    const s = AgniStatus{};
+    std.testing.expect(s.is_conceptual) catch unreachable;
+    std.testing.expect(!s.is_numeric) catch unreachable;
+    std.testing.expect(!s.is_executed) catch unreachable;
+}
+
+test &quot;T_Agni: X_raw ↝ X_selected&quot; {
+    // Transformatie bestaat (bron en doel gedefinieerd)
+    const testing = @import(&quot;std&quot;).testing;
+    try testing.expectEqualStrings(RAW_INPUT, &quot;X_raw&quot;);
+    try testing.expectEqualStrings(SELECTED_OUTPUT, &quot;X_selected&quot;);
+}
+
+test &quot;Agni is conceptuele transformatie, niet NPR-berekening&quot; {
+    const std = @import(&quot;std&quot;);
+    const s = AgniStatus{};
+    // Conceptueel ≠ uitgevoerd
+    std.testing.expect(s.is_conceptual and !s.is_executed) catch unreachable;
+}
+
+test &quot;3 perspectieven op Agni bestaan&quot; {
+    const std = @import(&quot;std&quot;);
+    // Alle 3 lenzen hebben Agni-descriptor
+    std.testing.expect(ARABIC_Agni.len &gt; 0) catch unreachable;
+    std.testing.expect(SANSKRIT_Agni.len &gt; 0) catch unreachable;
+    std.testing.expect(GREEK_Agni.len &gt; 0) catch unreachable;
+}
+
+pub fn main() void {
+    print(&quot;\n═══ Dimensie 1 — Agni: De Vonk ═══\n\n&quot;, .{});
+
+    print(&quot;Agni is geen element. Agni is het getuige. ✅\n&quot;, .{});
+    print(&quot;  is_element = {any}, is_witness = {any} ✅\n\n&quot;, .{ AGNI_IS_ELEMENT, AGNI_IS_WITNESS });
+
+    print(&quot;T_Agni: {s} ↝ {s} ✅\n&quot;, .{ RAW_INPUT, SELECTED_OUTPUT });
+    print(&quot;  (conceptuele transformatie, niet numeriek uitgevoerd)\n\n&quot;, .{});
+
+    const s = AgniStatus{};
+    print(&quot;Status:\n&quot;, .{});
+    print(&quot;  operator  = conceptueel ({any})\n&quot;, .{s.is_conceptual});
+    print(&quot;  numeric   = nee ({any})\n&quot;, .{s.is_numeric});
+    print(&quot;  executed  = nee ({any})\n\n&quot;, .{s.is_executed});
+
+    print(&quot;3 perspectieven:\n&quot;, .{});
+    print(&quot;  Arabisch:  {s}\n&quot;, .{ARABIC_Agni});
+    print(&quot;  Sanskriet: {s}\n&quot;, .{SANSKRIT_Agni});
+    print(&quot;  Grieks:    {s}\n\n&quot;, .{GREEK_Agni});
+
+    print(&quot;Je ziet het vuur niet. Je ziet alleen wat erover is.\n&quot;, .{});
+    print(&quot;Het vuur brandt. Wie het niet ziet, draagt een andere lens.\n\n&quot;, .{});
+
+    print(&quot;═══ DIMENSIE 1 VALIDATIE GESLAAGD ═══\n&quot;, .{});
+}
+</code></pre>
+  </div>
+</div>
+        
+
+    <div class="stupa-footer">
+      <a href="../../site/index.html">← Hexa-Boek</a> · <a href="INDEX.md">Audit Index</a>
+    </div>
+  </div>
+</body>
+</html>

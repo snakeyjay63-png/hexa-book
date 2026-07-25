@@ -225,6 +225,43 @@
     bindNav();
   }
 
+  async function showStupas() {
+    const stupas = sitemap.stupas || [];
+    let cards = stupas.map(s => `
+      <div class="media-card" style="cursor:pointer" data-page="stupa-${s.name}">
+        <div class="media-info">
+          <h4>• ${s.title}</h4>
+          <p>Stupa — ${s.file.replace('.html','')}</p>
+        </div>
+      </div>
+    `).join('');
+
+    document.getElementById('page-container').innerHTML =
+      '<div class="md"><h2>Stupas</h2><p>' + stupas.length + ' artikelen als stapels</p></div>' +
+      '<div class="media-grid">' + cards + '</div>';
+    bindNav();
+  }
+
+  async function showStupa(id) {
+    const stupa = sitemap.stupas.find(s => s.name === id);
+    if (!stupa) {
+      document.getElementById('page-container').innerHTML = '<div class="md"><h2>Niet gevonden</h2><p>Stupa bestaat niet.</p></div>';
+      return;
+    }
+    const content = await fetchFile(stupa.file);
+    // Render as raw HTML (it's already HTML)
+    document.getElementById('page-container').innerHTML = content;
+    // Re-bind nav links inside stupa
+    document.querySelectorAll('.stupa-footer a[data-page]').forEach(el => {
+      el.addEventListener('click', function(e) {
+        e.preventDefault();
+        const page = this.getAttribute('data-page');
+        setActive(page);
+        navigate(page);
+      });
+    });
+  }
+
   async function showTaals(id) {
     const taal = sitemap.talen.find(t => t.name === id);
     if (!taal) return;
@@ -281,6 +318,8 @@
     if (page === 'home') await showHome();
     else if (page === 'routing') await showRouting();
     else if (page === 'audit-index') await showAuditIndex();
+    else if (page === 'stupas') await showStupas();
+    else if (page.startsWith('stupa-')) await showStupa(page.slice(6));
     else if (page === 'charveld') await showCharveld();
     else if (page === 'media') await showMedia();
     else if (page === 'engine') await showEngine();

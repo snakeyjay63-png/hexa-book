@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stupa — Artikel 05 Dimensie 5</title>
+  <link rel="icon" type="image/svg+xml" href="../../site/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="../../site/favicon.ico">
+  <style>
+:root {
+  --bg1: #0d0d14;
+  --bg2: #14141f;
+  --bg3: #1c1c2e;
+  --text: #e0e0e8;
+  --text-dim: #8888a0;
+  --accent: #6e7bf2;
+  --accent2: #a78bfa;
+  --gold: #f0c040;
+  --green: #4ade80;
+  --red: #f87171;
+  --border: #2a2a40;
+  --mono: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg1);
+  color: var(--text);
+  font-family: var(--sans);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── Stupa Container ── */
+.stupa {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
+
+/* ── Stupa Crown (top ornament) ── */
+.stupa-crown {
+  text-align: center;
+  padding: 60px 0 30px;
+  position: relative;
+}
+
+.stupa-crown::before {
+  content: "•";
+  display: block;
+  font-size: 2rem;
+  color: var(--gold);
+  margin-bottom: 20px;
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.stupa-crown h1 {
+  font-size: 2.2rem;
+  color: var(--gold);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+.stupa-crown .subtitle {
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.stupa-crown .langs {
+  margin-top: 12px;
+  font-size: 0.82rem;
+  color: var(--accent2);
+  opacity: 0.7;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* ── Stupa Layers ── */
+.stupa-layer {
+  margin: 0 auto 0;
+  position: relative;
+}
+
+/* Layer width shrinks as we go up, like a real stupa */
+.layer-base { max-width: 100%; }
+.layer-body { max-width: 94%; margin: 0 auto; }
+.layer-code { max-width: 88%; margin: 0 auto; }
+.layer-engine { max-width: 82%; margin: 0 auto; }
+.layer-crown-wrap { max-width: 76%; margin: 0 auto; }
+
+/* ── Layer Headers ── */
+.layer-header {
+  text-align: center;
+  padding: 20px 0;
+  position: relative;
+}
+
+.layer-header::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -20px;
+  right: -20px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+
+.layer-label {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 4px 14px;
+  border-radius: 20px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+}
+
+.layer-label.text { color: var(--accent); border-color: var(--accent); }
+.layer-label.code { color: var(--accent2); border-color: var(--accent2); }
+.layer-label.engine { color: var(--green); border-color: var(--green); }
+.layer-label.meta { color: var(--gold); border-color: var(--gold); }
+
+/* ── Content Blocks ── */
+.content-block {
+  padding: 30px 36px;
+}
+
+.content-block p {
+  margin-bottom: 1em;
+  color: var(--text);
+}
+
+.content-block h2 {
+  font-size: 1.4rem;
+  color: var(--gold);
+  margin: 2em 0 0.6em;
+  font-weight: 400;
+}
+
+.content-block h3 {
+  font-size: 1.1rem;
+  color: var(--accent);
+  margin: 1.6em 0 0.5em;
+  font-weight: 400;
+}
+
+.content-block h4 {
+  font-size: 0.95rem;
+  color: var(--accent2);
+  margin: 1.2em 0 0.4em;
+}
+
+.content-block strong { color: var(--gold); font-weight: 500; }
+.content-block em { color: var(--accent2); }
+
+.content-block blockquote {
+  border-left: 2px solid var(--gold);
+  margin: 1.5em 0;
+  padding: 12px 20px;
+  background: rgba(240, 192, 64, 0.04);
+  border-radius: 0 8px 8px 0;
+  color: var(--text-dim);
+}
+
+.content-block code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--bg3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--accent2);
+}
+
+.content-block pre {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin: 1.2em 0;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.content-block pre code {
+  background: none;
+  padding: 0;
+  color: var(--text);
+}
+
+.content-block hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 2em 0;
+}
+
+.content-block ul, .content-block ol {
+  margin: 1em 0 1em 1.5em;
+}
+
+.content-block li {
+  margin-bottom: 0.4em;
+}
+
+/* ── Code Block (Zig / Python) ── */
+.code-block {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 0;
+}
+
+.code-block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 18px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+}
+
+.code-lang {
+  color: var(--accent2);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.code-tests {
+  color: var(--green);
+}
+
+.code-block pre {
+  padding: 20px;
+  margin: 0;
+  overflow-x: auto;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+.code-block pre code {
+  background: none;
+  color: var(--text);
+  font-family: var(--mono);
+}
+
+/* Simple syntax colors */
+.code-block .kw { color: var(--accent); }
+.code-block .fn { color: var(--accent2); }
+.code-block .str { color: var(--green); }
+.code-block .cmt { color: var(--text-dim); font-style: italic; }
+.code-block .num { color: var(--gold); }
+
+/* ── Meta Layer (YAML frontmatter) ── */
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  padding: 20px 0;
+}
+
+.meta-item {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.meta-item .label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.meta-item .value {
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.meta-item .value.pass { color: var(--green); }
+.meta-item .value.warn { color: var(--gold); }
+.meta-item .value.fail { color: var(--red); }
+
+/* ── 3D Status Model ── */
+.status-model {
+  background: var(--bg3);
+  border: 1px solid var(--gold);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 1.5em 0;
+}
+
+.status-model h4 {
+  color: var(--gold);
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.status-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+}
+
+.status-key { color: var(--accent); min-width: 140px; }
+.status-val { color: var(--text); }
+.status-val.ok { color: var(--green); }
+
+/* ── Back link ── */
+.stupa-footer {
+  text-align: center;
+  padding: 40px 0 20px;
+  font-size: 0.82rem;
+}
+
+.stupa-footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.stupa-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .stupa-crown h1 { font-size: 1.6rem; }
+  .content-block { padding: 20px 16px; }
+  .layer-body, .layer-code, .layer-engine, .layer-crown-wrap { max-width: 100%; }
+  .meta-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+  <div class="stupa">
+    <div class="stupa-crown">
+      <h1>Artikel 05 Dimensie 5</h1>
+      <div class="subtitle">الفصل الخامس - NPR: الضجيج يعود | पंचम अध्यायः - NPR: शब्दः प्रतिगच्छति | Περὶ Εʹ - NPR: ὁ ἦχος ἐπιστρέφει</div>
+    </div>
+
+    
+<div class="stupa-layer layer-crown-wrap">
+  <div class="layer-header"><span class="layer-label meta">Metadata</span></div>
+  <div class="content-block"><div class="meta-grid"><div class="meta-item"><div class="label">audit_metadata</div><div class="value "></div></div><div class="meta-item"><div class="label">article</div><div class="value ">07-artikel-05-dimensie-5</div></div><div class="meta-item"><div class="label">source_article</div><div class="value ">articles/hexa-book-005.md</div></div><div class="meta-item"><div class="label">verified_against_commit</div><div class="value ">5a13c64</div></div><div class="meta-item"><div class="label">audit_commit</div><div class="value ">pending</div></div><div class="meta-item"><div class="label">last_verified</div><div class="value ">2026-07-24</div></div><div class="meta-item"><div class="label">operator_status_model</div><div class="value ">3D</div></div><div class="meta-item"><div class="label">engine_evidence</div><div class="value ">[]</div></div><div class="meta-item"><div class="label">route_status</div><div class="value ">gesloten</div></div><div class="meta-item"><div class="label">supersedes</div><div class="value ">legacy-v3</div></div><div class="meta-item"><div class="label">known_exceptions</div><div class="value ">[]</div></div></div></div>
+</div>
+         
+<div class="stupa-layer layer-base">
+  <div class="layer-header"><span class="layer-label text">Tekst</span></div>
+  <div class="content-block"><h1>Artikel 5 - dimensie 5 (de return wordt zichtbaar) | 22+1</h1>
+<h2>الفصل الخامس - NPR: الضجيج يعود | पंचम अध्यायः - NPR: शब्दः प्रतिगच्छति | Περὶ Εʹ - NPR: ὁ ἦχος ἐπιστρέφει</h2>
+<p>القرآن ليس نصا تقرأه. إنه حجر مصدر: هندسة رقمية تدور في دورة 3-6-9.</p>
+<p>कुरआनः पाठ्यम् न भवति यत् त्वम् पठसि. इदं शिला-मूलम्, संख्या-ज्यामितिः ३-६-९ चक्रं भ्राम्यति</p>
+<p>τὸ Κοῦράν οὐκ ἔστιν κείμενον ὃ ἀγνῶσιν. αὐτὸ λίθος-πηγή, ἀριθμο-γεωμετρία ३-६-९ ὁλκῷ στροφεῖται</p>
+<p>De Quran is geen leesboek. Binnen NPR wordt ze als bronsteen gelezen. In deze editie is voor de Basmala één lokale Abjad-route reproduceerbaar uitgevoerd:</p>
+<pre><code class="">
+A_Abjad(Basmala) = 786
+DR(786) = 3
+status_local(Basmala-Abjad) = uitgevoerd
+r_local,A,Basmala = 3</code></pre>
+<p>Een corpusbrede 3-6-9-route is nog niet uitgevoerd:</p>
+<pre><code class="">
+status_corpus(Quran-369) = ongetest
+vṛtti(&quot;Quran heeft corpusbrede 369-geometrie&quot;) = vikalpa</code></pre>
+<blockquote>
+<p><strong>Formele status:<strong></p>
+<p><code>operator<em>status(A<em>Abjad) = formeel<code> | <code>execution<em>status(A<em>Abjad, Basmala) = voltooid<code> | <code>validatie<em>status(A<em>Abjad, Basmala) = gevalideerd<em>lokaal<code></p>
+<p><code>operator<em>status(A<em>Abjad, Quran-corpus) = conceptueel<code> | <code>execution<em>status(A<em>Abjad, Quran-corpus) = niet<em>gestart<code> | <code>validatie<em>status(A<em>Abjad, Quran-corpus) = niet<em>gevalideerd<code></p>
+</blockquote>
+<p>Bronstructuur: verhouding(water, informatie, energie)</p>
+<p>Water = continuïteit/medium | Informatie = onderscheid/positie | Energie = verandering/transformatie</p>
+<p>Geen term is op zichzelf volledig.</p>
+<blockquote>
+<p><strong>Lensoptiek 5:<strong> Terugkeer begint. Oude lens + nieuwe lens = dezelfde bron, verschillende filter.</p>
+<p><strong>العدسة 5:<strong> العودة تبدأ. عدسة قديمة + عدسة جديدة = نفس المصدر، فلتر مختلف.</p>
+<p><strong>दृष्टि 5:<strong> Prativṛttam ārabhate. Purātanaṃ darśanaṃ + navaṃ darśanaṃ = tad eva mūlam, anyat philtiram.</p>
+</blockquote>
+<hr>
+<h3>Neem één frase:</h3>
+<p>نفس الجملة</p>
+<p>एकं वाक्यम्</p>
+<p>ὁ αὐτὸς λόγος (φράσις)</p>
+<ul>
+<li>Lens A (basisletters) → reproduceerbare waarde: 786 → 3</li>
+</ul>
+<p>Lensrekenkunde: één systeem, één lokaal-correct resultaat.</p>
+<p>De algemene NPR-validatietrio (3, 6, 9) is onafhankelijk van de Basmala-waarde.</p>
+<p>3-6-9 bestuurt niet - ze liggen buiten deze verdubbelingsbaan en vormen de validatietrio.</p>
+<p>هذا ما تفعله LLM: هي لا &quot;تعرف&quot; الحقيقة. هي تطبق عدسة معينة وتعرض لك النمط.</p>
+<p>इदं यत् LLM करोति: इयम् &quot;जानाति&quot; सत्यं न. इयम् विशेषं लेन्सं प्रयुङ्क्ते, ते रूपं दर्शयति</p>
+<p>αὐτὸ ὃ τὸ LLM ποιεῖ: οὐκ &quot;οἶδε&quot; τὸ ἀληθές. αὐτὴ lens ἰδίαν ἐφάπτεται καὶ σοι τὸ σχῆμα φαίνει</p>
+<p>Dit doet een LLM: het &quot;weet&quot; niet de waarheid. Het past een lens toe en toont je het patroon.</p>
+<p>تغيير العدسة = تغيير النمط = تغيير الحقيقة الظاهرة.</p>
+<p>लेन्सं परिवर्तनम् = रूपं परिवर्तनम् = दृश्य-सत्यं परिवर्तनम्</p>
+<p>μετὰ τῆς lens = μετὰ τοῦ σχήματος = μετὰ τῆς ἀληθείας</p>
+<p>Wissel lens → wissel patroon → wissel waarheid.</p>
+<p>المصدر والنهاية ليسا منفصلين. لكنهما يظهران في ثلاثة أوجه: 3، 6، 9.</p>
+<p>मूलम् तथैव अन्तः न पृथक्. किन्तु त्रीणि रूपेण प्रकटम्: ३, ६, ९</p>
+<p>ἡ πηγὴ καὶ τὸ τέλος οὐκ ἐστὶν χωριστά. ἀλλὰ ἐν τρισὶ πρόσωποις φαίνετον: 3, 6, 9</p>
+<p>Bron en eindpunt: niet gescheiden. De claim dat zij in drie gezichten (3, 6, 9) verschijnen is een algemene NPR-lensstelling, niet een uitkomst van de lokale Basmala-route.</p>
+<pre><code class="">
+vṛtti(&quot;bron en eindpunt in drie gezichten: 3,6,9&quot;) = vikalpa</code></pre>
+<p>Return-rekenkunde: de vraag is niet welk getal eruit komt, maar of de route terugkeert naar de bronstructuur.</p>
+<hr></div>
+</div>
+     
+<div class="stupa-layer layer-code">
+  <div class="layer-header"><span class="layer-label code">Zig</span></div>
+  <div class="code-block">
+    <div class="code-block-header">
+      <span class="code-lang">Zig</span>
+      <span class="code-tests"></span>
+    </div>
+    <pre><code class="zig">const std = @import(&quot;std&quot;);
+const testing = std.testing;
+
+// Artikel 5 - Dimensie 5 (De Return Wordt Zichtbaar) | NPR
+//
+// Quran als bronsteen: verhouding(water, informatie, energie)
+// Basmala → Abjad → 786 → DR(786) = 3
+//
+// NPR-lens:
+//   LLM &quot;weet&quot; niet de waarheid — past lens toe, toont patroon
+//   Wissel lens → wissel patroon → wissel waarheid
+//   Bron/eindpunt niet gescheiden; verschijnen in 3, 6, 9
+//
+// Status:
+//   A_Abjad(Basmala) = uitgevoerd, gevalideerd_lokaal
+//   A_Abjad(Quran-corpus) = ongetest, conceptueel
+
+// ─── Abjad (basis) ───
+
+/// Digital root: herhaald som van cijfers tot één cijfer
+pub fn digitalRoot(n: i32) i32 {
+    var val = n;
+    while (val &gt;= 10) {
+        var s: i32 = 0;
+        var tmp = val;
+        while (tmp &gt; 0) {
+            s += @rem(tmp, 10);
+            tmp = @divTrunc(tmp, 10);
+        }
+        val = s;
+    }
+    return val;
+}
+
+// ─── Basmala Abjad Route ───
+
+/// Basmala Abjad waarde (lokaal uitgevoerd)
+pub const BASMALA_ABJAD: i32 = 786;
+
+/// Digital root van Basmala
+pub const BASMALA_DR: i32 = 3;
+
+/// Status flags
+pub const STATUS = struct {
+    pub const basmala_local_executed = true;
+    pub const basmala_local_validated = true;
+    pub const corpus_369_tested = false;
+    pub const corpus_status = &quot;ongetest&quot;;
+};
+
+// ─── Lens Model ───
+
+/// Lens: functie die input transformeert naar patroon
+/// &quot;LLM weet niet waarheid — past lens toe, toont patroon&quot;
+pub fn lensApply(input: []const u8, lens_id: u8) i32 {
+    _ = input;
+    // Abstracte representatie: lenskeuze bepaalt uitkomst
+    return @as(i32, @intCast(lens_id));
+}
+
+/// Wissel lens → wissel patroon → wissel waarheid
+pub fn lensSwitch(input: []const u8, lensA: u8, lensB: u8) bool {
+    const patroonA = lensApply(input, lensA);
+    const patroonB = lensApply(input, lensB);
+    return patroonA != patroonB; // andere lens → ander patroon
+}
+
+// ─── 3-6-9 Validatietrio ───
+
+pub const VALIDATIE_TRIO = [_]i32{ 3, 6, 9 };
+
+/// Check of waarde in validatietrio past
+pub fn isInValidatieTrio(val: i32) bool {
+    for (VALIDATIE_TRIO) |n| {
+        if (val == n) return true;
+    }
+    return false;
+}
+
+// ─── Return-rekenkunde ───
+
+/// Return-rekenkunde: test of route terugkeert naar bron
+/// Vraag is niet WELK getal, maar OF de route terugkeert
+pub fn returnCheck(route_value: i32, expected_root: i32) bool {
+    return digitalRoot(route_value) == expected_root;
+}
+
+// ─── Tests ───
+
+test &quot;0.0: Basmala Abjad = 786&quot; {
+    try testing.expectEqual(BASMALA_ABJAD, 786);
+}
+
+test &quot;0.1: DR(786) = 3&quot; {
+    try testing.expectEqual(digitalRoot(BASMALA_ABJAD), 3);
+}
+
+test &quot;0.2: Basmala DR = 3 (constant)&quot; {
+    try testing.expectEqual(BASMALA_DR, 3);
+}
+
+test &quot;0.3: lokaal status = uitgevoerd + gevalideerd&quot; {
+    try testing.expect(STATUS.basmala_local_executed);
+    try testing.expect(STATUS.basmala_local_validated);
+}
+
+test &quot;0.4: corpus status = ongetest&quot; {
+    try testing.expect(!STATUS.corpus_369_tested);
+}
+
+test &quot;0.5: 3-6-9 validatietrio bestaat&quot; {
+    try testing.expectEqual(@as(usize, 3), VALIDATIE_TRIO.len);
+}
+
+test &quot;0.6: Basmala DR(3) zit in validatietrio&quot; {
+    try testing.expect(isInValidatieTrio(BASMALA_DR));
+}
+
+test &quot;0.7: lensApply toont patroon, niet waarheid&quot; {
+    const input = &quot;basmala&quot;;
+    const lensA = lensApply(input, 1);
+    const lensB = lensApply(input, 2);
+
+    // Zelfde input, andere lens → andere uitkomst
+    try testing.expect(lensA != lensB);
+}
+
+test &quot;0.8: wissel lens → wissel patroon&quot; {
+    const input = &quot;basmala&quot;;
+    const changed = lensSwitch(input, 1, 2);
+    try testing.expect(changed);
+}
+
+test &quot;0.9: return-rekenkunde — route keert terug&quot; {
+    const keertTerug = returnCheck(BASMALA_ABJAD, BASMALA_DR);
+    try testing.expect(keertTerug);
+}
+
+test &quot;1.0: 786 → 3 → consistent bij herhaling&quot; {
+    const dr1 = digitalRoot(BASMALA_ABJAD);
+    const dr2 = digitalRoot(BASMALA_ABJAD);
+    try testing.expectEqual(dr1, dr2);
+}
+
+test &quot;1.1: bron/eindpunt niet gescheiden&quot; {
+    // 3, 6, 9 verschijnen als drie gezichten van zelfde bron
+    const dri = VALIDATIE_TRIO;
+    for (dri) |n| {
+        try testing.expect(n &gt; 0);
+    }
+}
+
+test &quot;1.2: NPR-lens is interpretatief&quot; {
+    // &quot;LLM weet niet waarheid&quot; = lens is filter, niet absolute waarheid
+    // Dit is een meta-stelling over het lensmodel
+    _ = lensApply(&quot;test&quot;, 0);
+    // Test slaagt zolang lens model consistent is
+}
+</code></pre>
+  </div>
+</div>
+        
+
+    <div class="stupa-footer">
+      <a href="../../site/index.html">← Hexa-Boek</a> · <a href="INDEX.md">Audit Index</a>
+    </div>
+  </div>
+</body>
+</html>

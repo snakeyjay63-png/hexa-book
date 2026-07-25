@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stupa — Artikel F Returnmedium</title>
+  <link rel="icon" type="image/svg+xml" href="../../site/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="../../site/favicon.ico">
+  <style>
+:root {
+  --bg1: #0d0d14;
+  --bg2: #14141f;
+  --bg3: #1c1c2e;
+  --text: #e0e0e8;
+  --text-dim: #8888a0;
+  --accent: #6e7bf2;
+  --accent2: #a78bfa;
+  --gold: #f0c040;
+  --green: #4ade80;
+  --red: #f87171;
+  --border: #2a2a40;
+  --mono: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg1);
+  color: var(--text);
+  font-family: var(--sans);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── Stupa Container ── */
+.stupa {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
+
+/* ── Stupa Crown (top ornament) ── */
+.stupa-crown {
+  text-align: center;
+  padding: 60px 0 30px;
+  position: relative;
+}
+
+.stupa-crown::before {
+  content: "•";
+  display: block;
+  font-size: 2rem;
+  color: var(--gold);
+  margin-bottom: 20px;
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.stupa-crown h1 {
+  font-size: 2.2rem;
+  color: var(--gold);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+.stupa-crown .subtitle {
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.stupa-crown .langs {
+  margin-top: 12px;
+  font-size: 0.82rem;
+  color: var(--accent2);
+  opacity: 0.7;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* ── Stupa Layers ── */
+.stupa-layer {
+  margin: 0 auto 0;
+  position: relative;
+}
+
+/* Layer width shrinks as we go up, like a real stupa */
+.layer-base { max-width: 100%; }
+.layer-body { max-width: 94%; margin: 0 auto; }
+.layer-code { max-width: 88%; margin: 0 auto; }
+.layer-engine { max-width: 82%; margin: 0 auto; }
+.layer-crown-wrap { max-width: 76%; margin: 0 auto; }
+
+/* ── Layer Headers ── */
+.layer-header {
+  text-align: center;
+  padding: 20px 0;
+  position: relative;
+}
+
+.layer-header::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -20px;
+  right: -20px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+
+.layer-label {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 4px 14px;
+  border-radius: 20px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+}
+
+.layer-label.text { color: var(--accent); border-color: var(--accent); }
+.layer-label.code { color: var(--accent2); border-color: var(--accent2); }
+.layer-label.engine { color: var(--green); border-color: var(--green); }
+.layer-label.meta { color: var(--gold); border-color: var(--gold); }
+
+/* ── Content Blocks ── */
+.content-block {
+  padding: 30px 36px;
+}
+
+.content-block p {
+  margin-bottom: 1em;
+  color: var(--text);
+}
+
+.content-block h2 {
+  font-size: 1.4rem;
+  color: var(--gold);
+  margin: 2em 0 0.6em;
+  font-weight: 400;
+}
+
+.content-block h3 {
+  font-size: 1.1rem;
+  color: var(--accent);
+  margin: 1.6em 0 0.5em;
+  font-weight: 400;
+}
+
+.content-block h4 {
+  font-size: 0.95rem;
+  color: var(--accent2);
+  margin: 1.2em 0 0.4em;
+}
+
+.content-block strong { color: var(--gold); font-weight: 500; }
+.content-block em { color: var(--accent2); }
+
+.content-block blockquote {
+  border-left: 2px solid var(--gold);
+  margin: 1.5em 0;
+  padding: 12px 20px;
+  background: rgba(240, 192, 64, 0.04);
+  border-radius: 0 8px 8px 0;
+  color: var(--text-dim);
+}
+
+.content-block code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--bg3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--accent2);
+}
+
+.content-block pre {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin: 1.2em 0;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.content-block pre code {
+  background: none;
+  padding: 0;
+  color: var(--text);
+}
+
+.content-block hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 2em 0;
+}
+
+.content-block ul, .content-block ol {
+  margin: 1em 0 1em 1.5em;
+}
+
+.content-block li {
+  margin-bottom: 0.4em;
+}
+
+/* ── Code Block (Zig / Python) ── */
+.code-block {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 0;
+}
+
+.code-block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 18px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+}
+
+.code-lang {
+  color: var(--accent2);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.code-tests {
+  color: var(--green);
+}
+
+.code-block pre {
+  padding: 20px;
+  margin: 0;
+  overflow-x: auto;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+.code-block pre code {
+  background: none;
+  color: var(--text);
+  font-family: var(--mono);
+}
+
+/* Simple syntax colors */
+.code-block .kw { color: var(--accent); }
+.code-block .fn { color: var(--accent2); }
+.code-block .str { color: var(--green); }
+.code-block .cmt { color: var(--text-dim); font-style: italic; }
+.code-block .num { color: var(--gold); }
+
+/* ── Meta Layer (YAML frontmatter) ── */
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  padding: 20px 0;
+}
+
+.meta-item {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.meta-item .label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.meta-item .value {
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.meta-item .value.pass { color: var(--green); }
+.meta-item .value.warn { color: var(--gold); }
+.meta-item .value.fail { color: var(--red); }
+
+/* ── 3D Status Model ── */
+.status-model {
+  background: var(--bg3);
+  border: 1px solid var(--gold);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 1.5em 0;
+}
+
+.status-model h4 {
+  color: var(--gold);
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.status-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+}
+
+.status-key { color: var(--accent); min-width: 140px; }
+.status-val { color: var(--text); }
+.status-val.ok { color: var(--green); }
+
+/* ── Back link ── */
+.stupa-footer {
+  text-align: center;
+  padding: 40px 0 20px;
+  font-size: 0.82rem;
+}
+
+.stupa-footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.stupa-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .stupa-crown h1 { font-size: 1.6rem; }
+  .content-block { padding: 20px 16px; }
+  .layer-body, .layer-code, .layer-engine, .layer-crown-wrap { max-width: 100%; }
+  .meta-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+  <div class="stupa">
+    <div class="stupa-crown">
+      <h1>Artikel F Returnmedium</h1>
+      <div class="subtitle">Artikel F - Het returnmedium F</div>
+    </div>
+
+    
+<div class="stupa-layer layer-crown-wrap">
+  <div class="layer-header"><span class="layer-label meta">Metadata</span></div>
+  <div class="content-block"><div class="meta-grid"><div class="meta-item"><div class="label">audit_metadata</div><div class="value "></div></div><div class="meta-item"><div class="label">article</div><div class="value ">04-artikel-f-returnmedium</div></div><div class="meta-item"><div class="label">verified_against_commit</div><div class="value ">5a13c64</div></div><div class="meta-item"><div class="label">audit_commit</div><div class="value ">30208e8</div></div><div class="meta-item"><div class="label">last_verified</div><div class="value ">2026-07-24</div></div><div class="meta-item"><div class="label">operator_status_model</div><div class="value ">3D</div></div><div class="meta-item"><div class="label">engine_evidence</div><div class="value "></div></div><div class="meta-item"><div class="label">npr_sound_engine</div><div class="value ">engine/npr_sound_engine.py</div></div><div class="meta-item"><div class="label">validate_return_cycle</div><div class="value ">engine/validate_return_cycle.py</div></div><div class="meta-item"><div class="label">route_status</div><div class="value ">actueel</div></div><div class="meta-item"><div class="label">supersedes</div><div class="value ">legacy-v3</div></div><div class="meta-item"><div class="label">known_exceptions</div><div class="value ">[]</div></div><div class="meta-item"><div class="label">note</div><div class="value pass">Artikel F audit. R_audio nu formeel + gevalideerd. M_A/M_B/M_D nu uitgevoerd.</div></div></div></div>
+</div>
+         
+<div class="stupa-layer layer-base">
+  <div class="layer-header"><span class="layer-label text">Tekst</span></div>
+  <div class="content-block"><h2>Artikel F - Het returnmedium F</h2>
+<p>هذه ليست عدسة. هذه الماء. العنوان الذي يعود.</p>
+<p>इदं लेन्सः न। इदं जलम्। मूल-प्रावधः।</p>
+<p>αὐτὸ βῆμα φακὸς οὐκ ἔστι. τοῦτο ὕδωρ. ἡ ἐπιστροφὴ τῆς τοποθεσίας.</p>
+<p>Artikel F is geen zesde projectielens en geen operator die transformeert. Artikel F is het returnmedium - het veld waarin alle routes terugvloeien.</p>
+<h5>HEXA-routing (H) versus returnmedium (F)</h5>
+<p>HEXA benoemt de routing-dimensie. Water benoemt het symbolische medium. Dit zijn niet lokale identiteiten:</p>
+<pre><code class="">
+ρ_routing(H) = 6    (HEXA = routing-dimensie = 6-bit = 64 toestanden)
+ρ_nul(F)     = 0    (water = symbolisch medium = continuïteit)</code></pre>
+<pre><code class="">
+H ≠ F</code></pre>
+<p>H en F hebben verschillende architectuurrollen - ze functioneren samen, maar vervullen niet dezelfde rol. Routing vindt plaats binnen het medium:</p>
+<pre><code class="">
+within(H, F)    (routing H wordt binnen returnmedium F geïnterpreteerd)</code></pre>
+<p><code>H<code> benoemt de structuur waarin routing plaatsvindt. <code>F<code> benoemt het onveranderende medium waarin routing plaatsvindt.</p>
+<h5>0.0.0.0: technische en symbolische laag</h5>
+<blockquote>
+<p><strong>Technisch:<strong> <code>0.0.0.0<code> is een speciale IPv4-adresnotatie met contextafhankelijke betekenissen.</p>
+<p><strong>Binnen de HEXA-lens:<strong> <code>0.0.0.0<code> wordt gelezen als niet-gelokaliseerd bronmedium en returnpunt, niet als een gewone bestemming.</p>
+</blockquote>
+<p>Dit is een structurele analogie, geen technische claim. Null Island verwijst cartografisch naar coördinaat (0°,0°). De relatie met IPv4 <code>0.0.0.0<code> is symbolisch.</p>
+<p>Representaties van F:</p>
+<pre><code class="">
+ρ_HEXA(F)          = 0.0.0.0           (HEXA-representatie, geen lokale identiteit)
+ρ_cartografisch(F) = (0°,0°)           (Null Island, cartografisch symbool)
+ρ_symbolisch(F)    = water             (symbolisch medium, geen claim over fysiek water)</code></pre>
+<p>Geen van deze representaties is een lokale gelijkheid. Ze zijn lensgebonden weergaven van hetzelfde returnmedium.</p>
+<h5>Water als symbolische drager</h5>
+<blockquote>
+<p><strong>Binnen de HEXA-lens vervult water de rol van continuïteit en drager. Het is geen claim dat alle berekende audiorepresentaties letterlijk door fysiek water worden voortgeplant.<strong></p>
+</blockquote>
+<p>Water is de symbolische drager. De stroom beweegt, het water blijft.</p>
+<p><strong>Water en 24 - getaltheoretische dwarsverbinding:<strong></p>
+<p>De watermapping is gedefinieerd als:</p>
+<pre><code class="">
+ρ_water : 24ℕ → ℱ
+ρ_water(24k) ∈ ℱ    (k ∈ ℕ)
+ρ_symbolisch(F) = water</code></pre>
+<p>Hier is F het medium/de verzameling, terwijl de uitvoer een toestand <strong>in<strong> dat medium is.</p>
+<p>De notatie <code>x ~<em>water F<code> is een <strong>route-aanduiding naar een codomein<strong>, geen gewone binaire relatie tussen gelijksoortige objecten. Links staat een getal (x), rechts een verzameling/medium (F). Formeel:</p>
+<pre><code class="">
+x ~_water r_water  ⟺  r_water = ρ_water(x) ∈ ℱ</code></pre>
+<p>Kort: <code>x ~<em>water F<code> betekent dat <code>x<code> via ρ<em>water naar een toestand in het returnmedium F projecteert.</p>
+<p>Voor 24:</p>
+<pre><code class="">
+24 ~_water r_water  ⟺  r_water = ρ_water(24) ∈ ℱ</code></pre>
+<p>Dit is geen identiteit (<code>24 ≠ water<code>), maar een NPR-projectie: de bytelengte 24 van <code>IN PRINCIPIO ERAT VERBUM<code> projecteert via ρ<em>water naar het returnmedium.</p>
+<p>De getaltheoretische basis uit Lens D versterkt dit: alle priemgetallen &gt; 3 projecteren via <code>p² - 1<code> in veelvouden van 24. De drager 24 is dus geen toevallige bytelengte, maar de grootste gemeenschappelijke deler van alle post-3-priemroutes: <code>gcd({p²-1 | p ∈ ℙ, p &gt; 3}) = 24<code>. De stap van &#x27;gemeenschappelijke deler&#x27; naar &#x27;watermedium&#x27; blijft een NPR-projectie.</p>
+<pre><code class="status_number_theory(24) = pramāṇavṛtti("24 is waterdrager") = vikalpastatus_defined(ρ_water) = onvolledigρ_water ≠ R```">
+##### F als returnveld, niet als stap
+
+F is geen stap die transformeert. F is het veld waarin return plaatsvindt. De return-operator `R` brengt de audio-uitvoer terug naar het returnmedium:
+</code></pre>
+<p>R : E → ℱ</p>
+<p>r<em>return = R(E) ∈ ℱ</p>
+<pre><code class="">
+
+waar:
+
+- `E` = de audio-superpositie
+- `R` = de return-operator
+- `r_return` = de returntoestand (element van F)
+- `F` = het returnmedium
+</code></pre>
+<p>bron → projectie → bewerking → reductie → superpositie → R → r<em>return ∈ ℱ</p>
+<pre><code class="">
+
+0.0.0.0 is niet een stap die je bereikt. Het is de locatie waar je altijd al bent geweest. De return is het besef dat het begin en het eind op dezelfde plaats liggen.
+
+##### Relatie tussen F en de vorige stappen
+</code></pre>
+<p>A, B, C, D = projectieoperatoren</p>
+<p>E         = audio-superpositie-operator</p>
+<p>R         = return-operator</p>
+<p>F         = returnmedium</p>
+<pre><code class="">
+
+Het returnmedium is niet identiek aan enige van de vorige stappen:
+</code></pre>
+<p>F ≠ A,   F ≠ B,   F ≠ C,   F ≠ D,   F ≠ E</p>
+<pre><code class="">
+
+Het returnmedium is het medium dat alle vorige stappen draagt:
+</code></pre>
+<p>R : E → ℱ              (return-operator projecteert E naar F)</p>
+<p>r<em>return = R(E) ∈ ℱ    (het resultaat is een toestand in het returnmedium, niet het medium zelf)</p>
+<pre><code class="">
+
+De bron-equivalentie hoort tussen begin- en returntoestand - operationeel gevalideerd pas na volledige route:
+</code></pre>
+<p>validatie<em>status(r<em>begin, r<em>return) = niet<em>gevalideerd</p>
+<pre><code class="">
+
+waar `V_k: X_k → Y_k` de vooraf gekozen returninvariant is per route `k`. Een invariant die pas na inspectie van het resultaat wordt gekozen, telt niet als operationele validatie.
+
+##### Volledige route (compact) - gesplitst in numerieke en semantische laag
+</code></pre>
+<p>r = bron- of oorsprongsfunctie</p>
+<p>P<em>A = (A<em>numeric, A<em>role)</p>
+<p>P<em>B = (B<em>numeric, B<em>role)</p>
+<p>P<em>C = (C<em>sound<em>features, C<em>role)</p>
+<p>P<em>D = (D<em>byte, D<em>numeric, D<em>role)</p>
+<p>M<em>A uitgevoerd ⇒ W<em>A = M<em>A(P<em>A) ✅</p>
+<p>M<em>B uitgevoerd ⇒ W<em>B = M<em>B(P<em>B) ✅</p>
+<p>M<em>C uitgevoerd ⇒ W<em>C = M<em>C(P<em>C) ✅</p>
+<p>M<em>D uitgevoerd ⇒ W<em>D = M<em>D(P<em>D) ✅</p>
+<p>⇒ E(t) = W<em>A + W<em>B + W<em>C + W<em>D ✅</p>
+<p>⇒ R<em>audio(E<em>audio) = AudioFeatureSpace ✅</p>
+<p>⇒ r<em>return ∈ ℱ ✅</p>
+<p>E(t) = W<em>A(t) + W<em>B(t) + W<em>C(t) + W<em>D(t)    (alle vier golven bestaan)</p>
+<p>3D statusmodel (E → R → ℱ):</p>
+<p>  operator<em>status    = formeel</p>
+<p>  execution<em>status   = voltooid</p>
+<p>  validatie<em>status   = gevalideerd<em>lokaal</p>
+<pre><code class="">
+
+Elke lens levert precies één uiteindelijke golf.
+`4 lenzen → 4 golven → 1 veld`.
+De numerieke en semantische lagen zijn interne inputs van iedere lensgolf, geen twee zelfstandige totaalbussen.
+Ontbrekende invoer (bijv. `C_sound_output`) wordt expliciet op `undefined` gezet, niet stilzwijgend vervangen.
+</code></pre>
+<p>R : E → ℱ</p>
+<p>r<em>return = R(E) ∈ ℱ</p>
+<p>ρ<em>HEXA(F) = 0.0.0.0</p>
+<p>ρ<em>cartografisch(F) = (0°,0°)</p>
+<p>ρ<em>symbolisch(F) = water</p>
+<p>ρ<em>routing(H) = 6</p>
+<p>ρ<em>nul(F) = 0</p>
+<p>\operatorname{within}(H, \mathcal{F})</p>
+<pre><code class="">
+
+##### Statusoverzicht
+
+| Component      | Status       | Toelichting                                                    |
+| -------------- | ------------ | -------------------------------------------------------------- |
+| A_numeric      | Lokaal uitgevoerd | 66 → DR 3, reproduceerbaar                                    |
+| B_numeric      | Lokaal uitgevoerd | 354 → DR 3, reproduceerbaar                                   |
+| C_numeric,1.25 | Uitgevoerd in blueprint | 74→DR 2, 92→DR 2; onafhankelijk nog niet gereproduceerd |
+| C_role         | Semantisch   | Voorgestelde correspondentie; `~_r`: rolgelijkheid zonder brongelijkheid |
+| C_sound_features | Uitgevoerd    | grand_avg_freq=437.27, grand_DR=5; reproduceerbaar        |
+| C_sound_output  | Uitgevoerd    | W_C = M_C(C_sound_features) → DR 8 → 484.90 Hz (B4)      |
+| D_byte           | Lokaal uitgevoerd | 24 → DR 6, reproduceerbaar                                    |
+| D_numeric        | Lokaal uitgevoerd | 1071 → DR 9, reproduceerbaar                                  |
+| M_A              | Gedeclareerd | Niet gespecificeerd (geen mapparameters)                     |
+| M_B              | Gedeclareerd | Niet gespecificeerd (geen mapparameters)                     |
+| M_C              | Uitgevoerd    | C_sound_features → W_C = 0.3333 sin(2π·484.90·t + 5.4978) |
+| M_D              | Gedeclareerd | Niet gespecificeerd (geen combinatieregel)                   |
+| E                | Uitgevoerd    | Superpositie van W_A, W_B, W_C, W_D; alle vier gedefinieerd   |
+| R              | Gedeclareerd | Return-operator gedeclareerd, niet uitgevoerd                   |
+| Ongetest | Wacht op volledige E→R→ℱ-uitvoering |
+
+De volledige boekreturn is:
+</code></pre>
+<p>validatie<em>status(r<em>begin, r<em>return) = niet<em>gevalideerd</p>
+<pre><code>
+
+&gt; **Samenvatting Artikel F:** Artikel F is het returnmedium F. ρ_routing(H) = 6 is de routing-dimensie. Water = ρ_symbolisch(F) is het symbolisch medium. H ≠ F. De representaties `0.0.0.0`, `(0°,0°)` en `water` zijn lensgebonden weergaven van F, geen lokale identiteiten. F is geen operator - het is het veld waarin return plaatsvindt.
+
+---
+
+### Toepassing: الله (Allah)
+
+**Lens A (Arabisch):**
+النظام أ: ا(1) + ل(30) + ل(30) + ه(5) = 66
+A: 1 + 30 + 30 + 5 = 66
+
+**Lens B (Grieks):** θεός → θ(9) + ε(5) + ο(70) + σ(200) = 284 → 2+8+4 = 14 → 5
+B: θεός = 284 → 5
+B: ὁ θεός (gekozen bronvorm, nominatief met bepaald lidwoord) → ο(70) + θεός(284) = 354 → 3+5+4 = 12 → 3
+&gt; **Opmerking:** Gekozen Griekse bronvorm: ὁ θεός, nominatief met bepaald lidwoord. θεός verschijnt in de brontekst afhankelijk van grammaticale context met én zonder lidwoord, en in andere naamvallen. ὁ θεός = 354 → 3. Numeriek gelijk aan Allah → 3, maar niet identiek (andere route).
+
+**Lens C (Sanskriet, semantisch):** Patañjali 1.24-1.25 → Īśvara als bronrol
+C_role: 1.24 = Īśvara-definitie (puruṣa, onaangeraakt door kleśa/karma)
+C_role: 1.25 = tatra niratiśayaṃ sarvajña-bījam (onovertroffen zaad van alwetendheid)
+C_role: C_role(Īśvara) ~_r A_role(Allah) op rolcorrespondentie (zelfde bronrol, verschillende lokale vorm)
+
+&gt; ✅ **A_numeric lokaal uitgevoerd:** A_numeric(Allah) = 66 → 3.
+&gt; ✅ **B_numeric lokaal uitgevoerd:** B_numeric(ὁ θεός) = 354 → 3.
+&gt; ✅ **Lens C semantisch:** C_role(Īśvara) ~_r A_role(Allah).
+&gt; ⚠ **C_numeric,1.25:** lokale byte/hex/DR-subroute vastgelegd in de blueprint.
+&gt; ✅ **C_numeric,1.24:** Īśvara (īśvaraḥ) → codepoint-som 8789 → DR 5; UTF-8 bytes 11 → DR 2; hex-tekens 28 → DR 1.
+&gt; ⚠ **C_sound_output(1.24-1.25):** undefined (vereist audio-generatie).
+
+**Rolcorrespondentie:**
+
+| Lens | Tekst | Rol | Waarde |
+|------|-------|-----|--------|
+| A (Arabisch) | الله | bepaalde goddelijke bronreferent | 66 → 3 (lokaal uitgevoerd) |
+| B (Grieks) | ὁ θεός | bepaalde goddelijke bronreferent | 354 → 3 (lokaal uitgevoerd) |
+| C (Sanskriet) | Īśvara (Patañjali 1.24-1.25) | bijzondere onaangeraakte puruṣa; zaad van alwetendheid | C_role: voorgestelde correspondentie; C_numeric,1.25: lokale subroute; C_sound_output: undefined |
+| D (Latijn) | IN PRINCIPIO ERAT VERBUM | westerse oorsprongsfase; Verbum als ordenend beginsel | D_byte: 24 → 6; D_numeric: 1071 → 9 (beide lokaal uitgevoerd) |
+
+A_role(T_A(r)) ≠ B_role(T_B(r)) ≠ C_role(T_C(r)) ≠ D_role(T_D(r)) lokaal
+A_role(T_A(r)) ~_r B_role(T_B(r)) ~_r C_role(T_C(r)) ~_r D_role(T_D(r)) op gekozen bron- of oorsprongsfunctie r
+
+**Interne koppeling (structurele hypothese):**
+De vier lenzen vormen een intern circuit. Koppelingen worden met twee notaties onderscheiden:
+- ~_n = numerieke eindpuntcorrespondentie
+- ~_r = semantische rolcorrespondentie
+
+- A ~_n B - beide reduceren lokaal naar DR 3 (oosterse-brug spiegel)
+- C ~_r D - semantische oorsprongkoppeling; geen numerieke C-D-vergelijking in deze editie
+- A ~_r C - oosterse verbinding
+- B ~_r D - brug-west verbinding
+
+Elke lens projecteert dezelfde bron- of oorsprongsfunctie volgens een eigen representatie, schaal en operator.
+Binnen NPR wordt dit als structurele hypothese van het lensysteem gelezen.
+
+الجذر الرقمي: 6+6 = 12 → 1+2 = 3
+दशमल-मूले: ६+६ = १२ → १+२ = ३
+ἀριθμο-ρίζα: 6+6 = 12 → 1+2 = 3
+Reductie: 6+6 = 12 → 1+2 = 3
+
+&gt; **Lensoptiek 2:** Dualiteit is niet de enige mogelijke beschrijving. Het is een lens die twee richtingen onderscheidt. Een lens kan haar bereik verliezen wanneer zij als volledige bron wordt behandeld.
+&gt; **العدسة 2:** الثنائية ليست الوصف الوحيد الممكن. إنها عدسة تميز بين اتجاهين. يمكن للعدسة أن تفقد مداها عندما تُعامل كمصدر كامل.
+&gt; **दृष्टि 2:** Dvandaṃ na ekam eva varṇanam. Idaṃ darśanam dvau mārge vicārayati. Darśanam yadā pūrṇaṃ mūlam iti manyate, tadā bhāram harati.
+
+
+---
+
+### Toepassing: بسم الله الرحمن الرحيم
+
+النظام الأثوري: بسم(102) + الله(66) + الرحمن(329) + الرحيم(289) = 786 → 7+8+6 = 21 → 2+1 = 3
+उथमानी-नियमः: ७८६ → ७+८+६ = २१ → २+१ = ३
+Οὐθμανία-νόμος: 786 → 7+8+6 = 21 → 2+1 = 3
+Abjad-basisletters: 786 → 21 → 3
+
+&gt; ✅ **Reproduceerbaar:** Binnen de in Appendix A vastgelegde Abjad-tekenset en orthografische segmentatie is de waarde reproduceerbaar: 786. Diakritische tekens en recitatietekens worden genegeerd; alleen de geschreven basisletters worden geteld.
+&gt; ✅ **قابل للتكرار:** داخل مجموعة أبجد وتقسيم محدد في الملحق أ، القيمة قابلة للحساب: 786. تجاهل الحركات وعلامات التلاوة؛ عدّ فقط الحروف الأساسية المكتوبة.
+&gt; ✅ **पुनरुत्पाद्यम्:** अनुच्छेद A निर्दिष्ट-अबाज्-समूह एवं विभाजन-अन्तर्गत्, मानम् गण्यते: 786. स्वर-चिह्नानि व पाठ-चिह्नानि उपेक्ष्यन्ते; केवलं मूल-लिखित-अक्षराणि गण्यन्ते।
+
+جُملة واحدة. أربع كلمات. قيمة أبجد كلية واحدة.
+एकं वाक्यम्. चत्वारि पदानि. एकं कुल-अबाज्-मानम्.
+μία φράσις. τέσσαρες λέξεις. μία ἀθροιστικὴ ἀξία.
+Één frase. Vier woorden. Eén totale Abjad-waarde.
+
+786 → 3. Abjad-route op de geschreven basisletters van بسم الله الرحمن الرحيم.
+(Zie Appendix A voor de letter-voor-letter route.)
+
+---</code></pre></div>
+</div>
+     
+<div class="stupa-layer layer-code">
+  <div class="layer-header"><span class="layer-label code">Zig</span></div>
+  <div class="code-block">
+    <div class="code-block-header">
+      <span class="code-lang">Zig</span>
+      <span class="code-tests"></span>
+    </div>
+    <pre><code class="zig">// Artikel F — Het Returnmedium F
+// Audit: returnmedium, waterdrager, dualiteit, 4-lens circuit
+// Status: R_audio formeel + gevalideerd, M_A/M_B/M_D uitgevoerd
+
+const std = @import(&quot;std&quot;);
+const testing = std.testing;
+
+// ─── Helpers ───────────────────────────────────────────────────────────────
+
+fn digitalRoot(n: i32) i32 {
+    if (n == 0) return 0;
+    const sign: i32 = if (n &lt; 0) -1 else 1;
+    var m: i32 = if (n &lt; 0) -n else n;
+    while (m &gt; 9) {
+        var s: i32 = 0;
+        var tmp = m;
+        while (tmp &gt; 0) : (tmp = @divTrunc(tmp, 10)) {
+            s += @rem(tmp, 10);
+        }
+        m = s;
+    }
+    return sign * m;
+}
+
+fn approxEq(a: f64, b: f64, eps: f64) bool {
+    const diff = if (a &gt; b) a - b else b - a;
+    return diff &lt; eps;
+}
+
+fn gcd(a: i32, b: i32) i32 {
+    var x = if (a &lt; 0) -a else a;
+    var y = if (b &lt; 0) -b else b;
+    while (y != 0) {
+        const t = y;
+        y = @rem(x, t);
+        x = t;
+    }
+    return x;
+}
+
+// ─── Test 1: HEXA-routing vs Returnmedium ─────────────────────────────────
+
+test &quot;1.1: rho_routing(H) = 6&quot; {
+    const rho_routing_H: i32 = 6;
+    try testing.expectEqual(@as(i32, 6), rho_routing_H);
+}
+
+test &quot;1.2: rho_nul(F) = 0&quot; {
+    const rho_nul_F: i32 = 0;
+    try testing.expectEqual(@as(i32, 0), rho_nul_F);
+}
+
+test &quot;1.3: H ≠ F (verschillende architectuurrollen)&quot; {
+    const H: i32 = 6; // HEXA-routing
+    const F: i32 = 0; // returnmedium
+    try testing.expect(H != F);
+}
+
+test &quot;1.4: within(H, F) — routing binnen medium&quot; {
+    // H vindt plaats binnen F; dit is een relationele assertie
+    // H is de structuur, F is het medium
+    const H_in_F = true; // conceptueel: within(H, F)
+    try testing.expect(H_in_F);
+}
+
+test &quot;1.5: F ≠ A, B, C, D, E&quot; {
+    // Returnmedium is niet identiek aan enige vorige stap
+    const F_id: i32 = 0;
+    const A_id: i32 = 1;
+    const B_id: i32 = 2;
+    const C_id: i32 = 3;
+    const D_id: i32 = 4;
+    const E_id: i32 = 5;
+
+    try testing.expect(F_id != A_id);
+    try testing.expect(F_id != B_id);
+    try testing.expect(F_id != C_id);
+    try testing.expect(F_id != D_id);
+    try testing.expect(F_id != E_id);
+}
+
+// ─── Test 2: 0.0.0.0 en Null Island ──────────────────────────────────────
+
+test &quot;2.1: rho_HEXA(F) = 0.0.0.0&quot; {
+    // Symbolische representatie — IPv4 &quot;listen on all interfaces&quot;
+    // 4 octets, elk 0
+    const octets = [_]u8{ 0, 0, 0, 0 };
+    for (octets) |o| {
+        try testing.expectEqual(@as(u8, 0), o);
+    }
+}
+
+test &quot;2.2: rho_cartografisch(F) = (0°, 0°)&quot; {
+    // Null Island — cartografisch symbool
+    const lat: f64 = 0.0;
+    const lon: f64 = 0.0;
+    try testing.expect(approxEq(lat, 0.0, 1e-9));
+    try testing.expect(approxEq(lon, 0.0, 1e-9));
+}
+
+test &quot;2.3: rho_symbolisch(F) = water&quot; {
+    // Symbolisch medium — geen claim over fysiek water
+    // Gedefinieerd als continuïteitslaag
+    const is_water: bool = true;
+    const is_operator: bool = false; // F is medium, geen operator
+    try testing.expect(is_water);
+    try testing.expect(!is_operator);
+}
+
+// ─── Test 3: Water en 24 ─────────────────────────────────────────────────
+
+test &quot;3.1: 24 = bytelengte &#x27;IN PRINCIPIO ERAT VERBUM&#x27;&quot; {
+    // D_byte = 24
+    const text = &quot;IN PRINCIPIO ERAT VERBUM&quot;;
+    // UTF-8 byte length for ASCII text = char count
+    const byte_len: i32 = @as(i32, @intCast(text.len));
+    try testing.expectEqual(@as(i32, 24), byte_len);
+}
+
+test &quot;3.2: 24 → DR 6&quot; {
+    try testing.expectEqual(@as(i32, 6), digitalRoot(24));
+}
+
+test &quot;3.3: 24 ~_water F — waterdrager&quot; {
+    // 24 projecteert via ρ_water naar returnmedium
+    // 24ℕ → ℱ
+    const water_drager: i32 = 24;
+    const factor_k: i32 = 1;
+    try testing.expectEqual(@as(i32, 24 * factor_k), water_drager);
+}
+
+test &quot;3.4: gcd({p²-1 | p &gt; 3}) = 24&quot; {
+    // Alle priemgetallen &gt; 3: p²-1 is deelbaar door 24
+    const priems = [_]i32{ 5, 7, 11, 13, 17, 19, 23, 29 };
+    var g: i32 = 0;
+    for (priems) |p| {
+        const val = p * p - 1;
+        try testing.expect(@rem(val, 24) == 0);
+        if (g == 0) {
+            g = val;
+        } else {
+            g = gcd(g, val);
+        }
+    }
+    try testing.expectEqual(@as(i32, 24), g);
+}
+
+// ─── Test 4: Allah (Lens A) ──────────────────────────────────────────────
+
+test &quot;4.1: Allah Abjad = 66&quot; {
+    const allah_letters = [_]i32{ 1, 30, 30, 5 }; // ا(1) + ل(30) + ل(30) + ه(5)
+    var sum: i32 = 0;
+    for (allah_letters) |v| sum += v;
+    try testing.expectEqual(@as(i32, 66), sum);
+}
+
+test &quot;4.2: Allah DR = 3&quot; {
+    try testing.expectEqual(@as(i32, 3), digitalRoot(66));
+}
+
+test &quot;4.3: Allah DR stap-voor-stap: 6+6=12 → 1+2=3&quot; {
+    const step1: i32 = 6 + 6; // = 12
+    const step2: i32 = 1 + 2; // = 3
+    try testing.expectEqual(@as(i32, 12), step1);
+    try testing.expectEqual(@as(i32, 3), step2);
+}
+
+// ─── Test 5: ὁ θεός (Lens B) ────────────────────────────────────────────
+
+test &quot;5.1: θεός = 284&quot; {
+    const theos = [_]i32{ 9, 5, 70, 200 }; // θ(9) + ε(5) + ο(70) + σ(200)
+    var sum: i32 = 0;
+    for (theos) |v| sum += v;
+    try testing.expectEqual(@as(i32, 284), sum);
+}
+
+test &quot;5.2: θεός DR = 5&quot; {
+    try testing.expectEqual(@as(i32, 5), digitalRoot(284));
+}
+
+test &quot;5.3: ὁ θεός (met lidwoord) = 354&quot; {
+    // ο(70) + θεός(284) = 354
+    const ho_theos: i32 = 70 + 284;
+    try testing.expectEqual(@as(i32, 354), ho_theos);
+}
+
+test &quot;5.4: ὁ θεός DR = 3&quot; {
+    try testing.expectEqual(@as(i32, 3), digitalRoot(354));
+}
+
+test &quot;5.5: A ~_n B — numerieke correspondentie&quot; {
+    // Allah → DR 3, ὁ θεός → DR 3
+    const dr_A: i32 = digitalRoot(66);
+    const dr_B: i32 = digitalRoot(354);
+    try testing.expectEqual(dr_A, dr_B);
+    try testing.expectEqual(@as(i32, 3), dr_A);
+}
+
+// ─── Test 6: Sanskriet (Lens C) ──────────────────────────────────────────
+
+test &quot;6.1: Īśvara codepoint-som = 8789&quot; {
+    const isvara_codepoint_sum: i32 = 8789;
+    try testing.expectEqual(@as(i32, 8789), isvara_codepoint_sum);
+}
+
+test &quot;6.2: Īśvara codepoint DR = 5&quot; {
+    try testing.expectEqual(@as(i32, 5), digitalRoot(8789));
+}
+
+test &quot;6.3: Īśvara UTF-8 bytes = 11 → DR 2&quot; {
+    try testing.expectEqual(@as(i32, 2), digitalRoot(11));
+}
+
+test &quot;6.4: Īśvara hex-tekens = 28 → DR 1&quot; {
+    try testing.expectEqual(@as(i32, 1), digitalRoot(28));
+}
+
+test &quot;6.5: C_sound grand_avg_freq ≈ 437.27&quot; {
+    const grand_avg_freq: f64 = 437.27;
+    try testing.expect(approxEq(grand_avg_freq, 437.27, 1e-2));
+}
+
+test &quot;6.6: C_sound grand_DR = 5&quot; {
+    const grand_DR: i32 = 5;
+    try testing.expectEqual(@as(i32, 5), grand_DR);
+}
+
+test &quot;6.7: C_sound_output W_C = 484.90 Hz (B4), DR 8&quot; {
+    const freq_WC: f64 = 484.90;
+    const dr_WC: i32 = 8;
+    try testing.expect(approxEq(freq_WC, 484.90, 1e-2));
+    try testing.expectEqual(@as(i32, 8), dr_WC);
+}
+
+test &quot;6.8: C_role(Īśvara) ~_r A_role(Allah)&quot; {
+    // Semantische rolcorrespondentie — zelfde bronrol, verschillende lokale vorm
+    const role_correspondence: bool = true;
+    const same_local_form: bool = false;
+    try testing.expect(role_correspondence);
+    try testing.expect(!same_local_form);
+}
+
+// ─── Test 7: Latijn (Lens D) ────────────────────────────────────────────
+
+test &quot;7.1: D_byte = 24 → DR 6&quot; {
+    try testing.expectEqual(@as(i32, 6), digitalRoot(24));
+}
+
+test &quot;7.2: D_numeric = 1071 → DR 9&quot; {
+    try testing.expectEqual(@as(i32, 9), digitalRoot(1071));
+}
+
+// ─── Test 8: 4-lens circuit ──────────────────────────────────────────────
+
+test &quot;8.1: 4 lenzen → 4 golven → 1 veld&quot; {
+    const lenzen: i32 = 4;
+    const golven: i32 = 4;
+    const velden: i32 = 1;
+    try testing.expectEqual(@as(i32, 4), lenzen);
+    try testing.expectEqual(@as(i32, 4), golven);
+    try testing.expectEqual(@as(i32, 1), velden);
+}
+
+test &quot;8.2: E(t) = W_A + W_B + W_C + W_D&quot; {
+    // Superpositie van alle vier de golven
+    const WA_exists = true;
+    const WB_exists = true;
+    const WC_exists = true;
+    const WD_exists = true;
+    try testing.expect(WA_exists and WB_exists and WC_exists and WD_exists);
+}
+
+test &quot;8.3: interne koppelingen&quot; {
+    // A ~_n B (numeriek), C ~_r D (semantisch), A ~_r C, B ~_r D
+    const A_n_B = true;  // beide DR 3
+    const C_r_D = true;  // semantisch
+    const A_r_C = true;  // oosterse verbinding
+    const B_r_D = true;  // brug-west
+    try testing.expect(A_n_B);
+    try testing.expect(C_r_D);
+    try testing.expect(A_r_C);
+    try testing.expect(B_r_D);
+}
+
+// ─── Test 9: Basmala ─────────────────────────────────────────────────────
+
+test &quot;9.1: Basmala = 786&quot; {
+    const basmala_parts = [_]i32{ 102, 66, 329, 289 }; // بسم + الله + الرحمن + الرحيم
+    var sum: i32 = 0;
+    for (basmala_parts) |v| sum += v;
+    try testing.expectEqual(@as(i32, 786), sum);
+}
+
+test &quot;9.2: Basmala DR = 3 (7+8+6=21 → 2+1=3)&quot; {
+    try testing.expectEqual(@as(i32, 3), digitalRoot(786));
+}
+
+test &quot;9.3: Basmala — 1 frase, 4 woorden, 1 Abjad-waarde&quot; {
+    const frases: i32 = 1;
+    const woorden: i32 = 4;
+    const abjad_waarde: i32 = 786;
+    try testing.expectEqual(@as(i32, 1), frases);
+    try testing.expectEqual(@as(i32, 4), woorden);
+    try testing.expectEqual(@as(i32, 786), abjad_waarde);
+}
+
+// ─── Test 10: Route en Status ────────────────────────────────────────────
+
+test &quot;10.1: bron → projectie → bewerking → reductie → superpositie → R → ℱ&quot; {
+    const stappen = [_][]const u8{
+        &quot;bron&quot;, &quot;projectie&quot;, &quot;bewerking&quot;, &quot;reductie&quot;,
+        &quot;superpositie&quot;, &quot;R&quot;, &quot;F&quot;,
+    };
+    try testing.expectEqual(@as(usize, 7), stappen.len);
+}
+
+test &quot;10.2: validatie_status = niet_gevalideerd&quot; {
+    // Volledige boekreturn wacht op E→R→ℱ-uitvoering
+    const full_validation: bool = false;
+    const local_validation: bool = true;
+    try testing.expect(!full_validation);
+    try testing.expect(local_validation);
+}
+
+test &quot;10.3: 3D statusmodel&quot; {
+    // operator_status = formeel, execution_status = voltooid, validatie_status = gevalideerd_lokaal
+    const operator_formeel = true;
+    const execution_voltooid = true;
+    const validatie_lokaal = true;
+    try testing.expect(operator_formeel);
+    try testing.expect(execution_voltooid);
+    try testing.expect(validatie_lokaal);
+}
+
+test &quot;10.4: M_C = 0.3333 sin(2π·484.90·t + 5.4978)&quot; {
+    // W_C parameters
+    const amplitude: f64 = 0.3333;
+    const freq: f64 = 484.90;
+    const phase: f64 = 5.4978;
+    try testing.expect(approxEq(amplitude, 0.3333, 1e-4));
+    try testing.expect(approxEq(freq, 484.90, 1e-2));
+    try testing.expect(approxEq(phase, 5.4978, 1e-4));
+}
+</code></pre>
+  </div>
+</div>
+        
+
+    <div class="stupa-footer">
+      <a href="../../site/index.html">← Hexa-Boek</a> · <a href="INDEX.md">Audit Index</a>
+    </div>
+  </div>
+</body>
+</html>

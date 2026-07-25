@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stupa — Artikel 09 Genre Interface</title>
+  <link rel="icon" type="image/svg+xml" href="../../site/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="../../site/favicon.ico">
+  <style>
+:root {
+  --bg1: #0d0d14;
+  --bg2: #14141f;
+  --bg3: #1c1c2e;
+  --text: #e0e0e8;
+  --text-dim: #8888a0;
+  --accent: #6e7bf2;
+  --accent2: #a78bfa;
+  --gold: #f0c040;
+  --green: #4ade80;
+  --red: #f87171;
+  --border: #2a2a40;
+  --mono: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg1);
+  color: var(--text);
+  font-family: var(--sans);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── Stupa Container ── */
+.stupa {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
+
+/* ── Stupa Crown (top ornament) ── */
+.stupa-crown {
+  text-align: center;
+  padding: 60px 0 30px;
+  position: relative;
+}
+
+.stupa-crown::before {
+  content: "•";
+  display: block;
+  font-size: 2rem;
+  color: var(--gold);
+  margin-bottom: 20px;
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.stupa-crown h1 {
+  font-size: 2.2rem;
+  color: var(--gold);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+.stupa-crown .subtitle {
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.stupa-crown .langs {
+  margin-top: 12px;
+  font-size: 0.82rem;
+  color: var(--accent2);
+  opacity: 0.7;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* ── Stupa Layers ── */
+.stupa-layer {
+  margin: 0 auto 0;
+  position: relative;
+}
+
+/* Layer width shrinks as we go up, like a real stupa */
+.layer-base { max-width: 100%; }
+.layer-body { max-width: 94%; margin: 0 auto; }
+.layer-code { max-width: 88%; margin: 0 auto; }
+.layer-engine { max-width: 82%; margin: 0 auto; }
+.layer-crown-wrap { max-width: 76%; margin: 0 auto; }
+
+/* ── Layer Headers ── */
+.layer-header {
+  text-align: center;
+  padding: 20px 0;
+  position: relative;
+}
+
+.layer-header::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -20px;
+  right: -20px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+
+.layer-label {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 4px 14px;
+  border-radius: 20px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+}
+
+.layer-label.text { color: var(--accent); border-color: var(--accent); }
+.layer-label.code { color: var(--accent2); border-color: var(--accent2); }
+.layer-label.engine { color: var(--green); border-color: var(--green); }
+.layer-label.meta { color: var(--gold); border-color: var(--gold); }
+
+/* ── Content Blocks ── */
+.content-block {
+  padding: 30px 36px;
+}
+
+.content-block p {
+  margin-bottom: 1em;
+  color: var(--text);
+}
+
+.content-block h2 {
+  font-size: 1.4rem;
+  color: var(--gold);
+  margin: 2em 0 0.6em;
+  font-weight: 400;
+}
+
+.content-block h3 {
+  font-size: 1.1rem;
+  color: var(--accent);
+  margin: 1.6em 0 0.5em;
+  font-weight: 400;
+}
+
+.content-block h4 {
+  font-size: 0.95rem;
+  color: var(--accent2);
+  margin: 1.2em 0 0.4em;
+}
+
+.content-block strong { color: var(--gold); font-weight: 500; }
+.content-block em { color: var(--accent2); }
+
+.content-block blockquote {
+  border-left: 2px solid var(--gold);
+  margin: 1.5em 0;
+  padding: 12px 20px;
+  background: rgba(240, 192, 64, 0.04);
+  border-radius: 0 8px 8px 0;
+  color: var(--text-dim);
+}
+
+.content-block code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--bg3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--accent2);
+}
+
+.content-block pre {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin: 1.2em 0;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.content-block pre code {
+  background: none;
+  padding: 0;
+  color: var(--text);
+}
+
+.content-block hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 2em 0;
+}
+
+.content-block ul, .content-block ol {
+  margin: 1em 0 1em 1.5em;
+}
+
+.content-block li {
+  margin-bottom: 0.4em;
+}
+
+/* ── Code Block (Zig / Python) ── */
+.code-block {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 0;
+}
+
+.code-block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 18px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+}
+
+.code-lang {
+  color: var(--accent2);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.code-tests {
+  color: var(--green);
+}
+
+.code-block pre {
+  padding: 20px;
+  margin: 0;
+  overflow-x: auto;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+.code-block pre code {
+  background: none;
+  color: var(--text);
+  font-family: var(--mono);
+}
+
+/* Simple syntax colors */
+.code-block .kw { color: var(--accent); }
+.code-block .fn { color: var(--accent2); }
+.code-block .str { color: var(--green); }
+.code-block .cmt { color: var(--text-dim); font-style: italic; }
+.code-block .num { color: var(--gold); }
+
+/* ── Meta Layer (YAML frontmatter) ── */
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  padding: 20px 0;
+}
+
+.meta-item {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.meta-item .label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.meta-item .value {
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.meta-item .value.pass { color: var(--green); }
+.meta-item .value.warn { color: var(--gold); }
+.meta-item .value.fail { color: var(--red); }
+
+/* ── 3D Status Model ── */
+.status-model {
+  background: var(--bg3);
+  border: 1px solid var(--gold);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 1.5em 0;
+}
+
+.status-model h4 {
+  color: var(--gold);
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.status-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+}
+
+.status-key { color: var(--accent); min-width: 140px; }
+.status-val { color: var(--text); }
+.status-val.ok { color: var(--green); }
+
+/* ── Back link ── */
+.stupa-footer {
+  text-align: center;
+  padding: 40px 0 20px;
+  font-size: 0.82rem;
+}
+
+.stupa-footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.stupa-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .stupa-crown h1 { font-size: 1.6rem; }
+  .content-block { padding: 20px 16px; }
+  .layer-body, .layer-code, .layer-engine, .layer-crown-wrap { max-width: 100%; }
+  .meta-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+  <div class="stupa">
+    <div class="stupa-crown">
+      <h1>Artikel 09 Genre Interface</h1>
+      <div class="subtitle">De Terminal (CPU)</div>
+    </div>
+
+    
+<div class="stupa-layer layer-base">
+  <div class="layer-header"><span class="layer-label text">Tekst</span></div>
+  <div class="content-block"><h1>Artikel 09 — Genre als Interface-Taal</h1>
+<blockquote>
+<p><strong>موسيقى = لغة الواجهة<strong></p>
+<p><strong>संगीत = इंटरफ़ेस भाषा<strong></p>
+<p>Music = Interface Language</p>
+<p>Muziek = Interface-Taal</p>
+</blockquote>
+<hr>
+<h2>De Terminal (CPU)</h2>
+<p>De fictieve 1980-terminal is de interface die verbonden is met alle pre-1980 synthesizers.</p>
+<pre><code class="">
+┌─────────────────────────────────────┐
+│  1980 TERMINAL                      │
+│                                     │
+│  command: 140 BPM                   │
+│  command: filter sweep              │
+│  command: arpeggio up               │
+│  command: breakdown at bar 16       │
+│                                     │
+│  → CPU: ritme controleren           │
+└──────────────────┬──────────────────┘
+                   │ verbinding
+                   ▼
+┌─────────────────────────────────────┐
+│  PRE-1980 SYNTHS (veld)             │
+│                                     │
+│  Moog      → filter hoek → bas      │
+│  ARP       → LFO geometrie → mid    │
+│  Buchla    → mesh grid → textuur    │
+│  Oberheim  → osc stack → shimmer    │
+│                                     │
+│  → GPU: frequentie veld berekenen   │
+└─────────────────────────────────────┘</code></pre>
+<p><strong>Elke synth is een geometrisch ontwerp dat vertraagt tot geluid.<strong></p>
+<p>De terminal spreekt de taal. De synths voeren de geometrie uit.</p>
+<hr>
+<h2>Synth Geometrie</h2>
+<p>| Synth | Geometrie | Vertraging | Uiting |</p>
+<p>|-------|-----------|------------|--------|</p>
+<p>| Moog | Filterhoek (LP 24dB/oct) | 40-200ms | Warme bas |</p>
+<p>| ARP | LFO sinus/triangle | 100-500ms | Modulatiediepte |</p>
+<p>| Buchla | Mesh voltage grid | 200-1000ms | Organische textuur |</p>
+<p>| Oberheim | Oscillator stack | 50-300ms | Supersaw breedte |</p>
+<p>| Roland | PWM modulation | 10-100ms | Timbre shift |</p>
+<pre><code class="">
+Geometrie = hoe het veld gevormd wordt
+Vertraging = hoe snel de geometrie tot geluid wordt
+Uiting = wat er klinkt</code></pre>
+<hr>
+<h2>Psytrance = De Interface-Taal</h2>
+<p>Psytrance is geen &quot;stijl muziek&quot;. Het is de <strong>taal die uitlegt welk ritme welke geometrie volgt<strong>.</p>
+<pre><code class="">
+Psytrance zegt:
+  &quot;140 BPM&quot;      → Moog filter draait op deze hoek
+  &quot;GBG bass&quot;     → Buchla mesh vormt deze curve
+  &quot;arpeggio&quot;     → ARP sequencer volgt dit ritme
+  &quot;breakdown&quot;    → Oberheim stack bouwt dit veld</code></pre>
+<p><strong>Vergelijking:<strong></p>
+<pre><code class="">
+Andere genres:   &quot;dit klinkt zo&quot;
+Psytrance:       &quot;dit ritme volgt deze geometrie&quot;</code></pre>
+<p>Psytrance is de <strong>documentatie van computationele potentie<strong> in geluidsvorm.</p>
+<hr>
+<h2>Genre Veld</h2>
+<p>Elk genre is een andere interface-taal:</p>
+<pre><code class="">
+Techno:    &quot;repeterende geometrie = meditatie&quot;
+Ambient:   &quot;veld = alles, geen ritme&quot;
+Dubstep:   &quot;bas veld + breakdown = contrast&quot;
+IDM:       &quot;geen patroon = alle patronen&quot;
+Lo-Fi:     &quot;gecomprimeerd veld = warmte&quot;
+Breakcore: &quot;chaos = grens van ritme&quot;</code></pre>
+<p><strong>Genres vormen zichzelf door viveka (onderscheid):<strong></p>
+<pre><code class="">
+&quot;dit klinkt anders dan dat&quot; → onderscheid
+&quot;dit doet mij dat&quot;          → categorie
+&quot;we doen dit samen&quot;         → genre</code></pre>
+<p>Niemand <em>bepaalt<em> een genre. Het gebeurt door herhaald onderscheid.</p>
+<hr>
+<h2>Hz Is Het Veld. Hoek Is De Geometrie.</h2>
+<pre><code class="">
+440Hz → veldsterkte (wat er is)
+hoek  → geometrie (hoe het draait)
+
+Zonder hoek = vlakke sinus.
+Met hoek = veld dat draait.</code></pre>
+<pre><code class="">
+Band 0: 440Hz + 0°   (referentie)
+Band 1: 432Hz + 45°  (delay geometry)
+Band 2: 396Hz + 10°  (delay geometry)
+
+Delay = hoekverschil tussen banden.
+Hz zegt niets zonder hoek.</code></pre>
+<hr>
+<h2>Muziek = Code = Taal</h2>
+<pre><code class="">
+Taal:      woorden → taalgroep → taalstam → zelf vormend
+Muziek:    klanken → genre → subgenre → zelf vormend
+
+Beide via viveka: onderscheid = vorming.
+
+Code schrijven:   &quot;wat kan deze machine?&quot;
+Muziek maken:     &quot;wat kan deze synth?&quot;
+
+Beide zijn audit van computationele potentie.</code></pre>
+<blockquote>
+<p>&quot;Psytrance is niet muziek. Het is de interface-taal tussen terminal en synth.&quot;</p>
+</blockquote>
+<hr>
+<h2>Dark Forest = Donker Bos</h2>
+<p>Het genre veld toont 24 lichte punten (gevormde genres). De ruimte tussenin is donker.</p>
+<p><strong>Maar donker is niet leeg.<strong></p>
+<pre><code class="">
+Een donker bos is vol leven:
+  - schimmels onder de grond
+  - zaden in de aarde
+  - mycelium-netwerken
+  - onbenoemde planten
+
+Het genre veld is hetzelfde:
+  - computationele potentie tussen genres
+  - onbenoemde combinaties
+  - mycelium van klanken
+  - muziek die kan bestaan maar nog niet klinkt</code></pre>
+<pre><code class="N A T U U R                    M U Z I E K">Donker bos    → vol onbenoemd leven        Donker veld → vol onbenoemde geluiden
+Boom          → zichtbare structuur        Genre       → zichtbare structuur
+Mycelium      → onzichtbaar netwerk        Connectie   → onzichtbaar netwerk
+Zaad          → potentie                   Mogelijkheid→ potentie</code></pre>
+<p><strong>De donkere regio&#x27;s zijn computationele potentie zonder interface:<strong></p>
+<pre><code class="">
+1. De terminal spreekt geen taal daar
+2. De synths hebben geen geometrie daar
+3. Viveka heeft nog geen onderscheid gemaakt</code></pre>
+<pre><code class="N A T U U R                    M U Z I E K">Donker        → potentie zonder naam        Donker    → potentie zonder genre
+Benoemen      → vormt zichtbaar maken        Benoemen → vormt genre
+Leven         → was al aanwezig             Klinkt    → was al aanwezig</code></pre>
+<p><strong>Het donker is geen leegte. Het is onuitgesproken potentie.<strong></p>
+<pre><code class="PSYTRANCE                   DARK FOREST">&quot;ik ben de taal van de terminal&quot;   &quot;ik ben alles wat de terminal nog niet kan zeggen&quot;</code></pre>
+<hr>
+<p><em>Conceptueel audit-artikel. Te valideren tegen synthesizer-architectuur en genre-evolutie.<em></p></div>
+</div>
+     
+<div class="stupa-layer layer-code">
+  <div class="layer-header"><span class="layer-label code">Zig</span></div>
+  <div class="code-block">
+    <div class="code-block-header">
+      <span class="code-lang">Zig</span>
+      <span class="code-tests"></span>
+    </div>
+    <pre><code class="zig">const std = @import(&quot;std&quot;);
+const testing = std.testing;
+const math = std.math;
+
+// === Artikel 09: Genre als Interface-Taal ===
+// Muziek = code = taal = computationele potentie audit
+
+// === 1. Synth Geometrie ===
+// Elke synth = geometrisch ontwerp dat vertraagt tot geluid
+
+const Synth = struct {
+    naam: []const u8,
+    geometrie: []const u8,
+    vertraging_min_ms: f64,
+    vertraging_max_ms: f64,
+    uitgang: []const u8,
+};
+
+const SYNTHS = [_]Synth{
+    .{ .naam = &quot;Moog&quot;, .geometrie = &quot;filterhoek&quot;, .vertraging_min_ms = 40, .vertraging_max_ms = 200, .uitgang = &quot;warme bas&quot; },
+    .{ .naam = &quot;ARP&quot;, .geometrie = &quot;LFO&quot;, .vertraging_min_ms = 100, .vertraging_max_ms = 500, .uitgang = &quot;modulatiediepte&quot; },
+    .{ .naam = &quot;Buchla&quot;, .geometrie = &quot;mesh&quot;, .vertraging_min_ms = 200, .vertraging_max_ms = 1000, .uitgang = &quot;organische textuur&quot; },
+    .{ .naam = &quot;Oberheim&quot;, .geometrie = &quot;osc_stack&quot;, .vertraging_min_ms = 50, .vertraging_max_ms = 300, .uitgang = &quot;supersaw breedte&quot; },
+    .{ .naam = &quot;Roland&quot;, .geometrie = &quot;PWM&quot;, .vertraging_min_ms = 10, .vertraging_max_ms = 100, .uitgang = &quot;timbre shift&quot; },
+};
+
+// CPU: ritme controleren
+pub fn cpuRitmeControleren(bpm: f64) f64 {
+    // Retourneer beat duur in seconden
+    return 60.0 / bpm;
+}
+
+// GPU: synth geometrie berekenen
+pub fn gpuSynthGeometrie(synth: *const Synth, t_ms: f64) f64 {
+    // Normaliseer tijd binnen vertraging-range
+    const range = synth.vertraging_max_ms - synth.vertraging_min_ms;
+    const t_norm = std.math.clamp(t_ms - synth.vertraging_min_ms, 0.0, range);
+    const progress = t_norm / range;
+    return progress;
+}
+
+test &quot;synth geometrie: vertraging binnen range&quot; {
+    const moog = &amp;SYNTHS[0];
+    try testing.expectEqualStrings(&quot;Moog&quot;, moog.naam);
+    try testing.expect(moog.vertraging_min_ms &gt; 0);
+    try testing.expect(moog.vertraging_max_ms &gt; moog.vertraging_min_ms);
+}
+
+test &quot;cpu ritme: 140 BPM = 0.429s beat&quot; {
+    const beat_dur = cpuRitmeControleren(140.0);
+    try testing.expect(math.approxEqAbs(f64, beat_dur, 60.0 / 140.0, 0.001));
+}
+
+test &quot;gpu synth geometrie: progress 0→1 binnen range&quot; {
+    const moog = &amp;SYNTHS[0];
+    const p_min = gpuSynthGeometrie(moog, moog.vertraging_min_ms);
+    const p_max = gpuSynthGeometrie(moog, moog.vertraging_max_ms);
+
+    try testing.expect(math.approxEqAbs(f64, p_min, 0.0, 0.01));
+    try testing.expect(math.approxEqAbs(f64, p_max, 1.0, 0.01));
+}
+
+// === 2. Psytrance = Interface-Taal ===
+// Ritme + geometrie = genre
+
+const Genre = struct {
+    naam: []const u8,
+    cpu_bpm: f64,
+    gpu_layers: u8,
+    synth_set: []const []const u8,
+};
+
+const GENRES = [_]Genre{
+    .{ .naam = &quot;Psytrance&quot;, .cpu_bpm = 140.0, .gpu_layers = 16, .synth_set = &amp;[_][]const u8{ &quot;Moog&quot;, &quot;Buchla&quot;, &quot;Oberheim&quot; } },
+    .{ .naam = &quot;Techno&quot;, .cpu_bpm = 128.0, .gpu_layers = 8, .synth_set = &amp;[_][]const u8{ &quot;Roland&quot; } },
+    .{ .naam = &quot;Ambient&quot;, .cpu_bpm = 0.0, .gpu_layers = 24, .synth_set = &amp;[_][]const u8{ &quot;Buchla&quot; } },
+    .{ .naam = &quot;IDM&quot;, .cpu_bpm = 160.0, .gpu_layers = 20, .synth_set = &amp;[_][]const u8{ &quot;Moog&quot;, &quot;ARP&quot;, &quot;Buchla&quot; } },
+};
+
+// CPU: genre = ritme + synth-keuze
+pub fn cpuGenreRitme(g: *const Genre) f64 {
+    return cpuRitmeControleren(g.cpu_bpm);
+}
+
+// GPU: genre = veld + laagtel
+pub fn gpuGenreVeld(g: *const Genre) usize {
+    return g.synth_set.len;
+}
+
+test &quot;psytrance = CPU 140 + GPU 16 layers&quot; {
+    const psy = &amp;GENRES[0];
+    try testing.expectEqualStrings(&quot;Psytrance&quot;, psy.naam);
+    try testing.expect(math.approxEqAbs(f64, psy.cpu_bpm, 140.0, 0.1));
+    try testing.expect(psy.gpu_layers == 16);
+}
+
+test &quot;ambient = geen CPU ritme, maximaal GPU veld&quot; {
+    const amb = &amp;GENRES[2];
+    try testing.expect(math.approxEqAbs(f64, amb.cpu_bpm, 0.0, 0.1));
+    try testing.expect(amb.gpu_layers &gt;= 20);
+}
+
+test &quot;genre: CPU bepaalt tempo, GPU bepaalt complexiteit&quot; {
+    const techno = &amp;GENRES[1];
+    const beat_dur = cpuGenreRitme(techno);
+    const synth_count = gpuGenreVeld(techno);
+
+    try testing.expect(beat_dur &gt; 0);
+    try testing.expect(synth_count &gt; 0);
+}
+
+// === 3. Hz = Veld, Hoek = Geometrie ===
+
+const Band = struct {
+    hz: f64,
+    hoek: f64, // radiaan
+    amp: f64,
+};
+
+pub fn gpuVeldPerBand(t: f64, band: *const Band) f64 {
+    // Hz = veldsterkte, hoek = fase-shift (geometrie van delay)
+    return band.amp * @sin(2 * std.math.pi * band.hz * t + band.hoek);
+}
+
+test &quot;hz = veld, hoek = geometrie&quot; {
+    const band = Band{ .hz = 440, .hoek = 0.0, .amp = 1.0 };
+    const veld = gpuVeldPerBand(0.0, &amp;band);
+
+    // Bij t=0, hoek=0: sin(0) = 0
+    try testing.expect(math.approxEqAbs(f64, veld, 0.0, 0.01));
+}
+
+test &quot;hoek verschuift fase&quot; {
+    const pi = std.math.pi;
+    const band0 = Band{ .hz = 440, .hoek = 0, .amp = 1.0 };
+    const band1 = Band{ .hz = 440, .hoek = pi / 2.0, .amp = 1.0 }; // 90°
+
+    // Bij t=0: band0 = sin(0) = 0, band1 = sin(π/2) = 1
+    const v0 = gpuVeldPerBand(0.0, &amp;band0);
+    const v1 = gpuVeldPerBand(0.0, &amp;band1);
+
+    try testing.expect(math.approxEqAbs(f64, v0, 0.0, 0.01));
+    try testing.expect(math.approxEqAbs(f64, v1, 1.0, 0.01));
+}
+
+// === 4. Viveka = Self-Organizing ===
+// Genre vormt zich door onderscheid, niet door autoriteit
+
+const VivekaField = struct {
+    onderscheid: f64, // 0-1
+    vorming: bool,
+};
+
+pub fn vivekaOnderscheid(s1: f64, s2: f64, threshold: f64) VivekaField {
+    const diff = @abs(s1 - s2);
+    return .{
+        .onderscheid = diff,
+        .vorming = diff &gt; threshold,
+    };
+}
+
+test &quot;viveka: onderscheid boven threshold = vorming&quot; {
+    const r = vivekaOnderscheid(140.0, 128.0, 5.0);
+    try testing.expect(r.vorming); // verschil 12 &gt; 5
+    try testing.expect(r.onderscheid == 12.0);
+}
+
+test &quot;viveka: onderscheid onder threshold = geen vorming&quot; {
+    const r = vivekaOnderscheid(140.0, 139.0, 5.0);
+    try testing.expect(!r.vorming); // verschil 1 &lt; 5
+}
+
+// === 5. Terminal Interface ===
+// CPU terminal spreekt → GPU synths uitvoeren
+
+const TerminalCommand = struct {
+    bpm: f64,
+    synth_naam: []const u8,
+    parameter: f64,
+};
+
+const TerminalOutput = struct {
+    beat_dur: f64,
+    synth_progress: f64,
+};
+
+pub fn terminalUitvoeren(cmd: TerminalCommand, t_ms: f64) TerminalOutput {
+    // CPU: ritme controleren
+    const beat_dur = cpuRitmeControleren(cmd.bpm);
+
+    // GPU: vind synth en bereken geometrie
+    var synth_progress: f64 = 0.0;
+    for (SYNTHS) |s| {
+        if (std.mem.eql(u8, s.naam, cmd.synth_naam)) {
+            const syn = &amp;s;
+            synth_progress = gpuSynthGeometrie(syn, t_ms);
+            break;
+        }
+    }
+
+    return .{ .beat_dur = beat_dur, .synth_progress = synth_progress };
+}
+
+test &quot;terminal: command → uitvoeren&quot; {
+    const cmd = TerminalCommand{
+        .bpm = 140.0,
+        .synth_naam = &quot;Moog&quot;,
+        .parameter = 0.5,
+    };
+
+    const out = terminalUitvoeren(cmd, 120.0);
+    try testing.expect(math.approxEqAbs(f64, out.beat_dur, 60.0 / 140.0, 0.001));
+    // Moog: vertraging 40-200ms, t=120ms → progress = (120-40)/(200-40) = 80/160 = 0.5
+    try testing.expect(math.approxEqAbs(f64, out.synth_progress, 0.5, 0.01));
+}
+
+// === 6. Muziek = Code = Taal ===
+
+test &quot;muziek = code = taal: computationele potentie audit&quot; {
+    // Psytrance = audit van computationele potentie
+    const psy = &amp;GENRES[0];
+    const cpu_ritme = cpuGenreRitme(psy);
+    const gpu_veld = gpuGenreVeld(psy);
+
+    // CPU bepaalt ritme (wanneer)
+    try testing.expect(cpu_ritme &gt; 0);
+    // GPU bepaalt veld (wat)
+    try testing.expect(gpu_veld &gt;= 2);
+    // Samen = genre
+    _ = psy.naam; // naam = resultaat van CPU + GPU audit
+}
+
+// === 7. Dark Forest = Donker Bos ===
+// Donker = computationele potentie zonder interface
+// Donker bos is vol leven, niet leeg
+
+const DarkForestRegion = struct {
+    cpu_range: [2]f64, // BPM range
+    gpu_range: [2]f64, // layer range
+    leven: bool,        // is er potentie?
+    naam: []const u8,   // benoemd?
+};
+
+pub fn donkerBosRegio(cpu_min: f64, cpu_max: f64, gpu_min: f64, gpu_max: f64) DarkForestRegion {
+    // Donker bos = ruimte tussen genres
+    // Vol leven (computationele potentie) maar nog niet benoemd
+    return .{
+        .cpu_range = .{ cpu_min, cpu_max },
+        .gpu_range = .{ gpu_min, gpu_max },
+        .leven = true, // altijd leven in donker bos
+        .naam = &quot;&quot;,     // nog niet benoemd
+    };
+}
+
+test &quot;dark forest: donker = potentie zonder naam&quot; {
+    const regio = donkerBosRegio(80, 100, 40, 60);
+    try testing.expect(regio.leven); // donker bos is vol leven
+    try testing.expect(std.mem.eql(u8, regio.naam, &quot;&quot;)); // nog niet benoemd
+    try testing.expect(regio.cpu_range[0] &lt; regio.cpu_range[1]);
+    try testing.expect(regio.gpu_range[0] &lt; regio.gpu_range[1]);
+}
+
+test &quot;natuur = muziek: donker bos = donker veld&quot; {
+    // Vergelijking:
+    // Natuur: donker bos vol leven (schimmels, zaden, mycelium)
+    // Muziek: donker veld vol potentie (onbenoemde combinaties)
+
+    const bos = donkerBosRegio(50, 70, 20, 40);
+
+    // Leven was al aanwezig, alleen niet benoemd
+    try testing.expect(bos.leven);
+    // Benoemen = vormt zichtbaar maken
+    _ = bos.cpu_range;
+    _ = bos.gpu_range;
+}
+</code></pre>
+  </div>
+</div>
+        
+
+    <div class="stupa-footer">
+      <a href="../../site/index.html">← Hexa-Boek</a> · <a href="INDEX.md">Audit Index</a>
+    </div>
+  </div>
+</body>
+</html>

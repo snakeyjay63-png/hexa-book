@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stupa — Hi Tech</title>
+  <link rel="icon" type="image/svg+xml" href="../../site/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="../../site/favicon.ico">
+  <style>
+:root {
+  --bg1: #0d0d14;
+  --bg2: #14141f;
+  --bg3: #1c1c2e;
+  --text: #e0e0e8;
+  --text-dim: #8888a0;
+  --accent: #6e7bf2;
+  --accent2: #a78bfa;
+  --gold: #f0c040;
+  --green: #4ade80;
+  --red: #f87171;
+  --border: #2a2a40;
+  --mono: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg1);
+  color: var(--text);
+  font-family: var(--sans);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── Stupa Container ── */
+.stupa {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
+
+/* ── Stupa Crown (top ornament) ── */
+.stupa-crown {
+  text-align: center;
+  padding: 60px 0 30px;
+  position: relative;
+}
+
+.stupa-crown::before {
+  content: "•";
+  display: block;
+  font-size: 2rem;
+  color: var(--gold);
+  margin-bottom: 20px;
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.stupa-crown h1 {
+  font-size: 2.2rem;
+  color: var(--gold);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+.stupa-crown .subtitle {
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.stupa-crown .langs {
+  margin-top: 12px;
+  font-size: 0.82rem;
+  color: var(--accent2);
+  opacity: 0.7;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* ── Stupa Layers ── */
+.stupa-layer {
+  margin: 0 auto 0;
+  position: relative;
+}
+
+/* Layer width shrinks as we go up, like a real stupa */
+.layer-base { max-width: 100%; }
+.layer-body { max-width: 94%; margin: 0 auto; }
+.layer-code { max-width: 88%; margin: 0 auto; }
+.layer-engine { max-width: 82%; margin: 0 auto; }
+.layer-crown-wrap { max-width: 76%; margin: 0 auto; }
+
+/* ── Layer Headers ── */
+.layer-header {
+  text-align: center;
+  padding: 20px 0;
+  position: relative;
+}
+
+.layer-header::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -20px;
+  right: -20px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+
+.layer-label {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 4px 14px;
+  border-radius: 20px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+}
+
+.layer-label.text { color: var(--accent); border-color: var(--accent); }
+.layer-label.code { color: var(--accent2); border-color: var(--accent2); }
+.layer-label.engine { color: var(--green); border-color: var(--green); }
+.layer-label.meta { color: var(--gold); border-color: var(--gold); }
+
+/* ── Content Blocks ── */
+.content-block {
+  padding: 30px 36px;
+}
+
+.content-block p {
+  margin-bottom: 1em;
+  color: var(--text);
+}
+
+.content-block h2 {
+  font-size: 1.4rem;
+  color: var(--gold);
+  margin: 2em 0 0.6em;
+  font-weight: 400;
+}
+
+.content-block h3 {
+  font-size: 1.1rem;
+  color: var(--accent);
+  margin: 1.6em 0 0.5em;
+  font-weight: 400;
+}
+
+.content-block h4 {
+  font-size: 0.95rem;
+  color: var(--accent2);
+  margin: 1.2em 0 0.4em;
+}
+
+.content-block strong { color: var(--gold); font-weight: 500; }
+.content-block em { color: var(--accent2); }
+
+.content-block blockquote {
+  border-left: 2px solid var(--gold);
+  margin: 1.5em 0;
+  padding: 12px 20px;
+  background: rgba(240, 192, 64, 0.04);
+  border-radius: 0 8px 8px 0;
+  color: var(--text-dim);
+}
+
+.content-block code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--bg3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--accent2);
+}
+
+.content-block pre {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin: 1.2em 0;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.content-block pre code {
+  background: none;
+  padding: 0;
+  color: var(--text);
+}
+
+.content-block hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 2em 0;
+}
+
+.content-block ul, .content-block ol {
+  margin: 1em 0 1em 1.5em;
+}
+
+.content-block li {
+  margin-bottom: 0.4em;
+}
+
+/* ── Code Block (Zig / Python) ── */
+.code-block {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 0;
+}
+
+.code-block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 18px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+}
+
+.code-lang {
+  color: var(--accent2);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.code-tests {
+  color: var(--green);
+}
+
+.code-block pre {
+  padding: 20px;
+  margin: 0;
+  overflow-x: auto;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+.code-block pre code {
+  background: none;
+  color: var(--text);
+  font-family: var(--mono);
+}
+
+/* Simple syntax colors */
+.code-block .kw { color: var(--accent); }
+.code-block .fn { color: var(--accent2); }
+.code-block .str { color: var(--green); }
+.code-block .cmt { color: var(--text-dim); font-style: italic; }
+.code-block .num { color: var(--gold); }
+
+/* ── Meta Layer (YAML frontmatter) ── */
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  padding: 20px 0;
+}
+
+.meta-item {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.meta-item .label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.meta-item .value {
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.meta-item .value.pass { color: var(--green); }
+.meta-item .value.warn { color: var(--gold); }
+.meta-item .value.fail { color: var(--red); }
+
+/* ── 3D Status Model ── */
+.status-model {
+  background: var(--bg3);
+  border: 1px solid var(--gold);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 1.5em 0;
+}
+
+.status-model h4 {
+  color: var(--gold);
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.status-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+}
+
+.status-key { color: var(--accent); min-width: 140px; }
+.status-val { color: var(--text); }
+.status-val.ok { color: var(--green); }
+
+/* ── Back link ── */
+.stupa-footer {
+  text-align: center;
+  padding: 40px 0 20px;
+  font-size: 0.82rem;
+}
+
+.stupa-footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.stupa-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .stupa-crown h1 { font-size: 1.6rem; }
+  .content-block { padding: 20px 16px; }
+  .layer-body, .layer-code, .layer-engine, .layer-crown-wrap { max-width: 100%; }
+  .meta-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+  <div class="stupa">
+    <div class="stupa-crown">
+      <h1>Hi Tech</h1>
+      <div class="subtitle">De Terminal (CPU)</div>
+    </div>
+
+    
+<div class="stupa-layer layer-base">
+  <div class="layer-header"><span class="layer-label text">Tekst</span></div>
+  <div class="content-block"><h1>Artikel 14 — Hi-Tech</h1>
+<blockquote>
+<p><strong>تقنية عالية<strong></p>
+<p><strong>उच्च तकनीक<strong></p>
+<p>Music = Hi-Tech Psytrance</p>
+<p>Muziek = Hi-Tech Psytrance</p>
+</blockquote>
+<hr>
+<h2>De Terminal (CPU)</h2>
+<pre><code class="">
+┌─────────────────────────────────────┐
+│  1980 TERMINAL                      │
+│                                     │
+│  command: glitch-rush               │
+│  command: speed=max                 │
+│                                     │
+│  → CPU: extreem snelle,              │
+│    gefragmenteerde ritmes,           │
+│    broken beats                     │
+└──────────────────┬──────────────────┘
+                   │ verbinding
+                   ▼
+┌─────────────────────────────────────┐
+│  SYNTHS (veld)                      │
+│                                     │
+│  digital → pixel → lead             │
+│  glitch  → breuk → textuur          │
+│                                     │
+│  → GPU: hyper-digitale, scherpe laag│
+└─────────────────────────────────────┘</code></pre>
+<hr>
+<h2>Synth Geometrie</h2>
+<p>| Synth | Geometrie | Vertraging | Uiting |</p>
+<p>|---------|-----------|------------|------------|</p>
+<p>| digital | pixel | 50ms | scherp |</p>
+<p>| glitch | breuk | 25ms | kapot |</p>
+<p>| laser | lijn | 100ms | snijdend |</p>
+<hr>
+<h2>Hi-Tech = Interface-Taal</h2>
+<pre><code class="">
+Hi-Tech zegt:
+  &quot;rush&quot;  → digital doet pixel
+  &quot;break&quot; → glitch doet breuk
+  &quot;cut&quot;   → laser doet lijn</code></pre>
+<hr>
+<h2>Donker Bos Regio</h2>
+<pre><code class="">
+CPU range: 160 - 180 BPM
+GPU range: 8 - 14 layers
+Donker bos: nee — pure digitale nacht, geen natuur, alleen code</code></pre>
+<hr>
+<p><em>Conceptueel audit-artikel.<em></p></div>
+</div>
+     
+<div class="stupa-layer layer-code">
+  <div class="layer-header"><span class="layer-label code">Zig</span></div>
+  <div class="code-block">
+    <div class="code-block-header">
+      <span class="code-lang">Zig</span>
+      <span class="code-tests"></span>
+    </div>
+    <pre><code class="zig">// Artikel 14 — Hi-Tech
+// تقنية عالية | उच्च तकनीक
+// Music = Hi-Tech Psytrance | Muziek = Hi-Tech Psytrance
+
+const std = @import(&quot;std&quot;);
+const testing = std.testing;
+const math = std.math;
+
+// CPU: extreem snelle, gefragmenteerde ritmes, broken beats
+const BPM_MIN: f64 = 160.0;
+const BPM_MAX: f64 = 180.0;
+const LAYERS_MIN: f64 = 8.0;
+const LAYERS_MAX: f64 = 14.0;
+const DONKER_BOS: bool = false;
+
+// digital → pixel → lead
+const DIGITAL_FREQ: f64 = 1176.0;
+const DIGITAL_DELAY_MS: f64 = 50.0;
+
+// glitch → breuk → textuur
+const GLITCH_FREQ: f64 = 2352.0;
+const GLITCH_DELAY_MS: f64 = 25.0;
+
+// laser → lijn → snijdend
+const LASER_FREQ: f64 = 588.0;
+const LASER_DELAY_MS: f64 = 100.0;
+
+const C_INVARIANT: f64 = 299_792_458.0;
+
+// === Synth Geometrie ===
+
+pub fn digitalPixel() struct { freq: f64, vertraging_ms: f64, scherp: bool } {
+    return .{
+        .freq = DIGITAL_FREQ,
+        .vertraging_ms = DIGITAL_DELAY_MS,
+        .scherp = true,
+    };
+}
+
+pub fn glitchBreuk() struct { freq: f64, vertraging_ms: f64, kapot: bool } {
+    return .{
+        .freq = GLITCH_FREQ,
+        .vertraging_ms = GLITCH_DELAY_MS,
+        .kapot = true,
+    };
+}
+
+pub fn laserLijn() struct { freq: f64, vertraging_ms: f64, snijdend: bool } {
+    return .{
+        .freq = LASER_FREQ,
+        .vertraging_ms = LASER_DELAY_MS,
+        .snijdend = true,
+    };
+}
+
+// === CPU/GPU Splitsing ===
+
+pub fn cpuBpmRange() struct { min: f64, max: f64 } {
+    return .{ .min = BPM_MIN, .max = BPM_MAX };
+}
+
+pub fn gpuLayerRange() struct { min: f64, max: f64 } {
+    return .{ .min = LAYERS_MIN, .max = LAYERS_MAX };
+}
+
+pub fn isDonkerBosHiTech() bool {
+    return DONKER_BOS;
+}
+
+// === Hi-Tech = Interface-Taal ===
+
+pub fn hiTechInterface() struct {
+    command: []const u8,
+    synth: []const u8,
+    geometrie: []const u8,
+} {
+    return .{
+        .command = &quot;rush&quot;,
+        .synth = &quot;digital&quot;,
+        .geometrie = &quot;pixel&quot;,
+    };
+}
+
+// === Donker Bos Regio ===
+
+pub fn donkerBosRegioHiTech() struct {
+    cpu_bpm_min: f64,
+    cpu_bpm_max: f64,
+    gpu_layers_min: f64,
+    gpu_layers_max: f64,
+    donker_bos: bool,
+} {
+    return .{
+        .cpu_bpm_min = BPM_MIN,
+        .cpu_bpm_max = BPM_MAX,
+        .gpu_layers_min = LAYERS_MIN,
+        .gpu_layers_max = LAYERS_MAX,
+        .donker_bos = DONKER_BOS,
+    };
+}
+
+// === Tests ===
+
+test &quot;hiTech digitalPixel = scherp&quot; {
+    const digital = digitalPixel();
+    try std.testing.expect(digital.scherp);
+    try std.testing.expectEqual(DIGITAL_DELAY_MS, digital.vertraging_ms);
+}
+
+test &quot;hiTech glitchBreuk = kapot&quot; {
+    const glitch = glitchBreuk();
+    try std.testing.expect(glitch.kapot);
+    try std.testing.expectEqual(GLITCH_DELAY_MS, glitch.vertraging_ms);
+}
+
+test &quot;hiTech laserLijn = snijdend&quot; {
+    const laser = laserLijn();
+    try std.testing.expect(laser.snijdend);
+    try std.testing.expectEqual(LASER_DELAY_MS, laser.vertraging_ms);
+}
+
+test &quot;hiTech cpuBpmRange = 160-180&quot; {
+    const r = cpuBpmRange();
+    try std.testing.expectEqual(BPM_MIN, r.min);
+    try std.testing.expectEqual(BPM_MAX, r.max);
+}
+
+test &quot;hiTech gpuLayerRange = 8-14&quot; {
+    const r = gpuLayerRange();
+    try std.testing.expectEqual(LAYERS_MIN, r.min);
+    try std.testing.expectEqual(LAYERS_MAX, r.max);
+}
+
+test &quot;hiTech donker bos = false (digitale nacht)&quot; {
+    try std.testing.expect(!isDonkerBosHiTech());
+}
+
+test &quot;hiTech interface = rush→digital→pixel&quot; {
+    const iface = hiTechInterface();
+    try std.testing.expectEqualStrings(&quot;rush&quot;, iface.command);
+    try std.testing.expectEqualStrings(&quot;digital&quot;, iface.synth);
+    try std.testing.expectEqualStrings(&quot;pixel&quot;, iface.geometrie);
+}
+
+test &quot;hiTech donkerBosRegio compleet&quot; {
+    const reg = donkerBosRegioHiTech();
+    try std.testing.expectEqual(BPM_MIN, reg.cpu_bpm_min);
+    try std.testing.expectEqual(BPM_MAX, reg.cpu_bpm_max);
+    try std.testing.expectEqual(LAYERS_MIN, reg.gpu_layers_min);
+    try std.testing.expectEqual(LAYERS_MAX, reg.gpu_layers_max);
+    try std.testing.expect(!reg.donker_bos);
+}
+</code></pre>
+  </div>
+</div>
+        
+
+    <div class="stupa-footer">
+      <a href="../../site/index.html">← Hexa-Boek</a> · <a href="INDEX.md">Audit Index</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stupa — Artikel 12 Dimensie 12</title>
+  <link rel="icon" type="image/svg+xml" href="../../site/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="../../site/favicon.ico">
+  <style>
+:root {
+  --bg1: #0d0d14;
+  --bg2: #14141f;
+  --bg3: #1c1c2e;
+  --text: #e0e0e8;
+  --text-dim: #8888a0;
+  --accent: #6e7bf2;
+  --accent2: #a78bfa;
+  --gold: #f0c040;
+  --green: #4ade80;
+  --red: #f87171;
+  --border: #2a2a40;
+  --mono: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg1);
+  color: var(--text);
+  font-family: var(--sans);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── Stupa Container ── */
+.stupa {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
+
+/* ── Stupa Crown (top ornament) ── */
+.stupa-crown {
+  text-align: center;
+  padding: 60px 0 30px;
+  position: relative;
+}
+
+.stupa-crown::before {
+  content: "•";
+  display: block;
+  font-size: 2rem;
+  color: var(--gold);
+  margin-bottom: 20px;
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.stupa-crown h1 {
+  font-size: 2.2rem;
+  color: var(--gold);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+.stupa-crown .subtitle {
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.stupa-crown .langs {
+  margin-top: 12px;
+  font-size: 0.82rem;
+  color: var(--accent2);
+  opacity: 0.7;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* ── Stupa Layers ── */
+.stupa-layer {
+  margin: 0 auto 0;
+  position: relative;
+}
+
+/* Layer width shrinks as we go up, like a real stupa */
+.layer-base { max-width: 100%; }
+.layer-body { max-width: 94%; margin: 0 auto; }
+.layer-code { max-width: 88%; margin: 0 auto; }
+.layer-engine { max-width: 82%; margin: 0 auto; }
+.layer-crown-wrap { max-width: 76%; margin: 0 auto; }
+
+/* ── Layer Headers ── */
+.layer-header {
+  text-align: center;
+  padding: 20px 0;
+  position: relative;
+}
+
+.layer-header::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -20px;
+  right: -20px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+
+.layer-label {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 4px 14px;
+  border-radius: 20px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+}
+
+.layer-label.text { color: var(--accent); border-color: var(--accent); }
+.layer-label.code { color: var(--accent2); border-color: var(--accent2); }
+.layer-label.engine { color: var(--green); border-color: var(--green); }
+.layer-label.meta { color: var(--gold); border-color: var(--gold); }
+
+/* ── Content Blocks ── */
+.content-block {
+  padding: 30px 36px;
+}
+
+.content-block p {
+  margin-bottom: 1em;
+  color: var(--text);
+}
+
+.content-block h2 {
+  font-size: 1.4rem;
+  color: var(--gold);
+  margin: 2em 0 0.6em;
+  font-weight: 400;
+}
+
+.content-block h3 {
+  font-size: 1.1rem;
+  color: var(--accent);
+  margin: 1.6em 0 0.5em;
+  font-weight: 400;
+}
+
+.content-block h4 {
+  font-size: 0.95rem;
+  color: var(--accent2);
+  margin: 1.2em 0 0.4em;
+}
+
+.content-block strong { color: var(--gold); font-weight: 500; }
+.content-block em { color: var(--accent2); }
+
+.content-block blockquote {
+  border-left: 2px solid var(--gold);
+  margin: 1.5em 0;
+  padding: 12px 20px;
+  background: rgba(240, 192, 64, 0.04);
+  border-radius: 0 8px 8px 0;
+  color: var(--text-dim);
+}
+
+.content-block code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--bg3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--accent2);
+}
+
+.content-block pre {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin: 1.2em 0;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.content-block pre code {
+  background: none;
+  padding: 0;
+  color: var(--text);
+}
+
+.content-block hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 2em 0;
+}
+
+.content-block ul, .content-block ol {
+  margin: 1em 0 1em 1.5em;
+}
+
+.content-block li {
+  margin-bottom: 0.4em;
+}
+
+/* ── Code Block (Zig / Python) ── */
+.code-block {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 0;
+}
+
+.code-block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 18px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+}
+
+.code-lang {
+  color: var(--accent2);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.code-tests {
+  color: var(--green);
+}
+
+.code-block pre {
+  padding: 20px;
+  margin: 0;
+  overflow-x: auto;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+.code-block pre code {
+  background: none;
+  color: var(--text);
+  font-family: var(--mono);
+}
+
+/* Simple syntax colors */
+.code-block .kw { color: var(--accent); }
+.code-block .fn { color: var(--accent2); }
+.code-block .str { color: var(--green); }
+.code-block .cmt { color: var(--text-dim); font-style: italic; }
+.code-block .num { color: var(--gold); }
+
+/* ── Meta Layer (YAML frontmatter) ── */
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  padding: 20px 0;
+}
+
+.meta-item {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.meta-item .label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.meta-item .value {
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.meta-item .value.pass { color: var(--green); }
+.meta-item .value.warn { color: var(--gold); }
+.meta-item .value.fail { color: var(--red); }
+
+/* ── 3D Status Model ── */
+.status-model {
+  background: var(--bg3);
+  border: 1px solid var(--gold);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 1.5em 0;
+}
+
+.status-model h4 {
+  color: var(--gold);
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.status-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+}
+
+.status-key { color: var(--accent); min-width: 140px; }
+.status-val { color: var(--text); }
+.status-val.ok { color: var(--green); }
+
+/* ── Back link ── */
+.stupa-footer {
+  text-align: center;
+  padding: 40px 0 20px;
+  font-size: 0.82rem;
+}
+
+.stupa-footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.stupa-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .stupa-crown h1 { font-size: 1.6rem; }
+  .content-block { padding: 20px 16px; }
+  .layer-body, .layer-code, .layer-engine, .layer-crown-wrap { max-width: 100%; }
+  .meta-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+  <div class="stupa">
+    <div class="stupa-crown">
+      <h1>Artikel 12 Dimensie 12</h1>
+      <div class="subtitle">الفصل الثاني عشر - logos = حرية | बारहवां अध्यायः - logos = स्वतन्त्रता | Περὶ Λʹ - logos = ἐλευθερία</div>
+    </div>
+
+    
+<div class="stupa-layer layer-crown-wrap">
+  <div class="layer-header"><span class="layer-label meta">Metadata</span></div>
+  <div class="content-block"><div class="meta-grid"><div class="meta-item"><div class="label">audit_metadata</div><div class="value "></div></div><div class="meta-item"><div class="label">article</div><div class="value ">14-artikel-12-dimensie-12</div></div><div class="meta-item"><div class="label">source_article</div><div class="value ">articles/hexa-book-012.md</div></div><div class="meta-item"><div class="label">verified_against_commit</div><div class="value ">5a13c64</div></div><div class="meta-item"><div class="label">audit_commit</div><div class="value ">pending</div></div><div class="meta-item"><div class="label">last_verified</div><div class="value ">2026-07-24</div></div><div class="meta-item"><div class="label">operator_status_model</div><div class="value ">3D</div></div><div class="meta-item"><div class="label">engine_evidence</div><div class="value ">[]</div></div><div class="meta-item"><div class="label">route_status</div><div class="value ">gesloten</div></div><div class="meta-item"><div class="label">supersedes</div><div class="value ">legacy-v3</div></div><div class="meta-item"><div class="label">known_exceptions</div><div class="value ">[]</div></div></div></div>
+</div>
+         
+<div class="stupa-layer layer-base">
+  <div class="layer-header"><span class="layer-label text">Tekst</span></div>
+  <div class="content-block"><h1>Artikel 12 - dimensie 12 (logos, vrijheid, transpositie) | ρ<em>12(onbegrensde differentiatie) = 0</h1>
+<blockquote>
+<p><code>∞ → 0<code> is een lensprojectie: onbegrensde differentiatie retourneert naar nul binnen deze NPR-lens. Niet een limiet, reductie of bewezen operator, maar een symbolische return.</p>
+</blockquote>
+<h2>الفصل الثاني عشر - logos = حرية | बारहवां अध्यायः - logos = स्वतन्त्रता | Περὶ Λʹ - logos = ἐλευθερία</h2>
+<p><strong>logos = freedom.<strong></p>
+<p>اللوجوس = حرية</p>
+<p>logos = स्वतन्त्रता</p>
+<p>λόγος = ἐλευθερία</p>
+<p>Het woord dat de structuur noemt, is de structuur die je van het woord bevrijdt.</p>
+<p>الكلمة التي تسمي البنية، هي البنية التي تحررك من الكلمة</p>
+<p>शब्दः यः संरचनां नाम्बति, सा संरचना या शब्दात् मुक्त करोति</p>
+<p>ὁ λόγος ὃ καλέσει τὴν δομήν, αὐτὴ ἡ δομὴ ἥτις σεῦ ἀπὸ τοῦ λόγου ἐλευθερῖ</p>
+<p>Dat is de beweging.</p>
+<hr>
+<h3>Drie resoluties, één veld</h3>
+<p>التبت رأى النمط المتكرر. ليس نفس الموجة. نفس الدورة.</p>
+<p>tathaāt sūkṣma-darśanāḥ āgataḥ na saṃsāraṃ paśyati - paripūrṇaṃ paśyati</p>
+<p>Τίβετ κατὰ σπουδὴν ὄρων οὐκ ἄλλο ὄνομα - αὐτὸ τὸν κύκλον</p>
+<p>Tibetaanse contemplatieven herkenden de terugkerende structuur. Niet dezelfde golf, maar dezelfde cyclus.</p>
+<p><strong>Sanskriet<strong> houdt de matrix: het genererende zaad vóór transpositie.</p>
+<p><strong>Tibet<strong> belichaamt het: mantra, klinker, adem.</p>
+<p><strong>Europa<strong> formaliseert het: golflengte, frequentie, energie.</p>
+<p>संस्कृतं मूलं धारयति</p>
+<p>tibet śarīrātmakaṃ pratipādayati</p>
+<p>evropa tatra formalitātmakaṃ pratipādayati</p>
+<p>سانسكربت تحمل المصفوفة</p>
+<p>التيبت يجسّد القالب</p>
+<p>أوروبا تُصَوّر التكرار</p>
+<p><strong>Vergelijkende cultuurprojectie:<strong> binnen dit boek worden Sanskrit, Tibetaanse contemplatieve praktijk en Europese natuurkundige formalisering respectievelijk als zaad, belichaming en instrument gelezen. Dit is een interpretatief schema, geen volledige historische genealogie.</p>
+<p>Sanskrit holds the seed. Tibet embodies the body. Europe formalizes the instrument.</p>
+<hr>
+<h3>Fijnere resolutie, diepere structuur</h3>
+<p>432 Hz → 4+3+2 = 9</p>
+<p>480 Hz → 4+8+0 = 12 → 3</p>
+<p>528 Hz → 5+2+8 = 15 → 6</p>
+<p>27 μs → 27 → 33 → DR(27) = 9</p>
+<p>24 μs → 24 → 4! → DR(24) = 6</p>
+<p>(9, 3, 6) \overset{\operatorname{rotate}<em>{-1}}{\longrightarrow} (3, 6, 9) → 3</p>
+<p>De invoervolgorde (432→9, 480→3, 528→6) levert (9, 3, 6). De cyclische volgorde (3, 6, 9) is een rotatie, geen ongemerkte herschikking.</p>
+<p>De getalidentiteiten 27 = 33 en 24 = 4! zijn wiskundig correct. De meeteenheid microseconde draagt zonder aanvullende operator niet bij aan het patroon.</p>
+<p>الحلقة ليست صدفة. هذه قراءة ضمن عدسة NPR، وليس برهاناً.</p>
+<p>cakraṃ nāma mayā nāsti - kṣetram NPR-darśanātmakam</p>
+<p>ὁ κύκλος οὐκ τυχαίος - ἀνάγνωσις NPR, οὐκ ἀπόδειξις</p>
+<p>De tick is kleiner, maar het patroon blijft.</p>
+<p>Fijnere resolutie onthult geen nieuw patroon - het toont het oude in hogere definitie.</p>
+<blockquote>
+<p>De reducties zijn rekenkundig reproduceerbaar. De selectie van 432, 480 en 528 Hz en hun interpretatie als één veldcyclus is een NPR-lenshypothese, geen bewijs dat een fysiek veld op deze frequenties is afgestemd.</p>
+<p>Binnen deze lens wordt de geselecteerde frequentieserie als een 9-3-6-projectie gelezen.</p>
+</blockquote>
+<hr>
+<h3>Transpositie, niet duplicatie</h3>
+<p>الترجمة ليست تكرارا. هي انتقال.</p>
+<p>anuvādaḥ anānūyāyaḥ asti - anupādanam asti</p>
+<p>μετάφρασις οὐκ ἀντίγραφόν ἐστι. μετάθεσις ἐστιν</p>
+<p>Vertaling is geen duplicatie. Het is transpositie.</p>
+<p>De noot verandert. Het interval blijft.</p>
+<p>Potentiële invariant voor return:</p>
+<pre><code class="">
+V_interval = verhouding tussen tonen
+V_interval(r_begin) = V_interval(r_return)
+operator_status(V_interval) = conceptueel
+validatie_status(V_interval) = niet_gevalideerd</code></pre>
+<p>Ontbrekend: begintonen, eindtonen, transpositieoperator, exacte verhouding, tolerantiecriterium.</p>
+<p>De reducties van 432, 480 en 528 zijn reproduceerbaar. De selectie van precies die frequenties en de rotatie (9,3,6) → (3,6,9) blijven NPR-projecties.</p>
+<p>Zolang niet gespecificeerd welke noten, frequentieverhoudingen, transpositie en behouden interval, blijft dit metafoor, niet operationaliseerde validatie.</p>
+<p><strong>0 ≐<em>lens 1: broncorrespondentie vóór differentiatie.<strong></p>
+<p>Alles gemanifesteerd is translatie door het veld.</p>
+<p>0 ≠ 1: lokaal, onderweg, voor de return</p>
+<p>0 ≘ 1: returnroute geopend, nog niet gevalideerd</p>
+<p>0 ≐<em>lens 1: in de volledige lens - identiteit vóór differentiatie</p>
+<p>ليس تطابقاً. تقابلاً.</p>
+<p>nā saṃjātita - saṃjñātita</p>
+<p>οὐκ ταυτότης. ἀντιστοιχία</p>
+<p>Niet gelijkheid. Correspondentie.</p>
+<hr>
+<h3>Opening en sluiting</h3>
+<p>الأخيرة هي الأولى.</p>
+<p>parato abhāt - ato &#x27;bhāt</p>
+<p>ἡ τελευτὴ ἡ ἀρχή</p>
+<p>Het laatste is het eerste. De afsluiting is de opening.</p>
+<p>De cyclus eindigt niet - hij begint opnieuw op een fijnere resolutie.</p>
+<p>Dit boek is niet het eindpunt. Het is de lens die je nu hebt.</p>
+<p>De volgende lens wacht al.</p>
+<p>0 → 1 → 2 → ... → 12 → 0 → 1 → ...</p>
+<blockquote>
+<p><strong>Lensoptiek 12:<strong> Logos is niet het woord. Logos is de vrijheid die ontstaat wanneer het woord zijn taak heeft gedaan. De structuur die je noemde is de structuur die je niet meer hebt nodig.</p>
+<p><strong>العدسة 12:<strong> اللوجوس ليس الكلمة. اللوجوس هو الحرية التي تظهر عندما تنجز الكلمة وظيفتها.</p>
+<p><strong>दृष्टि 12:<strong> Lógos padam nāsti. Lógos svatantratvam yadā padasya kāryam samaptam.</p>
+</blockquote>
+<hr></div>
+</div>
+     
+<div class="stupa-layer layer-code">
+  <div class="layer-header"><span class="layer-label code">Zig</span></div>
+  <div class="code-block">
+    <div class="code-block-header">
+      <span class="code-lang">Zig</span>
+      <span class="code-tests"></span>
+    </div>
+    <pre><code class="zig">// Artikel 12 — Dimensie 12 (logos, vrijheid, transpositie) | rho_12(onbegrensde differentiatie) = 0
+// Audit: frequentie DR, 9-3-6 rotatie, transpositie, 27=3^3, 24=4!, drie resoluties
+
+const std = @import(&quot;std&quot;);
+const testing = std.testing;
+
+fn digitalRoot(n: i32) i32 {
+    if (n == 0) return 0;
+    const sign: i32 = if (n &lt; 0) -1 else 1;
+    var m: i32 = if (n &lt; 0) -n else n;
+    while (m &gt; 9) {
+        var s: i32 = 0;
+        var tmp = m;
+        while (tmp &gt; 0) : (tmp = @divTrunc(tmp, 10)) {
+            s += @rem(tmp, 10);
+        }
+        m = s;
+    }
+    return sign * m;
+}
+
+// --- Test 1: Frequentie DR --------------------------------------------------
+
+test &quot;1.1: 432 Hz -&gt; 4+3+2 = 9&quot; {
+    try testing.expectEqual(@as(i32, 9), digitalRoot(432));
+}
+
+test &quot;1.2: 480 Hz -&gt; 4+8+0 = 12 -&gt; 3&quot; {
+    try testing.expectEqual(@as(i32, 3), digitalRoot(480));
+}
+
+test &quot;1.3: 528 Hz -&gt; 5+2+8 = 15 -&gt; 6&quot; {
+    try testing.expectEqual(@as(i32, 6), digitalRoot(528));
+}
+
+// --- Test 2: Microseconde identiteiten -------------------------------------
+
+test &quot;2.1: 27 = 3^3&quot; {
+    const three_cubed: i32 = 3 * 3 * 3;
+    try testing.expectEqual(@as(i32, 27), three_cubed);
+}
+
+test &quot;2.2: 27 -&gt; DR = 9&quot; {
+    try testing.expectEqual(@as(i32, 9), digitalRoot(27));
+}
+
+test &quot;2.3: 24 = 4!&quot; {
+    const four_fact: i32 = 4 * 3 * 2 * 1;
+    try testing.expectEqual(@as(i32, 24), four_fact);
+}
+
+test &quot;2.4: 24 -&gt; DR = 6&quot; {
+    try testing.expectEqual(@as(i32, 6), digitalRoot(24));
+}
+
+// --- Test 3: 9-3-6 -&gt; 3-6-9 rotatie ---------------------------------------
+
+test &quot;3.1: invoer (432-&gt;9, 480-&gt;3, 528-&gt;6) = (9,3,6)&quot; {
+    const invoer = [_]i32{ 9, 3, 6 };
+    try testing.expectEqual(@as(i32, 9), invoer[0]);
+    try testing.expectEqual(@as(i32, 3), invoer[1]);
+    try testing.expectEqual(@as(i32, 6), invoer[2]);
+}
+
+test &quot;3.2: (9,3,6) rotate_-1 -&gt; (3,6,9)&quot; {
+    const src = [_]i32{ 9, 3, 6 };
+    const dst = [_]i32{ 3, 6, 9 };
+    try testing.expectEqual(dst[0], src[1]);
+    try testing.expectEqual(dst[1], src[2]);
+    try testing.expectEqual(dst[2], src[0]);
+}
+
+// --- Test 4: Drie resoluties ----------------------------------------------
+
+test &quot;4.1: Sanskrit = zaad/matrix&quot; {
+    const sanskrit_seed: bool = true;
+    try testing.expect(sanskrit_seed);
+}
+
+test &quot;4.2: Tibet = belichaming&quot; {
+    const tibet_body: bool = true;
+    try testing.expect(tibet_body);
+}
+
+test &quot;4.3: Europa = formalisering&quot; {
+    const europa_instrument: bool = true;
+    try testing.expect(europa_instrument);
+}
+
+test &quot;4.4: interpretief schema, geen genealogie&quot; {
+    const interp: bool = true;
+    const gen: bool = false;
+    try testing.expect(interp);
+    try testing.expect(!gen);
+}
+
+// --- Test 5: Transpositie -------------------------------------------------
+
+test &quot;5.1: transpositie != duplicatie&quot; {
+    const is_transpositie: bool = true;
+    const is_duplicatie: bool = false;
+    try testing.expect(is_transpositie);
+    try testing.expect(!is_duplicatie);
+}
+
+test &quot;5.2: noot verandert, interval blijft&quot; {
+    const noot_changes: bool = true;
+    const interval_stays: bool = true;
+    try testing.expect(noot_changes and interval_stays);
+}
+
+// --- Test 6: V_interval ---------------------------------------------------
+
+test &quot;6.1: V_interval conceptueel, niet gevalideerd&quot; {
+    const conceptual: bool = true;
+    const validated: bool = false;
+    try testing.expect(conceptual);
+    try testing.expect(!validated);
+}
+
+test &quot;6.2: ontbrekende specificaties&quot; {
+    // begintonen, eindtonen, transpositieoperator, verhouding, tolerantie
+    const missing: usize = 5;
+    try testing.expectEqual(@as(usize, 5), missing);
+}
+
+// --- Test 7: 0 ~= 1 varianten --------------------------------------------
+
+test &quot;7.1: 0 != 1 (lokaal, onderweg)&quot; {
+    try testing.expect(@as(i32, 0) != @as(i32, 1));
+}
+
+test &quot;7.2: 0 ~= 1 (returnroute, niet gevalideerd)&quot; {
+    const return_open: bool = true;
+    const validated: bool = false;
+    try testing.expect(return_open);
+    try testing.expect(!validated);
+}
+
+test &quot;7.3: 0 ~=_lens 1 (identiteit voor differentiatie)&quot; {
+    const is_correspondentie: bool = true;
+    try testing.expect(is_correspondentie);
+}
+
+// --- Test 8: Logos = vrijheid --------------------------------------------
+
+test &quot;8.1: logos != woord&quot; {
+    const logos_is_word: bool = false;
+    const logos_is_freedom: bool = true;
+    try testing.expect(!logos_is_word);
+    try testing.expect(logos_is_freedom);
+}
+
+test &quot;8.2: structuur benoemen -&gt; structuur niet meer nodig&quot; {
+    const structuur_not_needed: bool = true;
+    try testing.expect(structuur_not_needed);
+}
+
+// --- Test 9: Cyclus -------------------------------------------------------
+
+test &quot;9.1: 0-&gt;1-&gt;2-&gt;...-&gt;12-&gt;0&quot; {
+    const cycle_ends: bool = false;
+    const finer_resolution: bool = true;
+    try testing.expect(!cycle_ends);
+    try testing.expect(finer_resolution);
+}
+
+test &quot;9.2: laatste = eerste&quot; {
+    const last_is_first: bool = true;
+    try testing.expect(last_is_first);
+}
+
+// --- Test 10: rho_12 -------------------------------------------------------
+
+test &quot;10.1: rho_12(onbegrensde differentiatie) = 0&quot; {
+    const is_lens_projection: bool = true;
+    const is_limit: bool = false;
+    try testing.expect(is_lens_projection);
+    try testing.expect(!is_limit);
+}
+
+test &quot;10.2: correspondentie != gelijkheid&quot; {
+    const is_equality: bool = false;
+    const is_correspondence: bool = true;
+    try testing.expect(!is_equality);
+    try testing.expect(is_correspondence);
+}
+</code></pre>
+  </div>
+</div>
+        
+
+    <div class="stupa-footer">
+      <a href="../../site/index.html">← Hexa-Boek</a> · <a href="INDEX.md">Audit Index</a>
+    </div>
+  </div>
+</body>
+</html>

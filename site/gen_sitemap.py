@@ -42,6 +42,12 @@ def gen():
         title = name.replace('-', ' ').title()
         audits_zig.append({'file': f, 'name': name, 'title': title})
 
+    stupas = []
+    for f in sorted(glob.glob('audit/*.html')):
+        name = os.path.basename(f).replace('.html', '')
+        title = name.replace('-', ' ').title()
+        stupas.append({'file': f, 'name': name, 'title': title})
+
     talen = []
     for f in sorted(glob.glob('charveld/taalen/*.md')):
         name = os.path.basename(f).replace('.md', '')
@@ -61,6 +67,7 @@ def gen():
         'articles': articles,
         'audits': audits,
         'audits_zig': audits_zig,
+        'stupas': stupas,
         'talen': talen,
         'media': media,
     }
@@ -69,7 +76,7 @@ def gen():
     with open(out_path, 'w') as fh:
         json.dump(sitemap, fh, indent=2, ensure_ascii=False)
 
-    print(f'✓ sitemap.json: {len(articles)} articles, {len(audits)} audits, {len(talen)} talen, {len(media)} media')
+    print(f'✓ sitemap.json: {len(articles)} articles, {len(audits)} audits, {len(stupas)} stupas, {len(talen)} talen, {len(media)} media')
 
 if __name__ == '__main__':
     gen()
