@@ -1,0 +1,652 @@
+{
+  "articles": [
+    {
+      "file": "articles/hexa-book-001.md",
+      "name": "hexa-book-001",
+      "title": "0 ≐ 1"
+    },
+    {
+      "file": "articles/hexa-book-002.md",
+      "name": "hexa-book-002",
+      "title": "HEXA-BOEK #002 — Terugkeerpad en Frequentie"
+    },
+    {
+      "file": "articles/hexa-book-003.md",
+      "name": "hexa-book-003",
+      "title": "Artikel 003 — E: Het Audio-Veld (Canoniek Contract)"
+    },
+    {
+      "file": "articles/hexa-book-004.md",
+      "name": "hexa-book-004",
+      "title": "Artikel 004 — F: Het ReturnMedium"
+    },
+    {
+      "file": "articles/hexa-book-005-quran-basmala-abjad.md",
+      "name": "hexa-book-005-quran-basmala-abjad",
+      "title": "Artikel 5 — Quran-bronroute en lokale Basmala-Abjadroute"
+    },
+    {
+      "file": "articles/hexa-book-006.md",
+      "name": "hexa-book-006",
+      "title": "Artikel 006 — Dimensie 3: 3-6-9 Veld"
+    },
+    {
+      "file": "articles/hexa-book-007.md",
+      "name": "hexa-book-007",
+      "title": "Artikel 007 — Dimensie 4: Expansie"
+    },
+    {
+      "file": "articles/hexa-book-008.md",
+      "name": "hexa-book-008",
+      "title": "Artikel 008 — Dimensie 5: De Return Wordt Zichtbaar"
+    },
+    {
+      "file": "articles/hexa-book-009.md",
+      "name": "hexa-book-009",
+      "title": "Artikel 009 — Dimensie 6: De Terugkeer Vormt Zich"
+    },
+    {
+      "file": "articles/hexa-book-010.md",
+      "name": "hexa-book-010",
+      "title": "Artikel 010 — Dimensie 7: Reflectie"
+    },
+    {
+      "file": "articles/hexa-book-011.md",
+      "name": "hexa-book-011",
+      "title": "HEXA-BOEK #011 — Synth en Fractaalveld"
+    },
+    {
+      "file": "articles/hexa-book-012.md",
+      "name": "hexa-book-012",
+      "title": "HEXA-BOEK #012 — 24-brug en 6-bit Routing"
+    },
+    {
+      "file": "articles/hexa-book-013.md",
+      "name": "hexa-book-013",
+      "title": "Artikel 013 — Dimensie 8: Onzichtbaar"
+    },
+    {
+      "file": "articles/hexa-book-014.md",
+      "name": "hexa-book-014",
+      "title": "Artikel 014 — Dimensie 11: Eka Routing"
+    },
+    {
+      "file": "articles/hexa-book-015.md",
+      "name": "hexa-book-015",
+      "title": "Artikel 015 — Dimensie 12: Logos"
+    },
+    {
+      "file": "articles/hexa-book-016.md",
+      "name": "hexa-book-016",
+      "title": "Artikel 016 — Dimensie 13: Taal, Veld, Soevereiniteit"
+    },
+    {
+      "file": "articles/hexa-book-017.md",
+      "name": "hexa-book-017",
+      "title": "Artikel 17 — CC-Construct: 16 Nodes Tegelijk"
+    },
+    {
+      "file": "articles/hexa-book-018.md",
+      "name": "hexa-book-018",
+      "title": "HEXA-BOEK #018 — Sanskrit-NPR Bridge"
+    }
+  ],
+  "audits": [
+    {
+      "file": "audit/00-intro.md",
+      "name": "00-intro",
+      "title": "00 Intro",
+      "tests": "\"21/21\""
+    },
+    {
+      "file": "audit/01-artikel-01-dimensie-1.md",
+      "name": "01-artikel-01-dimensie-1",
+      "title": "01 Artikel 01 Dimensie 1",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/02-artikel-02-dimensie-2.md",
+      "name": "02-artikel-02-dimensie-2",
+      "title": "02 Artikel 02 Dimensie 2",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/03-artikel-e-audio.md",
+      "name": "03-artikel-e-audio",
+      "title": "03 Artikel E Audio",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/04-artikel-f-returnmedium.md",
+      "name": "04-artikel-f-returnmedium",
+      "title": "04 Artikel F Returnmedium",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/05-artikel-03-dimensie-3.md",
+      "name": "05-artikel-03-dimensie-3",
+      "title": "05 Artikel 03 Dimensie 3",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/06-artikel-04-dimensie-4.md",
+      "name": "06-artikel-04-dimensie-4",
+      "title": "06 Artikel 04 Dimensie 4",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/07-artikel-05-dimensie-5.md",
+      "name": "07-artikel-05-dimensie-5",
+      "title": "07 Artikel 05 Dimensie 5",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/08-artikel-06-dimensie-6.md",
+      "name": "08-artikel-06-dimensie-6",
+      "title": "08 Artikel 06 Dimensie 6",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/09-artikel-07-dimensie-7.md",
+      "name": "09-artikel-07-dimensie-7",
+      "title": "09 Artikel 07 Dimensie 7",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/10-artikel-08-aarde-event-horizon.md",
+      "name": "10-artikel-08-aarde-event-horizon",
+      "title": "10 Artikel 08 Aarde Event Horizon",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/10-artikel-08-dimensie-8.md",
+      "name": "10-artikel-08-dimensie-8",
+      "title": "10 Artikel 08 Dimensie 8",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/11-artikel-09-dimensie-9.md",
+      "name": "11-artikel-09-dimensie-9",
+      "title": "11 Artikel 09 Dimensie 9",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/11-artikel-09-genre-interface.md",
+      "name": "11-artikel-09-genre-interface",
+      "title": "11 Artikel 09 Genre Interface",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/12-artikel-10-dimensie-10.md",
+      "name": "12-artikel-10-dimensie-10",
+      "title": "12 Artikel 10 Dimensie 10",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/12-full-on.md",
+      "name": "12-full-on",
+      "title": "12 Full On",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/13-artikel-11-dimensie-11.md",
+      "name": "13-artikel-11-dimensie-11",
+      "title": "13 Artikel 11 Dimensie 11",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/13-progressive-psy.md",
+      "name": "13-progressive-psy",
+      "title": "13 Progressive Psy",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/14-artikel-12-dimensie-12.md",
+      "name": "14-artikel-12-dimensie-12",
+      "title": "14 Artikel 12 Dimensie 12",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/14-dark-psy.md",
+      "name": "14-dark-psy",
+      "title": "14 Dark Psy",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/15-artikel-13-dimensie-13.md",
+      "name": "15-artikel-13-dimensie-13",
+      "title": "15 Artikel 13 Dimensie 13",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/15-forest-psy.md",
+      "name": "15-forest-psy",
+      "title": "15 Forest Psy",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/16-artikel-014-dimensie-14.md",
+      "name": "16-artikel-014-dimensie-14",
+      "title": "16 Artikel 014 Dimensie 14",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/16-hi-tech.md",
+      "name": "16-hi-tech",
+      "title": "16 Hi Tech",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/17-artikel-015-dimensie-15.md",
+      "name": "17-artikel-015-dimensie-15",
+      "title": "17 Artikel 015 Dimensie 15",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/17-slot-return-terminal.md",
+      "name": "17-slot-return-terminal",
+      "title": "17 Slot Return Terminal",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/18-artikel-016-dimensie-16.md",
+      "name": "18-artikel-016-dimensie-16",
+      "title": "18 Artikel 016 Dimensie 16",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/19-artikel-017-cc-construct.md",
+      "name": "19-artikel-017-cc-construct",
+      "title": "19 Artikel 017 Cc Construct",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/20-artikel-018-sanskrit-npr-bridge.md",
+      "name": "20-artikel-018-sanskrit-npr-bridge",
+      "title": "20 Artikel 018 Sanskrit Npr Bridge",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/INDEX.md",
+      "name": "INDEX",
+      "title": "Index",
+      "tests": "n/a"
+    },
+    {
+      "file": "audit/TEMPLATE-genre.md",
+      "name": "TEMPLATE-genre",
+      "title": "Template Genre",
+      "tests": "n/a"
+    }
+  ],
+  "audits_zig": [
+    {
+      "file": "audit/00-intro.zig",
+      "name": "00-intro",
+      "title": "00 Intro"
+    },
+    {
+      "file": "audit/01-artikel-01-dimensie-1.zig",
+      "name": "01-artikel-01-dimensie-1",
+      "title": "01 Artikel 01 Dimensie 1"
+    },
+    {
+      "file": "audit/02-artikel-02-dimensie-2.zig",
+      "name": "02-artikel-02-dimensie-2",
+      "title": "02 Artikel 02 Dimensie 2"
+    },
+    {
+      "file": "audit/03-artikel-e-audio.zig",
+      "name": "03-artikel-e-audio",
+      "title": "03 Artikel E Audio"
+    },
+    {
+      "file": "audit/05-artikel-03-dimensie-3.zig",
+      "name": "05-artikel-03-dimensie-3",
+      "title": "05 Artikel 03 Dimensie 3"
+    },
+    {
+      "file": "audit/06-artikel-04-dimensie-4.zig",
+      "name": "06-artikel-04-dimensie-4",
+      "title": "06 Artikel 04 Dimensie 4"
+    },
+    {
+      "file": "audit/07-artikel-05-dimensie-5.zig",
+      "name": "07-artikel-05-dimensie-5",
+      "title": "07 Artikel 05 Dimensie 5"
+    },
+    {
+      "file": "audit/09-artikel-f-returnmedium.zig",
+      "name": "09-artikel-f-returnmedium",
+      "title": "09 Artikel F Returnmedium"
+    },
+    {
+      "file": "audit/10-artikel-08-aarde-event-horizon.zig",
+      "name": "10-artikel-08-aarde-event-horizon",
+      "title": "10 Artikel 08 Aarde Event Horizon"
+    },
+    {
+      "file": "audit/11-artikel-09-genre-interface.zig",
+      "name": "11-artikel-09-genre-interface",
+      "title": "11 Artikel 09 Genre Interface"
+    },
+    {
+      "file": "audit/12-full-on.zig",
+      "name": "12-full-on",
+      "title": "12 Full On"
+    },
+    {
+      "file": "audit/13-progressive-psy.zig",
+      "name": "13-progressive-psy",
+      "title": "13 Progressive Psy"
+    },
+    {
+      "file": "audit/14-dark-psy.zig",
+      "name": "14-dark-psy",
+      "title": "14 Dark Psy"
+    },
+    {
+      "file": "audit/15-forest-psy.zig",
+      "name": "15-forest-psy",
+      "title": "15 Forest Psy"
+    },
+    {
+      "file": "audit/16-hi-tech.zig",
+      "name": "16-hi-tech",
+      "title": "16 Hi Tech"
+    },
+    {
+      "file": "audit/17-slot-return-terminal.zig",
+      "name": "17-slot-return-terminal",
+      "title": "17 Slot Return Terminal"
+    },
+    {
+      "file": "audit/18-artikel-06-dimensie-6.zig",
+      "name": "18-artikel-06-dimensie-6",
+      "title": "18 Artikel 06 Dimensie 6"
+    },
+    {
+      "file": "audit/19-artikel-07-dimensie-7.zig",
+      "name": "19-artikel-07-dimensie-7",
+      "title": "19 Artikel 07 Dimensie 7"
+    },
+    {
+      "file": "audit/20-artikel-08-dimensie-8.zig",
+      "name": "20-artikel-08-dimensie-8",
+      "title": "20 Artikel 08 Dimensie 8"
+    },
+    {
+      "file": "audit/21-artikel-09-dimensie-9.zig",
+      "name": "21-artikel-09-dimensie-9",
+      "title": "21 Artikel 09 Dimensie 9"
+    },
+    {
+      "file": "audit/22-artikel-10-dimensie-10.zig",
+      "name": "22-artikel-10-dimensie-10",
+      "title": "22 Artikel 10 Dimensie 10"
+    },
+    {
+      "file": "audit/23-artikel-11-dimensie-11.zig",
+      "name": "23-artikel-11-dimensie-11",
+      "title": "23 Artikel 11 Dimensie 11"
+    },
+    {
+      "file": "audit/24-artikel-12-dimensie-12.zig",
+      "name": "24-artikel-12-dimensie-12",
+      "title": "24 Artikel 12 Dimensie 12"
+    },
+    {
+      "file": "audit/25-artikel-13-dimensie-13.zig",
+      "name": "25-artikel-13-dimensie-13",
+      "title": "25 Artikel 13 Dimensie 13"
+    },
+    {
+      "file": "audit/26-artikel-14-dimensie-14.zig",
+      "name": "26-artikel-14-dimensie-14",
+      "title": "26 Artikel 14 Dimensie 14"
+    },
+    {
+      "file": "audit/27-artikel-15-dimensie-15.zig",
+      "name": "27-artikel-15-dimensie-15",
+      "title": "27 Artikel 15 Dimensie 15"
+    },
+    {
+      "file": "audit/28-artikel-16-dimensie-16.zig",
+      "name": "28-artikel-16-dimensie-16",
+      "title": "28 Artikel 16 Dimensie 16"
+    },
+    {
+      "file": "audit/29-artikel-17-cc-construct.zig",
+      "name": "29-artikel-17-cc-construct",
+      "title": "29 Artikel 17 Cc Construct"
+    },
+    {
+      "file": "audit/30-artikel-18-sanskrit-npr-bridge.zig",
+      "name": "30-artikel-18-sanskrit-npr-bridge",
+      "title": "30 Artikel 18 Sanskrit Npr Bridge"
+    },
+    {
+      "file": "audit/TEMPLATE-genre.zig",
+      "name": "TEMPLATE-genre",
+      "title": "Template Genre"
+    }
+  ],
+  "talen": [
+    {
+      "file": "charveld/taalen/1bit.md",
+      "name": "1bit",
+      "title": "1Bit"
+    },
+    {
+      "file": "charveld/taalen/TEMPLATE.md",
+      "name": "TEMPLATE",
+      "title": "Template"
+    },
+    {
+      "file": "charveld/taalen/arabisch.md",
+      "name": "arabisch",
+      "title": "Arabisch"
+    },
+    {
+      "file": "charveld/taalen/bg.md",
+      "name": "bg",
+      "title": "Bg"
+    },
+    {
+      "file": "charveld/taalen/cs.md",
+      "name": "cs",
+      "title": "Cs"
+    },
+    {
+      "file": "charveld/taalen/da.md",
+      "name": "da",
+      "title": "Da"
+    },
+    {
+      "file": "charveld/taalen/de.md",
+      "name": "de",
+      "title": "De"
+    },
+    {
+      "file": "charveld/taalen/el.md",
+      "name": "el",
+      "title": "El"
+    },
+    {
+      "file": "charveld/taalen/es.md",
+      "name": "es",
+      "title": "Es"
+    },
+    {
+      "file": "charveld/taalen/et.md",
+      "name": "et",
+      "title": "Et"
+    },
+    {
+      "file": "charveld/taalen/eu24-overview.md",
+      "name": "eu24-overview",
+      "title": "Eu24 Overview"
+    },
+    {
+      "file": "charveld/taalen/fi.md",
+      "name": "fi",
+      "title": "Fi"
+    },
+    {
+      "file": "charveld/taalen/fr.md",
+      "name": "fr",
+      "title": "Fr"
+    },
+    {
+      "file": "charveld/taalen/ga.md",
+      "name": "ga",
+      "title": "Ga"
+    },
+    {
+      "file": "charveld/taalen/grieks.md",
+      "name": "grieks",
+      "title": "Grieks"
+    },
+    {
+      "file": "charveld/taalen/hr.md",
+      "name": "hr",
+      "title": "Hr"
+    },
+    {
+      "file": "charveld/taalen/hu.md",
+      "name": "hu",
+      "title": "Hu"
+    },
+    {
+      "file": "charveld/taalen/it.md",
+      "name": "it",
+      "title": "It"
+    },
+    {
+      "file": "charveld/taalen/latijn.md",
+      "name": "latijn",
+      "title": "Latijn"
+    },
+    {
+      "file": "charveld/taalen/lb.md",
+      "name": "lb",
+      "title": "Lb"
+    },
+    {
+      "file": "charveld/taalen/lt.md",
+      "name": "lt",
+      "title": "Lt"
+    },
+    {
+      "file": "charveld/taalen/lv.md",
+      "name": "lv",
+      "title": "Lv"
+    },
+    {
+      "file": "charveld/taalen/mt.md",
+      "name": "mt",
+      "title": "Mt"
+    },
+    {
+      "file": "charveld/taalen/nl-alfabet.md",
+      "name": "nl-alfabet",
+      "title": "Nl Alfabet"
+    },
+    {
+      "file": "charveld/taalen/nl.md",
+      "name": "nl",
+      "title": "Nl"
+    },
+    {
+      "file": "charveld/taalen/pl.md",
+      "name": "pl",
+      "title": "Pl"
+    },
+    {
+      "file": "charveld/taalen/pt.md",
+      "name": "pt",
+      "title": "Pt"
+    },
+    {
+      "file": "charveld/taalen/ro.md",
+      "name": "ro",
+      "title": "Ro"
+    },
+    {
+      "file": "charveld/taalen/sanskriet.md",
+      "name": "sanskriet",
+      "title": "Sanskriet"
+    },
+    {
+      "file": "charveld/taalen/sk.md",
+      "name": "sk",
+      "title": "Sk"
+    },
+    {
+      "file": "charveld/taalen/sl.md",
+      "name": "sl",
+      "title": "Sl"
+    },
+    {
+      "file": "charveld/taalen/sv.md",
+      "name": "sv",
+      "title": "Sv"
+    }
+  ],
+  "media": [
+    {
+      "file": "engine/hexa-psy-24s.mp4",
+      "name": "hexa-psy-24s.mp4",
+      "size": "18.6MB",
+      "type": "audio"
+    },
+    {
+      "file": "engine/sunya-birds-60s-visual.mp4",
+      "name": "sunya-birds-60s-visual.mp4",
+      "size": "445KB",
+      "type": "audio"
+    },
+    {
+      "file": "engine/sunya-birds-60s.mp4",
+      "name": "sunya-birds-60s.mp4",
+      "size": "296KB",
+      "type": "audio"
+    },
+    {
+      "file": "engine/sunya-birds.mp4",
+      "name": "sunya-birds.mp4",
+      "size": "517KB",
+      "type": "audio"
+    },
+    {
+      "file": "engine/vogels-boom.mp4",
+      "name": "vogels-boom.mp4",
+      "size": "1.4MB",
+      "type": "audio"
+    },
+    {
+      "file": "engine/hexa-psy-multilayer-3min.wav",
+      "name": "hexa-psy-multilayer-3min.wav",
+      "size": "16.5MB",
+      "type": "audio"
+    },
+    {
+      "file": "engine/multilayer-3min.wav",
+      "name": "multilayer-3min.wav",
+      "size": "16.5MB",
+      "type": "audio"
+    },
+    {
+      "file": "engine/psytrance-3min.wav",
+      "name": "psytrance-3min.wav",
+      "size": "16.5MB",
+      "type": "audio"
+    },
+    {
+      "file": "engine/sunya-birds-60s.wav",
+      "name": "sunya-birds-60s.wav",
+      "size": "5.5MB",
+      "type": "audio"
+    }
+  ]
+}

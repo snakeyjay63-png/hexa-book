@@ -36,3 +36,12 @@ test_args4
 *.swp
 *~
 .DS_Store
+
+# Large media files (too big for GitHub >100MB)
+engine/hexa-8layer-3min.mp4
+engine/hexa-multilayer-3min.mp4
+engine/hexa-psy-3min.mp4
+engine/hexa-psy-24s.mp4
+engine/hexa-psy-multilayer-3min.wav
+engine/multilayer-3min.wav
+engine/psytrance-3min.wav
