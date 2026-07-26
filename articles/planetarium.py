@@ -25,14 +25,16 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT = os.path.join(SCRIPT_DIR, "planetarium.art.html")
 
 # ── Astronomische synodische perioden (dagen) ──
-# Deze zijn de ECHTE verhoudingen — niet random
+# 4 decimalen: ±0.0001 = max 8.6s per orbit
+# Nauwkeurig genoeg. Chaos zorgt ervoor dat interactie onvoorspelbaar blijft.
+# Geen 2 identieke verhoudingen → geen instorting.
 PLANETS = [
-    {"name": "Maan",      "synodic": 29.53059,  "color": "#c0c0c0", "hue": 220},
-    {"name": "Venus",     "synodic": 583.92,     "color": "#e8c070", "hue": 40},
+    {"name": "Maan",      "synodic": 29.5306,   "color": "#c0c0c0", "hue": 220},
+    {"name": "Venus",     "synodic": 583.9209,   "color": "#e8c070", "hue": 40},
     {"name": "Aarde",     "synodic": 365.2422,   "color": "#4a90d9", "hue": 210},
-    {"name": "Mars",      "synodic": 686.98,     "color": "#c1440e", "hue": 15},
-    {"name": "Jupiter",   "synodic": 398.88,     "color": "#c88b3a", "hue": 30},
-    {"name": "Saturnus",  "synodic": 792.54,     "color": "#a8845a", "hue": 35},
+    {"name": "Mars",      "synodic": 686.9798,   "color": "#c1440e", "hue": 15},
+    {"name": "Jupiter",   "synodic": 398.8844,   "color": "#c88b3a", "hue": 30},
+    {"name": "Saturnus",  "synodic": 792.5395,   "color": "#a8845a", "hue": 35},
 ]
 
 # Maya-kalender cycli
