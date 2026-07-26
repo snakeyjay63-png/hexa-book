@@ -640,9 +640,16 @@
       else ctx.lineTo(x, y);
     }
 
-    // Pulse effect
+    // Pulse effect - pulse alpha channel
     const pulse = 0.7 + Math.sin(time * 2) * 0.3;
-    ctx.strokeStyle = color.replace(/\d+$/, (m) => Math.round(parseInt(m) * pulse));
+    const rgbaMatch = color.match(/^rgba?\((\d+),(\d+),(\d+),?(\d*\.?\d*)?\)$/);
+    if (rgbaMatch) {
+      const [, r, g, b, aStr] = rgbaMatch;
+      const a = ((aStr ? parseFloat(aStr) : 1) * pulse).toFixed(3);
+      ctx.strokeStyle = `rgba(${r},${g},${b},${a})`;
+    } else {
+      ctx.strokeStyle = color;
+    }
     ctx.lineWidth = 1;
     ctx.setLineDash([4, 4]);
     ctx.stroke();
