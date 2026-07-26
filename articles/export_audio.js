@@ -87,10 +87,13 @@ function generateStage(stage, offset) {
         if (i > 0) val = samples[i - 1] * 0.8 + val * 0.2;
         break;
 
-      case 6: // MANDELBROT: drone + LFO
-        val = Math.sin(2 * Math.PI * 55 * t) * 0.2;
-        const lfo = Math.sin(2 * Math.PI * 0.2 * t) * 10;
-        val += Math.sin(2 * Math.PI * (110 + lfo) * t) * 0.15;
+      case 6: // 0.0.0.0: 7 banden → center
+        // Simpel: 7 band-pass gefilterde tonen
+        [55, 82.5, 110, 165, 220, 330, 440].forEach(function(f) {
+          val += Math.sin(2 * Math.PI * f * t) * 0.08;
+        });
+        // Echo/return
+        val *= 0.5 + 0.5 * Math.sin(2 * Math.PI * 0.4 * t);
         break;
     }
 
