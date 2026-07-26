@@ -221,12 +221,34 @@
   // ── Audio ──
   let activeOscillators = [];
   let activeNoiseNode = null;
+  let masterGain = null;
+  let fadeDuration = 0.4; // 400ms crossfade
 
   function initAudio() {
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    // Master gain voor crossfade
+    if (!masterGain) {
+      masterGain = audioCtx.createGain();
+      masterGain.gain.value = 1;
+      masterGain.connect(audioCtx.destination);
+    }
   }
 
-  function stopAudio() {
+  function fadeOutAudio(cb) {
+    if (!masterGain) { cb(); return; }
+    masterGain.gain.setTargetAtTime(0, audioCtx.currentTime, fadeDuration / 3);
+    setTimeout(function() {
+      stopAudioHard();
+      cb();
+    }, fadeDuration * 1000);
+  }
+
+  function fadeInAudio() {
+    if (!masterGain) return;
+    masterGain.gain.setTargetAtTime(1, audioCtx.currentTime, fadeDuration / 2);
+  }
+
+  function stopAudioHard() {
     activeOscillators.forEach(function(o) {
       try { o.stop(); } catch(e) {}
     });
@@ -237,10 +259,23 @@
     }
   }
 
+  function stopAudio() {
+    // Legacy, not used anymore — crossfade replaces this
+    stopAudioHard();
+  }
+
   function playStageAudio(s) {
     initAudio();
-    stopAudio();
 
+    // Crossfade: fade uit → nieuwe audio → fade in (geen gap)
+    fadeOutAudio(function() {
+      stopAudioHard();
+      createStageAudio(s);
+      fadeInAudio();
+    });
+  }
+
+  function createStageAudio(s) {
     if (s === 0) {
       // 0=1: zuivere toon — eenheid
       const osc = audioCtx.createOscillator();
@@ -249,19 +284,19 @@
       osc.frequency.value = 220;
       gain.gain.value = 0.1;
       osc.connect(gain);
-      gain.connect(audioCtx.destination);
+      gain.connect(masterGain);
       osc.start();
       activeOscillators.push(osc);
 
     } else if (s === 1) {
-      // 1 WAVE: 2⁰ — eerste beweging (zelfde toon, trilt)
+      // 1 WAVE: 2⁰ — eerste beweging
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = 'sine';
       osc.frequency.value = 220;
       gain.gain.value = 0.1;
       osc.connect(gain);
-      gain.connect(audioCtx.destination);
+      gain.connect(masterGain);
       osc.start();
       activeOscillators.push(osc);
 
@@ -274,7 +309,7 @@
         osc.frequency.value = f;
         gain.gain.value = 0.07;
         osc.connect(gain);
-        gain.connect(audioCtx.destination);
+        gain.connect(masterGain);
         osc.start();
         activeOscillators.push(osc);
       });
@@ -288,7 +323,7 @@
         osc.frequency.value = f;
         gain.gain.value = 0.05;
         osc.connect(gain);
-        gain.connect(audioCtx.destination);
+        gain.connect(masterGain);
         osc.start();
         activeOscillators.push(osc);
       });
@@ -302,7 +337,7 @@
         osc.frequency.value = f;
         gain.gain.value = 0.03;
         osc.connect(gain);
-        gain.connect(audioCtx.destination);
+        gain.connect(masterGain);
         osc.start();
         activeOscillators.push(osc);
       });
@@ -325,21 +360,17 @@
       gain.gain.value = 0.06;
       source.connect(filter);
       filter.connect(gain);
-      gain.connect(audioCtx.destination);
+      gain.connect(masterGain);
       source.start();
       activeNoiseNode = source;
 
     } else if (s === 6) {
       // 0.0.0.0: 7 banden → audio stroomt naar center → echo = positie
-      // 7 band-pass filters (P0→P6) + delay = return/echo
       const bands = [
-        { freq: 55, q: 1 },     // P0: center
-        { freq: 82.5, q: 1.5 }, // P1
-        { freq: 110, q: 1 },    // P2
-        { freq: 165, q: 2 },    // P3
-        { freq: 220, q: 1.5 },  // P4
-        { freq: 330, q: 2 },    // P5
-        { freq: 440, q: 3 },    // P6
+        { freq: 55, q: 1 }, { freq: 82.5, q: 1.5 },
+        { freq: 110, q: 1 }, { freq: 165, q: 2 },
+        { freq: 220, q: 1.5 }, { freq: 330, q: 2 },
+        { freq: 440, q: 3 },
       ];
 
       // Bron: white noise (ru = potentieel)
@@ -351,10 +382,10 @@
       src.buffer = buf;
       src.loop = true;
 
-      // 7 band filters → master gain
-      const masterGain = audioCtx.createGain();
-      masterGain.gain.value = 0.02;
-      masterGain.connect(audioCtx.destination);
+      // 7 band filters → masterGain (crossfade)
+      const stageGain = audioCtx.createGain();
+      stageGain.gain.value = 0.02;
+      stageGain.connect(masterGain);
 
       bands.forEach(function(b) {
         const bp = audioCtx.createBiquadFilter();
@@ -362,24 +393,23 @@
         bp.frequency.value = b.freq;
         bp.Q.value = b.q;
         const g = audioCtx.createGain();
-        g.gain.value = 1 / (bands.length); // even verdelen
+        g.gain.value = 1 / bands.length;
         src.connect(bp);
         bp.connect(g);
-        g.connect(masterGain);
+        g.connect(stageGain);
       });
 
       // Delay = return/echo (snelheid = momentum, return = positie)
       const delay = audioCtx.createDelay();
-      delay.delayTime.value = 0.5; // 500ms echo
+      delay.delayTime.value = 0.5;
       const delayGain = audioCtx.createGain();
       delayGain.gain.value = 0.3;
-      masterGain.connect(delay);
+      stageGain.connect(delay);
       delay.connect(delayGain);
-      delayGain.connect(audioCtx.destination);
+      delayGain.connect(masterGain);
 
       src.start();
       activeNoiseNode = src;
-      activeOscillators.push(delay); // track for cleanup
     }
   }
 
