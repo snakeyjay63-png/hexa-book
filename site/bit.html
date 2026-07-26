@@ -44,7 +44,7 @@
     color: var(--text-soft);
   }
 
-  #play-btn {
+  #play-btn, #autoplay-btn {
     padding: 8px 24px;
     border: 1px solid var(--accent);
     border-radius: 99px;
@@ -56,9 +56,36 @@
     transition: all 0.2s ease;
   }
 
-  #play-btn:hover {
+  #play-btn:hover, #autoplay-btn:hover {
     background: var(--accent);
     color: #06060a;
+  }
+
+  #autoplay-btn.active {
+    background: var(--accent);
+    color: #06060a;
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  #autoplay-progress {
+    width: 100px;
+    height: 2px;
+    background: rgba(124, 110, 245, 0.1);
+    border-radius: 1px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+
+  #autoplay-bar {
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    transition: width 0.1s linear;
   }
 
   .stage-bar {
@@ -104,7 +131,13 @@
     <div class="stage-dot" data-stage="3"></div>
     <div class="stage-dot" data-stage="4"></div>
   </div>
-  <button id="play-btn">▶ PLAY</button>
+  <div class="btn-row">
+    <button id="play-btn">▶ PLAY</button>
+    <button id="autoplay-btn">⏵ AUTO</button>
+  </div>
+  <div id="autoplay-progress">
+    <div id="autoplay-bar"></div>
+  </div>
 </div>
 
 <script>
@@ -122,6 +155,11 @@
   let audioCtx = null;
   let currentOsc = null;
   let noiseNode = null;
+  let autoplay = false;
+  let autoplayTimer = null;
+  let autoplayInterval = null;
+  let autoplayDelay = 4000; // 4 seconden per stage
+  let autoplayStart = 0;
 
   const stages = [
     { name: '0 = 1', label: '1 bit licht — statisch' },
@@ -366,6 +404,11 @@
     }
     updateUI();
     playStageAudio(stage);
+    // Reset autoplay timer if active
+    if (autoplay) {
+      autoplayStart = Date.now();
+      document.getElementById('autoplay-bar').style.width = '0%';
+    }
   }
 
   function updateUI() {
@@ -384,9 +427,56 @@
   // ── Events ──
   playBtn.addEventListener('click', advanceStage);
 
+  // Autoplay toggle
+  const autoplayBtn = document.getElementById('autoplay-btn');
+  autoplayBtn.addEventListener('click', function() {
+    autoplay = !autoplay;
+    this.textContent = autoplay ? '⏸ PAUSE' : '⏵ AUTO';
+    this.classList.toggle('active', autoplay);
+
+    if (autoplay) {
+      startAutoplay();
+    } else {
+      stopAutoplay();
+    }
+  });
+
+  function startAutoplay() {
+    stopAutoplay();
+    autoplayStart = Date.now();
+    autoplayTimer = setInterval(function() {
+      advanceStage();
+      autoplayStart = Date.now();
+    }, autoplayDelay);
+    // Start progress bar animation
+    updateProgressBar();
+  }
+
+  function stopAutoplay() {
+    if (autoplayTimer) {
+      clearInterval(autoplayTimer);
+      autoplayTimer = null;
+    }
+    if (autoplayInterval) {
+      cancelAnimationFrame(autoplayInterval);
+      autoplayInterval = null;
+    }
+    // Reset progress bar
+    document.getElementById('autoplay-bar').style.width = '0%';
+  }
+
+  function updateProgressBar() {
+    if (!autoplay) return;
+    const elapsed = Date.now() - autoplayStart;
+    const progress = Math.min(elapsed / autoplayDelay * 100, 100);
+    document.getElementById('autoplay-bar').style.width = progress + '%';
+    autoplayInterval = requestAnimationFrame(updateProgressBar);
+  }
+
   // Keyboard
   document.addEventListener('keydown', function(e) {
     if (e.code === 'Space') { e.preventDefault(); advanceStage(); }
+    if (e.code === 'KeyA') { autoplayBtn.click(); }
   });
 
   // ── Start ──
