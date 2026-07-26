@@ -1352,9 +1352,9 @@
 
   // ── Onweer / ontlading ──
   let stormCharge = 0;
-  const STORM_THRESHOLD = 0.85;
-  const STORM_RATE = 0.008;
-  const STORM_DISCHARGE = 0.6;
+  const STORM_THRESHOLD = 0.75;
+  const STORM_RATE = 0.012;
+  const STORM_DISCHARGE = 0.5;
   let lightningFlash = 0;
   let lightningBolt = null;
 
@@ -1907,11 +1907,18 @@
       stormCharge -= STORM_DISCHARGE;
 
       // ── Donder geluid ──
+      // Activeer audio automatisch bij eerste bliksem
+      if (!audioOn) {
+        initAudio();
+        audioOn = true;
+        setAudio(true);
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+      }
       if (audioOn && thunderGain) {
         const t = audioCtx.currentTime;
         // Kort crack + lange dreun
-        thunderGain.gain.setTargetAtTime(0.25, t, 0.01);
-        thunderGain.gain.setTargetAtTime(0.15, t + 0.1, 0.05);
+        thunderGain.gain.setTargetAtTime(0.35, t, 0.01);
+        thunderGain.gain.setTargetAtTime(0.20, t + 0.1, 0.05);
         thunderGain.gain.setTargetAtTime(0, t + 1.5, 0.3);
       }
     }
