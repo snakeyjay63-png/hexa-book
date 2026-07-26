@@ -483,7 +483,7 @@
   // ── Init ──
   async function init() {
     try {
-      const data = await fetch(BASE + 'site/sitemap.json');
+      const data = await fetch(BASE + 'sitemap.json');
       if (data.ok) {
         sitemap = await data.json();
       }
