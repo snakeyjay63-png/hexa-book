@@ -593,13 +593,14 @@
       if (tensionProgress < 1) tensionProgress += 0.005;
 
       // Spanning glow rond de rand
-      const tensionGlow = ctx.createRadialGradient(cx, cy, R * 0.5, cx, cy, R * 0.95);
+      const tensionGlow = ctx.createRadialGradient(cx, cy, Math.min(W, H) * 0.25, cx, cy, Math.min(W, H) * 0.48);
+      const maxR = Math.min(W, H) * 0.48;
       const glowAlpha = tensionProgress * 0.15;
       tensionGlow.addColorStop(0, 'rgba(255,100,50,0)');
       tensionGlow.addColorStop(0.7, `rgba(255,100,50,${glowAlpha * 0.5})`);
       tensionGlow.addColorStop(1, `rgba(255,100,50,${glowAlpha})`);
       ctx.beginPath();
-      ctx.arc(cx, cy, R * 0.95, 0, Math.PI * 2);
+      ctx.arc(cx, cy, maxR, 0, Math.PI * 2);
       ctx.fillStyle = tensionGlow;
       ctx.fill();
 
@@ -625,10 +626,10 @@
       if (tensionProgress > 0.7 && Math.random() < 0.03) {
         // Genereer bliksem lijn
         lightningBolts.push({
-          x1: cx + (Math.random() - 0.5) * R,
-          y1: cy + (Math.random() - 0.5) * R,
-          x2: cx + (Math.random() - 0.5) * R * 0.8,
-          y2: cy + (Math.random() - 0.5) * R * 0.8,
+          x1: cx + (Math.random() - 0.5) * maxR * 2,
+          y1: cy + (Math.random() - 0.5) * maxR * 2,
+          x2: cx + (Math.random() - 0.5) * maxR * 1.6,
+          y2: cy + (Math.random() - 0.5) * maxR * 1.6,
           alpha: 1
         });
         triggerThunder();
