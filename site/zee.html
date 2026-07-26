@@ -716,65 +716,116 @@
     { name: 'zon',      orbitR: 1.72, size: 10,  color: [255,200,50],  speed: 0.05, phase: 0,       note: 'plasma bron' },
   ];
 
-  // ── Zwart Gat Brug (core → zon, E/M verbinding) ──
+  // ── Zwart Gat Brug (core → elke planeet, E/M veld) ──
+  // Invloed op water: zon felst, maan kort maar intens, mars zwakker
   function drawBlackHoleBridge() {
     if (!showPlanets) return;
 
-    // Zon positie vinden
     const baseR = R * 1.05;
-    const zon = PLANETS[5]; // zon
-    const zonAngle = time * zon.speed + zon.phase;
-    const zonX = cx + Math.cos(zonAngle) * baseR * zon.orbitR;
-    const zonY = cy + Math.sin(zonAngle) * baseR * zon.orbitR;
+    const coreR = R * LAYERS.core.outer;
+    const holeR = coreR * 0.25;
 
-    // Brug van centrum (zwart gat) naar zon
-    // Hoofdlus
-    ctx.beginPath();
-    const steps = 40;
-    for (let i = 0; i <= steps; i++) {
-      const t = i / steps;
-      const x = cx + (zonX - cx) * t;
-      const y = cy + (zonY - cy) * t;
+    // Invloed op water per planeet (sterkte van E/M effect)
+    const influence = {
+      'maan':     { strength: 0.7,  color: [200,210,220], label: 'getijden kracht' },
+      'venus':    { strength: 0.4,  color: [230,200,100], label: 'zon resonantie' },
+      'aarde':    { strength: 0.3,  color: [100,150,200], label: 'self' },
+      'mars':     { strength: 0.2,  color: [200,100,60],  label: 'verborgen E/M' },
+      'jupiter':  { strength: 0.5,  color: [180,150,100], label: 'grote broer' },
+      'zon':      { strength: 1.0,  color: [255,200,50],  label: 'plasma bron' },
+    };
 
-      // Spirale effect (vortex)
-      const spiralR = 15 * (1 - Math.abs(t - 0.5) * 2);
-      const spiralAngle = t * Math.PI * 6 + time * 2;
-      const sx = x + Math.cos(spiralAngle) * spiralR;
-      const sy = y + Math.sin(spiralAngle) * spiralR;
+    for (let p = 0; p < PLANETS.length; p++) {
+      const pl = PLANETS[p];
+      const inf = influence[pl.name];
+      if (!inf) continue;
 
-      if (i === 0) ctx.moveTo(sx, sy);
-      else ctx.lineTo(sx, sy);
-    }
-    ctx.strokeStyle = `rgba(255,150,50,${0.15 + Math.sin(time * 2) * 0.05})`;
-    ctx.lineWidth = 1;
-    ctx.stroke();
+      const angle = time * pl.speed + pl.phase;
+      const px = cx + Math.cos(angle) * baseR * pl.orbitR;
+      const py = cy + Math.sin(angle) * baseR * pl.orbitR;
 
-    // E/M veld lijnen (parallel, dunner)
-    for (let l = 0; l < 3; l++) {
+      // Buigende lijn (vortex curve) van centrum → planeet
+      // Midpoint buigt naar buiten (zoals zon effect)
+      const steps = 30;
+      const midBend = 30 * inf.strength; // hoe fel, hoe meer buiging
+
+      // Hoofdlijn
       ctx.beginPath();
       for (let i = 0; i <= steps; i++) {
         const t = i / steps;
-        const x = cx + (zonX - cx) * t;
-        const y = cy + (zonY - cy) * t;
+        let x = cx + (px - cx) * t;
+        let y = cy + (py - cy) * t;
 
-        const spiralR = 8 * (1 - Math.abs(t - 0.5) * 2);
-        const spiralAngle = t * Math.PI * 4 + time * 1.5 + l * 2;
-        const sx = x + Math.cos(spiralAngle) * spiralR;
-        const sy = y + Math.sin(spiralAngle) * spiralR;
+        // Buiging naar buiten (perpendiculair)
+        const perpX = -(py - cy);
+        const perpY = (px - cx);
+        const perpLen = Math.sqrt(perpX * perpX + perpY * perpY) || 1;
+        const bendAmount = Math.sin(t * Math.PI) * midBend;
+        x += (perpX / perpLen) * bendAmount;
+        y += (perpY / perpLen) * bendAmount;
 
-        if (i === 0) ctx.moveTo(sx, sy);
-        else ctx.lineTo(sx, sy);
+        // Subtiele vortex oscillatie
+        const vortexR = 5 * inf.strength * (1 - Math.abs(t - 0.5) * 2);
+        const vortexAngle = t * Math.PI * 4 + time * 2 * coreSpeed;
+        x += Math.cos(vortexAngle) * vortexR;
+        y += Math.sin(vortexAngle) * vortexR;
+
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
       }
-      ctx.strokeStyle = `rgba(255,200,50,${0.06 + Math.sin(time * 1.5 + l) * 0.02})`;
-      ctx.lineWidth = 0.4;
+
+      const alpha = 0.08 + inf.strength * 0.12 + Math.sin(time * 1.5 + p) * 0.03;
+      ctx.strokeStyle = `rgba(${inf.color[0]},${inf.color[1]},${inf.color[2]},${alpha})`;
+      ctx.lineWidth = 0.5 + inf.strength * 0.5;
       ctx.stroke();
+
+      // Parallelle E/M lijn (dunner, zwevend)
+      ctx.beginPath();
+      for (let i = 0; i <= steps; i++) {
+        const t = i / steps;
+        let x = cx + (px - cx) * t;
+        let y = cy + (py - cy) * t;
+
+        const perpX = -(py - cy);
+        const perpY = (px - cx);
+        const perpLen = Math.sqrt(perpX * perpX + perpY * perpY) || 1;
+        const bendAmount = Math.sin(t * Math.PI) * (midBend - 5);
+        x += (perpX / perpLen) * bendAmount;
+        y += (perpY / perpLen) * bendAmount;
+
+        const vortexR = 3 * inf.strength * (1 - Math.abs(t - 0.5) * 2);
+        const vortexAngle = t * Math.PI * 3 - time * 1.5 + p;
+        x += Math.cos(vortexAngle) * vortexR;
+        y += Math.sin(vortexAngle) * vortexR;
+
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = `rgba(${inf.color[0]},${inf.color[1]},${inf.color[2]},${alpha * 0.5})`;
+      ctx.lineWidth = 0.3;
+      ctx.stroke();
+
+      // Invloed indicator bij planeet (water effect)
+      if (inf.strength > 0.3) {
+        const waterEffect = inf.strength * (0.5 + Math.sin(time * 2 + p) * 0.5);
+        ctx.beginPath();
+        ctx.arc(px, py, pl.size + 4 + waterEffect * 3, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(${inf.color[0]},${inf.color[1]},${inf.color[2]},${waterEffect * 0.15})`;
+        ctx.lineWidth = 0.5;
+        ctx.setLineDash([2, 3]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
     }
 
     // Zwart gat label bij centrum
     ctx.fillStyle = 'rgba(255,100,30,0.2)';
     ctx.font = '0.22em "IBM Plex Mono", monospace';
     ctx.textAlign = 'center';
-    ctx.fillText('zwart gat → E/M brug', cx, cy + R * 0.5);
+    ctx.fillText('zwart gat → E/M bruggen', cx, cy + coreR + 20);
+    ctx.font = '0.18em "IBM Plex Mono", monospace';
+    ctx.fillStyle = 'rgba(255,100,30,0.1)';
+    ctx.fillText('invloed op water', cx, cy + coreR + 32);
   }
 
   let showPlanets = true;
@@ -950,8 +1001,8 @@
     drawIcePoles();
     drawOuterRing();
     drawLayerBorders();
-    drawBlackHoleBridge();
     drawPlanets();
+    drawBlackHoleBridge();
 
     // Info
     if (!audioOn) {
