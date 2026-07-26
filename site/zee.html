@@ -3,78 +3,75 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>• Zee — Hexa-Book Kunstwerk</title>
+  <title>• Zee — Spiegel → Chaos</title>
   <link rel="stylesheet" href="css/main.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: #06060a; color: #e0e0e0; font-family: 'IBM Plex Mono', monospace; overflow: hidden; }
     canvas { display: block; }
 
-    .ui { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 10; }
-    .element-label { font-size: 1.4em; color: #7c6ef5; margin-bottom: 8px; }
-    .element-sub { font-size: 0.8em; color: #888; margin-bottom: 16px; }
+    .ui {
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+      text-align: center; z-index: 10; transition: opacity 1s;
+    }
 
-    .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .element-label { font-size: 1.4em; color: #7c6ef5; margin-bottom: 4px; }
+    .element-sub { font-size: 0.7em; color: #666; margin-bottom: 12px; }
+
+    .btn-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
     .btn {
-      background: rgba(124,110,245,0.1); border: 1px solid rgba(124,110,245,0.3);
-      color: #c0b8e8; padding: 10px 20px; border-radius: 6px; cursor: pointer;
-      font-family: inherit; font-size: 0.85em; transition: all 0.3s;
+      background: rgba(124,110,245,0.05); border: 1px solid rgba(124,110,245,0.15);
+      color: #888; padding: 6px 14px; border-radius: 4px; cursor: pointer;
+      font-family: inherit; font-size: 0.75em; transition: all 0.3s;
     }
-    .btn:hover { background: rgba(124,110,245,0.25); }
-    .btn.active { background: rgba(124,110,245,0.35); border-color: #7c6ef5; color: #fff; }
+    .btn:hover { background: rgba(124,110,245,0.15); }
+    .btn.active { background: rgba(124,110,245,0.2); border-color: rgba(124,110,245,0.4); color: #c0b8e8; }
 
-    .speed-row { margin-top: 12px; display: flex; gap: 8px; justify-content: center; align-items: center; }
-    .speed-btn {
-      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);
-      color: #888; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-family: inherit; font-size: 0.75em;
+    .stone-btn {
+      margin-top: 10px;
+      background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.2);
+      color: #fbbf26; padding: 8px 20px; border-radius: 20px; cursor: pointer;
+      font-family: inherit; font-size: 0.85em; transition: all 0.5s;
     }
-    .speed-btn:hover { background: rgba(255,255,255,0.1); }
-    .speed-btn.active { background: rgba(124,110,245,0.2); border-color: rgba(124,110,245,0.5); color: #c0b8e8; }
-
-    .audio-btn {
-      background: rgba(124,110,245,0.08); border: 1px solid rgba(124,110,245,0.2);
-      color: #666; padding: 5px 12px; border-radius: 4px; cursor: pointer;
-      font-family: inherit; font-size: 0.75em; margin-top: 12px;
-    }
-    .audio-btn.on { background: rgba(124,110,245,0.25); border-color: #7c6ef5; color: #c0b8e8; }
+    .stone-btn:hover { background: rgba(251,191,36,0.15); }
+    .stone-btn.rippled { background: rgba(251,191,36,0.25); border-color: rgba(251,191,36,0.5); box-shadow: 0 0 20px rgba(251,191,36,0.1); }
 
     .back-link {
       position: fixed; top: 20px; left: 20px; color: #555; text-decoration: none;
       font-size: 0.8em; z-index: 10; transition: color 0.3s;
     }
     .back-link:hover { color: #7c6ef5; }
+
+    .info {
+      position: fixed; top: 20px; right: 20px; color: #444; font-size: 0.65em;
+      text-align: right; z-index: 10;
+    }
   </style>
 </head>
 <body>
   <a href="bit.html" class="back-link">← bit</a>
   <a href="index.html" class="back-link" style="top:50px;">← hexa-book</a>
+  <div class="info" id="info">spiegel — stil</div>
 
   <canvas id="c"></canvas>
 
-  <div class="ui">
+  <div class="ui" id="ui">
     <div class="element-label" id="el-label">zee</div>
-    <div class="element-sub" id="el-sub">elk punt = atoom met E/M veld</div>
-    <div class="btn-row">
-      <button class="btn" data-e="schelp">schelp</button>
-      <button class="btn active" data-e="zee">zee</button>
-      <button class="btn" data-e="regen">regen</button>
-      <button class="btn" data-e="water">water</button>
-      <button class="btn" data-e="wind">wind</button>
-    </div>
-    <div class="speed-row">
-      <button class="speed-btn" data-s="0.5">0.5×</button>
-      <button class="speed-btn active" data-s="1">1×</button>
-      <button class="speed-btn" data-s="2">2×</button>
-    </div>
-    <button class="audio-btn" id="audio-toggle">♪ aan</button>
+    <div class="element-sub" id="el-sub">spiegel → steen → rimpel → chaos</div>
+    <button class="stone-btn" id="stone-btn">● steen gooien</button>
   </div>
 
 <script>
 (function() {
   const canvas = document.getElementById('c');
   const ctx = canvas.getContext('2d');
-  let W, H, cx, cy;
+  const infoEl = document.getElementById('info');
+  const uiEl = document.getElementById('ui');
+  const elLabel = document.getElementById('el-label');
+  const elSub = document.getElementById('el-sub');
+  const stoneBtn = document.getElementById('stone-btn');
 
+  let W, H, cx, cy;
   function resize() {
     W = canvas.width = window.innerWidth;
     H = canvas.height = window.innerHeight;
@@ -83,14 +80,24 @@
   window.addEventListener('resize', resize);
   resize();
 
-  // ── Audio: één white noise bron, filters = element ──
+  // ── Concept: Spiegel → Steen → Rimpel → Chaos ──
+  //
+  // Stil = pure spiegel. Alleen subtiele stroming zichtbaar.
+  // Steen gooien = geluid AAN → ripple effect → butterfly effect
+  // Geluid volgt beeld. Beeld volgt geluid.
+  // Chaos is niet willekeurig — het is de natuurlijke uitkomst van de ripple.
+
+  let time = 0;
+  let audioOn = false;
+  let rippleTime = 0; // tijd sinds steen gegooid
+  let stones = []; // gegooiden stenen met positie + tijd
+
+  // ── Audio ──
   let audioCtx = null;
   let audioNodes = null;
-  let currentElement = 'zee';
-  let audioOn = false;
 
   function initAudio() {
-    if (audioCtx) { audioOn = true; return; }
+    if (audioCtx) return true;
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     if (audioCtx.state === 'suspended') audioCtx.resume();
 
@@ -117,7 +124,7 @@
     lfo.start();
 
     const master = audioCtx.createGain();
-    master.gain.value = 0.1;
+    master.gain.value = 0; // start stil
 
     noise.connect(bp1); noise.connect(bp2);
     bp1.connect(master); bp2.connect(master);
@@ -125,377 +132,227 @@
     noise.start();
 
     audioNodes = { noise, bp1, bp2, lfo, lfoGain, master };
+    return true;
   }
 
-  function setElement(el) {
-    currentElement = el;
-    const n = audioNodes;
+  function setAudio(on) {
+    if (!audioNodes) return;
     const t = 1;
-
-    switch(el) {
-      case 'schelp':
-        n.bp1.frequency.setTargetAtTime(250, audioCtx.currentTime, t); n.bp1.Q.setTargetAtTime(0.3, audioCtx.currentTime, t);
-        n.bp2.frequency.setTargetAtTime(500, audioCtx.currentTime, t); n.bp2.Q.setTargetAtTime(0.2, audioCtx.currentTime, t);
-        n.lfo.frequency.setTargetAtTime(0.15, audioCtx.currentTime, t); n.lfoGain.gain.setTargetAtTime(80, audioCtx.currentTime, t);
-        n.master.gain.setTargetAtTime(0.12, audioCtx.currentTime, t);
-        break;
-      case 'zee':
-        n.bp1.frequency.setTargetAtTime(200, audioCtx.currentTime, t); n.bp1.Q.setTargetAtTime(0.5, audioCtx.currentTime, t);
-        n.bp2.frequency.setTargetAtTime(2000, audioCtx.currentTime, t); n.bp2.Q.setTargetAtTime(1, audioCtx.currentTime, t);
-        n.lfo.frequency.setTargetAtTime(0.1, audioCtx.currentTime, t); n.lfoGain.gain.setTargetAtTime(120, audioCtx.currentTime, t);
-        n.master.gain.setTargetAtTime(0.1, audioCtx.currentTime, t);
-        break;
-      case 'regen':
-        n.bp1.frequency.setTargetAtTime(4000, audioCtx.currentTime, t); n.bp1.Q.setTargetAtTime(2, audioCtx.currentTime, t);
-        n.bp2.frequency.setTargetAtTime(6000, audioCtx.currentTime, t); n.bp2.Q.setTargetAtTime(3, audioCtx.currentTime, t);
-        n.lfo.frequency.setTargetAtTime(2, audioCtx.currentTime, t); n.lfoGain.gain.setTargetAtTime(500, audioCtx.currentTime, t);
-        n.master.gain.setTargetAtTime(0.06, audioCtx.currentTime, t);
-        break;
-      case 'water':
-        n.bp1.frequency.setTargetAtTime(800, audioCtx.currentTime, t); n.bp1.Q.setTargetAtTime(1.5, audioCtx.currentTime, t);
-        n.bp2.frequency.setTargetAtTime(1500, audioCtx.currentTime, t); n.bp2.Q.setTargetAtTime(1, audioCtx.currentTime, t);
-        n.lfo.frequency.setTargetAtTime(0.5, audioCtx.currentTime, t); n.lfoGain.gain.setTargetAtTime(300, audioCtx.currentTime, t);
-        n.master.gain.setTargetAtTime(0.08, audioCtx.currentTime, t);
-        break;
-      case 'wind':
-        n.bp1.frequency.setTargetAtTime(150, audioCtx.currentTime, t); n.bp1.Q.setTargetAtTime(0.8, audioCtx.currentTime, t);
-        n.bp2.frequency.setTargetAtTime(800, audioCtx.currentTime, t); n.bp2.Q.setTargetAtTime(2, audioCtx.currentTime, t);
-        n.lfo.frequency.setTargetAtTime(0.3, audioCtx.currentTime, t); n.lfoGain.gain.setTargetAtTime(400, audioCtx.currentTime, t);
-        n.master.gain.setTargetAtTime(0.1, audioCtx.currentTime, t);
-        break;
-    }
-  }
-
-  function toggleAudio() {
-    if (!audioNodes) {
-      initAudio();
-      setElement(currentElement);
-      return true;
-    }
-    // Toggle mute
     const n = audioNodes;
-    const isMuted = n.master.gain.value === 0;
-    const wasMuted = n.master.gain.value === 0;
-    n.master.gain.setTargetAtTime(wasMuted ? 0.1 : 0, audioCtx.currentTime, 0.3);
-    audioOn = wasMuted;
-    return audioOn;
-  }
 
-  // ── Atoom: elk punt water = atoom met E/M veld ──
-  // Elk atoom heeft:
-  // - Positie (x, y)
-  // - Eigen frequentie (f) — de 'toon' van het atoom
-  // - Eigen fase (phase) — offset in cyclus
-  // - E-veld (elektrisch) — aantrekkingskracht
-  // - M-veld (magnetisch) — afstoting/rotatie
-  // - Diepte (depth) — hoe 'diep' het atoom zit in de zee
-  // - Resonantie — hoe sterk het reageert op andere atomen
-
-  let atoms = [];
-  let time = 0;
-  let speedMultiplier = 1;
-
-  // Grid-based interaction (optimalisatie)
-  const GRID_SIZE = 50; // celgrootte voor binned interaction
-  let grid = {};
-
-  function createAtom(x, y, element) {
-    const atom = {
-      x: x || Math.random() * W,
-      y: y || Math.random() * H,
-      vx: 0, vy: 0,
-      // Eigen E/M veld
-      f: 0.5 + Math.random() * 2,       // frequentie (Hz)
-      phase: Math.random() * Math.PI * 2, // fase-offset
-      depth: 0.2 + Math.random() * 0.8,  // diepte (0-1)
-      e: 0.5 + Math.random() * 0.5,      // E-veld sterkte
-      m: 0.3 + Math.random() * 0.7,      // M-veld sterkte
-      radius: 1 + Math.random() * 2,
-      life: 1,
-      decay: 0.0003 + Math.random() * 0.001,
-      // Resonantie
-      resonance: 0.8 + Math.random() * 0.4, // hoe sterk reageer ik?
-    };
-
-    // Element-specifieke eigenschappen
-    switch(element) {
-      case 'schelp':
-        atom.f = 0.3 + Math.random() * 0.5;
-        atom.e = 0.8; // sterke attractie = cirkelvormig
-        atom.m = 0.2; // zwakke rotatie
-        atom.vx = (Math.random() - 0.5) * 0.1;
-        atom.vy = (Math.random() - 0.5) * 0.1;
-        break;
-      case 'zee':
-        atom.f = 0.5 + Math.random() * 1;
-        atom.e = 0.5 + Math.random() * 0.3;
-        atom.m = 0.4 + Math.random() * 0.4;
-        atom.vx = (Math.random() - 0.5) * 0.3;
-        atom.vy = -0.1 - Math.random() * 0.3;
-        break;
-      case 'regen':
-        atom.f = 3 + Math.random() * 5;
-        atom.e = 0.3; // zwakke binding
-        atom.m = 0.1;
-        atom.vx = (Math.random() - 0.5) * 0.3;
-        atom.vy = 2 + Math.random() * 3;
-        atom.decay = 0.005;
-        break;
-      case 'water':
-        atom.f = 1 + Math.random() * 2;
-        atom.e = 0.6 + Math.random() * 0.3;
-        atom.m = 0.3 + Math.random() * 0.3;
-        atom.vx = (Math.random() - 0.5) * 0.2;
-        atom.vy = 0.5 + Math.random() * 1.5;
-        atom.decay = 0.002;
-        break;
-      case 'wind':
-        atom.f = 0.8 + Math.random() * 2;
-        atom.e = 0.2; // geen binding
-        atom.m = 0.8 + Math.random() * 0.5; // sterke rotatie
-        atom.vx = 1 + Math.random() * 2;
-        atom.vy = (Math.random() - 0.5) * 0.5;
-        atom.decay = 0.003;
-        break;
+    if (on) {
+      // Steen in water = lage frequentie + trage golven
+      n.bp1.frequency.setTargetAtTime(200, audioCtx.currentTime, t);
+      n.bp1.Q.setTargetAtTime(0.5, audioCtx.currentTime, t);
+      n.bp2.frequency.setTargetAtTime(1500, audioCtx.currentTime, t);
+      n.bp2.Q.setTargetAtTime(1, audioCtx.currentTime, t);
+      n.lfo.frequency.setTargetAtTime(0.1, audioCtx.currentTime, t);
+      n.lfoGain.gain.setTargetAtTime(100, audioCtx.currentTime, t);
+      n.master.gain.setTargetAtTime(0.1, audioCtx.currentTime, t);
+    } else {
+      n.master.gain.setTargetAtTime(0, audioCtx.currentTime, t);
     }
-
-    return atom;
   }
 
-  // ── Binned interaction grid ──
-  function updateGrid() {
-    grid = {};
-    atoms.forEach((a, i) => {
-      const gx = Math.floor(a.x / GRID_SIZE);
-      const gy = Math.floor(a.y / GRID_SIZE);
-      const key = gx + ',' + gy;
-      if (!grid[key]) grid[key] = [];
-      grid[key].push(i);
-    });
-  }
+  // ── Stroming: de onzichtbare kracht ──
+  // In stilte: subtiele stroming (niet direct zichtbaar)
+  // Na steen: stroming wordt sterker, zichtbaar, chaotisch
 
-  function getNearbyAtoms(x, y) {
-    const gx = Math.floor(x / GRID_SIZE);
-    const gy = Math.floor(y / GRID_SIZE);
-    const nearby = [];
-    for (let dx = -1; dx <= 1; dx++) {
-      for (let dy = -1; dy <= 1; dy++) {
-        const key = (gx + dx) + ',' + (gy + dy);
-        if (grid[key]) {
-          grid[key].forEach(idx => nearby.push(idx));
-        }
+  // Height map = de oppervlakte van het water
+  // Stil: platte lijn
+  // Na steen: sinusgolven die uitbreiden
+
+  function getWaterHeight(x, y, t) {
+    let h = 0;
+
+    // Basis stroming (altijd aanwezig, niet zichtbaar in stilte)
+    h += Math.sin(x * 0.003 + t * 0.1) * 2;
+    h += Math.cos(y * 0.004 + t * 0.08) * 2;
+
+    // Ripple van gegooiden stenen
+    for (let i = 0; i < stones.length; i++) {
+      const s = stones[i];
+      const age = t - s.time;
+      const dx = x - s.x;
+      const dy = y - s.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      // Uitbreidende ring
+      const speed = 100; // pixels per second
+      const ringDist = age * speed;
+      const ringWidth = 50 + age * 20;
+
+      if (Math.abs(dist - ringDist) < ringWidth) {
+        const ripple = Math.sin((dist - ringDist) * 0.05) *
+                       Math.exp(-age * 0.3) *
+                       Math.exp(-Math.abs(dist - ringDist) / ringWidth);
+        h += ripple * 30;
       }
-    }
-    return nearby;
-  }
 
-  // ── E/M veld interactie ──
-  // E-veld: aantrekking (als elektrische lading)
-  // M-veld: rotatie/afstoting (als magnetisch veld)
-  function applyFieldInteractions(atom, dt) {
-    const nearby = getNearbyAtoms(atom.x, atom.y);
-    let fx = 0, fy = 0;
-
-    for (let i = 0; i < nearby.length; i++) {
-      const other = atoms[nearby[i]];
-      if (other === atom) continue;
-
-      const dx = other.x - atom.x;
-      const dy = other.y - atom.y;
-      const distSq = dx * dx + dy * dy;
-      const dist = Math.sqrt(distSq) || 1;
-
-      // E-veld: aantrekking (omgekeerd kwadraat)
-      const eForce = atom.e * other.e * 0.5 / (distSq + 100);
-      fx += (dx / dist) * eForce * dt;
-      fy += (dy / dist) * eForce * dt;
-
-      // M-veld: rotatie (perpendiculair)
-      const mForce = atom.m * other.m * 0.3 / (distSq + 100);
-      fx += (-dy / dist) * mForce * dt;
-      fy += (dx / dist) * mForce * dt;
-
-      // Resonantie: atomen met vergelijkbare frequentie trekken elkaar aan
-      const freqDiff = Math.abs(atom.f - other.f);
-      if (freqDiff < 1) {
-        const resonance = (1 - freqDiff) * atom.resonance * 0.1;
-        fx += (dx / dist) * resonance * dt;
-        fy += (dy / dist) * resonance * dt;
+      // Secundaire rimpels (butterfly effect)
+      if (age > 1) {
+        const chaosFreq = 0.02 + age * 0.01;
+        const chaosAmp = Math.min(1, age * 0.1) * Math.exp(-age * 0.1);
+        h += Math.sin(dist * chaosFreq + t * 2) * chaosAmp * 5;
       }
     }
 
-    atom.vx += fx;
-    atom.vy += fy;
+    return h;
   }
 
-  // ── Element-specifieke visuals ──
-  const elementColors = {
-    schelp: '124, 110, 245',
-    zee:    '100, 140, 220',
-    regen:  '142, 202, 230',
-    water:  '100, 180, 255',
-    wind:   '160, 160, 200',
+  // ── Visuals ──
+  const COLORS = {
+    mirror: '100, 140, 220',    // stil water
+    ripple: '124, 110, 245',    // rimpel
+    chaos:  '251, 191, 36',     // chaos
   };
-
-  const elementSubs = {
-    schelp: 'spiraal — nautilus',
-    zee:    'elk punt = atoom met E/M veld',
-    regen:  'druppels — hoge frequentie',
-    water:  'stroom + binding',
-    wind:   'geen binding — vrij veld',
-  };
-
-  let spawnTimer = 0;
 
   function draw() {
     // Fade = continue laag
     ctx.fillStyle = 'rgba(6, 6, 10, 0.02)';
     ctx.fillRect(0, 0, W, H);
 
-    const dt = speedMultiplier;
-    time += 0.016 * dt;
+    time += 0.016;
+    if (audioOn) rippleTime += 0.016;
 
-    // Spawn nieuwe atomen (meer met geluid)
-    spawnTimer++;
-    const spawnRate = { schelp: 10, zee: 12, regen: 20, water: 15, wind: 18 };
-    const rate = Math.max(1, Math.round((spawnRate[currentElement] || 10) / (speedMultiplier * audioBoost)));
-    if (spawnTimer % rate === 0) {
-      // Spawn position afhankelijk van element
-      let x, y;
-      switch(currentElement) {
-        case 'regen': x = Math.random() * W; y = -10; break;
-        case 'wind': x = -10; y = Math.random() * H; break;
-        case 'water': x = cx + (Math.random() - 0.5) * W * 0.6; y = -10; break;
-        default: x = Math.random() * W; y = Math.random() * H;
+    // ── Spiegel: horizontale lijnen ──
+    // Stil: platte lijnen met subtiele stroming
+    // Na steen: golven die uitbreiden
+
+    const lineCount = Math.floor(H / 8);
+    for (let i = 0; i < lineCount; i++) {
+      const yBase = i * 8;
+
+      ctx.beginPath();
+      for (let x = 0; x < W; x += 4) {
+        const h = getWaterHeight(x, yBase, time);
+
+        // Hoe zichtbaar is de beweging?
+        let visibility;
+        if (!audioOn) {
+          // Stil: bijna niet zichtbaar
+          visibility = 0.01 + Math.sin(time * 0.1 + x * 0.001) * 0.005;
+        } else {
+          // Na steen: rimpels worden zichtbaar
+          const chaos = Math.min(1, rippleTime * 0.05);
+          visibility = 0.02 + Math.abs(h) * 0.003 + chaos * 0.03;
+        }
+
+        const y = yBase + h * 0.3;
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
       }
-      atoms.push(createAtom(x, y, currentElement));
+
+      // Kleur verandert met chaos
+      let color;
+      if (!audioOn) {
+        color = COLORS.mirror;
+      } else if (rippleTime < 3) {
+        color = COLORS.ripple;
+      } else {
+        // Langzaam naar chaos kleur
+        const chaos = Math.min(1, (rippleTime - 3) * 0.05);
+        const r = 100 + chaos * 151;
+        const g = 140 - chaos * 49;
+        const b = 220 - chaos * 184;
+        color = `${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}`;
+      }
+
+      ctx.strokeStyle = `rgba(${color}, ${visibility})`;
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
     }
 
-    // Update grid voor interaction
-    updateGrid();
+    // ── Ripple visuals ──
+    if (audioOn) {
+      for (let i = 0; i < stones.length; i++) {
+        const s = stones[i];
+        const age = time - s.time;
+        const speed = 100;
+        const ringDist = age * speed;
+        const alpha = Math.exp(-age * 0.2) * 0.3;
 
-    // Update atomen
-    const color = elementColors[currentElement];
-    const maxAtoms = 300;
-    atoms = atoms.filter(a => a.life > 0 && atoms.length <= maxAtoms);
+        if (alpha > 0.01) {
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, ringDist, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(124, 110, 245, ${alpha})`;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      }
+    }
 
-    // Geluid beïnvloedt visuals: audio aan = meer activiteit
-    const audioBoost = audioOn ? 1.5 : 1;
-    const fieldStrength = audioOn ? 1.2 : 0.6;
+    // ── Stroming indicators (subtiel) ──
+    // Alleen zichtbaar als je kijkt
+    if (!audioOn) {
+      // Stil: bijna onzichtbare deeltjes
+      for (let i = 0; i < 5; i++) {
+        const px = cx + Math.sin(time * 0.05 + i * 2) * W * 0.4;
+        const py = cy + Math.cos(time * 0.04 + i * 3) * H * 0.4;
+        const h = getWaterHeight(px, py, time);
 
-    atoms.forEach(a => {
-      // E/M veld interactie (sterker met geluid)
-      const localE = a.e * fieldStrength;
-      const localM = a.m * fieldStrength;
-      const saveE = a.e; const saveM = a.m;
-      a.e = localE; a.m = localM;
-      applyFieldInteractions(a, dt);
-      a.e = saveE; a.m = saveM;
-
-      // Eigen beweging (frequentie + fase)
-      const selfMotion = Math.sin(time * a.f + a.phase) * 0.05 * a.depth;
-      a.vx += selfMotion * Math.cos(a.phase);
-      a.vy += selfMotion * Math.sin(a.phase);
-
-      // Damping
-      a.vx *= 0.98;
-      a.vy *= 0.98;
-
-      // Update positie
-      a.x += a.vx * dt;
-      a.y += a.vy * dt;
-      a.life -= a.decay * dt;
-
-      // Wrap around
-      if (a.x < -20) a.x = W + 20;
-      if (a.x > W + 20) a.x = -20;
-      if (a.y < -20) a.y = H + 20;
-      if (a.y > H + 20) a.y = -20;
-    });
-
-    // Teken atomen
-    atoms.forEach(a => {
-      const r = Math.max(0.5, a.radius * a.life * a.depth);
-      if (r <= 0) return;
-
-      // E/M veld visualisatie: groter atoom = sterker veld
-      const fieldRadius = r * (1 + a.e * 0.5);
-
-      // Kern (groter met geluid)
-      const audioSize = audioOn ? 1.3 : 1;
-      const displayR = r * audioSize;
-      ctx.beginPath();
-      ctx.arc(a.x, a.y, displayR, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${color}, ${Math.min(0.4, a.life * 0.3 * a.depth * audioBoost)})`;
-      ctx.fill();
-
-      // Veld (sterker met geluid)
-      if (a.e > 0.5 || a.m > 0.5) {
-        const glowSize = audioOn ? 3 : 2;
         ctx.beginPath();
-        ctx.arc(a.x, a.y, fieldRadius * glowSize, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${color}, ${Math.min(0.05, a.life * 0.02 * a.depth * audioBoost)})`;
+        ctx.arc(px, py, 0.5, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(100, 140, 220, ${0.02 + Math.abs(h) * 0.001})`;
         ctx.fill();
       }
+    }
 
-      // Resonantie: verbind atomen met vergelijkbare frequentie
-      if (a.resonance > 1) {
-        const nearby = getNearbyAtoms(a.x, a.y);
-        nearby.forEach(idx => {
-          const other = atoms[idx];
-          if (!other || other === a) return;
-          const freqDiff = Math.abs(a.f - other.f);
-          if (freqDiff < 0.5) {
-            const dx = other.x - a.x;
-            const dy = other.y - a.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 80) {
-              ctx.beginPath();
-              ctx.moveTo(a.x, a.y);
-              ctx.lineTo(other.x, other.y);
-              ctx.strokeStyle = `rgba(${color}, ${(1 - freqDiff) * 0.05 * a.depth})`;
-              ctx.lineWidth = 0.5;
-              ctx.stroke();
-            }
-          }
-        });
-      }
-    });
+    // ── Info ──
+    if (!audioOn) {
+      infoEl.textContent = 'spiegel — stil';
+    } else if (rippleTime < 3) {
+      infoEl.textContent = `rimpel — ${rippleTime.toFixed(1)}s`;
+    } else if (rippleTime < 10) {
+      infoEl.textContent = `butterfly effect — ${rippleTime.toFixed(1)}s`;
+    } else {
+      infoEl.textContent = `chaos — ${rippleTime.toFixed(1)}s`;
+    }
 
     requestAnimationFrame(draw);
   }
 
-  // ── UI ──
-  const elLabel = document.getElementById('el-label');
-  const elSub = document.getElementById('el-sub');
+  // ── Stone throw ──
+  stoneBtn.addEventListener('click', () => {
+    initAudio();
+    audioOn = !audioOn;
+    setAudio(audioOn);
 
-  document.querySelectorAll('[data-e]').forEach(btn => {
-    btn.addEventListener('click', () => {
+    if (audioOn) {
+      // Steen gooien!
+      stones.push({
+        x: cx + (Math.random() - 0.5) * W * 0.3,
+        y: cy + (Math.random() - 0.5) * H * 0.3,
+        time: time
+      });
+      stoneBtn.textContent = '● stil';
+      stoneBtn.classList.add('rippled');
+      elSub.textContent = 'steen → rimpel → butterfly → chaos';
+    } else {
+      // Terug naar spiegel
+      stones = [];
+      rippleTime = 0;
+      stoneBtn.textContent = '● steen gooien';
+      stoneBtn.classList.remove('rippled');
+      elSub.textContent = 'spiegel → steen → rimpel → chaos';
+    }
+  });
+
+  // Click op canvas = steen gooien op die plek
+  canvas.addEventListener('click', (e) => {
+    if (!audioOn) {
       initAudio();
-      setElement(btn.dataset.e);
-      elLabel.textContent = btn.dataset.e;
-      elSub.textContent = elementSubs[btn.dataset.e];
-      document.querySelectorAll('[data-e]').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      atoms = []; // reset
-    });
-  });
+      audioOn = true;
+      setAudio(true);
+      stoneBtn.textContent = '● stil';
+      stoneBtn.classList.add('rippled');
+    }
 
-  document.querySelectorAll('[data-s]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const s = parseFloat(btn.dataset.s);
-      speedMultiplier = s;
-      document.querySelectorAll('[data-s]').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+    stones.push({
+      x: e.clientX,
+      y: e.clientY,
+      time: time
     });
-  });
-
-  // Audio toggle
-  const audioToggleBtn = document.getElementById('audio-toggle');
-  audioToggleBtn.addEventListener('click', () => {
-    const on = toggleAudio();
-    audioToggleBtn.textContent = on ? '♪ aan' : '♪ uit';
-    audioToggleBtn.classList.toggle('on', on);
   });
 
   // Start
