@@ -227,7 +227,8 @@
   // Eén oscillator die doorloopt. Stages = parameter verandering.
   // Geen stoppen/starten. De synth vertaalt alleen.
 
-  let audioNodes = null; // { osc, oscGain, filter, delay, delayGain, noise, noiseGain }
+  let audioNodes = null; // { osc, oscGain, filter, delay, delayGain, noise, noiseGain, thunderGain, thunderNoise, thunderLow, thunderHigh }
+  let thunderPlaying = false;
 
   function initAudio() {
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -271,6 +272,31 @@
       noiseGain.gain.value = 0; // stil tot chaos
       noise.start();
 
+      // ── Bliksem/donder effect ──
+      // Kort crack (hoge frequentie) + lage dreun (boom)
+      const thunderNoise = audioCtx.createBufferSource();
+      const thunderBuf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
+      const td = thunderBuf.getChannelData(0);
+      for (let i = 0; i < bufSize; i++) td[i] = Math.random() * 2 - 1;
+      thunderNoise.buffer = thunderBuf;
+      thunderNoise.loop = true;
+
+      const thunderLow = audioCtx.createBiquadFilter();
+      thunderLow.type = 'lowpass'; thunderLow.frequency.value = 150; thunderLow.Q.value = 2;
+      const thunderHigh = audioCtx.createBiquadFilter();
+      thunderHigh.type = 'highpass'; thunderHigh.frequency.value = 2000; thunderHigh.Q.value = 0.5;
+
+      const thunderGain = audioCtx.createGain();
+      thunderGain.gain.value = 0;
+
+      // Mix: lage dreun + hoge crack
+      thunderNoise.connect(thunderLow);
+      thunderNoise.connect(thunderHigh);
+      thunderLow.connect(thunderGain);
+      thunderHigh.connect(thunderGain);
+      thunderGain.connect(masterGain);
+      thunderNoise.start();
+
       // Signal chain:
       // osc → oscGain → filter → masterGain → destination
       // filter → delay → delayGain → filter (feedback loop = ripple)
@@ -292,8 +318,24 @@
 
       osc.start();
 
-      audioNodes = { osc, oscGain, filter, delay, delayGain, masterGain, noise, noiseGain };
+      audioNodes = { osc, oscGain, filter, delay, delayGain, masterGain, noise, noiseGain, thunderGain, thunderNoise, thunderLow, thunderHigh };
     }
+  }
+
+  // ── Bliksem/donder trigger ──
+  function triggerThunder() {
+    if (!audioNodes || thunderPlaying) return;
+    const n = audioNodes;
+    const t = audioCtx.currentTime;
+    thunderPlaying = true;
+
+    // Kort crack + lange dreun
+    ramp(n.thunderGain.gain, 0.25, 0.01);
+    ramp(n.thunderGain.gain, 0.15, 0.1);
+    ramp(n.thunderGain.gain, 0, 1.5);
+
+    // Timer om thunderPlaying te resetten
+    setTimeout(() => { thunderPlaying = false; }, 1600);
   }
 
   function stopAudio() {
@@ -382,6 +424,8 @@
         ramp(n.oscGain.gain, 0.3, t);
         ramp(n.filter.frequency, 4000, t);  // breed open
         ramp(n.filter.Q, 0, t);
+        // Bliksem/donder trigger bij chaos start
+        triggerThunder();
         ramp(n.delay.delayTime, 0.05, t);   // bijna geen delay = geen tijd
         ramp(n.delayGain.gain, 0.8, t);     // maximale feedback = chaos
         ramp(n.noiseGain.gain, 0.5, t);     // noise = implosie = knal
@@ -551,6 +595,9 @@
         drawBoundedWave(freq, spd, amp,
           `hsla(${hue}, 60%, 70%, 0.04)`, 1, Math.random() * Math.PI * 2);
       }
+
+      // Random bliksem in chaos
+      if (Math.random() < 0.02) triggerThunder();
 
     } else if (stage === 6) {
       // 0.0.0.0: 7 banden → water keert terug (stilte)
