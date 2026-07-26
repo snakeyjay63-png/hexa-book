@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>• Zee — Spiegel van de Diepte</title>
+  <title>• Zee — Horizontaal × Verticaal</title>
   <link rel="stylesheet" href="css/main.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -18,7 +18,6 @@
       position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
       text-align: center; z-index: 10;
     }
-
     .element-label { font-size: 1.4em; color: #7c6ef5; margin-bottom: 4px; }
     .element-sub { font-size: 0.7em; color: #666; margin-bottom: 12px; }
 
@@ -54,6 +53,18 @@
       position: fixed; top: 20px; right: 20px; color: #444; font-size: 0.65em;
       text-align: right; z-index: 10;
     }
+
+    .mode-toggle {
+      position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 4px; z-index: 10;
+    }
+    .mode-btn {
+      background: rgba(124,110,245,0.05); border: 1px solid rgba(124,110,245,0.1);
+      color: #555; padding: 4px 10px; border-radius: 3px; cursor: pointer;
+      font-family: inherit; font-size: 0.6em; transition: all 0.3s;
+    }
+    .mode-btn:hover { background: rgba(124,110,245,0.1); }
+    .mode-btn.active { background: rgba(124,110,245,0.15); color: #c0b8e8; border-color: rgba(124,110,245,0.3); }
   </style>
 </head>
 <body>
@@ -61,11 +72,17 @@
   <a href="index.html" class="back-link" style="top:50px;">← hexa-book</a>
   <div class="info" id="info">spiegel — stil</div>
 
+  <div class="mode-toggle">
+    <button class="mode-btn active" data-mode="both">horizontaal × verticaal</button>
+    <button class="mode-btn" data-mode="horizontal">horizontaal</button>
+    <button class="mode-btn" data-mode="vertical">verticaal</button>
+  </div>
+
   <canvas id="c"></canvas>
 
   <div class="ui" id="ui">
-    <div class="element-label" id="el-label">zee</div>
-    <div class="element-sub" id="el-sub">spiegel van de diepte — cirkel → rimpel → interferentie</div>
+    <div class="element-label">zee</div>
+    <div class="element-sub" id="el-sub">horizontaal (breedte) × verticaal (diepte) — de engine achter 0.0.0.0</div>
     <button class="stone-btn" id="stone-btn">● steen gooien</button>
   </div>
 
@@ -88,18 +105,22 @@
   window.addEventListener('resize', resize);
   resize();
 
-  // ── Concept: Spiegel van de Diepte ──
+  // ── Concept ──
   //
-  // Een cirkel = pond in het park = vrede
-  // Oppervlak = perfecte spiegel (wit, helder, zon zichtbaar)
-  // Diepte = steeds blauwer, dieper indigo
-  // Steen gooien = rimpel → golven botsen → interferentie patronen
-  // Alles komt terug: de golven reflecteren van de rand
+  // Horizontaal = de zee zoals je hem ziet (de horizon, de breedte)
+  // Verticaal = de diepte (oppervlak → afgrond)
+  //
+  // De engine achter 0.0.0.0:
+  // Horizontale lijnen = scanlines van de zee
+  // Verticale diepte = kleur van wit naar indigo
+  //
+  // Samen = de complete zee
 
+  let viewMode = 'both'; // 'both' | 'horizontal' | 'vertical'
   let time = 0;
   let audioOn = false;
   let rippleTime = 0;
-  let stones = []; // {x, y, time} — binnen de cirkel
+  let stones = [];
 
   // ── Audio ──
   let audioCtx = null;
@@ -147,7 +168,6 @@
     if (!audioNodes) return;
     const t = 1;
     const n = audioNodes;
-
     if (on) {
       n.bp1.frequency.setTargetAtTime(250, audioCtx.currentTime, t);
       n.bp1.Q.setTargetAtTime(0.5, audioCtx.currentTime, t);
@@ -161,39 +181,14 @@
     }
   }
 
-  // ── Diepte: van wit (oppervlak) naar indigo (diepte) ──
-  //
-  // Kleur interpolatie:
-  // 0 = oppervlak = helder wit/lichtblauw
-  // 1 = diepte = donker indigo
-
-  function depthColor(depth) {
-    // depth: 0-1 (0=oppervlak, 1=diepte)
-    const r = Math.round(240 - depth * 220); // 240 → 20
-    const g = Math.round(245 - depth * 225); // 245 → 20
-    const b = Math.round(255 - depth * 175); // 255 → 80
-    return `rgb(${r},${g},${b})`;
-  }
-
-  function depthColorAlpha(depth, alpha) {
-    const r = Math.round(240 - depth * 220);
-    const g = Math.round(245 - depth * 225);
-    const b = Math.round(255 - depth * 175);
-    return `rgba(${r},${g},${b},${alpha})`;
-  }
-
-  // ── Golf berekening ──
-  // Golven breiden uit van steen → botsen → interferentie → reflecteren van rand
-
+  // ── Golven ──
   function getWaveHeight(px, py, t) {
     let h = 0;
-
     for (let si = 0; si < stones.length; si++) {
       const s = stones[si];
       const age = t - s.time;
-      const speed = 80; // pixels/sec
+      const speed = 80;
 
-      // Originele golf
       const dx = px - s.x;
       const dy = py - s.y;
       const dist = Math.sqrt(dx * dx + dy * dy);
@@ -202,19 +197,16 @@
 
       if (Math.abs(dist - ringDist) < ringWidth) {
         const ripple = Math.sin((dist - ringDist) * 0.08) *
-                       Math.exp(-age * 0.15) *
+                       Math.exp(-age * 0.12) *
                        Math.exp(-Math.abs(dist - ringDist) / ringWidth);
         h += ripple * 20;
       }
 
-      // Reflected golf (van de rand van de cirkel)
-      // Simpel: golf van spiegel punt
+      // Reflected
       const sDx = s.x - cx;
       const sDy = s.y - cy;
       const sDist = Math.sqrt(sDx * sDx + sDy * sDy);
-
       if (sDist < pondRadius) {
-        // Spiegel punt (buiten de cirkel)
         const mirrorDist = 2 * pondRadius - sDist;
         const mirrorAngle = Math.atan2(sDy, sDx);
         const mx = cx + mirrorDist * Math.cos(mirrorAngle);
@@ -228,101 +220,150 @@
 
         if (Math.abs(rDist - rRingDist) < rRingWidth) {
           const rRipple = Math.sin((rDist - rRingDist) * 0.08) *
-                          Math.exp(-age * 0.15) *
+                          Math.exp(-age * 0.12) *
                           Math.exp(-Math.abs(rDist - rRingDist) / rRingWidth);
-          h += rRipple * 10; // zwakker reflectie
+          h += rRipple * 8;
         }
       }
     }
-
     return h;
   }
 
-  // ── Teken ──
+  // ── Diepte kleur ──
+  function depthColor(depth) {
+    // depth: 0 = oppervlak (helder), 1 = diepte (indigo)
+    const r = Math.round(240 - depth * 220);
+    const g = Math.round(245 - depth * 225);
+    const b = Math.round(255 - depth * 175);
+    return { r, g, b };
+  }
 
+  // ── Tekenen ──
   function draw() {
-    // Donkere achtergrond
     ctx.fillStyle = '#06060a';
     ctx.fillRect(0, 0, W, H);
 
     time += 0.016;
     if (audioOn) rippleTime += 0.016;
 
-    // ── Cirkel = de spiegel ──
-    // Clip binnen cirkel
+    // ── Clip to circle ──
     ctx.save();
     ctx.beginPath();
     ctx.arc(cx, cy, pondRadius, 0, Math.PI * 2);
     ctx.clip();
 
-    // Basis kleur = diepte gradiënt (centrum = diep, rand = oppervlak)
+    // ── BASIS: diepte gradiënt ──
     const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, pondRadius);
-    grad.addColorStop(0, '#0a0a2e');   // diep indigo in centrum
-    grad.addColorStop(0.5, '#1a1a4e'); // medium blauw
-    grad.addColorStop(1, '#3a4a6e');   // lichtblauw aan rand (oppervlak)
-
+    grad.addColorStop(0, '#0a0a2e');
+    grad.addColorStop(0.5, '#1a1a4e');
+    grad.addColorStop(1, '#3a4a6e');
     ctx.fillStyle = grad;
     ctx.fillRect(cx - pondRadius, cy - pondRadius, pondRadius * 2, pondRadius * 2);
 
-    // ── Golven = rimpels in de spiegel ──
-    // Tekening via scanlines (horizontale lijnen door cirkel)
+    // ── HORIZONTAAL: scanlines ──
+    // De zee zoals je hem ziet — de horizon
+    const showHorizontal = (viewMode === 'horizontal' || viewMode === 'both');
+    const hIntensity = (viewMode === 'horizontal') ? 1 : 0.5;
 
-    if (audioOn && stones.length > 0) {
-      const step = 3; // pixel stap
-      for (let y = cy - pondRadius; y < cy + pondRadius; y += step) {
+    if (showHorizontal) {
+      const lineSpacing = 4;
+      for (let y = cy - pondRadius; y < cy + pondRadius; y += lineSpacing) {
         const rowDy = y - cy;
-        const rowHalfWidth = Math.sqrt(Math.max(0, pondRadius * pondRadius - rowDy * rowDy));
+        const rowHW = Math.sqrt(Math.max(0, pondRadius * pondRadius - rowDy * rowDy));
+        if (rowHW < 1) continue;
+
+        // Diepte van deze rij
+        const depth = Math.abs(rowDy) / pondRadius;
+        const c = depthColor(depth);
+
+        // Golven
+        let waveAlpha = 0;
+        if (audioOn && stones.length > 0) {
+          const h = getWaveHeight(cx, y, time);
+          waveAlpha = Math.abs(h) * 0.008;
+        }
 
         ctx.beginPath();
-        for (let x = cx - rowHalfWidth; x < cx + rowHalfWidth; x += step) {
-          const h = getWaveHeight(x, y, time);
+        ctx.moveTo(cx - rowHW, y);
+        ctx.lineTo(cx + rowHW, y);
 
-          // Diepte van dit punt
-          const px = x - cx;
-          const py = y - cy;
-          const dist = Math.sqrt(px * px + py * py);
-          const depth = dist / pondRadius; // 0=centrum(diep), 1=rand(oppervlak)
+        const baseAlpha = 0.01 * hIntensity;
+        const alpha = baseAlpha + waveAlpha;
 
-          // Golf = vervorming van de spiegel
-          // In diepte: golven zijn donkerder
-          // Aan oppervlak: golven zijn lichter (wit/spiegel)
-          const waveBright = h * (1 - depth) * 30;
+        ctx.strokeStyle = `rgba(${c.r},${c.g},${c.b},${alpha})`;
+        ctx.lineWidth = lineSpacing * 0.4;
+        ctx.stroke();
+      }
+    }
 
-          const r = Math.round(10 + depth * 40 + waveBright);
-          const g = Math.round(10 + depth * 35 + waveBright * 0.9);
-          const b = Math.round(40 + depth * 60 + waveBright * 0.5);
+    // ── VERTICAAL: diepte ──
+    // De afgrond — oppervlak naar onder
+    const showVertical = (viewMode === 'vertical' || viewMode === 'both');
+    const vIntensity = (viewMode === 'vertical') ? 1 : 0.5;
 
-          const a = Math.min(0.4, 0.1 + Math.abs(h) * 0.02);
+    if (showVertical) {
+      // Concentrische cirkels = diepte lagen
+      const rings = 20;
+      for (let r = 0; r <= rings; r++) {
+        const ringR = (r / rings) * pondRadius;
+        const depth = r / rings; // 0 = centrum (diep), 1 = rand (oppervlak)
 
-          if (x === cx - rowHalfWidth) ctx.moveTo(x, y);
-          else ctx.lineTo(x, y);
+        const c = depthColor(1 - depth); // omgekeerd: rand = licht, centrum = donker
+
+        let waveAlpha = 0;
+        if (audioOn && stones.length > 0) {
+          const h = getWaveHeight(cx + ringR, cy, time);
+          waveAlpha = Math.abs(h) * 0.005;
         }
-        ctx.strokeStyle = `rgba(100,140,200,${0.02 + Math.abs(getWaveHeight(cx, y, time)) * 0.005})`;
-        ctx.lineWidth = step;
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, ringR, 0, Math.PI * 2);
+
+        const baseAlpha = 0.02 * vIntensity;
+        const alpha = baseAlpha + waveAlpha;
+
+        ctx.strokeStyle = `rgba(${c.r},${c.g},${c.b},${alpha})`;
+        ctx.lineWidth = 1;
         ctx.stroke();
       }
 
-      // Golven als heldere lijnen
-      for (let y = cy - pondRadius; y < cy + pondRadius; y += step) {
-        const rowDy = y - cy;
-        const rowHalfWidth = Math.sqrt(Math.max(0, pondRadius * pondRadius - rowDy * rowDy));
+      // Verticale lijnen vanuit centrum
+      const spokes = 12;
+      for (let s = 0; s < spokes; s++) {
+        const angle = (s / spokes) * Math.PI * 2;
 
         ctx.beginPath();
-        for (let x = cx - rowHalfWidth; x < cx + rowHalfWidth; x += step) {
-          const h = getWaveHeight(x, y, time);
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(
+          cx + Math.cos(angle) * pondRadius,
+          cy + Math.sin(angle) * pondRadius
+        );
+        ctx.strokeStyle = `rgba(100,140,200,${0.008 * vIntensity})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
 
-          // Lichtreflectie op golftop
-          if (h > 1) {
+    // ── Lichtreflectie op golftoppen ──
+    if (audioOn) {
+      const step = 6;
+      for (let y = cy - pondRadius; y < cy + pondRadius; y += step) {
+        const rowDy = y - cy;
+        const rowHW = Math.sqrt(Math.max(0, pondRadius * pondRadius - rowDy * rowDy));
+
+        for (let x = cx - rowHW; x < cx + rowHW; x += step) {
+          const h = getWaveHeight(x, y, time);
+          if (h > 2) {
             const px = x - cx;
             const py = y - cy;
             const dist = Math.sqrt(px * px + py * py);
             const depth = dist / pondRadius;
 
-            const bright = h * 5 * (1 - depth);
-            if (bright > 0.5) {
+            const bright = h * 3 * (1 - depth);
+            if (bright > 1) {
               ctx.beginPath();
-              ctx.arc(x, y, bright * 0.3, 0, Math.PI * 2);
-              ctx.fillStyle = `rgba(240,245,255,${bright * 0.02})`;
+              ctx.arc(x, y, bright * 0.2, 0, Math.PI * 2);
+              ctx.fillStyle = `rgba(240,245,255,${bright * 0.015})`;
               ctx.fill();
             }
           }
@@ -330,79 +371,51 @@
       }
     }
 
-    // ── Spiegel effect (altijd) ──
-    // Subtiele horizontale lijnen = de stilte van het water
-    const lineCount = Math.floor(pondRadius * 2 / 6);
-    for (let i = 0; i < lineCount; i++) {
-      const y = (cy - pondRadius) + i * 6;
-      const rowDy = y - cy;
-      const rowHalfWidth = Math.sqrt(Math.max(0, pondRadius * pondRadius - rowDy * rowDy));
-
-      if (rowHalfWidth < 1) continue;
-
-      ctx.beginPath();
-      ctx.moveTo(cx - rowHalfWidth, y);
-      ctx.lineTo(cx + rowHalfWidth, y);
-      ctx.strokeStyle = `rgba(200,210,230,${0.015})`;
-      ctx.lineWidth = 0.5;
-      ctx.stroke();
-    }
-
-    // ── Zon reflectie (subtiele witte gloed) ──
+    // ── Zon reflectie ──
     const sunX = cx + pondRadius * 0.3;
     const sunY = cy - pondRadius * 0.4;
-    const sunGrad = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, pondRadius * 0.5);
-    sunGrad.addColorStop(0, 'rgba(255,255,255,0.03)');
-    sunGrad.addColorStop(0.5, 'rgba(255,255,255,0.01)');
+    const sunGrad = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, pondRadius * 0.4);
+    sunGrad.addColorStop(0, 'rgba(255,255,255,0.02)');
     sunGrad.addColorStop(1, 'rgba(255,255,255,0)');
     ctx.fillStyle = sunGrad;
     ctx.fillRect(cx - pondRadius, cy - pondRadius, pondRadius * 2, pondRadius * 2);
 
-    ctx.restore(); // end clip
+    ctx.restore();
 
     // ── Cirkel rand ──
     ctx.beginPath();
     ctx.arc(cx, cy, pondRadius, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(100,140,200,0.15)';
+    ctx.strokeStyle = 'rgba(100,140,200,0.12)';
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // Rand glow
-    ctx.beginPath();
-    ctx.arc(cx, cy, pondRadius, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(100,140,200,0.05)';
-    ctx.lineWidth = 15;
-    ctx.stroke();
-
-    // ── Rimpel ring visuals ──
+    // ── Ripple rings ──
     if (audioOn) {
       for (let si = 0; si < stones.length; si++) {
         const s = stones[si];
         const age = time - s.time;
-        const speed = 80;
-        const ringDist = age * speed;
-        const alpha = Math.exp(-age * 0.12) * 0.2;
-
+        const ringDist = age * 80;
+        const alpha = Math.exp(-age * 0.1) * 0.15;
         if (alpha > 0.005 && ringDist < pondRadius) {
           ctx.beginPath();
           ctx.arc(s.x, s.y, ringDist, 0, Math.PI * 2);
           ctx.strokeStyle = `rgba(140,180,220,${alpha})`;
-          ctx.lineWidth = 1;
+          ctx.lineWidth = 0.5;
           ctx.stroke();
         }
       }
     }
 
-    // ── Diepte indicator (subtiele tekst in centrum) ──
+    // ── Diepte label (stil) ──
     if (!audioOn) {
-      ctx.fillStyle = 'rgba(100,140,200,0.08)';
-      ctx.font = '0.6em "IBM Plex Mono", monospace';
+      ctx.fillStyle = 'rgba(100,140,200,0.06)';
+      ctx.font = '0.5em "IBM Plex Mono", monospace';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText('diepte', cx, cy);
     }
 
-    // ── Info update ──
+    // ── Info ──
     if (!audioOn) {
       infoEl.textContent = 'spiegel — stil';
     } else if (rippleTime < 2) {
@@ -416,6 +429,15 @@
     requestAnimationFrame(draw);
   }
 
+  // ── Mode buttons ──
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      viewMode = btn.dataset.mode;
+    });
+  });
+
   // ── Steen gooien ──
   stoneBtn.addEventListener('click', () => {
     initAudio();
@@ -423,7 +445,6 @@
     setAudio(audioOn);
 
     if (audioOn) {
-      // Steen in centrum
       stones.push({
         x: cx + (Math.random() - 0.5) * 20,
         y: cy + (Math.random() - 0.5) * 20,
@@ -437,16 +458,15 @@
       rippleTime = 0;
       stoneBtn.textContent = '● steen gooien';
       stoneBtn.classList.remove('rippled');
-      elSub.textContent = 'spiegel van de diepte — cirkel → rimpel → interferentie';
+      elSub.textContent = 'horizontaal (breedte) × verticaal (diepte) — de engine achter 0.0.0.0';
     }
   });
 
-  // Click op cirkel = steen op die plek
+  // Click in cirkel = steen
   canvas.addEventListener('click', (e) => {
     const dx = e.clientX - cx;
     const dy = e.clientY - cy;
     const dist = Math.sqrt(dx * dx + dy * dy);
-
     if (dist > pondRadius * 1.1) return;
 
     if (!audioOn) {
@@ -457,9 +477,8 @@
       stoneBtn.classList.add('rippled');
     }
 
-    // Binnen cirkel gooien
-    const sx = Math.min(e.clientX, cx + pondRadius * 0.9);
-    const sy = Math.min(e.clientY, cy + pondRadius * 0.9);
+    const sx = Math.min(Math.max(e.clientX, cx - pondRadius * 0.9), cx + pondRadius * 0.9);
+    const sy = Math.min(Math.max(e.clientY, cy - pondRadius * 0.9), cy + pondRadius * 0.9);
     const sDx = sx - cx;
     const sDy = sy - cy;
     const sDist = Math.sqrt(sDx * sDx + sDy * sDy);
@@ -469,7 +488,6 @@
     }
   });
 
-  // Start
   draw();
 })();
 </script>
