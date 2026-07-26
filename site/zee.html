@@ -223,21 +223,18 @@
     for (let i = 0; i < lineCount; i++) {
       const yBase = i * 8;
 
+      // Hoe zichtbaar is de beweging?
+      let visibility;
+      if (!audioOn) {
+        visibility = 0.01 + Math.sin(time * 0.1) * 0.005;
+      } else {
+        const chaos = Math.min(1, rippleTime * 0.05);
+        visibility = 0.02 + chaos * 0.03;
+      }
+
       ctx.beginPath();
       for (let x = 0; x < W; x += 4) {
         const h = getWaterHeight(x, yBase, time);
-
-        // Hoe zichtbaar is de beweging?
-        let visibility;
-        if (!audioOn) {
-          // Stil: bijna niet zichtbaar
-          visibility = 0.01 + Math.sin(time * 0.1 + x * 0.001) * 0.005;
-        } else {
-          // Na steen: rimpels worden zichtbaar
-          const chaos = Math.min(1, rippleTime * 0.05);
-          visibility = 0.02 + Math.abs(h) * 0.003 + chaos * 0.03;
-        }
-
         const y = yBase + h * 0.3;
         if (x === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
