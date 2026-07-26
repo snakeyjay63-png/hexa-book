@@ -407,6 +407,50 @@
 
     time += 0.016;
 
+    // ── Zee-waves: permanente achtergrond ──
+    // Golven die altijd stromen, ongeacht de stage
+    // Dit is de 'water' laag — alles zit bovenop/om dit heen
+    drawSeaWaves();
+
+    // ── Zee-waves: continue achtergrond ──
+    function drawSeaWaves() {
+      // 3 lagen golven, elk met eigen frequentie en snelheid
+      // Dit simuleert zee-golven onder de structuur door
+      const waveLayers = [
+        { y: cy - 60, freq: 0.008, speed: 0.2, amp: 15, color: 'rgba(100, 140, 220, 0.04)' },
+        { y: cy - 20, freq: 0.012, speed: 0.3, amp: 12, color: 'rgba(100, 180, 255, 0.05)' },
+        { y: cy + 40, freq: 0.006, speed: 0.15, amp: 18, color: 'rgba(100, 140, 220, 0.04)' },
+      ];
+
+      waveLayers.forEach(function(w) {
+        ctx.beginPath();
+        for (let x = 0; x < W; x++) {
+          const wave = Math.sin(x * w.freq + time * w.speed) * w.amp;
+          const y = w.y + wave;
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = w.color;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      });
+
+      // Horizontale lijnen = wateroppervlak
+      for (let i = 0; i < 5; i++) {
+        const yBase = H * 0.3 + i * (H * 0.1);
+        ctx.beginPath();
+        for (let x = 0; x < W; x += 8) {
+          const wave = Math.sin(x * 0.005 + time * 0.25 + i) * 8;
+          const y = yBase + wave;
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = `rgba(100, 140, 220, ${0.03 + Math.sin(time + i) * 0.01})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+
     // ── Wave helper: bounded sine ──
     // Teken een wave die binnen canvas blijft.
     // Wave = sinus die center-gericht is, randen fade naar 0.
