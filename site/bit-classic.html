@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>• 1 Bit Licht — Classic</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="css/main.css">
+<style>
+  #bit-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+  }
+
+  #bit-ui {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    font-family: var(--mono);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    background: rgba(6, 6, 10, 0.9);
+    padding: 16px 32px;
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+  }
+
+  #bit-stage {
+    font-size: 0.8rem;
+    color: var(--accent);
+    text-align: center;
+  }
+
+  #bit-label {
+    font-size: 0.65rem;
+    color: var(--text-soft);
+  }
+
+  #play-btn, #autoplay-btn {
+    padding: 8px 24px;
+    border: 1px solid var(--accent);
+    border-radius: 99px;
+    background: transparent;
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  #play-btn:hover, #autoplay-btn:hover {
+    background: var(--accent);
+    color: #06060a;
+  }
+
+  #autoplay-btn.active {
+    background: var(--accent);
+    color: #06060a;
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  #speed-control {
+    display: flex;
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  .speed-btn {
+    padding: 4px 12px;
+    border: 1px solid rgba(124, 110, 245, 0.3);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--text-soft);
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .speed-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .speed-btn.active {
+    background: var(--accent);
+    color: #06060a;
+    border-color: var(--accent);
+  }
+
+  #autoplay-progress {
+    width: 100px;
+    height: 2px;
+    background: rgba(124, 110, 245, 0.1);
+    border-radius: 1px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+
+  #autoplay-bar {
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    transition: width 0.1s linear;
+  }
+
+  .stage-bar {
+    display: flex;
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  .stage-dot {
+    width: 24px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(124, 110, 245, 0.2);
+    transition: background 0.3s ease;
+  }
+
+  .stage-dot.active {
+    background: var(--accent);
+  }
+
+  .stage-dot.done {
+    background: var(--yellow);
+  }
+</style>
+<nav id="nav-top">
+  <a href="bit.html" style="color:#7c6ef5;text-decoration:none;opacity:0.7;">• 8×8 grid</a>
+  <a href="zee.html" style="color:#a78bfa;text-decoration:none;opacity:0.7;">zee</a>
+  <a href="/" style="color:#7c6ef5;text-decoration:none;opacity:0.7;">index</a>
+</nav>
+</head>
+<body>
+<!-- Top nav -->
+<nav id="nav-top">
+  <a href="/" style="color:#7c6ef5;text-decoration:none;opacity:0.7;">• index</a>
+  <a href="spectrum.html" style="color:#7c6ef5;text-decoration:none;opacity:0.7;">spectrum</a>
+  <a href="licht.html" style="color:#a78bfa;text-decoration:none;opacity:0.7;">licht</a>
+</nav>
+
+<canvas id="bit-canvas"></canvas>
+
+<div id="bit-ui">
+  <div id="bit-stage">0 = 1</div>
+  <div id="bit-label">1 bit licht — statisch</div>
+  <div class="stage-bar">
+    <div class="stage-dot" data-stage="0"></div>
+    <div class="stage-dot" data-stage="1"></div>
+    <div class="stage-dot" data-stage="2"></div>
+    <div class="stage-dot" data-stage="3"></div>
+    <div class="stage-dot" data-stage="4"></div>
+    <div class="stage-dot" data-stage="5"></div>
+    <div class="stage-dot" data-stage="6"></div>
+  </div>
+  <div class="btn-row">
+    <button id="play-btn">▶ PLAY</button>
+    <button id="autoplay-btn">⏵ AUTO</button>
+  </div>
+  <div id="speed-control">
+    <button class="speed-btn" data-speed="0.5">0.5×</button>
+    <button class="speed-btn active" data-speed="1">1×</button>
+    <button class="speed-btn" data-speed="2">2×</button>
+  </div>
+  <div id="autoplay-progress">
+    <div id="autoplay-bar"></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const canvas = document.getElementById('bit-canvas');
+  const ctx = canvas.getContext('2d');
+  const playBtn = document.getElementById('play-btn');
+  const stageLabel = document.getElementById('bit-stage');
+  const bitLabel = document.getElementById('bit-label');
+
+  let W, H, cx, cy;
+  let stage = 0; // 0=bit, 1=1wave(2^0), 2=2waves(2^1), 3=4waves(2^2), 4=8waves(2^3), 5=chaos, 6=mandelbrot→0
+  let playing = false;
+  let time = 0;
+  let audioCtx = null;
+  let currentOsc = null;
+  let noiseNode = null;
+  let autoplay = false;
+  let autoplayTimer = null;
+  let autoplayInterval = null;
+  let autoplayDelay = 6000; // 6 seconden per stage
+  let autoplayStart = 0;
+  let speedMultiplier = 1; // 0.5 = langzaam, 1 = normaal, 2 = snel
+
+  const stages = [
+    { name: '0 = 1', label: 'bit licht — eenheid' },
+    { name: '1 WAVE', label: '2⁰ — eerste beweging' },
+    { name: '2 WAVES', label: '2¹ — verdubbeling' },
+    { name: 'VORTEX', label: '2→4 draait → 4' },
+    { name: '8 WAVES', label: '2³ — grens van orde' },
+    { name: 'CHAOS', label: '>7 limiet → alles tegelijk' },
+    { name: '0.0.0.0', label: '7 banden → echo = positie' },
+  ];
+
+  // ── Resize ──
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    cx = W / 2;
+    cy = H / 2;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // ── Audio: één continue stroom ──
+  // Eén oscillator die doorloopt. Stages = parameter verandering.
+  // Geen stoppen/starten. De synth vertaalt alleen.
+
+  let audioNodes = null; // { osc, oscGain, filter, delay, delayGain, noise, noiseGain }
+
+  function initAudio() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+
+    if (!audioNodes) {
+      // ── Eén master oscillator ──
+      const osc = audioCtx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = 220;
+
+      // Gain voor de oscillator
+      const oscGain = audioCtx.createGain();
+      oscGain.gain.value = 0.1;
+
+      // Filter — verandert per stage
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 8000; // open = alles hoorbaar
+      filter.Q.value = 0;
+
+      // Delay = ripple/return (inversie die terugkomt)
+      const delay = audioCtx.createDelay();
+      delay.delayTime.value = 0; // geen delay = geen ripple
+      const delayGain = audioCtx.createGain();
+      delayGain.gain.value = 0; // geen return = geen echo
+
+      // Master gain
+      const masterGain = audioCtx.createGain();
+      masterGain.gain.value = 0.15;
+
+      // Noise source voor chaos (stage 5) — altijd aan, gain=0 tot nodig
+      const bufSize = audioCtx.sampleRate * 4;
+      const buf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buf;
+      noise.loop = true;
+      const noiseGain = audioCtx.createGain();
+      noiseGain.gain.value = 0; // stil tot chaos
+      noise.start();
+
+      // Signal chain:
+      // osc → oscGain → filter → masterGain → destination
+      // filter → delay → delayGain → filter (feedback loop = ripple)
+      // noise → noiseGain → masterGain
+
+      osc.connect(oscGain);
+      oscGain.connect(filter);
+      filter.connect(masterGain);
+      masterGain.connect(audioCtx.destination);
+
+      // Delay feedback (ripple = inversie die terugkomt)
+      filter.connect(delay);
+      delay.connect(delayGain);
+      delayGain.connect(filter); // terug naar filter input = feedback
+
+      // Noise parallel
+      noise.connect(noiseGain);
+      noiseGain.connect(masterGain);
+
+      osc.start();
+
+      audioNodes = { osc, oscGain, filter, delay, delayGain, masterGain, noise, noiseGain };
+    }
+  }
+
+  function stopAudio() {
+    if (audioNodes) {
+      try { audioNodes.osc.stop(); } catch(e) {}
+      try { audioNodes.noise.stop(); } catch(e) {}
+      audioNodes = null;
+    }
+  }
+
+  // ── Smooth parameter ramping — geen hiaten ──
+  function ramp(param, target, duration) {
+    // Exponential ramp = natuurlijke vertragen/versnellen
+    param.setTargetAtTime(target, audioCtx.currentTime, duration);
+  }
+
+  // ── Stage → parameters ──
+  // De synth vertaalt: continue stroom, alleen frequentie/filter/delay verandert
+
+  function playStageAudio(s) {
+    initAudio();
+    const n = audioNodes;
+    const t = 0.5; // ramp duration (halve seconde = vloeibaar)
+
+    switch(s) {
+
+      case 0: // 0=1: zuivere toon — eenheid
+        ramp(n.osc.frequency, 220, t);
+        ramp(n.oscGain.gain, 1, t);
+        ramp(n.filter.frequency, 8000, t); // open
+        ramp(n.filter.Q, 0, t);
+        ramp(n.delay.delayTime, 0, t);      // geen ripple
+        ramp(n.delayGain.gain, 0, t);       // geen echo
+        ramp(n.noiseGain.gain, 0, t);       // geen noise
+        break;
+
+      case 1: // 1 WAVE: 2⁰ — eerste beweging
+        // Vertraagt → inversie begint
+        ramp(n.osc.frequency, 110, t);      // halve frequentie = vertraagt
+        ramp(n.oscGain.gain, 1, t);
+        ramp(n.filter.frequency, 8000, t);
+        ramp(n.filter.Q, 0, t);
+        ramp(n.delay.delayTime, 0.1, t);    // mini-delay = beweging
+        ramp(n.delayGain.gain, 0.1, t);     // zwakke return
+        ramp(n.noiseGain.gain, 0, t);
+        break;
+
+      case 2: // 2 WAVES: inversie komt terug = ripple (2e wave)
+        // Delay = inversie die terugkomt als tweede golf
+        ramp(n.osc.frequency, 110, t);      // blijft traag
+        ramp(n.oscGain.gain, 0.7, t);
+        ramp(n.filter.frequency, 8000, t);
+        ramp(n.filter.Q, 0, t);
+        ramp(n.delay.delayTime, 0.3, t);    // meer delay = duidelijk ripple
+        ramp(n.delayGain.gain, 0.4, t);     // sterkere echo = 2e wave hoorbaar
+        ramp(n.noiseGain.gain, 0, t);
+        break;
+
+      case 3: // VORTEX: 2→4 draait → implosie naar center
+        // Draaiend = frequentie oscilleert (LFO = vortex)
+        // Implosie = alles comprimeert naar center
+        ramp(n.osc.frequency, 165, t);
+        ramp(n.oscGain.gain, 0.6, t);
+        ramp(n.filter.frequency, 400, t);   // smaller = implosie
+        ramp(n.filter.Q, 4, t);             // meer Q = vortex-scherp
+        ramp(n.delay.delayTime, 0.4, t);    // medium delay = draaien
+        ramp(n.delayGain.gain, 0.5, t);     // sterke feedback = vortex
+        ramp(n.noiseGain.gain, 0.05, t);    // zacht ruisen = werveling
+        break;
+
+      case 4: // 8 WAVES: 2³ — grens van orde (dichthelder)
+        // Alles dicht bij elkaar = dichthelder
+        ramp(n.osc.frequency, 82.5, t);     // laag = dicht
+        ramp(n.oscGain.gain, 0.4, t);
+        ramp(n.filter.frequency, 500, t);   // smaller band = dicht
+        ramp(n.filter.Q, 4, t);
+        ramp(n.delay.delayTime, 0.2, t);
+        ramp(n.delayGain.gain, 0.35, t);
+        ramp(n.noiseGain.gain, 0, t);
+        break;
+
+      case 5: // CHAOS: >7 limiet → versnelt > Mach 1 → implosie → KNAL
+        // Versnellen tot sneller dan geluid = implosie
+        // Knal = alles tegelijk = white noise + extreme filter
+        ramp(n.osc.frequency, 8000, t);     // extreem hoog = versnelt
+        ramp(n.oscGain.gain, 0.3, t);
+        ramp(n.filter.frequency, 4000, t);  // breed open
+        ramp(n.filter.Q, 0, t);
+        ramp(n.delay.delayTime, 0.05, t);   // bijna geen delay = geen tijd
+        ramp(n.delayGain.gain, 0.8, t);     // maximale feedback = chaos
+        ramp(n.noiseGain.gain, 0.5, t);     // noise = implosie = knal
+        break;
+
+      case 6: // 0.0.0.0: 7 banden → water keert terug (stilte)
+        // Na de knal: implosie implodeert → terug naar center → stilte
+        ramp(n.osc.frequency, 55, t);       // diep = grond
+        ramp(n.oscGain.gain, 0.2, t);       // zwak = verdwijnt
+        ramp(n.filter.frequency, 200, t);   // smal band = 1 van 7
+        ramp(n.filter.Q, 8, t);             // zeer resonant = scherp
+        ramp(n.delay.delayTime, 0.8, t);    // lange echo = water stroomt
+        ramp(n.delayGain.gain, 0.2, t);     // zachte return = positie
+        ramp(n.noiseGain.gain, 0, t);       // geen chaos meer
+        break;
+
+    }
+  }
+
+  // ── Visuals: continue transform ──
+  // Alles op fade-buffer. Oud beeld vervaagt, nieuw beeld groeit er overheen.
+  // Waves blijven binnen canvas — ze comprimeren/expanderen in de nieuwe vorm.
+
+  function draw() {
+    // Fade = continue laag (alle stages) — geen clearRect
+    ctx.fillStyle = 'rgba(6, 6, 10, 0.04)';
+    ctx.fillRect(0, 0, W, H);
+
+    time += 0.016;
+
+    // ── Zee-waves: permanente achtergrond ──
+    // Golven die altijd stromen, ongeacht de stage
+    // Dit is de 'water' laag — alles zit bovenop/om dit heen
+    drawSeaWaves();
+
+    // ── Zee-waves: continue achtergrond ──
+    function drawSeaWaves() {
+      // 3 lagen golven, elk met eigen frequentie en snelheid
+      // Dit simuleert zee-golven onder de structuur door
+      const waveLayers = [
+        { y: cy - 60, freq: 0.008, speed: 0.2, amp: 15, color: 'rgba(100, 140, 220, 0.04)' },
+        { y: cy - 20, freq: 0.012, speed: 0.3, amp: 12, color: 'rgba(100, 180, 255, 0.05)' },
+        { y: cy + 40, freq: 0.006, speed: 0.15, amp: 18, color: 'rgba(100, 140, 220, 0.04)' },
+      ];
+
+      waveLayers.forEach(function(w) {
+        ctx.beginPath();
+        for (let x = 0; x < W; x++) {
+          const wave = Math.sin(x * w.freq + time * w.speed) * w.amp;
+          const y = w.y + wave;
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = w.color;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      });
+
+      // Horizontale lijnen = wateroppervlak
+      for (let i = 0; i < 5; i++) {
+        const yBase = H * 0.3 + i * (H * 0.1);
+        ctx.beginPath();
+        for (let x = 0; x < W; x += 8) {
+          const wave = Math.sin(x * 0.005 + time * 0.25 + i) * 8;
+          const y = yBase + wave;
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = `rgba(100, 140, 220, ${0.03 + Math.sin(time + i) * 0.01})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+
+    // ── Wave helper: bounded sine ──
+    // Teken een wave die binnen canvas blijft.
+    // Wave = sinus die center-gericht is, randen fade naar 0.
+    function drawBoundedWave(freq, speed, amp, color, lineWidth, phase) {
+      phase = phase || 0;
+      ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        // Normaaliseer x: 0→1 (links→rechts)
+        const nx = x / W;
+        // Sinus binnen canvas
+        const wave = Math.sin(nx * Math.PI * 4 * freq + time * speed + phase);
+        // Randen: wave comprimeert naar 0 aan randen
+        const envelope = Math.sin(nx * Math.PI); // 0 aan randen, 1 in midden
+        const y = cy + wave * amp * envelope;
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = color;
+      ctx.lineWidth = lineWidth;
+      ctx.stroke();
+    }
+
+    if (stage === 0) {
+      // Single bit — pulse
+      const pulse = 0.5 + 0.5 * Math.sin(time * 2);
+      const r = 100 + pulse * 20;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(124, 110, 245, ${0.05 + pulse * 0.05})`;
+      ctx.fill();
+      ctx.strokeStyle = `rgba(124, 110, 245, ${0.3 + pulse * 0.2})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+    } else if (stage === 1) {
+      // 1 WAVE: 2⁰ — eerste beweging (bounded)
+      drawBoundedWave(1, 0.5, 120, 'rgba(124, 110, 245, 0.7)', 2.5);
+
+    } else if (stage === 2) {
+      // 2 WAVES: 2¹ — verdubbeling (beide bounded)
+      drawBoundedWave(1, 0.5, 120, 'rgba(124, 110, 245, 0.6)', 2);
+      drawBoundedWave(2, 0.4, 90, 'rgba(251, 191, 36, 0.5)', 2, Math.PI);
+
+    } else if (stage === 3) {
+      // VORTEX: 2→4 door draaien
+      // 2 golven botsen → spiraal naar center → splits in 4
+      // Vortex = draaiende kracht tussen 2 en 4
+      const vortexColors = [
+        'rgba(124,110,245,', 'rgba(251,191,36,',
+        'rgba(142,202,230,', 'rgba(167,139,250,',
+      ];
+      for (let i = 0; i < 4; i++) {
+        ctx.beginPath();
+        const arms = 4;
+        const armOffset = (i / arms) * Math.PI * 2;
+        // Spiraal: van buiten naar center
+        for (let s = 0; s < 200; s++) {
+          const t = s / 200; // 0→1
+          const angle = armOffset + t * Math.PI * 4 + time * 0.8;
+          const radius = (1 - t) * (Math.min(W, H) * 0.4);
+          const x = cx + Math.cos(angle) * radius;
+          const y = cy + Math.sin(angle) * radius;
+          if (s === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        const alpha = 0.3 + Math.sin(time * 0.6 + i) * 0.15;
+        ctx.strokeStyle = vortexColors[i] + alpha + ')';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+
+    } else if (stage === 4) {
+      // 8 WAVES: 2³ — grens van orde (bounded, dicht maar binnen randen)
+      for (let i = 0; i < 8; i++) {
+        const freq = 1 + i * 0.25;
+        const amp = 85 - i * 6;
+        const speed = 0.5 - i * 0.025;
+        const hue = (i * 45 + 240) % 360;
+        const alpha = 0.4 - i * 0.03;
+        drawBoundedWave(freq, speed, amp,
+          `hsla(${hue}, 50%, 65%, ${alpha})`, 1, i * 0.4);
+      }
+
+    } else if (stage === 5) {
+      // CHAOS: >7 limiet — onweer in white noise
+      // Waves versnellen >Mach1 → implosie → KNAL
+      // Alle golven comprimeren naar center (implosie)
+      for (let g = 0; g < 40; g++) {
+        const freq = Math.random() * 6 + 1;
+        const spd = Math.random() * 3 + 2; // snel! = versnelt
+        const amp = Math.random() * 100 + 20; // klein = geïmplodeerd
+        const hue = Math.random() * 60 + 240;
+        drawBoundedWave(freq, spd, amp,
+          `hsla(${hue}, 60%, 70%, 0.04)`, 1, Math.random() * Math.PI * 2);
+      }
+
+    } else if (stage === 6) {
+      // 0.0.0.0: 7 banden → water keert terug (stilte)
+      // Na de knal: structuur keert langzaam terug
+      const bandColors = [
+        'rgba(124,110,245,', 'rgba(167,139,250,', 'rgba(251,191,36,',
+        'rgba(142,202,230,', 'rgba(124,110,245,', 'rgba(167,139,250,',
+        'rgba(251,191,36,',
+      ];
+
+      // 7 bounded waves = 7 banden (zacht, traag, water-achtig)
+      for (let i = 0; i < 7; i++) {
+        const freq = 0.5 + i * 0.5;
+        const amp = 40 + i * 10;
+        const speed = 0.1 + i * 0.05;
+        const alpha = 0.15 + Math.sin(time * 0.5 + i) * 0.08;
+        drawBoundedWave(freq, speed, amp, bandColors[i] + alpha + ')', 1.5, i * 0.7);
+      }
+
+      // Center: 0.0.0.0 (hexagonaal punt)
+      const hexPulse = 15 + Math.sin(time * 0.8) * 5;
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const angle = (i / 6) * Math.PI * 2 - Math.PI / 6;
+        const x = cx + Math.cos(angle) * hexPulse;
+        const y = cy + Math.sin(angle) * hexPulse;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(124,110,245,0.2)';
+      ctx.fill();
+
+      // Echo/return: concentrische cirkels die uitbreiden (snelheid → positie)
+      for (let e = 0; e < 3; e++) {
+        const echoPhase = (time * 0.4 + e * 2) % 6;
+        const echoRadius = echoPhase * 50;
+        const echoAlpha = Math.max(0, 0.3 - echoPhase * 0.05);
+        ctx.beginPath();
+        ctx.arc(cx, cy, echoRadius, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(255,255,255,${echoAlpha})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  // ── Stage progression ──
+  function advanceStage() {
+    if (stage < 6) {
+      stage++;
+    } else {
+      // Loop back
+      stage = 0;
+    }
+    updateUI();
+    playStageAudio(stage);
+    // Reset autoplay timer if active
+    if (autoplay) {
+      autoplayStart = Date.now();
+      document.getElementById('autoplay-bar').style.width = '0%';
+    }
+  }
+
+  function updateUI() {
+    stageLabel.textContent = stages[stage].name;
+    bitLabel.textContent = stages[stage].label;
+
+    document.querySelectorAll('.stage-dot').forEach(function(dot, i) {
+      dot.classList.remove('active', 'done');
+      if (i === stage) dot.classList.add('active');
+      else if (i < stage) dot.classList.add('done');
+    });
+
+    playBtn.textContent = stage === 0 ? '▶ PLAY' : '→ VOLGENDE';
+  }
+
+  // ── Speed control ──
+  document.querySelectorAll('.speed-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.speed-btn').forEach(function(b) {
+        b.classList.remove('active');
+      });
+      this.classList.add('active');
+      speedMultiplier = parseFloat(this.getAttribute('data-speed'));
+      autoplayDelay = 6000 / speedMultiplier;
+      // Restart autoplay timer if active
+      if (autoplay) {
+        startAutoplay();
+      }
+    });
+  });
+
+  // ── Events ──
+  playBtn.addEventListener('click', advanceStage);
+
+  // Autoplay toggle
+  const autoplayBtn = document.getElementById('autoplay-btn');
+  autoplayBtn.addEventListener('click', function() {
+    autoplay = !autoplay;
+    this.textContent = autoplay ? '⏸ PAUSE' : '⏵ AUTO';
+    this.classList.toggle('active', autoplay);
+
+    if (autoplay) {
+      startAutoplay();
+    } else {
+      stopAutoplay();
+    }
+  });
+
+  function startAutoplay() {
+    stopAutoplay();
+    autoplayStart = Date.now();
+    autoplayTimer = setInterval(function() {
+      advanceStage();
+      autoplayStart = Date.now();
+    }, autoplayDelay);
+    // Start progress bar animation
+    updateProgressBar();
+  }
+
+  function stopAutoplay() {
+    if (autoplayTimer) {
+      clearInterval(autoplayTimer);
+      autoplayTimer = null;
+    }
+    if (autoplayInterval) {
+      cancelAnimationFrame(autoplayInterval);
+      autoplayInterval = null;
+    }
+    // Reset progress bar
+    document.getElementById('autoplay-bar').style.width = '0%';
+  }
+
+  function updateProgressBar() {
+    if (!autoplay) return;
+    const elapsed = Date.now() - autoplayStart;
+    const progress = Math.min(elapsed / autoplayDelay * 100, 100);
+    document.getElementById('autoplay-bar').style.width = progress + '%';
+    autoplayInterval = requestAnimationFrame(updateProgressBar);
+  }
+
+  // Keyboard
+  document.addEventListener('keydown', function(e) {
+    if (e.code === 'Space') { e.preventDefault(); advanceStage(); }
+    if (e.code === 'KeyA') { autoplayBtn.click(); }
+  });
+
+  // ── Start ──
+  updateUI();
+  draw();
+})();
+</script>
+</body>
+</html>

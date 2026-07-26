@@ -996,20 +996,55 @@
       const cpy = cy + Math.sin(baseAngle) * cloudR;
       const cSize = 2 + Math.sin(time + i) * 1;
 
-      // Wolken = condensatie (wit)
+      // Wolken = condensatie (wit → grijs → donker bij storm)
+      const stormTint = stormCharge || 0;
+      const clr = Math.round(240 - stormTint * 160);
+      const clg = Math.round(245 - stormTint * 170);
+      const clb = Math.round(255 - stormTint * 180);
+      const ca = 0.15 + Math.sin(time * 0.5 + i) * 0.05 + stormTint * 0.1;
+
       ctx.beginPath();
       ctx.arc(cpx, cpy, cSize, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(240,245,255,${0.15 + Math.sin(time * 0.5 + i) * 0.05})`;
+      ctx.fillStyle = `rgba(${clr},${clg},${clb},${ca})`;
       ctx.fill();
 
       // Subtiele glow
       const cloudGlow = ctx.createRadialGradient(cpx, cpy, 0, cpx, cpy, cSize * 2);
-      cloudGlow.addColorStop(0, `rgba(240,245,255,0.06)`);
+      cloudGlow.addColorStop(0, `rgba(${clr},${clg},${clb},0.06)`);
       cloudGlow.addColorStop(1, 'rgba(240,245,255,0)');
       ctx.beginPath();
       ctx.arc(cpx, cpy, cSize * 2, 0, Math.PI * 2);
       ctx.fillStyle = cloudGlow;
       ctx.fill();
+    }
+
+    // ── Bliksem ontlading ──
+    if (lightningBolt && lightningFlash > 0) {
+      const bolt = lightningBolt;
+      const segments = 8;
+      ctx.beginPath();
+      ctx.moveTo(bolt.x1, bolt.y1);
+      for (let s = 1; s < segments; s++) {
+        const t = s / segments;
+        const mx = bolt.x1 + (bolt.x2 - bolt.x1) * t + (Math.random() - 0.5) * 15;
+        const my = bolt.y1 + (bolt.y2 - bolt.y1) * t + (Math.random() - 0.5) * 15;
+        ctx.lineTo(mx, my);
+      }
+      ctx.lineTo(bolt.x2, bolt.y2);
+      const flashR = Math.round(200 + lightningFlash * 55);
+      const flashG = Math.round(200 + lightningFlash * 55);
+      ctx.strokeStyle = `rgba(${flashR},${flashG},255,${lightningFlash * 0.8})`;
+      ctx.lineWidth = 2 * lightningFlash;
+      ctx.stroke();
+    }
+
+    // Storm indicator
+    if (stormCharge > 0.5) {
+      const ia = (stormCharge - 0.5) * 0.3;
+      ctx.fillStyle = `rgba(150,140,130,${ia})`;
+      ctx.font = '0.2em "IBM Plex Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(`⚡ druk: ${Math.round(stormCharge * 100)}%`, cx, cy + airOuter + 30);
     }
   }
 
@@ -1287,6 +1322,14 @@
 
   let showPlanets = true;
   let showCycle = true;
+
+  // ── Onweer / ontlading ──
+  let stormCharge = 0;
+  const STORM_THRESHOLD = 0.85;
+  const STORM_RATE = 0.008;
+  const STORM_DISCHARGE = 0.6;
+  let lightningFlash = 0;
+  let lightningBolt = null;
 
   // ── Watercyclus deeltjes ──
   // Elk deeltje: { angle, progress, speed, size, alpha }
