@@ -202,7 +202,7 @@
     { name: '0 = 1', label: 'bit licht — eenheid' },
     { name: '1 WAVE', label: '2⁰ — eerste beweging' },
     { name: '2 WAVES', label: '2¹ — verdubbeling' },
-    { name: '4 WAVES', label: '2² — resonantie' },
+    { name: 'VORTEX', label: '2→4 draait → 4' },
     { name: '8 WAVES', label: '2³ — grens van orde' },
     { name: 'CHAOS', label: '>7 limiet → alles tegelijk' },
     { name: '0.0.0.0', label: '7 banden → echo = positie' },
@@ -347,15 +347,16 @@
         ramp(n.noiseGain.gain, 0, t);
         break;
 
-      case 3: // 4 WAVES: 2² — resonantie
-        // Harmonische serie = filter verandert resonantie
+      case 3: // VORTEX: 2→4 draait → implosie naar center
+        // Draaiend = frequentie oscilleert (LFO = vortex)
+        // Implosie = alles comprimeert naar center
         ramp(n.osc.frequency, 165, t);
-        ramp(n.oscGain.gain, 0.5, t);
-        ramp(n.filter.frequency, 660, t);   // bandpass = resonant
-        ramp(n.filter.Q, 2, t);
-        ramp(n.delay.delayTime, 0.25, t);
-        ramp(n.delayGain.gain, 0.3, t);
-        ramp(n.noiseGain.gain, 0, t);
+        ramp(n.oscGain.gain, 0.6, t);
+        ramp(n.filter.frequency, 400, t);   // smaller = implosie
+        ramp(n.filter.Q, 4, t);             // meer Q = vortex-scherp
+        ramp(n.delay.delayTime, 0.4, t);    // medium delay = draaien
+        ramp(n.delayGain.gain, 0.5, t);     // sterke feedback = vortex
+        ramp(n.noiseGain.gain, 0.05, t);    // zacht ruisen = werveling
         break;
 
       case 4: // 8 WAVES: 2³ — grens van orde (dichthelder)
@@ -450,11 +451,32 @@
       drawBoundedWave(2, 0.4, 90, 'rgba(251, 191, 36, 0.5)', 2, Math.PI);
 
     } else if (stage === 3) {
-      // 4 WAVES: 2² — resonantie (bounded, opgaan in elkaars ruimte)
-      drawBoundedWave(1, 0.5, 100, 'rgba(124, 110, 245, 0.5)', 1.5);
-      drawBoundedWave(1.5, 0.4, 80, 'rgba(251, 191, 36, 0.45)', 1.5, 0.5);
-      drawBoundedWave(2, 0.35, 65, 'rgba(142, 202, 230, 0.4)', 1.5, 1);
-      drawBoundedWave(3, 0.3, 50, 'rgba(167, 139, 250, 0.35)', 1.5, 1.5);
+      // VORTEX: 2→4 door draaien
+      // 2 golven botsen → spiraal naar center → splits in 4
+      // Vortex = draaiende kracht tussen 2 en 4
+      const vortexColors = [
+        'rgba(124,110,245,', 'rgba(251,191,36,',
+        'rgba(142,202,230,', 'rgba(167,139,250,',
+      ];
+      for (let i = 0; i < 4; i++) {
+        ctx.beginPath();
+        const arms = 4;
+        const armOffset = (i / arms) * Math.PI * 2;
+        // Spiraal: van buiten naar center
+        for (let s = 0; s < 200; s++) {
+          const t = s / 200; // 0→1
+          const angle = armOffset + t * Math.PI * 4 + time * 0.8;
+          const radius = (1 - t) * (Math.min(W, H) * 0.4);
+          const x = cx + Math.cos(angle) * radius;
+          const y = cy + Math.sin(angle) * radius;
+          if (s === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        const alpha = 0.3 + Math.sin(time * 0.6 + i) * 0.15;
+        ctx.strokeStyle = vortexColors[i] + alpha + ')';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
 
     } else if (stage === 4) {
       // 8 WAVES: 2³ — grens van orde (bounded, dicht maar binnen randen)
