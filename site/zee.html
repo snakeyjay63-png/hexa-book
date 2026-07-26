@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hexa-Book — Zee (white noise → natuur)</title>
+  <title>• Zee — Hexa-Book Kunstwerk</title>
   <link rel="stylesheet" href="css/main.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -38,7 +38,8 @@
   </style>
 </head>
 <body>
-  <a href="index.html" class="back-link">← hexa-book</a>
+  <a href="bit.html" class="back-link">← bit</a>
+  <a href="index.html" class="back-link" style="top:50px;">← hexa-book</a>
 
   <canvas id="c"></canvas>
 
@@ -54,7 +55,7 @@
     </div>
     <div class="speed-row">
       <button class="speed-btn" data-s="0.5">0.5×</button>
-      <button class="speed-btn" data-s="1">1×</button>
+      <button class="speed-btn active" data-s="1">1×</button>
       <button class="speed-btn" data-s="2">2×</button>
     </div>
   </div>
@@ -277,6 +278,7 @@
   };
 
   let spawnTimer = 0;
+  let speedMultiplier = 1;
 
   function draw() {
     // Fade = continue laag (geen clearRect = oude deeltjes vervaagd)
@@ -288,7 +290,8 @@
     // Spawn nieuwe deeltjes
     spawnTimer++;
     const spawnRate = { schelp: 8, zee: 12, regen: 25, water: 15, wind: 20 };
-    if (spawnTimer % (spawnRate[currentElement] || 10) === 0) {
+    const rate = Math.max(1, Math.round((spawnRate[currentElement] || 10) / speedMultiplier));
+    if (spawnTimer % rate === 0) {
       spawnParticles(3, currentElement);
     }
 
@@ -296,13 +299,16 @@
     const color = elementColors[currentElement];
     particles = particles.filter(p => p.life > 0);
     particles.forEach(p => {
-      p.x += p.vx;
-      p.y += p.vy;
+      p.x += p.vx * speedMultiplier;
+      p.y += p.vy * speedMultiplier;
       p.life -= p.decay;
 
+      const r = Math.max(0, p.size * p.life);
+      if (r <= 0) return;
+
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${color}, ${p.life * 0.5})`;
+      ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${color}, ${Math.max(0, p.life) * 0.5})`;
       ctx.fill();
     });
 
@@ -378,13 +384,10 @@
 
   document.querySelectorAll('[data-s]').forEach(btn => {
     btn.addEventListener('click', () => {
-      if (audioNodes) {
-        const s = parseFloat(btn.dataset.s);
-        audioNodes.lfo.frequency.setTargetAtTime(
-          audioNodes.lfo.frequency.value * s / (parseFloat(btn.dataset.s) || 1),
-          audioCtx.currentTime, 0.3
-        );
-      }
+      const s = parseFloat(btn.dataset.s);
+      speedMultiplier = s;
+      document.querySelectorAll('[data-s]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
     });
   });
 
