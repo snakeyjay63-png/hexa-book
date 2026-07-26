@@ -126,10 +126,10 @@
     filter.Q.value = 0;
 
     noiseGain = audioCtx.createGain();
-    noiseGain.gain.value = 0.02; // heel zacht start
+    noiseGain.gain.value = 0.05; // zacht start
 
     masterGain = audioCtx.createGain();
-    masterGain.gain.value = 0.3;
+    masterGain.gain.value = 0.8;
 
     noiseSource.connect(filter);
     filter.connect(noiseGain);
@@ -318,7 +318,7 @@
         filter.Q.setTargetAtTime(1, audioCtx.currentTime, 2);
       }
       if (noiseGain) {
-        noiseGain.gain.setTargetAtTime(0.05, audioCtx.currentTime, 2);
+        noiseGain.gain.setTargetAtTime(0.10, audioCtx.currentTime, 2);
       }
       counterEl.textContent = '∞';
     }
