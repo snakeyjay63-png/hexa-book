@@ -223,20 +223,20 @@ slider.addEventListener('input', () => {
   bitLabel.textContent = v + '-bit';
   perspectiefLabel.textContent = bitMap[v] || `${v}-bit`;
 
-  // Map bit-depth to band visibility and opacity
-  // 5-bit  → P0-P2 (vast/ijs) zichtbaar
-  // 7-bit  → P0-P3 (leven) zichtbaar
-  // 12-bit → P0-P4 (communicatie) zichtbaar
-  // 16-bit → P0-P5 (perceptie) zichtbaar
-  // 24-bit → P0-P6 (heel spectrum) zichtbaar
+  // Map bit-depth to band visibility
+  // 5-bit  → P0-P2 helder, P3+ verzwakt
+  // 7-bit  → P0-P3 helder, P4+ verzwakt
+  // 12-bit → P0-P4 helder, P5+ verzwakt
+  // 16-bit → P0-P5 helder, P6 verzwakt
+  // 24-bit → heel spectrum helder
   const threshold = {
-    'band-p0': 1,    // altijd zichtbaar
-    'band-p1': 3,    // vanaf 3-bit
-    'band-p2': 5,    // vanaf 5-bit
-    'band-p3': 7,    // vanaf 7-bit (Sanskriet)
-    'band-p4': 12,   // vanaf 12-bit (ecosysteem)
-    'band-p5': 16,   // vanaf 16-bit (complex netwerk)
-    'band-p6': 20,   // vanaf 20-bit (regenatie)
+    'band-p0': 1,
+    'band-p1': 3,
+    'band-p2': 5,
+    'band-p3': 7,
+    'band-p4': 12,
+    'band-p5': 16,
+    'band-p6': 20,
   };
 
   bands.forEach(id => {
@@ -245,17 +245,15 @@ slider.addEventListener('input', () => {
 
     const required = threshold[id] || 0;
     if (v >= required) {
-      // Fade in based on how far above threshold
       const excess = v - required;
-      const opacity = Math.min(1, 0.3 + (excess / 8) * 0.7);
-      el.style.display = 'flex';
+      const opacity = Math.min(1, 0.5 + (excess / 6) * 0.5);
       el.style.opacity = opacity;
+      el.style.pointerEvents = 'auto';
     } else {
-      // Fade out
       const deficit = required - v;
-      const opacity = Math.max(0.03, 0.3 - (deficit / 8) * 0.3);
-      el.style.display = 'flex';
+      const opacity = Math.max(0.05, 0.5 - (deficit / 6) * 0.5);
       el.style.opacity = opacity;
+      el.style.pointerEvents = 'none';
     }
   });
 });
