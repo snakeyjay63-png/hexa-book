@@ -482,6 +482,7 @@
         auditList.appendChild(link);
       });
     }
+  }
 
   // ── Init ──
   async function init() {
