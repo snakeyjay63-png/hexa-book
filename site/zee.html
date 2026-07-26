@@ -72,24 +72,14 @@
     <button class="mode-btn" data-mode="ice">ijspolen</button>
   </div>
 
-  <div style="position:fixed;bottom:120px;left:50%;transform:translateX(-50%);z-index:10;text-align:center;">
-    <div style="color:#555;font-size:0.6em;margin-bottom:6px;">
-      rotatie balans: core snelheid volgt maan + aarde → 1=0
+  <div style="position:fixed;bottom:130px;left:50%;transform:translateX(-50%);z-index:10;text-align:center;">
+    <div style="display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:4px;">
+      <label style="color:#555;font-size:0.6em;">aarde rotatie:</label>
+      <input type="range" id="earthSpeed" min="0.2" max="3" step="0.1" value="1" style="width:100px;opacity:0.5;">
+      <span id="earthSpeedVal" style="color:#8a9abf;font-size:0.55em;">1.0×</span>
     </div>
-    <div style="display:flex;gap:6px;align-items:center;justify-content:center;">
-      <label style="color:#666;font-size:0.6em;">maan orbit:</label>
-      <input type="range" id="moonSlider" min="0.5" max="3" step="0.1" value="1"
-        style="width:80px;opacity:0.5;">
-      <span id="moonVal" style="color:#8ab4f8;font-size:0.55em;">1×</span>
-    </div>
-    <div style="display:flex;gap:6px;align-items:center;justify-content:center;margin-top:4px;">
-      <label style="color:#666;font-size:0.6em;">aarde rotatie:</label>
-      <input type="range" id="earthSlider" min="0.5" max="3" step="0.1" value="1"
-        style="width:80px;opacity:0.5;">
-      <span id="earthVal" style="color:#8ab4f8;font-size:0.55em;">1×</span>
-    </div>
-    <div id="balanceDisplay" style="color:#7c6ef5;font-size:0.65em;margin-top:8px;">
-      core: 1.00× | balans: 1=0
+    <div id="balanceDisplay" style="color:#7c6ef5;font-size:0.6em;">
+      maan orbit: 1× → core: 1.00× → balans 1=0
     </div>
   </div>
 
@@ -159,17 +149,12 @@
 
   let viewMode = 'all';
   let time = 0;
+  let earthRotationMult = 1;
+  let moonOrbitSpeed = 1;      // basis: maan orbit als referentie
+  let coreSpeed = 1;            // berekend: core snelheid voor balans 1=0
   let audioOn = false;
   let rippleTime = 0;
   let stones = [];
-
-  // ── Rotatie balans ──
-  // Maan orbit = reference snelheid voor balans met water
-  // Aarde rotatie = extra input
-  // Core snelheid = berekend voor balans (1=0)
-  let moonSpeed = 1;    // maan orbit snelheid (reference)
-  let earthSpeed = 1;   // aarde rotatie snelheid
-  let coreSpeed = 1;    // berekend: core = maan × aarde (balans)
 
   // ── Audio ──
   let audioCtx = null;
@@ -388,8 +373,8 @@
     for (let i = 0; i < grains; i++) {
       const angle = (i / grains) * Math.PI * 2;
       const grainR = inner + (outer - inner) * ((i % 5) / 5);
-      const px = cx + Math.cos(angle + time * 0.05 * earthSpeed) * grainR;
-      const py = cy + Math.sin(angle + time * 0.05 * earthSpeed) * grainR;
+      const px = cx + Math.cos(angle + time * 0.05 * earthRotationMult) * grainR;
+      const py = cy + Math.sin(angle + time * 0.05 * earthRotationMult) * grainR;
       const size = 1 + Math.sin(time + i) * 0.5;
 
       ctx.beginPath();
@@ -741,30 +726,21 @@
     requestAnimationFrame(draw);
   }
 
-  // ── Rotatie sliders ──
-  const moonSlider = document.getElementById('moonSlider');
-  const earthSlider = document.getElementById('earthSlider');
-  const moonVal = document.getElementById('moonVal');
-  const earthVal = document.getElementById('earthVal');
+  // ── Aarde rotatie slider ──
+  const earthSlider = document.getElementById('earthSpeed');
+  const earthSliderVal = document.getElementById('earthSpeedVal');
   const balanceDisplay = document.getElementById('balanceDisplay');
 
-  function updateBalance() {
-    moonSpeed = parseFloat(moonSlider.value);
-    earthSpeed = parseFloat(earthSlider.value);
-    // Core snelheid = maan × aarde voor balans 1=0
-    coreSpeed = moonSpeed * earthSpeed;
-
-    moonVal.textContent = moonSpeed.toFixed(1) + '×';
-    earthVal.textContent = earthSpeed.toFixed(1) + '×';
-
-    const balance = coreSpeed - 1;
-    const balanceStr = Math.abs(balance) < 0.01 ? '1=0' : `${balance > 0 ? '+' : ''}${balance.toFixed(2)}`;
-    balanceDisplay.textContent = `core: ${coreSpeed.toFixed(2)}× | balans: ${balanceStr}`;
-    balanceDisplay.style.color = Math.abs(balance) < 0.1 ? '#7c6ef5' : '#ff6644';
+  function calcCoreSpeed() {
+    earthRotationMult = parseFloat(earthSlider.value);
+    // Core snelheid = maan orbit / aarde rotatie (balans)
+    // Als aarde sneller draait → core langzamer voor balans 1=0
+    // Als aarde langzamer draait → core sneller voor balans 1=0
+    coreSpeed = moonOrbitSpeed / earthRotationMult;
+    earthSliderVal.textContent = earthRotationMult.toFixed(1) + '×';
+    balanceDisplay.textContent = `maan orbit: 1× → aarde: ${earthRotationMult.toFixed(1)}× → core: ${coreSpeed.toFixed(2)}× → balans 1=0`;
   }
-
-  moonSlider.addEventListener('input', updateBalance);
-  earthSlider.addEventListener('input', updateBalance);
+  earthSlider.addEventListener('input', calcCoreSpeed);
 
   // ── Mode buttons ──
   document.querySelectorAll('.mode-btn').forEach(btn => {
