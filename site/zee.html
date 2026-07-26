@@ -287,9 +287,9 @@
 
     // Core glow
     const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
-    coreGrad.addColorStop(0, 'rgba(255,100,30,0.6)');
-    coreGrad.addColorStop(0.5, 'rgba(255,60,20,0.3)');
-    coreGrad.addColorStop(1, 'rgba(255,30,10,0)');
+    coreGrad.addColorStop(0, 'rgba(255,100,30,0.9)');
+    coreGrad.addColorStop(0.5, 'rgba(255,60,20,0.5)');
+    coreGrad.addColorStop(1, 'rgba(255,30,10,0.1)');
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.fillStyle = coreGrad;
@@ -311,7 +311,7 @@
         if (t === 0) ctx.moveTo(px, py);
         else ctx.lineTo(px, py);
       }
-      ctx.strokeStyle = `rgba(255,150,50,${0.3 + Math.sin(time * 3 + i) * 0.1})`;
+      ctx.strokeStyle = `rgba(255,150,50,${0.5 + Math.sin(time * 3 + i) * 0.1})`;
       ctx.lineWidth = 1;
       ctx.stroke();
     }
@@ -339,14 +339,14 @@
     }
 
     // Label
-    ctx.fillStyle = 'rgba(255,150,50,0.15)';
+    ctx.fillStyle = 'rgba(255,150,50,0.4)';
     ctx.font = '0.4em "IBM Plex Mono", monospace';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('plasma', cx, cy - 10);
     ctx.fillText('core', cx, cy + 2);
     ctx.font = '0.28em "IBM Plex Mono", monospace';
-    ctx.fillStyle = 'rgba(255,120,40,0.1)';
+    ctx.fillStyle = 'rgba(255,120,40,0.25)';
     ctx.fillText('druk ↔ beweging', cx, cy + 14);
   }
 
@@ -359,8 +359,8 @@
 
     // Sediment zone
     const aGrad = ctx.createRadialGradient(cx, cy, inner, cx, cy, outer);
-    aGrad.addColorStop(0, 'rgba(140,100,60,0.08)');
-    aGrad.addColorStop(0.5, 'rgba(120,90,50,0.05)');
+    aGrad.addColorStop(0, 'rgba(140,100,60,0.25)');
+    aGrad.addColorStop(0.5, 'rgba(120,90,50,0.2)');
     aGrad.addColorStop(1, 'rgba(100,80,40,0)');
     ctx.beginPath();
     ctx.arc(cx, cy, outer, 0, Math.PI * 2);
@@ -379,18 +379,18 @@
 
       ctx.beginPath();
       ctx.arc(px, py, size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(160,120,70,${0.04 + Math.sin(time * 0.5 + i) * 0.02})`;
+      ctx.fillStyle = `rgba(160,120,70,${0.12 + Math.sin(time * 0.5 + i) * 0.02})`;
       ctx.fill();
     }
 
     // Label
     const labelR = (inner + outer) / 2;
-    ctx.fillStyle = 'rgba(160,120,70,0.12)';
+    ctx.fillStyle = 'rgba(160,120,70,0.3)';
     ctx.font = '0.35em "IBM Plex Mono", monospace';
     ctx.textAlign = 'center';
     ctx.fillText('aarde', cx - labelR * 0.5, cy - labelR);
     ctx.font = '0.25em "IBM Plex Mono", monospace';
-    ctx.fillStyle = 'rgba(160,120,70,0.07)';
+    ctx.fillStyle = 'rgba(160,120,70,0.15)';
     ctx.fillText('(water → verdampt → rest zakt)', cx - labelR * 0.5, cy - labelR + 10);
   }
 
@@ -404,8 +404,8 @@
     // EM zone
     const emGrad = ctx.createRadialGradient(cx, cy, inner, cx, cy, outer);
     emGrad.addColorStop(0, 'rgba(100,50,200,0)');
-    emGrad.addColorStop(0.3, 'rgba(100,50,200,0.05)');
-    emGrad.addColorStop(0.7, 'rgba(80,40,180,0.08)');
+    emGrad.addColorStop(0.3, 'rgba(100,50,200,0.12)');
+    emGrad.addColorStop(0.7, 'rgba(80,40,180,0.15)');
     emGrad.addColorStop(1, 'rgba(60,30,160,0)');
     ctx.beginPath();
     ctx.arc(cx, cy, outer, 0, Math.PI * 2);
@@ -428,14 +428,14 @@
         if (t === 0) ctx.moveTo(px, py);
         else ctx.lineTo(px, py);
       }
-      ctx.strokeStyle = `rgba(120,80,220,${0.1 + Math.sin(time + i) * 0.03})`;
+      ctx.strokeStyle = `rgba(120,80,220,${0.25 + Math.sin(time + i) * 0.03})`;
       ctx.lineWidth = 0.5;
       ctx.stroke();
     }
 
     // Label
     const labelR = (inner + outer) / 2;
-    ctx.fillStyle = 'rgba(120,80,220,0.1)';
+    ctx.fillStyle = 'rgba(120,80,220,0.25)';
     ctx.font = '0.35em "IBM Plex Mono", monospace';
     ctx.textAlign = 'center';
     ctx.fillText('E/M veld', cx + Math.cos(time * 0.1) * labelR * 0.3, cy - labelR);
@@ -453,38 +453,39 @@
 
     // Water zone
     const wGrad = ctx.createRadialGradient(cx, cy, inner, cx, cy, outer);
-    wGrad.addColorStop(0, 'rgba(30,60,120,0.15)');
-    wGrad.addColorStop(0.5, 'rgba(20,50,100,0.1)');
-    wGrad.addColorStop(1, 'rgba(40,80,140,0.05)');
+    wGrad.addColorStop(0, 'rgba(30,80,150,0.35)');
+    wGrad.addColorStop(0.5, 'rgba(20,50,120,0.25)');
+    wGrad.addColorStop(1, 'rgba(40,80,160,0.15)');
     ctx.beginPath();
     ctx.arc(cx, cy, outer, 0, Math.PI * 2);
     ctx.arc(cx, cy, inner, 0, Math.PI * 2, true);
     ctx.fillStyle = wGrad;
     ctx.fill();
 
-    // Golven
-    if (audioOn && stones.length > 0) {
-      const step = 4;
-      for (let y = cy - outer; y < cy + outer; y += step) {
-        const rowDy = y - cy;
-        const rowHW = Math.sqrt(Math.max(0, outer * outer - rowDy * rowDy));
+    // Golven (altijd subtiele golven, feller met steen)
+    const step = 4;
+    for (let y = cy - outer; y < cy + outer; y += step) {
+      const rowDy = y - cy;
+      const rowHW = Math.sqrt(Math.max(0, outer * outer - rowDy * rowDy));
 
-        // Alleen in water zone
-        const minDist = Math.max(rowDy, inner);
-        if (minDist > outer) continue;
+      // Alleen in water zone
+      const minDist = Math.max(rowDy, inner);
+      if (minDist > outer) continue;
 
-        let waveAlpha = 0;
+      let waveAlpha = 0;
+      if (audioOn && stones.length > 0) {
         const h = getWaveHeight(cx, y, time);
         waveAlpha = Math.abs(h) * 0.005;
-
-        ctx.beginPath();
-        const startX = cx - Math.min(rowHW, outer);
-        ctx.moveTo(startX, y);
-        ctx.lineTo(cx + Math.min(rowHW, outer), y);
-        ctx.strokeStyle = `rgba(100,150,200,${0.005 + waveAlpha})`;
-        ctx.lineWidth = step * 0.3;
-        ctx.stroke();
       }
+
+      ctx.beginPath();
+      const startX = cx - Math.min(rowHW, outer);
+      ctx.moveTo(startX, y);
+      ctx.lineTo(cx + Math.min(rowHW, outer), y);
+      const alpha = (audioOn ? 0.04 : 0.02) + waveAlpha;
+      ctx.strokeStyle = `rgba(100,150,200,${alpha})`;
+      ctx.lineWidth = step * 0.3;
+      ctx.stroke();
     }
 
     // Concentrische ringen
@@ -493,7 +494,7 @@
       const ringR = inner + (outer - inner) * (ri / rings);
       ctx.beginPath();
       ctx.arc(cx, cy, ringR, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(80,120,180,0.04)`;
+      ctx.strokeStyle = `rgba(80,120,180,0.15)`;
       ctx.lineWidth = 0.5;
       ctx.stroke();
     }
@@ -529,7 +530,7 @@
     // Vochtige zone (lichtblauw met condensatie)
     const aGrad = ctx.createRadialGradient(cx, cy, inner, cx, cy, outer);
     aGrad.addColorStop(0, 'rgba(160,190,220,0)');
-    aGrad.addColorStop(0.5, 'rgba(160,190,220,0.03)');
+    aGrad.addColorStop(0.5, 'rgba(160,190,220,0.08)');
     aGrad.addColorStop(1, 'rgba(160,190,220,0)');
     ctx.beginPath();
     ctx.arc(cx, cy, outer, 0, Math.PI * 2);
@@ -548,13 +549,13 @@
 
       ctx.beginPath();
       ctx.arc(px, py, size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(170,200,220,${0.06 + Math.sin(time * 0.5 + i) * 0.03})`;
+      ctx.fillStyle = `rgba(170,200,220,${0.15 + Math.sin(time * 0.5 + i) * 0.03})`;
       ctx.fill();
     }
 
     // Label
     const labelR = (inner + outer) / 2;
-    ctx.fillStyle = 'rgba(170,200,220,0.1)';
+    ctx.fillStyle = 'rgba(170,200,220,0.2)';
     ctx.font = '0.3em "IBM Plex Mono", monospace';
     ctx.textAlign = 'center';
     ctx.fillText('lucht (vochtig)', cx, cy - labelR);
@@ -570,7 +571,7 @@
     // Droge zone (bijna onzichtbaar, geen water)
     const aGrad = ctx.createRadialGradient(cx, cy, inner, cx, cy, outer);
     aGrad.addColorStop(0, 'rgba(140,160,180,0)');
-    aGrad.addColorStop(0.5, 'rgba(140,160,180,0.01)');
+    aGrad.addColorStop(0.5, 'rgba(140,160,180,0.08)');
     aGrad.addColorStop(1, 'rgba(140,160,180,0)');
     ctx.beginPath();
     ctx.arc(cx, cy, outer, 0, Math.PI * 2);
@@ -588,7 +589,7 @@
 
       ctx.beginPath();
       ctx.arc(px, py, 0.8, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(140,160,180,0.04)';
+      ctx.fillStyle = 'rgba(140,160,180,0.08)';
       ctx.fill();
     }
 
@@ -614,8 +615,8 @@
 
     // Noordpool (boven)
     const northGrad = ctx.createRadialGradient(cx, cy - inner, 0, cx, cy - outer, outer - inner);
-    northGrad.addColorStop(0, 'rgba(220,230,240,0.15)');
-    northGrad.addColorStop(1, 'rgba(200,210,220,0)');
+    northGrad.addColorStop(0, 'rgba(230,240,250,0.3)');
+    northGrad.addColorStop(1, 'rgba(200,210,220,0.05)');
 
     ctx.beginPath();
     ctx.arc(cx, cy, outer, -Math.PI/2 - poleAngle, -Math.PI/2 + poleAngle);
@@ -626,8 +627,8 @@
 
     // Zuidpool (onder)
     const southGrad = ctx.createRadialGradient(cx, cy + inner, 0, cx, cy + outer, outer - inner);
-    southGrad.addColorStop(0, 'rgba(220,230,240,0.15)');
-    southGrad.addColorStop(1, 'rgba(200,210,220,0)');
+    southGrad.addColorStop(0, 'rgba(230,240,250,0.3)');
+    southGrad.addColorStop(1, 'rgba(200,210,220,0.05)');
 
     ctx.beginPath();
     ctx.arc(cx, cy, outer, Math.PI/2 - poleAngle, Math.PI/2 + poleAngle);
@@ -644,7 +645,7 @@
       ctx.beginPath();
       ctx.moveTo(cx + Math.cos(nAngle) * inner, cy + Math.sin(nAngle) * inner);
       ctx.lineTo(cx + Math.cos(nAngle + 0.05) * outer, cy + Math.sin(nAngle + 0.05) * outer);
-      ctx.strokeStyle = 'rgba(220,230,240,0.05)';
+      ctx.strokeStyle = 'rgba(230,240,250,0.1)';
       ctx.lineWidth = 0.5;
       ctx.stroke();
 
@@ -653,13 +654,13 @@
       ctx.beginPath();
       ctx.moveTo(cx + Math.cos(sAngle) * inner, cy + Math.sin(sAngle) * inner);
       ctx.lineTo(cx + Math.cos(sAngle + 0.05) * outer, cy + Math.sin(sAngle + 0.05) * outer);
-      ctx.strokeStyle = 'rgba(220,230,240,0.05)';
+      ctx.strokeStyle = 'rgba(230,240,250,0.1)';
       ctx.lineWidth = 0.5;
       ctx.stroke();
     }
 
     // Labels
-    ctx.fillStyle = 'rgba(220,230,240,0.12)';
+    ctx.fillStyle = 'rgba(230,240,250,0.2)';
     ctx.font = '0.35em "IBM Plex Mono", monospace';
     ctx.textAlign = 'center';
     ctx.fillText('noordpool', cx, cy - outer + 12);
@@ -670,9 +671,23 @@
   function drawOuterRing() {
     ctx.beginPath();
     ctx.arc(cx, cy, R, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(100,140,200,0.1)';
+    ctx.strokeStyle = 'rgba(120,160,220,0.3)';
     ctx.lineWidth = 1;
     ctx.stroke();
+  }
+
+  // ── Laag grenzen (dunne ringen tussen lagen) ──
+  function drawLayerBorders() {
+    if (viewMode !== 'all') return;
+    const borders = [0.15, 0.30, 0.40, 0.65, 0.80, 0.90];
+    for (const b of borders) {
+      const r = R * b;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(100,140,200,0.06)';
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    }
   }
 
   // ── Ripple visuals ──
@@ -687,7 +702,7 @@
       if (alpha > 0.003 && ringDist < R * 0.7) {
         ctx.beginPath();
         ctx.arc(s.x, s.y, ringDist, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(140,180,220,${alpha})`;
+        ctx.strokeStyle = `rgba(160,200,240,${alpha * 2})`;
         ctx.lineWidth = 0.5;
         ctx.stroke();
       }
@@ -696,7 +711,7 @@
 
   // ── Main draw ──
   function draw() {
-    ctx.fillStyle = '#06060a';
+    ctx.fillStyle = '#0a0a12';
     ctx.fillRect(0, 0, W, H);
 
     time += 0.016;
@@ -711,6 +726,7 @@
     drawAirDroog();
     drawIcePoles();
     drawOuterRing();
+    drawLayerBorders();
 
     // Info
     if (!audioOn) {
