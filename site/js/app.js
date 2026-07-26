@@ -499,5 +499,8 @@
     navigate('home');
   }
 
-  init();
+  // Skip init op spectrum-home (geen SPA, geen page-container)
+  if (document.getElementById('page-container') || document.getElementById('article-list')) {
+    init();
+  }
 })();
