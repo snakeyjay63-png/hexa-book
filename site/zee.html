@@ -1411,7 +1411,58 @@
       ctx.fillText(pl.note, px, py + pl.size + 6);
     }
 
-    // Resonantielijnen tussen paren
+    // ── E/M veldlijnen: elke planeet ↔ zon ──
+    // Veldlijnen kruisen niet → boogvormig, elke planeet heeft eigen "baan"
+    const zonIdx = PLANETS.findIndex(p => p.name === 'zon');
+    if (zonIdx >= 0) {
+      const zAngle = time * PLANETS[zonIdx].speed + PLANETS[zonIdx].phase;
+      const zx = cx + Math.cos(zAngle) * baseR * PLANETS[zonIdx].orbitR;
+      const zy = cy + Math.sin(zAngle) * baseR * PLANETS[zonIdx].orbitR;
+
+      for (let i = 0; i < PLANETS.length; i++) {
+        if (i === zonIdx) continue; // sla zon zelf over
+
+        const pl = PLANETS[i];
+        const pAngle = time * pl.speed + pl.phase;
+        const px = cx + Math.cos(pAngle) * baseR * pl.orbitR;
+        const py = cy + Math.sin(pAngle) * baseR * pl.orbitR;
+
+        // Rechte lijn afstand
+        const dx = zx - px;
+        const dy = zy - py;
+        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+
+        // Elke planeet krijgt eigen boogrichting (afwisselend +/−)
+        // Dit voorkomt dat lijnen door elkaar lopen
+        const sign = (i % 2 === 0) ? 1 : -1;
+        const bendAmount = dist * 0.3 * sign; // 30% van afstand als boog
+
+        // Middelste punt van boog
+        const midX = (px + zx) / 2;
+        const midY = (py + zy) / 2;
+        // Loodrechte richting
+        const perpX = -dy / dist;
+        const perpY = dx / dist;
+        const ctrlX = midX + perpX * bendAmount;
+        const ctrlY = midY + perpY * bendAmount;
+
+        // Teken gebogen lijn (quadratic bezier)
+        ctx.beginPath();
+        ctx.moveTo(px, py);
+        ctx.quadraticCurveTo(ctrlX, ctrlY, zx, zy);
+
+        // Kleur en dikte per planeet
+        const pulse = 0.05 + Math.sin(time * 1.2 + i) * 0.02;
+        const c = pl.color;
+        ctx.strokeStyle = `rgba(${c[0]},${c[1]},${c[2]},${pulse})`;
+        ctx.lineWidth = 0.3;
+        ctx.setLineDash([2, 8]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+    }
+
+    // Resonantielijnen tussen paren (dichtere relaties)
     const pairs = [
       [0, 2], // maan ↔ aarde
       [1, 5], // venus ↔ zon
