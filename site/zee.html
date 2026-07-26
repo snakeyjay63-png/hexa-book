@@ -494,24 +494,6 @@
       ctx.fill();
     }
 
-    // Sedimentatie deeltjes (zakken van water → sediment)
-    // Deeltjes beginnen bij binnenkant water en zakken naar sediment laag
-    const sedimentParticles = 12;
-    for (let i = 0; i < sedimentParticles; i++) {
-      const angle = (i / sedimentParticles) * Math.PI * 2 + time * 0.02;
-      const fallProgress = ((time * 0.15 + i / sedimentParticles) % 1);
-      const fallY = R * LAYERS.water.inner + (outer - R * LAYERS.water.inner) * fallProgress;
-      const px = cx + Math.cos(angle) * fallY;
-      const py = cy + Math.sin(angle) * fallY;
-      const size = 0.5 + (1 - fallProgress) * 0.8;
-      const alpha = (1 - fallProgress) * 0.2;
-
-      ctx.beginPath();
-      ctx.arc(px, py, size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(160,120,70,${alpha})`;
-      ctx.fill();
-    }
-
     // Label
     const labelR = (inner + outer) / 2;
     ctx.fillStyle = 'rgba(160,120,70,0.3)';
@@ -1306,6 +1288,45 @@
   let showPlanets = true;
   let showCycle = true;
 
+  // ── Watercyclus deeltjes ──
+  // Elk deeltje: { angle, progress, speed, size, alpha }
+  // progress 0→1: begin→eind van cyclus
+  const CYCLE_COUNTS = { evap: 24, rain: 18, freeze: 12, sediment: 10 };
+
+  // Verdamping: water → airVocht (omhoog)
+  let evapParticles = Array.from({length: CYCLE_COUNTS.evap}, (_, i) => ({
+    angle: (i / CYCLE_COUNTS.evap) * Math.PI * 2,
+    progress: i / CYCLE_COUNTS.evap,
+    speed: 0.003 + Math.random() * 0.002,
+    wobble: Math.random() * Math.PI * 2,
+  }));
+
+  // Regen: airVocht → water (omlaag)
+  let rainParticles = Array.from({length: CYCLE_COUNTS.rain}, (_, i) => ({
+    angle: (i / CYCLE_COUNTS.rain) * Math.PI * 2,
+    progress: i / CYCLE_COUNTS.rain,
+    speed: 0.004 + Math.random() * 0.003,
+    wobble: Math.random() * Math.PI * 2,
+  }));
+
+  // Bevriezing: water → ice (naar buitenrand)
+  let freezeParticles = Array.from({length: CYCLE_COUNTS.freeze}, (_, i) => ({
+    angle: (i / CYCLE_COUNTS.freeze) * Math.PI * 2,
+    progress: i / CYCLE_COUNTS.freeze,
+    speed: 0.0015 + Math.random() * 0.001,
+    wobble: Math.random() * Math.PI * 2,
+  }));
+
+  // Sedimentatie: water → aarde → core (omlaag, compressie door lagen → steen)
+  // Fases: 'water' → 'compress' → 'stone' (terugkeren)
+  let sedimentParticles = Array.from({length: CYCLE_COUNTS.sediment}, (_, i) => ({
+    angle: (i / CYCLE_COUNTS.sediment) * Math.PI * 2,
+    progress: i / CYCLE_COUNTS.sediment,
+    speed: 0.001 + Math.random() * 0.0008,
+    phase: i % 3, // 0=water, 1=compressie, 2=steen terug
+    wobble: Math.random() * Math.PI * 2,
+  }));
+
   // ── Kosmische invloed per laag ──
   // Elke planeet stuurt een specifieke laag aan
   const COSMIC_INFLUENCE = {
@@ -1477,6 +1498,152 @@
     ctx.font = '0.22em "IBM Plex Mono", monospace';
     ctx.textAlign = 'center';
     ctx.fillText('0.0.0.0 → 4 punten', cx, cy - baseR * 1.85);
+
+    // ── Watercyclus deeltjes ──
+    // Deze deeltjes bewegen écht door de lagen (niet alleen fade)
+    // Verdamping (water→airVocht), Regen (airVocht→water), Bevriezing (water→ice), Sedimentatie (water→aarde→steen)
+
+    // ── Verdamping: water → airVocht (omhoog) ──
+    // Zon-gerichte verdamping volgt zonpositie
+    let evapBaseAngle = 0;
+    if (showPlanets) {
+      const zon = PLANETS.find(p => p.name === 'zon');
+      if (zon) evapBaseAngle = time * zon.speed + zon.phase;
+    }
+    const evapStartR = R * (LAYERS.water.inner + LAYERS.water.outer) / 2;
+    const evapEndR = R * (LAYERS.airVocht.inner + LAYERS.airVocht.outer) / 2;
+
+    for (const pt of evapParticles) {
+      pt.progress += pt.speed;
+      if (pt.progress > 1) pt.progress -= 1;
+
+      const r = evapStartR + (evapEndR - evapStartR) * pt.progress;
+      const wobble = Math.sin(time * 2 + pt.wobble) * 3;
+      const px = cx + Math.cos(evapBaseAngle + pt.angle * 0.3) * (r + wobble);
+      const py = cy + Math.sin(evapBaseAngle + pt.angle * 0.3) * (r + wobble);
+
+      // Kleur: blauw (water) → lichtblauw (vapor) → transparant
+      const alpha = Math.sin(pt.progress * Math.PI) * 0.2;
+      const cR = 100 + pt.progress * 100;
+      const cG = 150 + pt.progress * 50;
+      const cB = 200 + pt.progress * 55;
+
+      ctx.beginPath();
+      ctx.arc(px, py, 1 + (1 - pt.progress) * 1.5, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${cR},${cG},${cB},${alpha})`;
+      ctx.fill();
+    }
+
+    // ── Regen: airVocht → water (omlaag) ──
+    const rainAngle = evapBaseAngle + Math.PI * 0.4; // verschoven van verdamping
+
+    for (const pt of rainParticles) {
+      pt.progress += pt.speed;
+      if (pt.progress > 1) pt.progress -= 1;
+
+      const r = evapEndR - (evapEndR - evapStartR) * pt.progress;
+      const wobble = Math.sin(time * 3 + pt.wobble) * 2;
+      const px = cx + Math.cos(rainAngle + pt.angle * 0.4) * (r + wobble);
+      const py = cy + Math.sin(rainAngle + pt.angle * 0.4) * (r + wobble);
+
+      // Kleur: lichtblauw (vapor) → donkerblauw (water) → transparant
+      const alpha = Math.sin(pt.progress * Math.PI) * 0.25;
+      const cR = 200 - pt.progress * 120;
+      const cG = 200 - pt.progress * 100;
+      const cB = 255 - pt.progress * 55;
+      const size = 0.5 + pt.progress * 2; // groter wordend druppel
+
+      ctx.beginPath();
+      ctx.arc(px, py, size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${cR},${cG},${cB},${alpha})`;
+      ctx.fill();
+    }
+
+    // ── Bevriezing: water → ice (naar buitenrand) ──
+    const freezeAngle = Math.PI * 1.2; // richting polen
+
+    for (const pt of freezeParticles) {
+      pt.progress += pt.speed;
+      if (pt.progress > 1) pt.progress -= 1;
+
+      const freezeStartR = R * LAYERS.water.outer;
+      const freezeEndR = R * LAYERS.ice.outer;
+      const r = freezeStartR + (freezeEndR - freezeStartR) * pt.progress;
+      const wobble = Math.sin(time + pt.wobble) * 2;
+
+      const angle = freezeAngle + pt.angle * 0.5 + Math.sin(time * 0.5) * 0.2;
+      const px = cx + Math.cos(angle) * (r + wobble);
+      const py = cy + Math.sin(angle) * (r + wobble);
+
+      // Kleur: blauw → wit (ijs)
+      const alpha = Math.sin(pt.progress * Math.PI) * 0.2;
+      const cR = 100 + pt.progress * 155;
+      const cG = 150 + pt.progress * 105;
+      const cB = 200 + pt.progress * 55;
+      const size = 1 + pt.progress * 1.5;
+
+      ctx.beginPath();
+      ctx.arc(px, py, size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${cR},${cG},${cB},${alpha})`;
+      ctx.fill();
+    }
+
+    // ── Sedimentatie: water → aarde → core → steen (terugkerend) ──
+    // Fase 0: water → aarde (zakken)
+    // Fase 1: compressie door lagen (aarde → core)
+    // Fase 2: steen keert terug (core → water)
+    for (const pt of sedimentParticles) {
+      pt.progress += pt.speed;
+      if (pt.progress > 1) {
+        pt.progress -= 1;
+        pt.phase = (pt.phase + 1) % 3; // wissel fase
+      }
+
+      let r, cR, cG, cB, alpha, size;
+      const wobble = Math.sin(time * 0.5 + pt.wobble) * 2;
+
+      if (pt.phase === 0) {
+        // Water → aarde (zakken naar sediment)
+        const startR = R * LAYERS.water.inner;
+        const endR = R * LAYERS.aarde.outer;
+        r = startR + (endR - startR) * pt.progress;
+        cR = 100 + pt.progress * 60;
+        cG = 150 - pt.progress * 30;
+        cB = 200 - pt.progress * 130;
+        alpha = Math.sin(pt.progress * Math.PI) * 0.18;
+        size = 1.5 - pt.progress * 0.5;
+      } else if (pt.phase === 1) {
+        // Compressie door lagen: aarde → em → core
+        const startR = R * LAYERS.aarde.inner;
+        const endR = R * LAYERS.core.outer;
+        r = startR + (endR - startR) * pt.progress;
+        // Compressie: kleur donkerder, groter
+        cR = 160 - pt.progress * 100;
+        cG = 120 - pt.progress * 80;
+        cB = 70 - pt.progress * 40;
+        alpha = 0.15 + pt.progress * 0.1;
+        size = 1 + pt.progress * 2; // compressie → groter
+      } else {
+        // Steen keert terug: core → water
+        const startR = R * LAYERS.core.outer;
+        const endR = R * LAYERS.water.inner;
+        r = startR + (endR - startR) * pt.progress;
+        // Steenkleur naar water
+        cR = 60 + pt.progress * 40;
+        cG = 40 + pt.progress * 110;
+        cB = 30 + pt.progress * 170;
+        alpha = 0.15 - pt.progress * 0.12;
+        size = 3 - pt.progress * 1.5; // kleiner wordend
+      }
+
+      const px = cx + Math.cos(pt.angle + time * 0.01) * (r + wobble * 0.3);
+      const py = cy + Math.sin(pt.angle + time * 0.01) * (r + wobble * 0.3);
+
+      ctx.beginPath();
+      ctx.arc(px, py, size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${Math.round(cR)},${Math.round(cG)},${Math.round(cB)},${alpha})`;
+      ctx.fill();
+    }
 
     // ── Kosmische invloed pijlen (planeet → laag) ──
     if (showPlanets) {
