@@ -996,16 +996,16 @@
       const cpy = cy + Math.sin(baseAngle) * cloudR;
       const cSize = 2 + Math.sin(time + i) * 1;
 
-      // Wolken = condensatie (wit/blauw)
+      // Wolken = condensatie (wit)
       ctx.beginPath();
       ctx.arc(cpx, cpy, cSize, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(200,220,240,${0.12 + Math.sin(time * 0.5 + i) * 0.04})`;
+      ctx.fillStyle = `rgba(240,245,255,${0.15 + Math.sin(time * 0.5 + i) * 0.05})`;
       ctx.fill();
 
       // Subtiele glow
       const cloudGlow = ctx.createRadialGradient(cpx, cpy, 0, cpx, cpy, cSize * 2);
-      cloudGlow.addColorStop(0, `rgba(200,220,240,0.04)`);
-      cloudGlow.addColorStop(1, 'rgba(200,220,240,0)');
+      cloudGlow.addColorStop(0, `rgba(240,245,255,0.06)`);
+      cloudGlow.addColorStop(1, 'rgba(240,245,255,0)');
       ctx.beginPath();
       ctx.arc(cpx, cpy, cSize * 2, 0, Math.PI * 2);
       ctx.fillStyle = cloudGlow;
@@ -1020,11 +1020,11 @@
     const inner = R * LAYERS.airVocht.inner;
     const outer = R * LAYERS.airVocht.outer;
 
-    // Vochtige zone (lichtblauw met condensatie)
+    // Vochtige zone (wit/wolken met condensatie)
     const aGrad = ctx.createRadialGradient(cx, cy, inner, cx, cy, outer);
-    aGrad.addColorStop(0, 'rgba(160,190,220,0)');
-    aGrad.addColorStop(0.5, 'rgba(160,190,220,0.08)');
-    aGrad.addColorStop(1, 'rgba(160,190,220,0)');
+    aGrad.addColorStop(0, 'rgba(220,230,255,0)');
+    aGrad.addColorStop(0.5, 'rgba(220,230,255,0.06)');
+    aGrad.addColorStop(1, 'rgba(220,230,255,0)');
     ctx.beginPath();
     ctx.arc(cx, cy, outer, 0, Math.PI * 2);
     ctx.arc(cx, cy, inner, 0, Math.PI * 2, true);
@@ -1033,12 +1033,12 @@
 
     // Label
     const labelR = (inner + outer) / 2;
-    ctx.fillStyle = 'rgba(170,200,220,0.2)';
+    ctx.fillStyle = 'rgba(230,240,255,0.2)';
     ctx.font = '0.3em "IBM Plex Mono", monospace';
     ctx.textAlign = 'center';
     ctx.fillText('lucht (vochtig)', cx, cy - labelR);
     ctx.font = '0.2em "IBM Plex Mono", monospace';
-    ctx.fillStyle = 'rgba(170,200,220,0.1)';
+    ctx.fillStyle = 'rgba(230,240,255,0.1)';
     ctx.fillText('(verdamping + condensatie)', cx, cy - labelR + 8);
   }
 
@@ -1772,6 +1772,50 @@
   function draw() {
     ctx.fillStyle = '#0c0a1f';
     ctx.fillRect(0, 0, W, H);
+
+    // ── Melkweg / wormgat effect ──
+    // Sterrenvelden die roteren rond centrum met spiraalvorm
+    const stars = 120;
+    const spiralArms = 3;
+    for (let i = 0; i < stars; i++) {
+      const arm = i % spiralArms;
+      const armAngle = (arm / spiralArms) * Math.PI * 2;
+      const armProgress = Math.floor(i / spiralArms) / (stars / spiralArms);
+
+      // Spiraal: hoe verder van centrum, hoe langzamer rotatie
+      const dist = R * (0.3 + armProgress * 1.5); // buiten de planeet
+      if (dist > R * 1.2) continue; // niet te dicht bij diagram
+
+      const spiralAngle = armAngle + armProgress * Math.PI * 1.5 + time * 0.02 * (1 - armProgress * 0.5);
+      const wobble = Math.sin(time * 0.5 + i * 0.7) * 3;
+
+      const sx = cx + Math.cos(spiralAngle) * (dist + wobble);
+      const sy = cy + Math.sin(spiralAngle) * (dist + wobble);
+
+      // Kleur: wit/blauw/paars afhankelijk van positie
+      const hue = 220 + armProgress * 40; // blauw → paars
+      const lightness = 60 + Math.sin(time + i) * 10;
+      const alpha = 0.03 + Math.sin(time * 0.8 + i * 0.5) * 0.02;
+
+      ctx.beginPath();
+      ctx.arc(sx, sy, 0.5 + armProgress * 0.5, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${hue}, 40%, ${lightness}%, ${alpha})`;
+      ctx.fill();
+    }
+
+    // Wormgat centrum: subtiele trekkende spirals naar binnen
+    const wormholeRings = 5;
+    for (let ri = 0; ri < wormholeRings; ri++) {
+      const ringR = R * (1.1 + ri * 0.15);
+      const ringAlpha = 0.02 - ri * 0.003;
+      const ringAngle = time * 0.03 * (ri % 2 === 0 ? 1 : -1);
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, ringR, ringAngle, ringAngle + Math.PI * 1.5);
+      ctx.strokeStyle = `rgba(120, 100, 200, ${ringAlpha})`;
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    }
 
     time += 0.016;
     if (audioOn) rippleTime += 0.016;
