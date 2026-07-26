@@ -72,6 +72,27 @@
     <button class="mode-btn" data-mode="ice">ijspolen</button>
   </div>
 
+  <div style="position:fixed;bottom:120px;left:50%;transform:translateX(-50%);z-index:10;text-align:center;">
+    <div style="color:#555;font-size:0.6em;margin-bottom:6px;">
+      rotatie balans: core snelheid volgt maan + aarde → 1=0
+    </div>
+    <div style="display:flex;gap:6px;align-items:center;justify-content:center;">
+      <label style="color:#666;font-size:0.6em;">maan orbit:</label>
+      <input type="range" id="moonSlider" min="0.5" max="3" step="0.1" value="1"
+        style="width:80px;opacity:0.5;">
+      <span id="moonVal" style="color:#8ab4f8;font-size:0.55em;">1×</span>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center;justify-content:center;margin-top:4px;">
+      <label style="color:#666;font-size:0.6em;">aarde rotatie:</label>
+      <input type="range" id="earthSlider" min="0.5" max="3" step="0.1" value="1"
+        style="width:80px;opacity:0.5;">
+      <span id="earthVal" style="color:#8ab4f8;font-size:0.55em;">1×</span>
+    </div>
+    <div id="balanceDisplay" style="color:#7c6ef5;font-size:0.65em;margin-top:8px;">
+      core: 1.00× | balans: 1=0
+    </div>
+  </div>
+
   <canvas id="c"></canvas>
 
   <div class="ui" id="ui">
@@ -141,6 +162,14 @@
   let audioOn = false;
   let rippleTime = 0;
   let stones = [];
+
+  // ── Rotatie balans ──
+  // Maan orbit = reference snelheid voor balans met water
+  // Aarde rotatie = extra input
+  // Core snelheid = berekend voor balans (1=0)
+  let moonSpeed = 1;    // maan orbit snelheid (reference)
+  let earthSpeed = 1;   // aarde rotatie snelheid
+  let coreSpeed = 1;    // berekend: core = maan × aarde (balans)
 
   // ── Audio ──
   let audioCtx = null;
@@ -281,10 +310,10 @@
     ctx.fillStyle = coreGrad;
     ctx.fill();
 
-    // Plasma beweging
+    // Plasma beweging (volgt coreSpeed)
     const plasmaLines = 6;
     for (let i = 0; i < plasmaLines; i++) {
-      const angle = (i / plasmaLines) * Math.PI * 2 + time * 0.5;
+      const angle = (i / plasmaLines) * Math.PI * 2 + time * 0.5 * coreSpeed;
       const innerR = r * 0.2;
       const outerR = r * 0.9;
 
@@ -302,10 +331,10 @@
       ctx.stroke();
     }
 
-    // Druk feedback lijnen (core ↔ water)
+    // Druk feedback lijnen (core ↔ water, volgt coreSpeed)
     const feedbackLines = 4;
     for (let i = 0; i < feedbackLines; i++) {
-      const angle = (i / feedbackLines) * Math.PI * 2 + time * 0.2;
+      const angle = (i / feedbackLines) * Math.PI * 2 + time * 0.2 * coreSpeed;
       const pulse = Math.sin(time * 1.5 + i) * 0.15;
 
       ctx.beginPath();
@@ -359,8 +388,8 @@
     for (let i = 0; i < grains; i++) {
       const angle = (i / grains) * Math.PI * 2;
       const grainR = inner + (outer - inner) * ((i % 5) / 5);
-      const px = cx + Math.cos(angle + time * 0.05) * grainR;
-      const py = cy + Math.sin(angle + time * 0.05) * grainR;
+      const px = cx + Math.cos(angle + time * 0.05 * earthSpeed) * grainR;
+      const py = cy + Math.sin(angle + time * 0.05 * earthSpeed) * grainR;
       const size = 1 + Math.sin(time + i) * 0.5;
 
       ctx.beginPath();
@@ -407,7 +436,7 @@
       ctx.beginPath();
       for (let t = 0; t <= 1; t += 0.01) {
         const r = inner + (outer - inner) * t;
-        const wave = Math.sin(t * 8 + time * 2) * (outer - inner) * 0.1;
+        const wave = Math.sin(t * 8 + time * 2 * coreSpeed) * (outer - inner) * 0.1;
         const a = baseAngle + wave / r;
         const px = cx + Math.cos(a) * r;
         const py = cy + Math.sin(a) * r;
@@ -711,6 +740,31 @@
 
     requestAnimationFrame(draw);
   }
+
+  // ── Rotatie sliders ──
+  const moonSlider = document.getElementById('moonSlider');
+  const earthSlider = document.getElementById('earthSlider');
+  const moonVal = document.getElementById('moonVal');
+  const earthVal = document.getElementById('earthVal');
+  const balanceDisplay = document.getElementById('balanceDisplay');
+
+  function updateBalance() {
+    moonSpeed = parseFloat(moonSlider.value);
+    earthSpeed = parseFloat(earthSlider.value);
+    // Core snelheid = maan × aarde voor balans 1=0
+    coreSpeed = moonSpeed * earthSpeed;
+
+    moonVal.textContent = moonSpeed.toFixed(1) + '×';
+    earthVal.textContent = earthSpeed.toFixed(1) + '×';
+
+    const balance = coreSpeed - 1;
+    const balanceStr = Math.abs(balance) < 0.01 ? '1=0' : `${balance > 0 ? '+' : ''}${balance.toFixed(2)}`;
+    balanceDisplay.textContent = `core: ${coreSpeed.toFixed(2)}× | balans: ${balanceStr}`;
+    balanceDisplay.style.color = Math.abs(balance) < 0.1 ? '#7c6ef5' : '#ff6644';
+  }
+
+  moonSlider.addEventListener('input', updateBalance);
+  earthSlider.addEventListener('input', updateBalance);
 
   // ── Mode buttons ──
   document.querySelectorAll('.mode-btn').forEach(btn => {
