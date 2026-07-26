@@ -205,7 +205,7 @@
     { name: '4 WAVES', label: '2² — resonantie' },
     { name: '8 WAVES', label: '2³ — grens van orde' },
     { name: 'CHAOS', label: '>7 limiet → alles tegelijk' },
-    { name: 'MANDELBROT', label: '∞→1 → terug naar 0' },
+    { name: '0.0.0.0', label: '7 banden → echo = positie' },
   ];
 
   // ── Resize ──
@@ -330,30 +330,56 @@
       activeNoiseNode = source;
 
     } else if (s === 6) {
-      // MANDELBROT: ∞→1 — fractaal terug naar eenheid
-      // Diepe drone + trage pulserende toon
-      const osc1 = audioCtx.createOscillator();
-      const osc2 = audioCtx.createOscillator();
-      const lfo = audioCtx.createOscillator();
-      const lfoGain = audioCtx.createGain();
-      const gain = audioCtx.createGain();
-      osc1.type = 'sine';
-      osc1.frequency.value = 55;
-      osc2.type = 'sine';
-      osc2.frequency.value = 110;
-      lfo.type = 'sine';
-      lfo.frequency.value = 0.2; // heel traag
-      lfoGain.gain.value = 10;
-      lfo.connect(lfoGain);
-      lfoGain.connect(osc2.frequency);
-      gain.gain.value = 0.06;
-      osc1.connect(gain);
-      osc2.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc1.start();
-      osc2.start();
-      lfo.start();
-      activeOscillators.push(osc1, osc2, lfo);
+      // 0.0.0.0: 7 banden → audio stroomt naar center → echo = positie
+      // 7 band-pass filters (P0→P6) + delay = return/echo
+      const bands = [
+        { freq: 55, q: 1 },     // P0: center
+        { freq: 82.5, q: 1.5 }, // P1
+        { freq: 110, q: 1 },    // P2
+        { freq: 165, q: 2 },    // P3
+        { freq: 220, q: 1.5 },  // P4
+        { freq: 330, q: 2 },    // P5
+        { freq: 440, q: 3 },    // P6
+      ];
+
+      // Bron: white noise (ru = potentieel)
+      const bufSize = audioCtx.sampleRate * 2;
+      const buf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
+      const src = audioCtx.createBufferSource();
+      src.buffer = buf;
+      src.loop = true;
+
+      // 7 band filters → master gain
+      const masterGain = audioCtx.createGain();
+      masterGain.gain.value = 0.02;
+      masterGain.connect(audioCtx.destination);
+
+      bands.forEach(function(b) {
+        const bp = audioCtx.createBiquadFilter();
+        bp.type = 'bandpass';
+        bp.frequency.value = b.freq;
+        bp.Q.value = b.q;
+        const g = audioCtx.createGain();
+        g.gain.value = 1 / (bands.length); // even verdelen
+        src.connect(bp);
+        bp.connect(g);
+        g.connect(masterGain);
+      });
+
+      // Delay = return/echo (snelheid = momentum, return = positie)
+      const delay = audioCtx.createDelay();
+      delay.delayTime.value = 0.5; // 500ms echo
+      const delayGain = audioCtx.createGain();
+      delayGain.gain.value = 0.3;
+      masterGain.connect(delay);
+      delay.connect(delayGain);
+      delayGain.connect(audioCtx.destination);
+
+      src.start();
+      activeNoiseNode = src;
+      activeOscillators.push(delay); // track for cleanup
     }
   }
 
@@ -483,63 +509,72 @@
       }
 
     } else if (stage === 6) {
-      // Mandelbrot — simplified fractal rendering
-      const zoom = 2.5;
-      const maxIter = 50;
-      const imgData = ctx.createImageData(W, H);
-      const data = imgData.data;
+      // 0.0.0.0: 7 banden → center → echo = positie
+      // Hexagonale structuur, audio stroomt naar center
+      // Snelheid = momentum, return/echo = positie
 
-      for (let px = 0; px < W; px += 2) {
-        for (let py = 0; py < H; py += 2) {
-          const x0 = (px - W / 2) / (W / 2) * zoom;
-          const y0 = (py - H / 2) / (H / 2) * zoom;
-          let x = 0, y = 0, iter = 0;
-          while (x * x + y * y <= 4 && iter < maxIter) {
-            const xt = x * x - y * y + x0;
-            y = 2 * x * y + y0;
-            x = xt;
-            iter++;
-          }
-          const hue = (iter / maxIter) * 270;
-          const rgb = hslToRgb(hue / 360, 0.7, iter === maxIter ? 0 : iter / maxIter);
-          // Fill 2x2 block for speed
-          for (let dx = 0; dx < 2 && px + dx < W; dx++) {
-            for (let dy = 0; dy < 2 && py + dy < H; dy++) {
-              const idx = ((py + dy) * W + (px + dx)) * 4;
-              data[idx] = rgb[0];
-              data[idx + 1] = rgb[1];
-              data[idx + 2] = rgb[2];
-              data[idx + 3] = iter === maxIter ? 255 : 200;
-            }
-          }
+      const bands = [55, 82.5, 110, 165, 220, 330, 440];
+      const bandColors = [
+        'rgba(124,110,245,', // P0
+        'rgba(167,139,250,', // P1
+        'rgba(251,191,36,',  // P2
+        'rgba(142,202,230,', // P3
+        'rgba(124,110,245,', // P4
+        'rgba(167,139,250,', // P5
+        'rgba(251,191,36,',  // P6
+      ];
+
+      // 7 spiraalvormige banen naar center
+      bands.forEach(function(b, i) {
+        const radius = 100 + i * 60 + Math.sin(time * 0.3 + i) * 30;
+        const angleOffset = (i / 7) * Math.PI * 2 + time * 0.1;
+
+        ctx.beginPath();
+        for (let a = 0; a < Math.PI * 2; a += 0.05) {
+          const r = radius * (1 - a / (Math.PI * 4)); // spiraal naar binnen
+          const angle = a + angleOffset;
+          const x = cx + Math.cos(angle) * r;
+          const y = cy + Math.sin(angle) * r;
+          if (a === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
         }
+        const alpha = 0.15 + Math.sin(time * 0.5 + i) * 0.1;
+        ctx.strokeStyle = bandColors[i] + alpha + ')';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      });
+
+      // Center: 0.0.0.0 (hexagonaal punt)
+      const hexPulse = 15 + Math.sin(time * 0.8) * 5;
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const angle = (i / 6) * Math.PI * 2 - Math.PI / 6;
+        const x = cx + Math.cos(angle) * hexPulse;
+        const y = cy + Math.sin(angle) * hexPulse;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
       }
-      ctx.putImageData(imgData, 0, 0);
+      ctx.closePath();
+      ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(124,110,245,0.2)';
+      ctx.fill();
+
+      // Echo/return: concentrische cirkels die uitbreiden (snelheid → positie)
+      for (let e = 0; e < 3; e++) {
+        const echoPhase = (time * 0.4 + e * 2) % 6;
+        const echoRadius = echoPhase * 50;
+        const echoAlpha = Math.max(0, 0.3 - echoPhase * 0.05);
+        ctx.beginPath();
+        ctx.arc(cx, cy, echoRadius, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(255,255,255,${echoAlpha})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
     }
 
     requestAnimationFrame(draw);
-  }
-
-  // HSL → RGB helper
-  function hslToRgb(h, s, l) {
-    let r, g, b;
-    if (s === 0) { r = g = b = l; }
-    else {
-      const hue2rgb = function(p, q, t) {
-        if (t < 0) t += 1;
-        if (t > 1) t -= 1;
-        if (t < 1/6) return p + (q - p) * 6 * t;
-        if (t < 1/2) return q;
-        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-        return p;
-      };
-      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-      const p = 2 * l - q;
-      r = hue2rgb(p, q, h + 1/3);
-      g = hue2rgb(p, q, h);
-      b = hue2rgb(p, q, h - 1/3);
-    }
-    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
   }
 
   // ── Stage progression ──
