@@ -395,21 +395,38 @@
     }
   }
 
-  // ── Visuals ──
+  // ── Visuals: continue transform ──
+  // Alles op fade-buffer. Oud beeld vervaagt, nieuw beeld groeit er overheen.
+  // Waves blijven binnen canvas — ze comprimeren/expanderen in de nieuwe vorm.
+
   function draw() {
-    if (stage === 5) {
-      // Chaos: trage fade → dichtheid opbouwt
-      ctx.fillStyle = 'rgba(6, 6, 10, 0.05)';
-      ctx.fillRect(0, 0, W, H);
-    } else if (stage === 6) {
-      // Mandelbrot: volledig herberekenen, geen fade
-      // (geen action needed, imgData overschrijft)
-    } else {
-      // Stages 0-4: clean frame
-      ctx.clearRect(0, 0, W, H);
-    }
+    // Fade = continue laag (alle stages) — geen clearRect
+    ctx.fillStyle = 'rgba(6, 6, 10, 0.04)';
+    ctx.fillRect(0, 0, W, H);
 
     time += 0.016;
+
+    // ── Wave helper: bounded sine ──
+    // Teken een wave die binnen canvas blijft.
+    // Wave = sinus die center-gericht is, randen fade naar 0.
+    function drawBoundedWave(freq, speed, amp, color, lineWidth, phase) {
+      phase = phase || 0;
+      ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        // Normaaliseer x: 0→1 (links→rechts)
+        const nx = x / W;
+        // Sinus binnen canvas
+        const wave = Math.sin(nx * Math.PI * 4 * freq + time * speed + phase);
+        // Randen: wave comprimeert naar 0 aan randen
+        const envelope = Math.sin(nx * Math.PI); // 0 aan randen, 1 in midden
+        const y = cy + wave * amp * envelope;
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = color;
+      ctx.lineWidth = lineWidth;
+      ctx.stroke();
+    }
 
     if (stage === 0) {
       // Single bit — pulse
@@ -424,137 +441,63 @@
       ctx.stroke();
 
     } else if (stage === 1) {
-      // 1 WAVE: 2⁰ — eerste beweging
-      ctx.beginPath();
-      for (let x = 0; x < W; x++) {
-        const t = (x / W) * Math.PI * 4;
-        const y = cy + Math.sin(t + time * 0.5) * 120;
-        if (x === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
-      ctx.strokeStyle = 'rgba(124, 110, 245, 0.7)';
-      ctx.lineWidth = 2.5;
-      ctx.stroke();
+      // 1 WAVE: 2⁰ — eerste beweging (bounded)
+      drawBoundedWave(1, 0.5, 120, 'rgba(124, 110, 245, 0.7)', 2.5);
 
     } else if (stage === 2) {
-      // 2 WAVES: 2¹ — verdubbeling
-      const waves = [
-        { amp: 120, freq: 1, speed: 0.5, color: 'rgba(124, 110, 245, 0.6)' },
-        { amp: 90, freq: 2, speed: 0.4, color: 'rgba(251, 191, 36, 0.5)' },
-      ];
-      waves.forEach(function(w) {
-        ctx.beginPath();
-        for (let x = 0; x < W; x++) {
-          const t = (x / W) * Math.PI * 4;
-          const y = cy + Math.sin(t * w.freq + time * w.speed) * w.amp;
-          if (x === 0) ctx.moveTo(x, y);
-          else ctx.lineTo(x, y);
-        }
-        ctx.strokeStyle = w.color;
-        ctx.lineWidth = 2;
-        ctx.stroke();
-      });
+      // 2 WAVES: 2¹ — verdubbeling (beide bounded)
+      drawBoundedWave(1, 0.5, 120, 'rgba(124, 110, 245, 0.6)', 2);
+      drawBoundedWave(2, 0.4, 90, 'rgba(251, 191, 36, 0.5)', 2, Math.PI);
 
     } else if (stage === 3) {
-      // 4 WAVES: 2² — resonantie
-      const waves = [
-        { amp: 100, freq: 1, speed: 0.5, color: 'rgba(124, 110, 245, 0.5)' },
-        { amp: 80, freq: 1.5, speed: 0.4, color: 'rgba(251, 191, 36, 0.45)' },
-        { amp: 65, freq: 2, speed: 0.35, color: 'rgba(142, 202, 230, 0.4)' },
-        { amp: 50, freq: 3, speed: 0.3, color: 'rgba(167, 139, 250, 0.35)' },
-      ];
-      waves.forEach(function(w) {
-        ctx.beginPath();
-        for (let x = 0; x < W; x++) {
-          const t = (x / W) * Math.PI * 4;
-          const y = cy + Math.sin(t * w.freq + time * w.speed) * w.amp;
-          if (x === 0) ctx.moveTo(x, y);
-          else ctx.lineTo(x, y);
-        }
-        ctx.strokeStyle = w.color;
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-      });
+      // 4 WAVES: 2² — resonantie (bounded, opgaan in elkaars ruimte)
+      drawBoundedWave(1, 0.5, 100, 'rgba(124, 110, 245, 0.5)', 1.5);
+      drawBoundedWave(1.5, 0.4, 80, 'rgba(251, 191, 36, 0.45)', 1.5, 0.5);
+      drawBoundedWave(2, 0.35, 65, 'rgba(142, 202, 230, 0.4)', 1.5, 1);
+      drawBoundedWave(3, 0.3, 50, 'rgba(167, 139, 250, 0.35)', 1.5, 1.5);
 
     } else if (stage === 4) {
-      // 8 WAVES: 2³ — grens van orde
-      const waves = [
-        { amp: 85, freq: 1, speed: 0.5, color: 'rgba(124, 110, 245, 0.4)' },
-        { amp: 75, freq: 1.25, speed: 0.45, color: 'rgba(167, 139, 250, 0.35)' },
-        { amp: 65, freq: 1.5, speed: 0.4, color: 'rgba(251, 191, 36, 0.4)' },
-        { amp: 60, freq: 1.75, speed: 0.38, color: 'rgba(142, 202, 230, 0.35)' },
-        { amp: 55, freq: 2, speed: 0.35, color: 'rgba(124, 110, 245, 0.3)' },
-        { amp: 45, freq: 2.5, speed: 0.3, color: 'rgba(251, 191, 36, 0.3)' },
-        { amp: 40, freq: 3, speed: 0.28, color: 'rgba(167, 139, 250, 0.25)' },
-        { amp: 35, freq: 3.5, speed: 0.25, color: 'rgba(142, 202, 230, 0.25)' },
-      ];
-      waves.forEach(function(w) {
-        ctx.beginPath();
-        for (let x = 0; x < W; x++) {
-          const t = (x / W) * Math.PI * 4;
-          const y = cy + Math.sin(t * w.freq + time * w.speed) * w.amp;
-          if (x === 0) ctx.moveTo(x, y);
-          else ctx.lineTo(x, y);
-        }
-        ctx.strokeStyle = w.color;
-        ctx.lineWidth = 1;
-        ctx.stroke();
-      });
+      // 8 WAVES: 2³ — grens van orde (bounded, dicht maar binnen randen)
+      for (let i = 0; i < 8; i++) {
+        const freq = 1 + i * 0.25;
+        const amp = 85 - i * 6;
+        const speed = 0.5 - i * 0.025;
+        const hue = (i * 45 + 240) % 360;
+        const alpha = 0.4 - i * 0.03;
+        drawBoundedWave(freq, speed, amp,
+          `hsla(${hue}, 50%, 65%, ${alpha})`, 1, i * 0.4);
+      }
 
     } else if (stage === 5) {
-      // CHAOS: >7 limiet — overlappende golven → white noise dichtheid
+      // CHAOS: >7 limiet — onweer in white noise
+      // Waves versnellen >Mach1 → implosie → KNAL
+      // Alle golven comprimeren naar center (implosie)
       for (let g = 0; g < 40; g++) {
-        ctx.beginPath();
-        const amp = Math.random() * H * 0.4;
-        const freq = Math.random() * 0.05 + 0.001;
-        const spd = Math.random() * 0.1;
-        const phase = Math.random() * Math.PI * 2;
+        const freq = Math.random() * 6 + 1;
+        const spd = Math.random() * 3 + 2; // snel! = versnelt
+        const amp = Math.random() * 100 + 20; // klein = geïmplodeerd
         const hue = Math.random() * 60 + 240;
-        for (let x = 0; x < W; x++) {
-          const y = cy + Math.sin(x * freq + time * spd + phase) * amp;
-          if (x === 0) ctx.moveTo(x, y);
-          else ctx.lineTo(x, y);
-        }
-        ctx.strokeStyle = `hsla(${hue}, 60%, 70%, 0.04)`;
-        ctx.lineWidth = 1;
-        ctx.stroke();
+        drawBoundedWave(freq, spd, amp,
+          `hsla(${hue}, 60%, 70%, 0.04)`, 1, Math.random() * Math.PI * 2);
       }
 
     } else if (stage === 6) {
-      // 0.0.0.0: 7 banden → center → echo = positie
-      // Hexagonale structuur, audio stroomt naar center
-      // Snelheid = momentum, return/echo = positie
-
-      const bands = [55, 82.5, 110, 165, 220, 330, 440];
+      // 0.0.0.0: 7 banden → water keert terug (stilte)
+      // Na de knal: structuur keert langzaam terug
       const bandColors = [
-        'rgba(124,110,245,', // P0
-        'rgba(167,139,250,', // P1
-        'rgba(251,191,36,',  // P2
-        'rgba(142,202,230,', // P3
-        'rgba(124,110,245,', // P4
-        'rgba(167,139,250,', // P5
-        'rgba(251,191,36,',  // P6
+        'rgba(124,110,245,', 'rgba(167,139,250,', 'rgba(251,191,36,',
+        'rgba(142,202,230,', 'rgba(124,110,245,', 'rgba(167,139,250,',
+        'rgba(251,191,36,',
       ];
 
-      // 7 spiraalvormige banen naar center
-      bands.forEach(function(b, i) {
-        const radius = 100 + i * 60 + Math.sin(time * 0.3 + i) * 30;
-        const angleOffset = (i / 7) * Math.PI * 2 + time * 0.1;
-
-        ctx.beginPath();
-        for (let a = 0; a < Math.PI * 2; a += 0.05) {
-          const r = radius * (1 - a / (Math.PI * 4)); // spiraal naar binnen
-          const angle = a + angleOffset;
-          const x = cx + Math.cos(angle) * r;
-          const y = cy + Math.sin(angle) * r;
-          if (a === 0) ctx.moveTo(x, y);
-          else ctx.lineTo(x, y);
-        }
-        const alpha = 0.15 + Math.sin(time * 0.5 + i) * 0.1;
-        ctx.strokeStyle = bandColors[i] + alpha + ')';
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-      });
+      // 7 bounded waves = 7 banden (zacht, traag, water-achtig)
+      for (let i = 0; i < 7; i++) {
+        const freq = 0.5 + i * 0.5;
+        const amp = 40 + i * 10;
+        const speed = 0.1 + i * 0.05;
+        const alpha = 0.15 + Math.sin(time * 0.5 + i) * 0.08;
+        drawBoundedWave(freq, speed, amp, bandColors[i] + alpha + ')', 1.5, i * 0.7);
+      }
 
       // Center: 0.0.0.0 (hexagonaal punt)
       const hexPulse = 15 + Math.sin(time * 0.8) * 5;
