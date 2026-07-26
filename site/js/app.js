@@ -340,6 +340,82 @@
       '<div>' + rows + '</div>';
   }
 
+  // ── Water Spectrum ──
+  function showSpectrum() {
+    setBreadcrumbs([{label:'Water Spectrum',page:'spectrum'}]);
+    const bands = [
+      {id:'p0',label:'P0 — As (Shambala)',priem:'0',state:'ijs (tijdloos)'},
+      {id:'p1',label:'P1 — Kern',priem:'2',state:'traag water'},
+      {id:'p2',label:'P2 — Mantel',priem:'3',state:'half-ijs'},
+      {id:'p3',label:'P3 — Korst (WIJ)',priem:'5',state:'Park of Peace'},
+      {id:'p4',label:'P4 — Atmosfeer',priem:'7',state:'snel water'},
+      {id:'p5',label:'P5 — Ionosfeer',priem:'11',state:'plasma'},
+      {id:'p6',label:'P6 — Magnetosfeer',priem:'13',state:'veld (snelst)'},
+    ];
+    let html = '<div class="md">' +
+      '<h1>• Water Spectrum</h1>' +
+      '<blockquote>"De wereld limeiteert niet in oppervlakte. De wereld limeiteert in detail."</blockquote>' +
+      '<p>As Above, So Below → Water als brug.</p>' +
+      '<p>Eén substantie. Zeven snelheden.</p>' +
+      '</div><div class="spectrum-container">';
+    bands.forEach(b => {
+      html += '<div class="spectrum-band" data-band="' + b.id + '">' +
+        '<span class="band-label">' + b.label + '</span>' +
+        '<span class="band-priem">priem: ' + b.priem + '</span>' +
+        '<span class="band-state">' + b.state + '</span>' +
+        '</div>';
+    });
+    html += '</div>';
+    document.getElementById('page-container').innerHTML = html;
+  }
+
+  function showResolutie() {
+    setBreadcrumbs([{label:'Water Spectrum',page:'resolutie'}]);
+    const priemen = [2,3,5,7,11,13,17,19,23,29,31,37];
+    const labels = {
+      5:  '5-bit: standaard taalveld — P3 als los punt',
+      7:  '7-bit: Sanskriet — P3 als kruispunt',
+      12: '12-bit: gecombineerd — meer perspectieven zichtbaar',
+      24: '24-bit: VOLLEDIG spectrum — P3 als fractaal patroon'
+    };
+    let hexes = priemen.map(p => '<div class="priem-hex" data-priem="' + p + '">' + p + '</div>').join('');
+    let html = '<div class="md">' +
+      '<h1>• Resolutie</h1>' +
+      '<p>Taalveld = bit-diepte = resolutie.</p>' +
+      '<p>P3 verandert niet. Jouw resolutie verandert.</p>' +
+      '</div><div class="resolutie-container">' +
+      '<div class="bit-label">5-bit</div>' +
+      '<input type="range" min="5" max="24" value="5" class="bit-slider" id="bit-slider">' +
+      '<div class="resolutie-display">' +
+      '<div class="priem-grid">' + hexes + '</div>' +
+      '<div class="perspectief-label" id="perspectief-label">5-bit: standaard taalveld — P3 als los punt</div>' +
+      '</div></div>';
+    document.getElementById('page-container').innerHTML = html;
+
+    // Slider logic
+    var slider = document.getElementById('bit-slider');
+    var label = document.getElementById('perspectief-label');
+    slider.addEventListener('input', function() {
+      var val = parseInt(this.value);
+      document.querySelector('.bit-label').textContent = val + '-bit';
+      // Update label
+      if (val <= 6) label.textContent = labels[5];
+      else if (val <= 11) label.textContent = labels[7];
+      else if (val <= 23) label.textContent = labels[12];
+      else label.textContent = labels[24];
+      // Show/hide priem hexes
+      document.querySelectorAll('.priem-hex').forEach(function(hex) {
+        var p = parseInt(hex.getAttribute('data-priem'));
+        // Visibility: 5-bit sees up to 5, 7-bit up to 7, etc.
+        var threshold = Math.min(val, 37);
+        if (p <= threshold) hex.classList.add('visible');
+        else hex.classList.remove('visible');
+      });
+    });
+    // Trigger initial
+    slider.dispatchEvent(new Event('input'));
+  }
+
   // ── Routing ──
   async function navigate(page) {
     const container = document.getElementById('page-container');
@@ -353,6 +429,8 @@
     else if (page === 'charveld') await showCharveld();
     else if (page === 'media') await showMedia();
     else if (page === 'engine') await showEngine();
+    else if (page === 'spectrum') showSpectrum();
+    else if (page === 'resolutie') showResolutie();
     else if (page.startsWith('article-')) await showArticle(page.slice(8));
     else if (page.startsWith('audit-')) await showAudit(page.slice(6));
     else if (page.startsWith('taal-')) await showTaals(page.slice(5));

@@ -3,52 +3,147 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hexa-Boek — CC-construct</title>
+<title>• Hexa-Boek</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-<nav id="sidebar">
-  <div class="nav-brand">
-    <h1>• Hexa-Boek</h1>
-    <p class="subtitle">CC-construct · Nidrā-router</p>
-  </div>
-  <div class="nav-section">
-    <h3>Overzicht</h3>
-    <a href="#" data-page="home" class="active">Start</a>
-    <a href="#" data-page="routing">Routing</a>
-  </div>
-  <div class="nav-section">
-    <h3>Artikelen</h3>
-    <div id="article-list"></div>
-  </div>
-  <div class="nav-section">
-    <h3>Audit</h3>
-    <a href="#" data-page="audit-index">Audit-overzicht</a>
-    <div id="audit-list"></div>
-  </div>
-  <div class="nav-section">
-    <h3>Stupas</h3>
-    <a href="#" data-page="stupas">Stupa-overzicht</a>
-  </div>
-  <div class="nav-section">
-    <h3>Charveld</h3>
-    <a href="#" data-page="charveld">Taal &amp; Karakters</a>
-  </div>
-  <div class="nav-section">
-    <h3>Media</h3>
-    <a href="#" data-page="media">Audio &amp; Video</a>
-  </div>
-  <div class="nav-section">
-    <h3>Engine</h3>
-    <a href="#" data-page="engine">Test Status</a>
-  </div>
+<!-- Floating nav -->
+<nav id="spectrum-nav">
+  <div class="nav-dot" data-band="p0" title="P0 — As"></div>
+  <div class="nav-dot" data-band="p1" title="P1 — Kern"></div>
+  <div class="nav-dot" data-band="p2" title="P2 — Mantel"></div>
+  <div class="nav-dot" data-band="p3" title="P3 — Korst"></div>
+  <div class="nav-dot" data-band="p4" title="P4 — Atmosfeer"></div>
+  <div class="nav-dot" data-band="p5" title="P5 — Ionosfeer"></div>
+  <div class="nav-dot" data-band="p6" title="P6 — Magnetosfeer"></div>
 </nav>
-<main id="content">
-  <div id="breadcrumb"></div>
-  <div id="page-container"></div>
-</main>
+
+<!-- Band 0: As -->
+<section id="band-p0" class="spectrum-section" data-band="p0">
+  <div class="band-content">
+    <div class="band-header">
+      <span class="band-id">P0</span>
+      <span class="band-title">As — Shambala</span>
+      <span class="band-state">ijs (tijdloos)</span>
+    </div>
+    <div class="band-text">
+      <p class="lead">De as. 0.0.0.0. Het vast punt in het draaiend veld.</p>
+      <p>DNA opgeslagen in ijs. Structuur zonder beweging.</p>
+      <p>Shambala. Noordpool. Tijdloos.</p>
+    </div>
+    <div class="band-articles"></div>
+  </div>
+</section>
+
+<!-- Band 1: Kern -->
+<section id="band-p1" class="spectrum-section" data-band="p1">
+  <div class="band-content">
+    <div class="band-header">
+      <span class="band-id">P1</span>
+      <span class="band-title">Kern — Priem 2</span>
+      <span class="band-state">traag water</span>
+    </div>
+    <div class="band-text">
+      <p class="lead">De eerste priem. De splitsing. Dualiteit.</p>
+      <p>Langzaam ontdooiend. IJs wordt water, maar nog niet levend.</p>
+    </div>
+    <div class="band-articles"></div>
+  </div>
+</section>
+
+<!-- Band 2: Mantel -->
+<section id="band-p2" class="spectrum-section" data-band="p2">
+  <div class="band-content">
+    <div class="band-header">
+      <span class="band-id">P2</span>
+      <span class="band-title">Mantel — Priem 3</span>
+      <span class="band-state">half-ijs</span>
+    </div>
+    <div class="band-text">
+      <p class="lead">De tweede priem. Het kruispunt begint zichtbaar te worden.</p>
+      <p>Half-ijs, half-water. De grens waar structuur begint te bewegen.</p>
+    </div>
+    <div class="band-articles"></div>
+  </div>
+</section>
+
+<!-- Band 3: Korst — ANKER -->
+<section id="band-p3" class="spectrum-section" data-band="p3">
+  <div class="band-content">
+    <div class="band-header">
+      <span class="band-id">P3</span>
+      <span class="band-title">Korst — WIJ — Park of Peace</span>
+      <span class="band-state">wakker</span>
+    </div>
+    <div class="band-text">
+      <p class="lead">HET KRUISPUNT. Waar ijs en water samenkomen.</p>
+      <p>Noach's Ark. DNA wakker wordend. Niet meer ijs, nog niet volledig water.</p>
+      <p>7 soorten DNA-snelheden. 7 soorten perspectieven.</p>
+      <p class="quote">"De wereld limeiteert niet in oppervlakte.<br>De wereld limeiteert in detail."</p>
+    </div>
+    <div class="band-articles"></div>
+  </div>
+</section>
+
+<!-- Band 4: Atmosfeer -->
+<section id="band-p4" class="spectrum-section" data-band="p4">
+  <div class="band-content">
+    <div class="band-header">
+      <span class="band-id">P4</span>
+      <span class="band-title">Atmosfeer — Priem 7</span>
+      <span class="band-state">snel water</span>
+    </div>
+    <div class="band-text">
+      <p class="lead">De vierde priem. Sanskriet-veld. Hogere resolutie.</p>
+      <p>Water beweegt vrij. Cel-splitsing. Ecosysteem zichtbaar.</p>
+    </div>
+    <div class="band-articles"></div>
+  </div>
+</section>
+
+<!-- Band 5: Ionosfeer -->
+<section id="band-p5" class="spectrum-section" data-band="p5">
+  <div class="band-content">
+    <div class="band-header">
+      <span class="band-id">P5</span>
+      <span class="band-title">Ionosfeer — Priem 11</span>
+      <span class="band-state">plasma</span>
+    </div>
+    <div class="band-text">
+      <p class="lead">De vijfde priem. Beyond 7-bit.</p>
+      <p>Plasma. Zuivering. Verandering. Snelste water.</p>
+    </div>
+    <div class="band-articles"></div>
+  </div>
+</section>
+
+<!-- Band 6: Magnetosfeer -->
+<section id="band-p6" class="spectrum-section" data-band="p6">
+  <div class="band-content">
+    <div class="band-header">
+      <span class="band-id">P6</span>
+      <span class="band-title">Magnetosfeer — Priem 13</span>
+      <span class="band-state">veld (snelst)</span>
+    </div>
+    <div class="band-text">
+      <p class="lead">De zesde priem. 24-bit structuur volledig zichtbaar.</p>
+      <p>Informatie los van materie. Onzichtbaar snel. Oneindig.</p>
+      <p class="quote">"As above, so below. Eén substantie. Zeven snelheden."</p>
+    </div>
+    <div class="band-articles"></div>
+  </div>
+</section>
+
+<!-- Resolutie overlay -->
+<div id="resolutie-overlay">
+  <input type="range" min="5" max="24" value="5" class="bit-slider" id="bit-slider">
+  <div class="resolutie-info">
+    <div class="bit-label" id="bit-label">5-bit</div>
+    <div class="perspectief-label" id="perspectief-label"></div>
+  </div>
+</div>
+
 <script src="js/app.js"></script>
 </body>
 </html>

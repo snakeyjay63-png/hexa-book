@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Water Spectrum | Hexa-Boek</title>
+<link rel="stylesheet" href="css/main.css">
+</head>
+<body id="spectrum-body">
+
+<!-- Floating Nav -->
+<nav id="spectrum-nav">
+  <div class="nav-dot" title="P0 — As" onclick="scrollToBand('band-p0')"></div>
+  <div class="nav-dot" title="P1 — Structuur" onclick="scrollToBand('band-p1')"></div>
+  <div class="nav-dot" title="P2 — Patroon" onclick="scrollToBand('band-p2')"></div>
+  <div class="nav-dot" title="P3 — Leven" onclick="scrollToBand('band-p3')"></div>
+  <div class="nav-dot" title="P4 — Communicatie" onclick="scrollToBand('band-p4')"></div>
+  <div class="nav-dot" title="P5 — Perceptie" onclick="scrollToBand('band-p5')"></div>
+  <div class="nav-dot" title="P6 — Regenatie" onclick="scrollToBand('band-p6')"></div>
+</nav>
+
+<!-- Resolutie Overlay -->
+<div id="resolutie-overlay">
+  <input type="range" class="bit-slider" id="bit-slider" min="5" max="24" value="5" step="1">
+  <div class="resolutie-info">
+    <span class="bit-label" id="bit-label">5-bit</span>
+    <span class="perspectief-label" id="perspectief-label">enkelcellig</span>
+  </div>
+</div>
+
+<!-- P0 — As -->
+<section class="spectrum-section" id="band-p0">
+  <div class="band-content">
+    <div class="band-header">
+      <div class="band-id">P0</div>
+      <h1 class="band-title">Shambala</h1>
+      <span class="band-state">vast · 0 Hz · priem 0</span>
+    </div>
+    <div class="band-text">
+      <p class="lead">De onbeweeglijke as. Tijdloos. Opslag.</p>
+      <p>Niet "boven" — maar tijdloos. Te hoog van resolutie om straling te zien.</p>
+      <p class="quote">"De veld doet niet aan individuen. Het onthoudt alleen."</p>
+    </div>
+    <div class="band-articles">
+      <a class="article-link" onclick="openArticle('020')">020 · Resolutie als Kosmisch Water</a>
+    </div>
+  </div>
+  <div class="scroll-indicator" style="display:none;">
+    <span>scroll</span>
+    <div class="arrow"></div>
+  </div>
+</section>
+
+<!-- P1 — Structuur -->
+<section class="spectrum-section" id="band-p1">
+  <div class="band-content">
+    <div class="band-header">
+      <div class="band-id">P1</div>
+      <h1 class="band-title">Structuur</h1>
+      <span class="band-state">ijs · traag · priem 2</span>
+    </div>
+    <div class="band-text">
+      <p class="lead">Eerste splitsing. Dualiteit. Vorm.</p>
+      <p>Het moment waarop eenheid twee wordt. Niet breuk — opening.</p>
+      <p class="quote">"Priem 2 = de eerste vraag: wat is anders?"</p>
+    </div>
+    <div class="band-articles">
+      <a class="article-link" onclick="openArticle('020')">020 · Resolutie</a>
+    </div>
+  </div>
+</section>
+
+<!-- P2 — Patroon -->
+<section class="spectrum-section" id="band-p2">
+  <div class="band-content">
+    <div class="band-header">
+      <div class="band-id">P2</div>
+      <h1 class="band-title">Patroon</h1>
+      <span class="band-state">half-ijs · middels · priem 3</span>
+    </div>
+    <div class="band-text">
+      <p class="lead">DNA. Frequentie. Codering.</p>
+      <p>Informatie opgeslagen in ijs. Nog niet actief — maar aanwezig als kristal.</p>
+      <p class="quote">"DNA = opslag. IJs = de harde schijf van het universum."</p>
+    </div>
+    <div class="band-articles">
+      <a class="article-link" onclick="openArticle('020')">020 · Resolutie</a>
+    </div>
+  </div>
+</section>
+
+<!-- P3 — Leven (Ark) -->
+<section class="spectrum-section" id="band-p3">
+  <div class="band-content">
+    <div class="band-header">
+      <div class="band-id">P3</div>
+      <h1 class="band-title">Park of Peace</h1>
+      <span class="band-state">water · levend · priem 5</span>
+    </div>
+    <div class="band-text">
+      <p class="lead">Het kruispunt. Waar ijs wordt water. Waar DNA wakker wordt.</p>
+      <p>Niet "leefbaar zone." Maar het moment waarop structuur expressie wordt.</p>
+      <p>De Ark draagt geen 7 diersoorten. Draagt 7 DNA-snelheden.</p>
+      <p class="quote">"P3 = jou. Dit moment. Niet meer in ijs, nog niet volledig in water."</p>
+    </div>
+    <div class="band-articles">
+      <a class="article-link" onclick="openArticle('019')">019 · Aarde als Banden</a>
+      <a class="article-link" onclick="openArticle('020')">020 · Resolutie</a>
+    </div>
+  </div>
+</section>
+
+<!-- P4 — Communicatie -->
+<section class="spectrum-section" id="band-p4">
+  <div class="band-content">
+    <div class="band-header">
+      <div class="band-id">P4</div>
+      <h1 class="band-title">Communicatie</h1>
+      <span class="band-state">damp · snel · priem 7</span>
+    </div>
+    <div class="band-text">
+      <p class="lead">Taal. Routing. Sanskriet-veld.</p>
+      <p>7-bit taalveld. Het moment waarop informatie beweegt tussen cellen.</p>
+      <p class="quote">"Niet 'soorten worden ingewikkelder.' → 'Water wordt dieper router.'"</p>
+    </div>
+    <div class="band-articles">
+      <a class="article-link" onclick="openArticle('019')">019 · Aarde als Banden</a>
+    </div>
+  </div>
+</section>
+
+<!-- P5 — Perceptie -->
+<section class="spectrum-section" id="band-p5">
+  <div class="band-content">
+    <div class="band-header">
+      <div class="band-id">P5</div>
+      <h1 class="band-title">Perceptie</h1>
+      <span class="band-state">plasma · zeer snel · priem 11</span>
+    </div>
+    <div class="band-text">
+      <p class="lead">Individuele lens. Snelheid.</p>
+      <p>11-bit = beyond 7-bit. Ecosysteem zichtbaar. Maar nog niet het hele spectrum.</p>
+      <p class="quote">"Je bent geen individu. Je bent een lees-schrijfkop."</p>
+    </div>
+    <div class="band-articles">
+      <a class="article-link" onclick="openArticle('020')">020 · Resolutie</a>
+    </div>
+  </div>
+</section>
+
+<!-- P6 — Regenatie -->
+<section class="spectrum-section" id="band-p6">
+  <div class="band-content">
+    <div class="band-header">
+      <div class="band-id">P6</div>
+      <h1 class="band-title">Regenatie</h1>
+      <span class="band-state">veld · oneindig · priem 13</span>
+    </div>
+    <div class="band-text">
+      <p class="lead">Warfield. Regen. De pomp.</p>
+      <p>Niet "waar het misgaat." Waar het zichzelf maakt. Botsing = verdamping = condensatie = vers water.</p>
+      <p>P0 onthoudt. P6 vernieuwt. Samen = eeuwig cyclisch.</p>
+      <p class="quote">"Warfield = waterpomp. Chaos = regeneratie. Geen einde. Alleen cyclus."</p>
+    </div>
+    <div class="band-articles">
+      <a class="article-link" onclick="openArticle('020')">020 · Resolutie</a>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <span>terug naar P0</span>
+    <div class="arrow"></div>
+  </div>
+</section>
+
+<!-- Article Modal -->
+<div class="article-modal" id="article-modal">
+  <button class="modal-close" onclick="closeArticle()">✕</button>
+  <div class="modal-content" id="modal-content"></div>
+</div>
+
+<script>
+// Band data
+const bands = ['band-p0','band-p1','band-p2','band-p3','band-p4','band-p5','band-p6'];
+const labels = ['P0 As','P1 Structuur','P2 Patroon','P3 Leven','P4 Communicatie','P5 Perceptie','P6 Regenatie'];
+
+// Scroll tracking
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      document.querySelectorAll('.nav-dot').forEach((d,i) => {
+        d.classList.toggle('active', bands[i] === entry.target.id);
+      });
+    }
+  });
+}, { threshold: 0.5 });
+
+bands.forEach(id => {
+  const el = document.getElementById(id);
+  if (el) observer.observe(el);
+});
+
+function scrollToBand(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+}
+
+// Resolutie slider
+const slider = document.getElementById('bit-slider');
+const bitLabel = document.getElementById('bit-label');
+const perspectiefLabel = document.getElementById('perspectief-label');
+
+const bitMap = {
+  5:  'enkelcellig',
+  7:  'meercellig',
+  9:  'simpler multi',
+  12: 'ecosysteem',
+  16: 'complex netwerk',
+  19: 'hoog spectrum',
+  24: 'HEEL spectrum'
+};
+
+slider.addEventListener('input', () => {
+  const v = parseInt(slider.value);
+  bitLabel.textContent = v + '-bit';
+  perspectiefLabel.textContent = bitMap[v] || `${v}-bit`;
+
+  // Show/hide bands based on bit-depth
+  const visibleBands = Math.min(7, Math.max(1, Math.ceil((v - 4) / 3)));
+  bands.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.style.display = i < visibleBands ? 'flex' : 'none';
+    }
+  });
+});
+
+// Initialize
+slider.dispatchEvent(new Event('input'));
+
+// Article modal
+function openArticle(id) {
+  const modal = document.getElementById('article-modal');
+  const content = document.getElementById('modal-content');
+  content.innerHTML = `<h2>Artikel ${id}</h2><p>Artikel content wordt geladen...</p><iframe src="articles/${id}-placeholder.html" style="width:100%;height:600px;border:none;background:#06060a;"></iframe>`;
+  modal.classList.add('active');
+}
+
+function closeArticle() {
+  document.getElementById('article-modal').classList.remove('active');
+}
+</script>
+
+</body>
+</html>

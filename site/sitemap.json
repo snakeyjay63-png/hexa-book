@@ -107,6 +107,18 @@
       "name": "hexa-book-018",
       "title": "HEXA-BOEK #018 — Sanskrit-NPR Bridge",
       "art": false
+    },
+    {
+      "file": "articles/hexa-book-019.md",
+      "name": "hexa-book-019",
+      "title": "Artikel 019 — Perspectief Routing: Taalveld",
+      "art": false
+    },
+    {
+      "file": "articles/hexa-book-020.md",
+      "name": "hexa-book-020",
+      "title": "Artikel 020 — Resolutie als Kosmisch Water",
+      "art": false
     }
   ],
   "audits": [

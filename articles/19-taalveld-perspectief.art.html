@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perspectief Routing: Aarde als Banden (P0→P3) | Hexa-Boek</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #06060a; color: #d4d4e0; font-family: 'Instrument Sans', -apple-system, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; }
+.field { position: relative; width: 500px; height: 500px; }
+.layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; animation: breathe 12s ease-in-out infinite; }
+@keyframes breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+</style>
+</head>
+<body>
+<div class="field">
+  <div class="layer">
+    <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+<circle cx="250" cy="250" r="10" fill="none" stroke="hsl(200,50%,60%)" stroke-width="0.8" opacity="0.2"/>
+<text x="275" y="245" text-anchor="start" fill="hsl(200,50%,70%)" font-size="8" font-family="JetBrains Mono,monospace" opacity="0.6">As (Shambala)</text>
+<text x="260.42795564921045" y="249.453000480514" text-anchor="middle" fill="hsl(200,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">corst</text>
+<text x="258.6582278014113" y="254.46241196494285" text-anchor="middle" fill="hsl(200,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">veld</text>
+<text x="259.74925107651023" y="260.1700064856045" text-anchor="middle" fill="hsl(200,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">snel</text>
+<text x="253.13330727196094" y="256.64127860992545" text-anchor="middle" fill="hsl(200,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">snel</text>
+<text x="249.91398602792904" y="260.49595923563237" text-anchor="middle" fill="hsl(200,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">water</text>
+<text x="247.34399801200468" y="255.93934563404764" text-anchor="middle" fill="hsl(200,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">ijs</text>
+<text x="242.25252849971852" y="256.68331237340215" text-anchor="middle" fill="hsl(200,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">0</text>
+<text x="244.7181085562621" y="251.97857754647373" text-anchor="middle" fill="hsl(200,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">1</text>
+<text x="244.69407634645023" y="250.2110028497396" text-anchor="middle" fill="hsl(200,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">ark</text>
+<text x="238.7142816537831" y="245.39720332869464" text-anchor="middle" fill="hsl(200,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">water</text>
+<text x="240.39074089270196" y="239.53031606448044" text-anchor="middle" fill="hsl(200,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">water</text>
+<text x="246.33691726860047" y="239.87304253612953" text-anchor="middle" fill="hsl(200,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">ijs</text>
+<text x="250.452277948294" y="244.0426004096513" text-anchor="middle" fill="hsl(200,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">ijs</text>
+<text x="252.8935009309436" y="242.994201958558" text-anchor="middle" fill="hsl(200,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">atmos</text>
+<text x="260.1023754060709" y="240.96641552450856" text-anchor="middle" fill="hsl(200,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">atmos</text>
+<text x="258.18923929692085" y="246.62179595143306" text-anchor="middle" fill="hsl(200,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">corst</text>
+<circle cx="250" cy="250" r="35" fill="none" stroke="hsl(220,45%,55%)" stroke-width="0.8" opacity="0.2"/>
+<text x="300" y="245" text-anchor="start" fill="hsl(220,50%,70%)" font-size="8" font-family="JetBrains Mono,monospace" opacity="0.6">Kern</text>
+<text x="284.0749660367453" y="250.23241589662297" text-anchor="middle" fill="hsl(220,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">mantel</text>
+<text x="281.77511399871054" y="268.60218739339143" text-anchor="middle" fill="hsl(220,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">0</text>
+<text x="272.59796854992555" y="282.89576951465926" text-anchor="middle" fill="hsl(220,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">traag</text>
+<text x="256.1081955548431" y="282.6982749118506" text-anchor="middle" fill="hsl(220,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">noise</text>
+<text x="239.27068467098007" y="284.0401913876249" text-anchor="middle" fill="hsl(220,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">kern</text>
+<text x="224.3144306224771" y="280.50775935731815" text-anchor="middle" fill="hsl(220,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">ark</text>
+<text x="222.99618377147985" y="264.4662704201397" text-anchor="middle" fill="hsl(220,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">snel</text>
+<text x="212.12267551892575" y="253.12422306371604" text-anchor="middle" fill="hsl(220,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">atmos</text>
+<text x="223.91498195385316" y="234.77871395245373" text-anchor="middle" fill="hsl(220,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">atmos</text>
+<text x="227.51551489042268" y="218.46778834172977" text-anchor="middle" fill="hsl(220,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">1</text>
+<text x="242.40141725458977" y="213.1591127520466" text-anchor="middle" fill="hsl(220,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">water</text>
+<text x="258.82329136912585" y="217.88030072208596" text-anchor="middle" fill="hsl(220,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">ark</text>
+<text x="274.9641707574041" y="218.76544290340934" text-anchor="middle" fill="hsl(220,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">park</text>
+<text x="276.5403985042984" y="233.82446881103402" text-anchor="middle" fill="hsl(220,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">noise</text>
+<circle cx="250" cy="250" r="70" fill="none" stroke="hsl(240,40%,50%)" stroke-width="0.8" opacity="0.2"/>
+<text x="335" y="245" text-anchor="start" fill="hsl(240,50%,70%)" font-size="8" font-family="JetBrains Mono,monospace" opacity="0.6">Mantel</text>
+<text x="316.6799055780273" y="243.7320989464546" text-anchor="middle" fill="hsl(240,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">atmos</text>
+<text x="309.9306618952851" y="281.3470489113679" text-anchor="middle" fill="hsl(240,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">1</text>
+<text x="278.36523243951524" y="312.2392071163298" text-anchor="middle" fill="hsl(240,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">corst</text>
+<text x="243.22441646100825" y="323.6556097851245" text-anchor="middle" fill="hsl(240,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">water</text>
+<text x="214.73485154952112" y="314.7139815458141" text-anchor="middle" fill="hsl(240,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">water</text>
+<text x="187.55446673994695" y="283.6954092784314" text-anchor="middle" fill="hsl(240,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">noise</text>
+<text x="175.50710823822874" y="255.93360119637475" text-anchor="middle" fill="hsl(240,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">chaos</text>
+<text x="186.64881362838526" y="217.19089835565978" text-anchor="middle" fill="hsl(240,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">mantel</text>
+<text x="220.68238996243358" y="187.1247814442347" text-anchor="middle" fill="hsl(240,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">ark</text>
+<text x="250.29782762906353" y="179.51632455323426" text-anchor="middle" fill="hsl(240,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">0</text>
+<text x="291.1130623812299" y="187.42272190532464" text-anchor="middle" fill="hsl(240,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">tijd</text>
+<text x="307.9309676442991" y="208.6785646190139" text-anchor="middle" fill="hsl(240,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">ijs</text>
+<circle cx="250" cy="250" r="110" fill="none" stroke="hsl(260,35%,45%)" stroke-width="1.5" opacity="0.6"/>
+<text x="375" y="245" text-anchor="start" fill="hsl(260,50%,70%)" font-size="8" font-family="JetBrains Mono,monospace" opacity="0.6">Korst (Ark)</text>
+<text x="360.84299586807947" y="240.22235802366296" text-anchor="middle" fill="hsl(260,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">plasma</text>
+<text x="344.3021089810842" y="314.36361011111836" text-anchor="middle" fill="hsl(260,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">ark</text>
+<text x="277.71618293712083" y="351.50588945706454" text-anchor="middle" fill="hsl(260,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">1</text>
+<text x="208.53196460930312" y="346.6957993388086" text-anchor="middle" fill="hsl(260,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">corst</text>
+<text x="164.67555672993234" y="318.7300293092818" text-anchor="middle" fill="hsl(260,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">tijd</text>
+<text x="143.36983777757177" y="256.88889026937863" text-anchor="middle" fill="hsl(260,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">corst</text>
+<text x="167.4696670082028" y="180.89566435063813" text-anchor="middle" fill="hsl(260,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">water</text>
+<text x="206.65603152254772" y="145.50202917298427" text-anchor="middle" fill="hsl(260,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">ijs</text>
+<text x="279.23667997118224" y="146.8375149423208" text-anchor="middle" fill="hsl(260,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">ark</text>
+<text x="333.06330578082645" y="182.7502638474365" text-anchor="middle" fill="hsl(260,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">atmos</text>
+<circle cx="250" cy="250" r="145" fill="none" stroke="hsl(280,30%,40%)" stroke-width="0.8" opacity="0.2"/>
+<text x="410" y="245" text-anchor="start" fill="hsl(280,50%,70%)" font-size="8" font-family="JetBrains Mono,monospace" opacity="0.6">Atmosfeer</text>
+<text x="390.9071813563143" y="254.2154805190158" text-anchor="middle" fill="hsl(280,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">tijd</text>
+<text x="344.0401426081628" y="362.65789359784856" text-anchor="middle" fill="hsl(280,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">mantel</text>
+<text x="251.82924260947595" y="398.54408928479126" text-anchor="middle" fill="hsl(280,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">traag</text>
+<text x="154.87258695462802" y="362.62165746174776" text-anchor="middle" fill="hsl(280,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">kern</text>
+<text x="105.91694331719216" y="238.88657519015436" text-anchor="middle" fill="hsl(280,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">mantel</text>
+<text x="156.6218018501266" y="145.23563557334148" text-anchor="middle" fill="hsl(280,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">kern</text>
+<text x="244.51603436553995" y="101.73933752875772" text-anchor="middle" fill="hsl(280,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">traag</text>
+<text x="358.50159006579827" y="156.2381768520446" text-anchor="middle" fill="hsl(280,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">veld</text>
+<circle cx="250" cy="250" r="175" fill="none" stroke="hsl(300,25%,35%)" stroke-width="0.8" opacity="0.2"/>
+<text x="440" y="245" text-anchor="start" fill="hsl(300,50%,70%)" font-size="8" font-family="JetBrains Mono,monospace" opacity="0.6">Ionosfeer</text>
+<text x="423.1275535401523" y="260.61761570950057" text-anchor="middle" fill="hsl(300,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">ijs</text>
+<text x="339.9698441625252" y="400.31584300922896" text-anchor="middle" fill="hsl(300,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">ark</text>
+<text x="162.9088319291596" y="403.33478661688525" text-anchor="middle" fill="hsl(300,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">park</text>
+<text x="75.92719019985293" y="252.79337083014798" text-anchor="middle" fill="hsl(300,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">atmos</text>
+<text x="155.05395804541644" y="108.928736477006" text-anchor="middle" fill="hsl(300,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">chaos</text>
+<text x="337.70210334135504" y="93.38209023417915" text-anchor="middle" fill="hsl(300,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">mantel</text>
+<circle cx="250" cy="250" r="200" fill="none" stroke="hsl(320,20%,30%)" stroke-width="0.8" opacity="0.2"/>
+<text x="465" y="245" text-anchor="start" fill="hsl(320,50%,70%)" font-size="8" font-family="JetBrains Mono,monospace" opacity="0.6">Magnetosfeer</text>
+<text x="448.69433893565645" y="231.360461654098" text-anchor="middle" fill="hsl(320,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">chaos</text>
+<text x="231.45128643862043" y="449.5785103669181" text-anchor="middle" fill="hsl(320,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">mantel</text>
+<text x="46.95213418485329" y="235.29273563865564" text-anchor="middle" fill="hsl(320,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">park</text>
+<text x="235.00845086938133" y="53.124619336719064" text-anchor="middle" fill="hsl(320,40%,75%,0.3)" font-size="7" font-family="JetBrains Mono,monospace">1</text>
+<circle cx="342" cy="186" r="3.8477095991144843" fill="hsla(45,80%,60%,0.8482835824920243)">
+  <animate attributeName="opacity" values="0.8482835824920243;0.9;0.8482835824920243" dur="3.8482835824920243s" repeatCount="indefinite"/>
+</circle>
+<circle cx="339" cy="185" r="2.0262889933742256" fill="hsla(45,80%,60%,0.7726491336554808)">
+  <animate attributeName="opacity" values="0.7726491336554808;0.9;0.7726491336554808" dur="3.772649133655481s" repeatCount="indefinite"/>
+</circle>
+<circle cx="301" cy="345" r="3.3257922086096565" fill="hsla(45,80%,60%,0.6624820677079124)">
+  <animate attributeName="opacity" values="0.6624820677079124;0.9;0.6624820677079124" dur="3.6624820677079124s" repeatCount="indefinite"/>
+</circle>
+<circle cx="152" cy="309" r="3.224327819251825" fill="hsla(45,80%,60%,0.5706763287089975)">
+  <animate attributeName="opacity" values="0.5706763287089975;0.9;0.5706763287089975" dur="3.5706763287089975s" repeatCount="indefinite"/>
+</circle>
+<circle cx="248" cy="364" r="2.954394993358126" fill="hsla(45,80%,60%,0.7911625558933919)">
+  <animate attributeName="opacity" values="0.7911625558933919;0.9;0.7911625558933919" dur="3.7911625558933917s" repeatCount="indefinite"/>
+</circle>
+<circle cx="186" cy="336" r="3.0692740811055543" fill="hsla(45,80%,60%,0.8084054236084615)">
+  <animate attributeName="opacity" values="0.8084054236084615;0.9;0.8084054236084615" dur="3.8084054236084617s" repeatCount="indefinite"/>
+</circle>
+<circle cx="304" cy="349" r="3.843533022547264" fill="hsla(45,80%,60%,0.8030255195814568)">
+  <animate attributeName="opacity" values="0.8030255195814568;0.9;0.8030255195814568" dur="3.803025519581457s" repeatCount="indefinite"/>
+</circle>
+<circle cx="297" cy="156" r="3.2572144206001656" fill="hsla(45,80%,60%,0.8312772840271799)">
+  <animate attributeName="opacity" values="0.8312772840271799;0.9;0.8312772840271799" dur="3.83127728402718s" repeatCount="indefinite"/>
+</circle>
+<circle cx="352" cy="283" r="2.5371722224069995" fill="hsla(45,80%,60%,0.6636330892133415)">
+  <animate attributeName="opacity" values="0.6636330892133415;0.9;0.6636330892133415" dur="3.6636330892133415s" repeatCount="indefinite"/>
+</circle>
+<circle cx="153" cy="301" r="3.5529953214455547" fill="hsla(45,80%,60%,0.4009043248631896)">
+  <animate attributeName="opacity" values="0.4009043248631896;0.9;0.4009043248631896" dur="3.4009043248631894s" repeatCount="indefinite"/>
+</circle>
+<circle cx="350" cy="286" r="2.2492524690901234" fill="hsla(45,80%,60%,0.43420834423159416)">
+  <animate attributeName="opacity" values="0.43420834423159416;0.9;0.43420834423159416" dur="3.4342083442315943s" repeatCount="indefinite"/>
+</circle>
+<circle cx="362" cy="232" r="2.1722560154706914" fill="hsla(45,80%,60%,0.6510600033774656)">
+  <animate attributeName="opacity" values="0.6510600033774656;0.9;0.6510600033774656" dur="3.6510600033774656s" repeatCount="indefinite"/>
+</circle>
+<line x1="244" y1="264" x2="197" y2="370" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="241" y1="262" x2="152" y2="382" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="237" y1="242" x2="134" y2="180" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="255" y1="264" x2="298" y2="374" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="261" y1="261" x2="361" y2="359" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="247" y1="235" x2="221" y2="115" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="263" y1="257" x2="353" y2="307" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="240" y1="261" x2="138" y2="365" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="253" y1="235" x2="278" y2="115" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="255" y1="236" x2="301" y2="96" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="236" y1="256" x2="125" y2="307" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="235" y1="250" x2="80" y2="254" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="237" y1="257" x2="101" y2="331" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="235" y1="254" x2="129" y2="280" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="235" y1="247" x2="85" y2="212" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="264" y1="257" x2="378" y2="312" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="237" y1="257" x2="82" y2="334" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="264" y1="244" x2="377" y2="197" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="262" y1="241" x2="393" y2="143" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="249" y1="265" x2="239" y2="396" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="261" y1="260" x2="380" y2="377" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="242" y1="237" x2="151" y2="89" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="254" y1="236" x2="294" y2="89" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="248" y1="235" x2="234" y2="94" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="262" y1="259" x2="377" y2="346" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="265" y1="250" x2="364" y2="254" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="252" y1="235" x2="266" y2="147" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="263" y1="258" x2="342" y2="310" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="261" y1="240" x2="336" y2="170" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="265" y1="252" x2="432" y2="277" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="261" y1="260" x2="383" y2="377" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="243" y1="237" x2="165" y2="87" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="264" y1="246" x2="401" y2="203" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="255" y1="236" x2="281" y2="151" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="252" y1="235" x2="267" y2="100" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<line x1="247" y1="235" x2="226" y2="142" stroke="hsl(0,0%,60%)" stroke-width="0.2" opacity="0.1"/>
+<circle cx="250" cy="250" r="5" fill="hsl(0,0%,100%)" opacity="0.8"/>
+<text x="250" y="270" text-anchor="middle" fill="hsl(0,0%,80%)" font-size="10" font-family="JetBrains Mono,monospace">P0</text>
+<text x="375" y="235" text-anchor="start" fill="hsl(45,80%,60%)" font-size="9" font-family="JetBrains Mono,monospace" opacity="0.8">P3: Park of Peace</text>
+<text x="250" y="50" text-anchor="middle" fill="hsl(220,60%,70%)" font-size="8" font-family="JetBrains Mono,monospace" opacity="0.5">IJ (POOL)</text>
+<text x="250" y="470" text-anchor="middle" fill="hsl(220,60%,50%)" font-size="8" font-family="JetBrains Mono,monospace" opacity="0.5">WATER (EWENAAAR)</text>
+<text x="250" y="15" text-anchor="middle" fill="hsl(0,0%,70%)" font-size="14" font-family="JetBrains Mono,monospace">AARDE ALS BANDEN</text>
+<text x="250" y="28" text-anchor="middle" fill="hsl(0,0%,50%)" font-size="9" font-family="JetBrains Mono,monospace">P0 → P3: As tot Ark</text>
+    </svg>
+  </div>
+</div>
+</body>
+</html>
