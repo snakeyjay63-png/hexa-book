@@ -456,29 +456,32 @@
   function buildSidebar() {
     // Articles
     const articleList = document.getElementById('article-list');
-    (sitemap.articles || []).forEach(a => {
-      const link = document.createElement('a');
-      link.href = '#';
-      link.setAttribute('data-page', 'article-' + a.name);
-      link.textContent = a.title;
-      link.style.fontSize = '0.82rem';
-      articleList.appendChild(link);
-    });
+    if (articleList) {
+      (sitemap.articles || []).forEach(a => {
+        const link = document.createElement('a');
+        link.href = '#';
+        link.setAttribute('data-page', 'article-' + a.name);
+        link.textContent = a.title;
+        link.style.fontSize = '0.82rem';
+        articleList.appendChild(link);
+      });
+    }
 
     // Audits (top-level only)
     const auditList = document.getElementById('audit-list');
-    const shown = new Set();
-    (sitemap.audits || []).slice(0, 20).forEach(a => {
-      if (shown.has(a.name)) return;
-      shown.add(a.name);
-      const link = document.createElement('a');
-      link.href = '#';
-      link.setAttribute('data-page', 'audit-' + a.name);
-      link.textContent = a.title;
-      link.style.fontSize = '0.82rem';
-      auditList.appendChild(link);
-    });
-  }
+    if (auditList) {
+      const shown = new Set();
+      (sitemap.audits || []).slice(0, 20).forEach(a => {
+        if (shown.has(a.name)) return;
+        shown.add(a.name);
+        const link = document.createElement('a');
+        link.href = '#';
+        link.setAttribute('data-page', 'audit-' + a.name);
+        link.textContent = a.title;
+        link.style.fontSize = '0.82rem';
+        auditList.appendChild(link);
+      });
+    }
 
   // ── Init ──
   async function init() {
