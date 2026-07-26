@@ -995,7 +995,7 @@
   function playSquelch() {
     if (!audioCtx || !fxSendGain) return;
     const now = audioCtx.currentTime;
-    const dur = 0.15;
+    const dur = 0.25;
 
     // Noise source
     const bufSize = audioCtx.sampleRate * dur;
@@ -1005,16 +1005,18 @@
     const src = audioCtx.createBufferSource();
     src.buffer = buf;
 
-    // Resonant bandpass with sweeping frequency
+    // Resonant bandpass with aggressive sweep
     const filt = audioCtx.createBiquadFilter();
     filt.type = 'bandpass';
-    filt.Q.value = 15;
-    filt.frequency.setValueAtTime(200, now);
-    filt.frequency.exponentialRampToValueAtTime(3000, now + dur * 0.4);
-    filt.frequency.exponentialRampToValueAtTime(400, now + dur);
+    filt.Q.value = 25;
+    filt.frequency.setValueAtTime(300, now);
+    filt.frequency.exponentialRampToValueAtTime(6000, now + dur * 0.3);
+    filt.frequency.exponentialRampToValueAtTime(800, now + dur * 0.7);
+    filt.frequency.exponentialRampToValueAtTime(50, now + dur);
 
     const gain = audioCtx.createGain();
-    gain.gain.setValueAtTime(0.25, now);
+    gain.gain.setValueAtTime(0.5, now);
+    gain.gain.setValueAtTime(0.5, now + dur * 0.6);
     gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
 
     src.connect(filt);
