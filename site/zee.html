@@ -66,6 +66,7 @@
   <div class="mode-toggle">
     <button class="mode-btn active" data-mode="all">alle lagen</button>
     <button class="mode-btn" data-mode="core">plasma core</button>
+    <button class="mode-btn" data-mode="aarde">aarde</button>
     <button class="mode-btn" data-mode="water">water + E/M</button>
     <button class="mode-btn" data-mode="air">lucht</button>
     <button class="mode-btn" data-mode="ice">ijspolen</button>
@@ -75,7 +76,7 @@
 
   <div class="ui" id="ui">
     <div class="element-label">zee</div>
-    <div class="element-sub" id="el-sub">plasma core → E/M veld → water → lucht → ijs (noord + zuidpool)</div>
+    <div class="element-sub" id="el-sub">plasma core (druk↔) → aarde → E/M → water → lucht (vochtig→droog) → ijs</div>
     <button class="stone-btn" id="stone-btn">● steen gooien</button>
   </div>
 
@@ -100,23 +101,38 @@
 
   // ── Laagstructuur (binnen → buiten) ──
   //
-  // 1. Plasma Core (centrum, 0-15% R)
-  //    = water wat snel gaat = E/M veld generator
-  //    = fel licht, warm, rood/oranje
+  // 1. Plasma Core (0-15% R)
+  //    = druk van water → beweging → plasma → E/M veld
+  //    = circulaire lus: druk ↔ beweging ↔ E/M ↔ druk
+  //    = zonder druk = geen core, zonder core = geen water
+  //    = rood/oranje, fel, warm
   //
-  // 2. E/M Veld Zone (15-35% R)
+  // 2. Aarde / Sediment (15-30% R)
+  //    = wat overblijft als water verdampt
+  //    = zand = verdampt water wat naar beneden zakt
+  //    = leven hier, maar wordt gemaakt door water
+  //    = Mars heeft dit ook, alleen onder zand (niet zichtbaar)
+  //    = bruin, aarde, sediment
+  //
+  // 3. E/M Veld Zone (30-40% R)
   //    = het veld dat het water vasthoudt
   //    = ioniserende straling, paars/blauw
+  //    = op Mars zit dit ONDER het zand (zelfde patroon, niet zichtbaar)
   //
-  // 3. Water Laag (35-70% R)
+  // 4. Water Laag (40-65% R)
   //    = de zee zelf, vastgehouden door E/M veld
   //    = blauw, golven, leven
+  //    = bovenste laag verdampt → rest zakt naar beneden → sediment
   //
-  // 4. Lucht Laag (70-90% R)
-  //    = atmosfeer, ruimte tussen water en ijs
-  //    = licht, transparant
+  // 5a. Vochtige Lucht (65-80% R)
+  //    = atmosfeer met waterdamp
+  //    = condensatie, wolken, regen
   //
-  // 5. IJspolen (buiten 90% R, alleen boven/onder)
+  // 5b. Droge Lucht (80-90% R)
+  //    = atmosfeer ZONDER water meer
+  //    = het punt waar lucht geen water meer bevat
+  //
+  // 6. IJspolen (buiten 90% R, alleen boven/onder)
   //    = ijs alleen op noord + zuid pool
   //    = wit, koud, de muur
 
@@ -235,16 +251,18 @@
 
   // ── Lagen ──
   const LAYERS = {
-    core:   { inner: 0, outer: 0.15 },
-    em:     { inner: 0.15, outer: 0.35 },
-    water:  { inner: 0.35, outer: 0.70 },
-    air:    { inner: 0.70, outer: 0.90 },
-    ice:    { inner: 0.90, outer: 1.0 },
+    core:     { inner: 0,   outer: 0.15 },
+    aarde:    { inner: 0.15, outer: 0.30 },
+    em:       { inner: 0.30, outer: 0.40 },
+    water:    { inner: 0.40, outer: 0.65 },
+    airVocht: { inner: 0.65, outer: 0.80 },
+    airDroog: { inner: 0.80, outer: 0.90 },
+    ice:      { inner: 0.90, outer: 1.0 },
   };
 
   function showLayer(name) {
     if (viewMode === 'all') return true;
-    return viewMode === name;
+    return viewMode === name || (name === 'airVocht' && viewMode === 'air') || (name === 'airDroog' && viewMode === 'air');
   }
 
   // ── Plasma Core ──
@@ -284,13 +302,82 @@
       ctx.stroke();
     }
 
+    // Druk feedback lijnen (core ↔ water)
+    const feedbackLines = 4;
+    for (let i = 0; i < feedbackLines; i++) {
+      const angle = (i / feedbackLines) * Math.PI * 2 + time * 0.2;
+      const pulse = Math.sin(time * 1.5 + i) * 0.15;
+
+      ctx.beginPath();
+      ctx.moveTo(
+        cx + Math.cos(angle) * r,
+        cy + Math.sin(angle) * r
+      );
+      ctx.lineTo(
+        cx + Math.cos(angle + pulse) * R * LAYERS.aarde.inner,
+        cy + Math.sin(angle + pulse) * R * LAYERS.aarde.inner
+      );
+      ctx.strokeStyle = `rgba(255,120,40,${0.1 + Math.sin(time * 2 + i) * 0.05})`;
+      ctx.lineWidth = 0.5;
+      ctx.setLineDash([3, 4]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
     // Label
     ctx.fillStyle = 'rgba(255,150,50,0.15)';
     ctx.font = '0.4em "IBM Plex Mono", monospace';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('plasma', cx, cy - 8);
-    ctx.fillText('core', cx, cy + 6);
+    ctx.fillText('plasma', cx, cy - 10);
+    ctx.fillText('core', cx, cy + 2);
+    ctx.font = '0.28em "IBM Plex Mono", monospace';
+    ctx.fillStyle = 'rgba(255,120,40,0.1)';
+    ctx.fillText('druk ↔ beweging', cx, cy + 14);
+  }
+
+  // ── Aarde / Sediment ──
+  function drawAardeLayer() {
+    if (!showLayer('aarde')) return;
+
+    const inner = R * LAYERS.aarde.inner;
+    const outer = R * LAYERS.aarde.outer;
+
+    // Sediment zone
+    const aGrad = ctx.createRadialGradient(cx, cy, inner, cx, cy, outer);
+    aGrad.addColorStop(0, 'rgba(140,100,60,0.08)');
+    aGrad.addColorStop(0.5, 'rgba(120,90,50,0.05)');
+    aGrad.addColorStop(1, 'rgba(100,80,40,0)');
+    ctx.beginPath();
+    ctx.arc(cx, cy, outer, 0, Math.PI * 2);
+    ctx.arc(cx, cy, inner, 0, Math.PI * 2, true);
+    ctx.fillStyle = aGrad;
+    ctx.fill();
+
+    // Sediment korrels
+    const grains = 30;
+    for (let i = 0; i < grains; i++) {
+      const angle = (i / grains) * Math.PI * 2;
+      const grainR = inner + (outer - inner) * ((i % 5) / 5);
+      const px = cx + Math.cos(angle + time * 0.05) * grainR;
+      const py = cy + Math.sin(angle + time * 0.05) * grainR;
+      const size = 1 + Math.sin(time + i) * 0.5;
+
+      ctx.beginPath();
+      ctx.arc(px, py, size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(160,120,70,${0.04 + Math.sin(time * 0.5 + i) * 0.02})`;
+      ctx.fill();
+    }
+
+    // Label
+    const labelR = (inner + outer) / 2;
+    ctx.fillStyle = 'rgba(160,120,70,0.12)';
+    ctx.font = '0.35em "IBM Plex Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('aarde', cx - labelR * 0.5, cy - labelR);
+    ctx.font = '0.25em "IBM Plex Mono", monospace';
+    ctx.fillStyle = 'rgba(160,120,70,0.07)';
+    ctx.fillText('(water → verdampt → rest zakt)', cx - labelR * 0.5, cy - labelR + 10);
   }
 
   // ── E/M Veld ──
@@ -338,6 +425,9 @@
     ctx.font = '0.35em "IBM Plex Mono", monospace';
     ctx.textAlign = 'center';
     ctx.fillText('E/M veld', cx + Math.cos(time * 0.1) * labelR * 0.3, cy - labelR);
+    ctx.font = '0.25em "IBM Plex Mono", monospace';
+    ctx.fillStyle = 'rgba(120,80,220,0.06)';
+    ctx.fillText('(Mars: onder zand, zelfde patroon)', cx + Math.cos(time * 0.1) * labelR * 0.3, cy - labelR + 10);
   }
 
   // ── Water Laag ──
@@ -394,52 +484,109 @@
       ctx.stroke();
     }
 
+    // Verdampings indicator (bovenkant water → sediment)
+    const evapAngle = Math.PI * 0.1;
+    ctx.beginPath();
+    ctx.arc(cx, cy, outer, -evapAngle, evapAngle);
+    ctx.strokeStyle = 'rgba(100,150,200,0.08)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([4, 6]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
     // Label
     const labelR = (inner + outer) / 2;
     ctx.fillStyle = 'rgba(100,150,200,0.1)';
     ctx.font = '0.35em "IBM Plex Mono", monospace';
     ctx.textAlign = 'center';
     ctx.fillText('water', cx, cy + labelR);
+    ctx.font = '0.25em "IBM Plex Mono", monospace';
+    ctx.fillStyle = 'rgba(100,150,200,0.06)';
+    ctx.fillText('(bovenkant verdampt → rest zakt → aarde)', cx, cy + labelR + 10);
   }
 
-  // ── Lucht Laag ──
-  function drawAirLayer() {
-    if (!showLayer('air')) return;
+  // ── Vochtige Lucht ──
+  function drawAirVocht() {
+    if (!showLayer('airVocht')) return;
 
-    const inner = R * LAYERS.air.inner;
-    const outer = R * LAYERS.air.outer;
+    const inner = R * LAYERS.airVocht.inner;
+    const outer = R * LAYERS.airVocht.outer;
 
-    // Lucht zone (bijna onzichtbaar)
+    // Vochtige zone (lichtblauw met condensatie)
     const aGrad = ctx.createRadialGradient(cx, cy, inner, cx, cy, outer);
-    aGrad.addColorStop(0, 'rgba(180,200,220,0)');
-    aGrad.addColorStop(0.5, 'rgba(180,200,220,0.02)');
-    aGrad.addColorStop(1, 'rgba(180,200,220,0)');
+    aGrad.addColorStop(0, 'rgba(160,190,220,0)');
+    aGrad.addColorStop(0.5, 'rgba(160,190,220,0.03)');
+    aGrad.addColorStop(1, 'rgba(160,190,220,0)');
     ctx.beginPath();
     ctx.arc(cx, cy, outer, 0, Math.PI * 2);
     ctx.arc(cx, cy, inner, 0, Math.PI * 2, true);
     ctx.fillStyle = aGrad;
     ctx.fill();
 
-    // Subtiele deeltjes
-    const particles = 20;
+    // Wolken / condensatie deeltjes
+    const particles = 15;
     for (let i = 0; i < particles; i++) {
-      const angle = (i / particles) * Math.PI * 2 + time * 0.02;
-      const r = inner + (outer - inner) * ((Math.sin(time * 0.5 + i * 3) + 1) / 2);
+      const angle = (i / particles) * Math.PI * 2 + time * 0.03;
+      const r = inner + (outer - inner) * ((Math.sin(time * 0.3 + i * 2) + 1) / 2);
       const px = cx + Math.cos(angle) * r;
       const py = cy + Math.sin(angle) * r;
+      const size = 1.5 + Math.sin(time + i) * 0.8;
 
       ctx.beginPath();
-      ctx.arc(px, py, 1, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(180,200,220,0.06)`;
+      ctx.arc(px, py, size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(170,200,220,${0.06 + Math.sin(time * 0.5 + i) * 0.03})`;
       ctx.fill();
     }
 
     // Label
     const labelR = (inner + outer) / 2;
-    ctx.fillStyle = 'rgba(180,200,220,0.08)';
-    ctx.font = '0.35em "IBM Plex Mono", monospace';
+    ctx.fillStyle = 'rgba(170,200,220,0.1)';
+    ctx.font = '0.3em "IBM Plex Mono", monospace';
     ctx.textAlign = 'center';
-    ctx.fillText('lucht', cx, cy - labelR);
+    ctx.fillText('lucht (vochtig)', cx, cy - labelR);
+  }
+
+  // ── Droge Lucht ──
+  function drawAirDroog() {
+    if (!showLayer('airDroog')) return;
+
+    const inner = R * LAYERS.airDroog.inner;
+    const outer = R * LAYERS.airDroog.outer;
+
+    // Droge zone (bijna onzichtbaar, geen water)
+    const aGrad = ctx.createRadialGradient(cx, cy, inner, cx, cy, outer);
+    aGrad.addColorStop(0, 'rgba(140,160,180,0)');
+    aGrad.addColorStop(0.5, 'rgba(140,160,180,0.01)');
+    aGrad.addColorStop(1, 'rgba(140,160,180,0)');
+    ctx.beginPath();
+    ctx.arc(cx, cy, outer, 0, Math.PI * 2);
+    ctx.arc(cx, cy, inner, 0, Math.PI * 2, true);
+    ctx.fillStyle = aGrad;
+    ctx.fill();
+
+    // Droge deeltjes (minder, kleiner)
+    const particles = 8;
+    for (let i = 0; i < particles; i++) {
+      const angle = (i / particles) * Math.PI * 2 + time * 0.01;
+      const r = inner + (outer - inner) * ((Math.sin(time * 0.2 + i * 4) + 1) / 2);
+      const px = cx + Math.cos(angle) * r;
+      const py = cy + Math.sin(angle) * r;
+
+      ctx.beginPath();
+      ctx.arc(px, py, 0.8, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(140,160,180,0.04)';
+      ctx.fill();
+    }
+
+    // Label
+    const labelR = (inner + outer) / 2;
+    ctx.fillStyle = 'rgba(140,160,180,0.07)';
+    ctx.font = '0.3em "IBM Plex Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('lucht (droog)', cx, cy - labelR);
+    ctx.font = '0.23em "IBM Plex Mono", monospace';
+    ctx.fillStyle = 'rgba(140,160,180,0.05)';
+    ctx.fillText('(geen water meer)', cx, cy - labelR + 8);
   }
 
   // ── IJspolen ──
@@ -542,10 +689,12 @@
     if (audioOn) rippleTime += 0.016;
 
     drawPlasmaCore();
+    drawAardeLayer();
     drawEMField();
     drawWaterLayer();
     drawRipples();
-    drawAirLayer();
+    drawAirVocht();
+    drawAirDroog();
     drawIcePoles();
     drawOuterRing();
 
@@ -592,7 +741,7 @@
       rippleTime = 0;
       stoneBtn.textContent = '● steen gooien';
       stoneBtn.classList.remove('rippled');
-      elSub.textContent = 'plasma core → E/M veld → water → lucht → ijs (noord + zuidpool)';
+      elSub.textContent = 'plasma core (druk↔) → aarde → E/M → water → lucht (vochtig→droog) → ijs';
     }
   });
 
