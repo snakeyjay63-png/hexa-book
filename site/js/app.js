@@ -419,7 +419,8 @@
   // ── Routing ──
   async function navigate(page) {
     const container = document.getElementById('page-container');
-    container.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text-dim)">Loading •</div>';
+    if (!container) return; // spectrum-home heeft geen page-container
+    container.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text-dim)">Loading •</div>'
 
     if (page === 'home') await showHome();
     else if (page === 'routing') await showRouting();
