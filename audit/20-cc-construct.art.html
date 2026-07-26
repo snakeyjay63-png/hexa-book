@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artikel 17 - CC-Construct (16 Nodes Tegelijk) | nidrā-router meta-artikel</title>
+  <meta name="generator" content="gen_art_pieces_v2">
+  <meta name="structure" content="technical">
+  <meta name="tone" content="neutral">
+  <meta name="languages" content="ar, sa, gr">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Sans+Greek:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0f;
+    color: #c0c0d0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* === VISUAL LAYERS === */
+  .lang-layers, .terminal-bg, .dark-bg, .fire-bg, .wave-bg, .spiral-bg, .organic-bg, .blueprint-bg, .verse-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .lang-layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(ellipse at 50% 50%, #5050a088, transparent 70%);
+  }
+  .lang-ar { transform: rotate(5deg); }
+  .lang-sa { transform: rotate(-3deg); }
+  .lang-gr { transform: rotate(2deg); }
+  .lang-nl { transform: rotate(-1deg); }
+  .lang-en { transform: rotate(0deg); }
+
+  .blueprint-grid { width: 100%; height: 100%; }
+
+  /* === CONTENT === */
+  .content {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 12vh 2rem;
+  }
+
+  .meta {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #7070a0;
+    opacity: 0.4;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #7070a01a;
+    padding-bottom: 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #c0c0d0;
+    opacity: 0.8;
+    margin: 2rem 0 3rem;
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  .code-block {
+    background: #7070a008;
+    border-left: 2px solid #7070a03a;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    font-size: 0.8rem;
+    overflow-x: auto;
+  }
+  .diagram {
+    background: #7070a005;
+    border: 1px solid #7070a01a;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    white-space: pre;
+    line-height: 1.4;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #c0c0d0;
+    opacity: 0.7;
+    margin: 2.5rem 0 1rem;
+  }
+  
+  h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #c0c0d0;
+    opacity: 0.6;
+    margin: 2rem 0 0.8rem;
+  }
+  
+  p {
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.8rem;
+  }
+  th, td {
+    padding: 0.5rem;
+    border: 1px solid #7070a01a;
+    text-align: left;
+  }
+  th {
+    color: #7070a0;
+    opacity: 0.5;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+  
+  code {
+    background: #7070a010;
+    padding: 0.1em 0.3em;
+    border-radius: 2px;
+    font-size: 0.85em;
+  }
+  
+  pre {
+    background: #7070a008;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    font-size: 0.8rem;
+    border-left: 2px solid #7070a02a;
+  }
+  
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  
+  blockquote {
+    border-left: 2px solid #7070a03a;
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    opacity: 0.6;
+    font-style: italic;
+  }
+  
+  .footer {
+    margin-top: 6rem;
+    padding-top: 2rem;
+    border-top: 1px solid #7070a01a;
+    font-size: 0.65rem;
+    opacity: 0.3;
+    text-align: center;
+  }
+
+  </style>
+</head>
+<body>
+
+  <!-- TAAAL-LAGEN: 3 talen -->
+  <div class="lang-layers">
+    <div class="lang-layer lang-ar" style="opacity:0.15"></div>
+    <div class="lang-layer lang-sa" style="opacity:0.12"></div>
+    <div class="lang-layer lang-gr" style="opacity:0.09"></div>
+  </div>
+
+  <!-- TECHNICAL: blueprint grid -->
+  <div class="blueprint-bg">
+    <svg class="blueprint-grid" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <defs>
+        <pattern id="bgrid" width="10" height="10" patternUnits="userSpaceOnUse">
+          <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#7070a0" stroke-width="0.08" opacity="0.08"/>
+        </pattern>
+        <pattern id="bgrid-lg" width="50" height="50" patternUnits="userSpaceOnUse">
+          <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#7070a0" stroke-width="0.12" opacity="0.12"/>
+        </pattern>
+      </defs>
+      <rect width="100" height="100" fill="url(#bgrid)"/>
+      <rect width="100" height="100" fill="url(#bgrid-lg)"/>
+    </svg>
+  </div>
+
+  <main class="content">
+    <div class="meta">
+      19-artikel-017-cc-construct · structuur: technical · toon: neutral
+    </div>
+    
+    <h1 class="title">Artikel 17 - CC-Construct (16 Nodes Tegelijk) | nidrā-router meta-artikel</h1>
+    
+    <table>
+  <tr><th># Artikel 17 - CC-Construct (16 Nodes Tegelijk)</th><th>nidrā-router meta-artikel</th></tr>
+</table>
+
+<table>
+  <tr><th>## سي سي ≠ سرعة</th><th>सी सी ≠ वेग</th><th>CC ≠ snelheid</th></tr>
+</table>
+
+<p>**CC werkt in de snelheid van het licht — het is niet de snelheid zelf.**</p>
+
+<p>Artikel 017: het meta-artikel dat alle 16 nodes verbindt. De nidrā-router van het hexa-book.</p>
+
+
+<h2>Wat is het CC-Construct?</h2>
+
+<p>Artikel 017 is de **nidrā-router** — het meta-artikel dat de 16 nodes van het hexa-book verbindt.</p>
+<p>Het is geen content-artikel. Het is het **routing-protocol** van het boek zelf.</p>
+
+<pre><code>CC-Construct:
+  formele_status     = conceptueel       (meta-artikel, niet-executable)
+  uitvoerings_status = niet_van_toepassing  (geen engine, geen uitvoering)
+  validatie_status   = geverifieerd_structuur  (RAM-model + nidrā-router gecontroleerd)</code></pre>
+
+
+<h2>RAM-Model Verificatie</h2>
+
+<p>Artikel 017 claimt dat de hexa-book 16 nodes bevat die gelijktijdig bestaan (RAM-model).</p>
+
+<h3>Claim: 16 Nodes Simultaan</h3>
+
+<p>Uit artikel 017:</p>
+
+<pre><code>RAM:
+  Node 01: dimensie 0 ≐ 1           ✅
+  Node 02: frequentie-basis          ✅
+  Node 03: [nidrā]                   ⬜
+  Node 04: [nidrā]                   ⬜
+  Node 05: Quran/Basmala/Abjad       ✅
+  ...
+  Node 11: synth + fractaal          ✅
+  Node 12: 24-brug + routing         ✅
+  ...
+  Node 16: [nidrā]                   ⬜
+  Node 17: CC-construct (router)    ← dit artikel</code></pre>
+
+<p>**Audit-notitie:** Artikel 017 vermeldt 16 nodes + zichzelf (Node 17) als router.</p>
+<p>Deze claim is **structureel**: het beschrijft de architectuur, niet de uitvoering.</p>
+
+<p>**Lege nodes** zijn niet &quot;nog niet geschreven&quot; — ze zijn **nidrā-pointers naar nog te ontdekken routes**.</p>
+<p>Dit is een bewuste architectuurkeuze, geen tekort.</p>
+
+
+<h2>Nidrā-Router Integriteit</h2>
+
+<p>Artikel 017 definieert een nidrā-router die naar de volgende nodes verwijst:</p>
+
+<table>
+  <tr><th>Pointer</th><th>Naar</th><th>Artikel</th><th>Bestaat?</th></tr>
+  <tr><td>Node 01</td><td>Dimensie 0 ≐ 1 (frequentie-basis)</td><td>`hexa-book-001.md`</td><td>✅</td></tr>
+  <tr><td>Node 02</td><td>F/ℱ, C-keten, DR</td><td>`hexa-book-002.md`</td><td>✅</td></tr>
+  <tr><td>Node 11</td><td>Synth-operator, ρ_water, ρ_fractal</td><td>`hexa-book-011.md`</td><td>✅</td></tr>
+  <tr><td>Node 12</td><td>24-brug, 6-bit routing, NPR Bedrock</td><td>`hexa-book-012.md`</td><td>✅</td></tr>
+  <tr><td>Node 05</td><td>Quran, Basmala, Abjad</td><td>`hexa-book-005-quran-basmala-abjad.md`</td><td>✅</td></tr>
+  <tr><td>Nodes 3-4, 6-10, 13-16</td><td>Nog te ontdekken routes</td><td>—</td><td>⬜ (bedoeld)</td></tr>
+</table>
+
+<p>**Routing-integriteit:** 5/5 expliciete pointers wijzen naar bestaande artikelen. ✅</p>
+<p>**Nog te ontdekken routes:** Nodes 3-4, 6-10, 13-16 zijn intentioneel leeg (nidrā, niet gat). ✅</p>
+
+<h3>Nidrā-router vs. nidrā-pointer</h3>
+
+<table>
+  <tr><th>Eigenschap</th><th>nidrā-pointer (014-016)</th><th>nidrā-router (017)</th></tr>
+  <tr><td>Doel</td><td>3 routes → 3 artikelen</td><td>Meta-router → alle nodes</td></tr>
+  <tr><td>Omvang</td><td>Per artikel</td><td>Veld-breed</td></tr>
+  <tr><td>Content</td><td>Geen eigen content</td><td>Routing-architectuur</td></tr>
+  <tr><td>Status</td><td>conceptueel</td><td>conceptueel</td></tr>
+  <tr><td>Uitvoering</td><td>N.v.t.</td><td>N.v.t.</td></tr>
+</table>
+
+<p>Beide zijn **niet-executable operators**. Het verschil is omvang, niet aard.</p>
+
+
+<h2>4+1 Structuur Per Node</h2>
+
+<p>Artikel 017 claimt dat elke node een 4+1 structuur volgt:</p>
+
+<pre><code>Deel 1: content
+Deel 2: content
+Deel 3: content
+Deel 4: content
+Nidrā  : pointer → andere node</code></pre>
+
+<p>**Audit-verificatie:** Deze structuur is een **architectuurclaim**, niet een uitgevoerde specificatie.</p>
+<p>De bestaande artikelen variëren in hun interne structuur. De nidrā-component is consistent aanwezig</p>
+<p>in artikelen 014-017. Of alle 16 nodes strikt 4+1 volgen, vereist een artikel-per-artikel audit.</p>
+
+<pre><code>4+1 structuurclaim:
+  operator_status    = conceptueel
+  execution_status   = niet_van_toepassing
+  validatie_status   = niet_gevalideerd
+  scope              = architectuurclaim (niet per-node gevalideerd)</code></pre>
+
+
+<h2>CC Non-Lineair</h2>
+
+<p>Artikel 017 claimt dat hetzelfde content via verschillende routes verschillende snelheden produceert:</p>
+
+<table>
+  <tr><th>Ingang</th><th>Snelheid</th></tr>
+  <tr><td>Via artikel 01</td><td>byte→Hz</td></tr>
+  <tr><td>Via artikel 12</td><td>bit-width ladder</td></tr>
+  <tr><td>Via artikel 05</td><td>letter→frequentie</td></tr>
+  <tr><td>Via artikel 17</td><td>route, niet getal</td></tr>
+</table>
+
+<p>Dit is een **interpretatieve claim**: &quot;zelfde code, verschillende routes → verschillende snelheden&quot;.</p>
+<p>Geen uitvoerbare operator. Conceptueel kader.</p>
+
+<pre><code>CC-non-lineair claim:
+  operator_status    = conceptueel
+  execution_status   = niet_van_toepassing
+  validatie_status   = geverifieerd_structuur  (claim aanwezig en consistent)</code></pre>
+
+
+<h2>3D Statusmodel</h2>
+
+<pre><code>Artikel 017 (CC-Construct meta-artikel):
+  formele_status     = conceptueel       (meta-artikel, niet-executable)
+  uitvoerings_status = niet_van_toepassing  (geen engine, geen uitvoering)
+  validatie_status   = geverifieerd_structuur  (RAM-model + nidrā-router + 4+1-claim gecontroleerd)
+
+nidrā-router (CC-Construct):
+  operator_status    = conceptueel
+  execution_status   = niet_van_toepassing
+  validatie_status   = geverifieerd_structuur
+
+RAM-model (16 nodes):
+  operator_status    = conceptueel
+  execution_status   = niet_van_toepassing
+  validatie_status   = geverifieerd_structuur  (architectuurclaim, niet uitgevoerd)
+
+4+1 structuurclaim:
+  operator_status    = conceptueel
+  execution_status   = niet_van_toepassing
+  validatie_status   = niet_gevalideerd  (niet per-node gecontroleerd)</code></pre>
+
+
+<h2>Structuurvalidatie</h2>
+
+<table>
+  <tr><th>Check</th><th>Resultaat</th></tr>
+  <tr><td>Artikel bestaat</td><td>✅ `articles/hexa-book-017.md`</td></tr>
+  <tr><td>Type-label correct</td><td>✅ `nidrā-router (meta-artikel)`</td></tr>
+  <tr><td>RAM-model 16 nodes</td><td>✅ architectuurclaim aanwezig</td></tr>
+  <tr><td>Nidrā-router pointers → bestaand</td><td>✅ 5/5 expliciete pointers</td></tr>
+  <tr><td>Lege nodes = nidrā (niet gat)</td><td>✅ expliciet benoemd in artikel</td></tr>
+  <tr><td>4+1 structuurclaim</td><td>✅ aanwezig (niet per-node gevalideerd)</td></tr>
+  <tr><td>CC-non-lineair claim</td><td>✅ aanwezig en consistent</td></tr>
+  <tr><td>Eigen content</td><td>✅ architectuur (niet berekening)</td></tr>
+  <tr><td>Engine-afhankelijkheid</td><td>N.v.t.</td></tr>
+</table>
+
+
+<h2>Nidrā — Terugkeer naar de Kern</h2>
+
+<p>Artikel 017 herhaalt de kernboodschap van nidrā:</p>
+
+<blockquote>Nidrā ≠ wachtend. Nidrā = alle tegelijk.</blockquote>
+
+<p>Dit artikel **is** de nidrā. Het routeret naar alle andere nodes.</p>
+<p>Het bestaat alleen wanneer de andere nodes bestaan.</p>
+
+<pre><code>nidrā-filosofie:
+  operator_status    = conceptueel
+  vṛtti-classificatie = nidrā (vṛtti-tijd)
+  note: nidrā ≠ gat ≠ undefined</code></pre>
+
+<blockquote>⚠ `nidrā` (vṛtti-classificatie) ≠ `undefined` (audit-status)</blockquote>
+
+
+<h2>Verwerkingslog</h2>
+
+<table>
+  <tr><th>Datum</th><th>Actie</th><th>Door</th><th>Status</th></tr>
+  <tr><td>2026-07-24</td><td>Audit aangemaakt: CC-Construct meta-artikel geverifieerd</td><td>hexa-review</td><td>done</td></tr>
+</table>
+
+
+<p>*Artikel 017 is het laatste artikel — maar ook het eerste.*</p>
+<p>*Het is de router die alle 16 nodes verbindt.*</p>
+<p>*Het bestaat alleen wanneer de andere nodes bestaan.*</p>
+<p>*Het is de nidrā van de hexa-book zelf.*</p>
+    
+    <div class="footer">
+      HEXA-BOEK · Artikel 17 - CC-Construct (16 Nodes Tegelijk) | nidrā-router meta-artikel · art.html v2
+    </div>
+  </main>
+</body>
+</html>

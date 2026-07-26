@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artikel 7 - dimensie 7 (reflectie) | 23-1</title>
+  <meta name="generator" content="gen_art_pieces_v2">
+  <meta name="structure" content="verse">
+  <meta name="tone" content="light">
+  <meta name="languages" content="ar, sa, gr, en">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Sans+Greek:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a08;
+    color: #e0d8a0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* === VISUAL LAYERS === */
+  .lang-layers, .terminal-bg, .dark-bg, .fire-bg, .wave-bg, .spiral-bg, .organic-bg, .blueprint-bg, .verse-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .lang-layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(ellipse at 50% 50%, #e0c02088, transparent 70%);
+  }
+  .lang-ar { transform: rotate(5deg); }
+  .lang-sa { transform: rotate(-3deg); }
+  .lang-gr { transform: rotate(2deg); }
+  .lang-nl { transform: rotate(-1deg); }
+  .lang-en { transform: rotate(0deg); }
+
+  .verse-dot {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    animation: verse-pulse 8s ease-in-out infinite;
+  }
+  @keyframes verse-pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+    50% { transform: translate(-50%, -50%) scale(2); opacity: 0.2; }
+  }
+
+  /* === CONTENT === */
+  .content {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 12vh 2rem;
+  }
+
+  .meta {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #d0b040;
+    opacity: 0.4;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #d0b0401a;
+    padding-bottom: 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #e0d8a0;
+    opacity: 0.8;
+    margin: 2rem 0 3rem;
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  .verse-block {
+    margin: 3rem 0;
+    padding: 2rem 0;
+    border-bottom: 1px solid #d0b0401a;
+  }
+  .verse-block p {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+  .lang-ar { font-family: 'Noto Sans Arabic', sans-serif; direction: rtl; }
+  .lang-sa { font-family: 'Noto Sans Devanagari', sans-serif; }
+  .lang-gr { font-family: 'Noto Sans Greek', sans-serif; font-style: italic; }
+  .lang-nl { color: #d0b040; opacity: 0.8; }
+
+  h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #e0d8a0;
+    opacity: 0.7;
+    margin: 2.5rem 0 1rem;
+  }
+  
+  h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #e0d8a0;
+    opacity: 0.6;
+    margin: 2rem 0 0.8rem;
+  }
+  
+  p {
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.8rem;
+  }
+  th, td {
+    padding: 0.5rem;
+    border: 1px solid #d0b0401a;
+    text-align: left;
+  }
+  th {
+    color: #d0b040;
+    opacity: 0.5;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+  
+  code {
+    background: #d0b04010;
+    padding: 0.1em 0.3em;
+    border-radius: 2px;
+    font-size: 0.85em;
+  }
+  
+  pre {
+    background: #d0b04008;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    font-size: 0.8rem;
+    border-left: 2px solid #d0b0402a;
+  }
+  
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  
+  blockquote {
+    border-left: 2px solid #d0b0403a;
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    opacity: 0.6;
+    font-style: italic;
+  }
+  
+  .footer {
+    margin-top: 6rem;
+    padding-top: 2rem;
+    border-top: 1px solid #d0b0401a;
+    font-size: 0.65rem;
+    opacity: 0.3;
+    text-align: center;
+  }
+
+  </style>
+</head>
+<body>
+
+  <!-- TAAAL-LAGEN: 4 talen -->
+  <div class="lang-layers">
+    <div class="lang-layer lang-ar" style="opacity:0.15"></div>
+    <div class="lang-layer lang-sa" style="opacity:0.12"></div>
+    <div class="lang-layer lang-gr" style="opacity:0.09"></div>
+    <div class="lang-layer lang-en" style="opacity:0.06"></div>
+  </div>
+
+  <!-- VERSE: minimalistisch -->
+  <div class="verse-bg">
+    <div class="verse-dot" style="background:#d0b040;box-shadow:0 0 30px #e0c02088"></div>
+  </div>
+
+  <main class="content">
+    <div class="meta">
+      09-artikel-07-dimensie-7 · structuur: verse · toon: light
+    </div>
+    
+    <h1 class="title">Artikel 7 - dimensie 7 (reflectie) | 23-1</h1>
+    
+    <table>
+  <tr><th># Artikel 7 - dimensie 7 (reflectie)</th><th>23-1</th></tr>
+</table>
+
+<table>
+  <tr><th>## الفصل السابع - الإجابة ليست في الرقم. الإجابة في العدسة.</th><th>सप्तम अध्यायः</th><th>Περὶ Ζʹ</th></tr>
+</table>
+
+<p><span class="lang-ar">الإجابة ليست في الرقم. الإجابة في العدسة.</span></p>
+<p><span class="lang-sa">उत्तरं संख्यायाम् न. उत्तरं लेन्से</span></p>
+<p><span class="lang-gr">ἡ ἀποκρισις οὐκ ἐν τῷ ἀριθμῷ. ἡ ἀποκρισις ἐν τῇ lens</span></p>
+<p>Het antwoord zit niet in het getal. Het antwoord zit in de lens.</p>
+
+<p><span class="lang-ar">النظام الذي تقرأ به هو النظام الذي تحصل عليه.</span></p>
+<p><span class="lang-sa">प्रणाली यस्मिन् पठसि सा प्रणाली यां लभसि</span></p>
+<p><span class="lang-gr">τὸ σύστημα ὃ ἀγνῶσιν, αὐτὸ τὸ σύστημα ὃ λαμβάνεις</span></p>
+<p>Het systeem waarmee je leest, is het systeem dat je krijgt.</p>
+
+<p><span class="lang-ar">هذا ليس تقصيرا. هذا هو التصميم.</span></p>
+<p><span class="lang-sa">इदं ह्रासः न. इदं डिजाइनम्</span></p>
+<p><span class="lang-gr">αὐτὸ μείωσις οὐκ ἔστι. αὐτὸ ὁ σχεδιασμὸς ἐστιν</span></p>
+<p>Dit is geen beperking. Dit is het ontwerp.</p>
+
+<p>Lensrekenkunde: elke lens is lokaal correct mits haar regels expliciet en consequent worden toegepast. Het &quot;antwoord&quot; hangt af van de gekozen projectie.</p>
+
+
+<blockquote>**Lensoptiek 7:** Reflectie is door de lens kijken. Wat zie je in de spiegel? De bron of de lens zelf?<br>**العدسة 7:** الانعكاس هو النظر عبر العدسة. ماذا ترى في المرآة؟ المصدر أم العدسة نفسها؟<br>**दृष्टि 7:** Prativṛtti darśanena darśanam. Aśau kiṃ paśyasi? Mūlam, svayam darśanam?</blockquote>
+
+
+    
+    <div class="footer">
+      HEXA-BOEK · Artikel 7 - dimensie 7 (reflectie) | 23-1 · art.html v2
+    </div>
+  </main>
+</body>
+</html>

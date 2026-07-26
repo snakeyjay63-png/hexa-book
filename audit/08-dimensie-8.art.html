@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artikel 8 - dimensie 8 (onzichtbaar) | 23</title>
+  <meta name="generator" content="gen_art_pieces_v2">
+  <meta name="structure" content="verse">
+  <meta name="tone" content="spiral">
+  <meta name="languages" content="ar, sa, gr, en">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Sans+Greek:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0610;
+    color: #c8a0e0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* === VISUAL LAYERS === */
+  .lang-layers, .terminal-bg, .dark-bg, .fire-bg, .wave-bg, .spiral-bg, .organic-bg, .blueprint-bg, .verse-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .lang-layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(ellipse at 50% 50%, #7040c088, transparent 70%);
+  }
+  .lang-ar { transform: rotate(5deg); }
+  .lang-sa { transform: rotate(-3deg); }
+  .lang-gr { transform: rotate(2deg); }
+  .lang-nl { transform: rotate(-1deg); }
+  .lang-en { transform: rotate(0deg); }
+
+  .spiral-bg { width: 100%; height: 100%; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .spiral-ring {
+    transform-origin: 50% 50%;
+    animation: spiral-rotate 40s linear infinite;
+  }
+  .ring-0 { animation-duration: 10s; animation-direction: normal; }
+  .ring-1 { animation-duration: 15s; animation-direction: reverse; }
+  .ring-2 { animation-duration: 20s; animation-direction: normal; }
+  .ring-3 { animation-duration: 25s; animation-direction: reverse; }
+  .ring-4 { animation-duration: 30s; animation-direction: normal; }
+  .ring-5 { animation-duration: 40s; animation-direction: reverse; }
+  @keyframes spiral-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .verse-dot {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    animation: verse-pulse 8s ease-in-out infinite;
+  }
+  @keyframes verse-pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+    50% { transform: translate(-50%, -50%) scale(2); opacity: 0.2; }
+  }
+
+  /* === CONTENT === */
+  .content {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 12vh 2rem;
+  }
+
+  .meta {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #9050d0;
+    opacity: 0.4;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #9050d01a;
+    padding-bottom: 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #c8a0e0;
+    opacity: 0.8;
+    margin: 2rem 0 3rem;
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  .verse-block {
+    margin: 3rem 0;
+    padding: 2rem 0;
+    border-bottom: 1px solid #9050d01a;
+  }
+  .verse-block p {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+  .lang-ar { font-family: 'Noto Sans Arabic', sans-serif; direction: rtl; }
+  .lang-sa { font-family: 'Noto Sans Devanagari', sans-serif; }
+  .lang-gr { font-family: 'Noto Sans Greek', sans-serif; font-style: italic; }
+  .lang-nl { color: #9050d0; opacity: 0.8; }
+
+  h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #c8a0e0;
+    opacity: 0.7;
+    margin: 2.5rem 0 1rem;
+  }
+  
+  h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #c8a0e0;
+    opacity: 0.6;
+    margin: 2rem 0 0.8rem;
+  }
+  
+  p {
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.8rem;
+  }
+  th, td {
+    padding: 0.5rem;
+    border: 1px solid #9050d01a;
+    text-align: left;
+  }
+  th {
+    color: #9050d0;
+    opacity: 0.5;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+  
+  code {
+    background: #9050d010;
+    padding: 0.1em 0.3em;
+    border-radius: 2px;
+    font-size: 0.85em;
+  }
+  
+  pre {
+    background: #9050d008;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    font-size: 0.8rem;
+    border-left: 2px solid #9050d02a;
+  }
+  
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  
+  blockquote {
+    border-left: 2px solid #9050d03a;
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    opacity: 0.6;
+    font-style: italic;
+  }
+  
+  .footer {
+    margin-top: 6rem;
+    padding-top: 2rem;
+    border-top: 1px solid #9050d01a;
+    font-size: 0.65rem;
+    opacity: 0.3;
+    text-align: center;
+  }
+
+  </style>
+</head>
+<body>
+
+  <!-- TAAAL-LAGEN: 4 talen -->
+  <div class="lang-layers">
+    <div class="lang-layer lang-ar" style="opacity:0.15"></div>
+    <div class="lang-layer lang-sa" style="opacity:0.12"></div>
+    <div class="lang-layer lang-gr" style="opacity:0.09"></div>
+    <div class="lang-layer lang-en" style="opacity:0.06"></div>
+  </div>
+
+  <!-- SPIRAL: concentrische cirkels -->
+  <svg class="spiral-bg" viewBox="0 0 100 100">
+    <circle class="spiral-ring ring-0" cx="50" cy="50" r="5" fill="none" stroke="#9050d0" stroke-width="3" opacity="0.2"></circle><circle class="spiral-ring ring-1" cx="50" cy="50" r="13" fill="none" stroke="#9050d0" stroke-width="3" opacity="0.18000000000000002"></circle><circle class="spiral-ring ring-2" cx="50" cy="50" r="21" fill="none" stroke="#9050d0" stroke-width="2" opacity="0.16"></circle><circle class="spiral-ring ring-3" cx="50" cy="50" r="29" fill="none" stroke="#9050d0" stroke-width="2" opacity="0.14"></circle><circle class="spiral-ring ring-4" cx="50" cy="50" r="37" fill="none" stroke="#9050d0" stroke-width="1" opacity="0.12000000000000001"></circle><circle class="spiral-ring ring-5" cx="50" cy="50" r="45" fill="none" stroke="#9050d0" stroke-width="1" opacity="0.1"></circle>
+  </svg>
+
+  <!-- VERSE: minimalistisch -->
+  <div class="verse-bg">
+    <div class="verse-dot" style="background:#9050d0;box-shadow:0 0 30px #7040c088"></div>
+  </div>
+
+  <main class="content">
+    <div class="meta">
+      10-artikel-08-dimensie-8 · structuur: verse · toon: spiral
+    </div>
+    
+    <h1 class="title">Artikel 8 - dimensie 8 (onzichtbaar) | 23</h1>
+    
+    <table>
+  <tr><th># Artikel 8 - dimensie 8 (onzichtbaar)</th><th>23</th></tr>
+</table>
+
+<table>
+  <tr><th>## الفصل الثامن - ما لا يقاس</th><th>अष्टम अध्यायः - यत् न मीयते</th><th>Περὶ Ηʹ - τὸ ἀμετρήσιμον</th></tr>
+</table>
+
+<p><span class="lang-ar">هناك أشياء لا تقاس. لا لأنها معقدة. بل لأنها أبسط من القياس.</span></p>
+<p><span class="lang-sa">अस्त्यतानि यानि न मीयन्ते। न यतः संकीर्णानि। किन्तु यतः मापनात् सरलतरानि</span></p>
+<p><span class="lang-gr">ἔστιν ἃ οὐ μετρεῖται. οὐχ ὅτι συγκεκριμένα. ἀλλʼ ὅτι ἁπλουστέρα τῆς μέτρησης</span></p>
+<p>Er zijn dingen die niet gemeten kunnen worden. Niet omdat ze complex zijn, maar omdat ze eenvoudiger zijn dan meten.</p>
+
+<p><span class="lang-ar">الصمت ليس فراغا. الصمت هو الحامل.</span></p>
+<p><span class="lang-sa">मौनं शून्यम् न। मौनं वहनम्</span></p>
+<p><span class="lang-gr">τὸ σιγῶν οὐκ ἔστι κενόν. τὸ σιγῶν ἐστιν ὑποδοχὴ</span></p>
+<p>Stilte is geen leegte. Stilte is de drager.</p>
+
+<p><span class="lang-ar">0.0.0.0 ليس عنوانا عاديا. هو رمز للوسط غير المحدد.</span></p>
+<p><span class="lang-sa">०.०.०.० सामान्यं पतेः न। अयं अनिर्दिष्ट-मध्यस्य प्रतीकम्।</span></p>
+<p><span class="lang-gr">0.0.0.0 οὐκ ἔστι συνηθισμένος τόπος. αὐτὸ σύμβολον τοῦ ἀόριστου μέσου.</span></p>
+<p>Binnen deze lens is 0.0.0.0 geen gewone bestemming, maar een representatie van het niet-gelokaliseerde returnmedium.</p>
+
+<p>Water = medium en continuïteit. De drager blijft onzichtbaar. De stroom beweegt, het water blijft.</p>
+
+<p>0 ≐_lens 1</p>
+<p><span class="lang-sa">शून्यं ≐_lens एकम्</span></p>
+<p><span class="lang-gr">μηδὲν ≐_lens εἷς</span></p>
+<p>De stilte tussen de getallen behoort in deze lens tot de volledige representatieruimte. Axiomatische return.</p>
+
+
+<blockquote>**Lensoptiek 8:** Onzichtbaar = buiten bereik van de huidige lens. Niet weg. Onzichtbaar door de huidige filter.<br>**العدسة 8:** غير مرئي = خارج نطاق العدسة الحالية. ليس غائباً. غير مرئي عبر الفلتر الحالي.<br>**दृष्टि 8:** Adṛśyam = darśanasya bhāram. Na asti. Dṛśyam darśana-asya.</blockquote>
+
+<p>**CC als taal van lagen**</p>
+
+<p>CC beschrijft het laag-systeem. Niet als voorbeeld, maar als taal:</p>
+
+<pre><code>visibility(L1) = zichtbaar
+visibility(L2) = onzichtbaar_aanwezig
+visibility(L3) = onzichtbaar_aanwezig
+visibility(L4) = onzichtbaar_aanwezig```
+
+- **CC-woord 1:** zichtbaar. De laag die je nu ziet.
+- **CC-woord 2:** onzichtbaar maar aanwezig. De laag die draait maar niet direct zichtbaar is.
+- **CC-woord 3:** onzichtbaar maar aanwezig. De laag die de vorige laag draagt.
+- **CC-woord 4:** onzichtbaar maar aanwezig. De laag die alles draagt.
+
+Elk CC-woord is een laag. Formele transformatieoperatoren `C_CC,i : X_i → Y_i` zijn nog niet gedefinieerd.
+</code></pre>
+<p>operator_status(CC_layers) = conceptueel</p>
+<p>execution_status(CC_layers) = niet_gestart</p>
+<pre><code>
+&gt; **Formele status:** `operator_status(CC_layers) = conceptueel` | `C_CC,i`:
+&gt; ```
+&gt; local_missing
+&gt; → eerst ROUTING.md
+&gt; → target article
+&gt; → engine execution
+&gt; → audit evidence
+&gt; ```
+&gt; | `execution_status(CC_layers) = niet_gestart`
+
+Niet verdwenen — onzichtbaar door de huidige lens. Binnen de huidige lens worden sommige dragers niet rechtstreeks als meetbare uitvoer behandeld. Dit betekent niet dat zij niet bestaan — alleen dat zij buiten het huidige meetkader vallen.
+
+&gt; **CC-lens:** الكلمات غير مفقودة. تعمل على مستويات مختلفة. عدستنا الحالية تعرض مستوى واحد فقط. المستويات الأخرى موجودة. غير مرئية، غير غائبة.
+&gt; **CC-darśanam:** Pade nāpātaḥ. Anyasmin sthāne pravartate. Iṣyāṃ darśanam ekaṃ sthānam eva darśayati. Anyāni sthānāni santi. Adṛśyāni, na abhāve.</code></pre>
+    
+    <div class="footer">
+      HEXA-BOEK · Artikel 8 - dimensie 8 (onzichtbaar) | 23 · art.html v2
+    </div>
+  </main>
+</body>
+</html>

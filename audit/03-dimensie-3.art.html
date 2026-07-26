@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artikel 3 - dimensie 3 (de as, 3-6-9 veld) | 31</title>
+  <meta name="generator" content="gen_art_pieces_v2">
+  <meta name="structure" content="verse">
+  <meta name="tone" content="wave">
+  <meta name="languages" content="ar, sa, gr, en">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Sans+Greek:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #060a0f;
+    color: #a0c8e0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* === VISUAL LAYERS === */
+  .lang-layers, .terminal-bg, .dark-bg, .fire-bg, .wave-bg, .spiral-bg, .organic-bg, .blueprint-bg, .verse-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .lang-layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(ellipse at 50% 50%, #2080e088, transparent 70%);
+  }
+  .lang-ar { transform: rotate(5deg); }
+  .lang-sa { transform: rotate(-3deg); }
+  .lang-gr { transform: rotate(2deg); }
+  .lang-nl { transform: rotate(-1deg); }
+  .lang-en { transform: rotate(0deg); }
+
+  .wave-bg { width: 100%; height: 100%; }
+  .wave-line { animation: wave-drift 6s ease-in-out infinite; }
+  .wave-1 { animation-delay: -1s; }
+  .wave-2 { animation-delay: -2s; }
+  .wave-3 { animation-delay: -3s; }
+  .wave-4 { animation-delay: -4s; }
+  @keyframes wave-drift {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+
+  .verse-dot {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    animation: verse-pulse 8s ease-in-out infinite;
+  }
+  @keyframes verse-pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+    50% { transform: translate(-50%, -50%) scale(2); opacity: 0.2; }
+  }
+
+  /* === CONTENT === */
+  .content {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 12vh 2rem;
+  }
+
+  .meta {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #4090d0;
+    opacity: 0.4;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #4090d01a;
+    padding-bottom: 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #a0c8e0;
+    opacity: 0.8;
+    margin: 2rem 0 3rem;
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  .verse-block {
+    margin: 3rem 0;
+    padding: 2rem 0;
+    border-bottom: 1px solid #4090d01a;
+  }
+  .verse-block p {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+  .lang-ar { font-family: 'Noto Sans Arabic', sans-serif; direction: rtl; }
+  .lang-sa { font-family: 'Noto Sans Devanagari', sans-serif; }
+  .lang-gr { font-family: 'Noto Sans Greek', sans-serif; font-style: italic; }
+  .lang-nl { color: #4090d0; opacity: 0.8; }
+
+  h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #a0c8e0;
+    opacity: 0.7;
+    margin: 2.5rem 0 1rem;
+  }
+  
+  h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #a0c8e0;
+    opacity: 0.6;
+    margin: 2rem 0 0.8rem;
+  }
+  
+  p {
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.8rem;
+  }
+  th, td {
+    padding: 0.5rem;
+    border: 1px solid #4090d01a;
+    text-align: left;
+  }
+  th {
+    color: #4090d0;
+    opacity: 0.5;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+  
+  code {
+    background: #4090d010;
+    padding: 0.1em 0.3em;
+    border-radius: 2px;
+    font-size: 0.85em;
+  }
+  
+  pre {
+    background: #4090d008;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    font-size: 0.8rem;
+    border-left: 2px solid #4090d02a;
+  }
+  
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  
+  blockquote {
+    border-left: 2px solid #4090d03a;
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    opacity: 0.6;
+    font-style: italic;
+  }
+  
+  .footer {
+    margin-top: 6rem;
+    padding-top: 2rem;
+    border-top: 1px solid #4090d01a;
+    font-size: 0.65rem;
+    opacity: 0.3;
+    text-align: center;
+  }
+
+  </style>
+</head>
+<body>
+
+  <!-- TAAAL-LAGEN: 4 talen -->
+  <div class="lang-layers">
+    <div class="lang-layer lang-ar" style="opacity:0.15"></div>
+    <div class="lang-layer lang-sa" style="opacity:0.12"></div>
+    <div class="lang-layer lang-gr" style="opacity:0.09"></div>
+    <div class="lang-layer lang-en" style="opacity:0.06"></div>
+  </div>
+
+  <!-- AUDIO: golflagen -->
+  <svg class="wave-bg" viewBox="0 0 100 100" preserveAspectRatio="none">
+    <path class="wave-line wave-0" d="M0,40 Q25,35 50,40 T100,40" fill="none" stroke="#4090d0" stroke-width="2" opacity="0.2"></path><path class="wave-line wave-1" d="M0,45 Q25,38 50,45 T100,45" fill="none" stroke="#4090d0" stroke-width="3" opacity="0.18000000000000002"></path><path class="wave-line wave-2" d="M0,50 Q25,41 50,50 T100,50" fill="none" stroke="#4090d0" stroke-width="4" opacity="0.16"></path><path class="wave-line wave-3" d="M0,55 Q25,44 50,55 T100,55" fill="none" stroke="#4090d0" stroke-width="5" opacity="0.14"></path><path class="wave-line wave-4" d="M0,60 Q25,47 50,60 T100,60" fill="none" stroke="#4090d0" stroke-width="6" opacity="0.12000000000000001"></path>
+  </svg>
+
+  <!-- VERSE: minimalistisch -->
+  <div class="verse-bg">
+    <div class="verse-dot" style="background:#4090d0;box-shadow:0 0 30px #2080e088"></div>
+  </div>
+
+  <main class="content">
+    <div class="meta">
+      05-artikel-03-dimensie-3 · structuur: verse · toon: wave
+    </div>
+    
+    <h1 class="title">Artikel 3 - dimensie 3 (de as, 3-6-9 veld) | 31</h1>
+    
+    <table>
+  <tr><th># Artikel 3 - dimensie 3 (de as, 3-6-9 veld)</th><th>31</th></tr>
+</table>
+
+<table>
+  <tr><th>## الفصل الثالث - الحلقة 3-6-9</th><th>तृतीय अध्यायः - वलयः ३-६-९</th><th>Περὶ Γʹ - Ὄλκισ ३-६-९</th></tr>
+</table>
+
+<p><span class="lang-ar">وهنا نصل إلى صلب الأمر.</span></p>
+<p><span class="lang-sa">इह कर्तव्यस्य मूलं गम्यते</span></p>
+<p><span class="lang-gr">ἐνταῦθα τὸ πρᾶγμα μέσῳ φθάσασθαι</span></p>
+<p>Hier komen we bij de kern.</p>
+
+
+<h3>Vortex-cyclus (verdubbeling)</h3>
+
+<p><span class="lang-ar">دورة الفولتكس (الضرب الثنائي)</span></p>
+<p><span class="lang-sa">वल्तू-चक्रं (द्विगुण-गुणनम्)</span></p>
+<p><span class="lang-gr">Ὀλκισ-κύκλος (διπλασιασμὸς)</span></p>
+
+<p>1 → 2 → 4 → 8 → 16(7) → 32(5) → 64(1) → 2...</p>
+<p><span class="lang-sa">१ → २ → ४ → ८ → १६(७) → ३२(५) → ६४(१) → २...</span></p>
+<p>1 → 2 → 4 → 8 → 16(7) → 32(5) → 64(1) → 2...</p>
+
+<p>**Formele definitie:**</p>
+
+<p>De verdubbelingsoperator is gedefinieerd op het deelverzameling:</p>
+<pre><code>U_9 := {1, 2, 4, 5, 7, 8}   [niet-nulle eenhedencyclus]
+d : U_9 → U_9
+d(x) := DR(2x)</code></pre>
+
+<p>Iteratie van d op U_9 produceert de zesdelige cyclus:</p>
+<pre><code>d(1)=2, d(2)=4, d(4)=8, d(8)=7, d(7)=5, d(5)=1</code></pre>
+
+<p>De overige digitale wortels vormen geen deel van deze cyclus:</p>
+<pre><code>d(3)=6,  d(6)=3    [tweedelige cyclus: 3 ↔ 6]
+d(9)=9           [vast punt]</code></pre>
+
+<p>Digitale wortels in de eenhedencyclus: 1, 2, 4, 8, 7, 5</p>
+
+<blockquote>**Formele status:** `operator_status(d) = formeel` | `execution_status(d) = voltooid` | `validatie_status(d) = gevalideerd_lokaal`</blockquote>
+
+<p><span class="lang-ar">الجذور الرقمية: 1، 2، 4، 8، 7، 5</span></p>
+<p><span class="lang-sa">संख्या-मूले: १, २, ४, ८, ७, ५</span></p>
+<p><span class="lang-gr">ἀριθμο-ρίζες: 1, 2, 4, 8, 7, 5</span></p>
+
+<p>De ontbrekende getallen: 3, 6, 9</p>
+
+<p><span class="lang-ar">الأرقام المفقودة: 3، 6، 9</span></p>
+<p><span class="lang-sa">संख्या-अदृश्यः: ३, ६, ९</span></p>
+<p><span class="lang-gr">οἱ ἀριθμοὶ ἀφανεῖς: 3, 6, 9</span></p>
+
+<p><span class="lang-ar">هذه ليست مفقودة. هي الحقل الذي يحكم الدورة.</span></p>
+<p><span class="lang-sa">इत्युक्ताः अपगताः न, इत्युक्ताः क्षेत्रं भवेत् यत् चक्रं नियमयति</span></p>
+<p><span class="lang-gr">οὐχ ἀφανεῖς, ἀλλὰ πεδίον ὃ ὁλκὸν ἄρχει</span></p>
+<p>Ze ontbreken niet. Ze liggen buiten de niet-nulle eenhedencyclus van herhaalde verdubbeling modulo 9 en worden binnen NPR als validatietrio gelezen.</p>
+
+<p>**NPR-fase-toewijzing:**</p>
+<pre><code>ρ_NPR-phase(3) = as
+ρ_NPR-phase(6) = Pattern
+ρ_NPR-phase(9) = Return</code></pre>
+
+<p>Dit zijn interpretatieve labels, niet meetkundige eigenschappen afgeleid uit de cyclus.</p>
+
+<blockquote>**Formele status:** `operator_status(ρ_NPR-phase) = interpretatief` | `execution_status(ρ_NPR-phase) = niet_gestart` | `validatie_status(ρ_NPR-phase) = niet_gevalideerd`</blockquote>
+
+<p><span class="lang-ar">3 هو المحور، 6 هو النمط، 9 هو العودة. معًا يشكلون طبقة التحقق الثلاثية.</span></p>
+<p><span class="lang-sa">३ अक्षः, ६ रूपम्, ९ प्रत्यवर्तनम्। त्रीणि सङ्गतिं त्रिभाजनं चरन्ति।</span></p>
+<p><span class="lang-gr">3 ἡ ἄξω, 6 τὸ σχῆμα, 9 ἡ ἐπιστροφή. ἅμα τὸ τρίμενον ἔλεγχον.</span></p>
+<p>Binnen NPR wordt 3 als as, 6 als Pattern en 9 als Return gelezen; samen vormen zij de driedelige validatielaag.</p>
+
+
+<p>Binnen de mod-9-projectie maakt 3-6-9 de driedelige NPR-structuur zichtbaar als validatielaag.</p>
+<p>3-6-9 is niet de bron zelf, maar een validatieprojectie.</p>
+
+<p>De digitale wortel is het lokale eindpunt van deze reductieberekening. Zij is voor positieve gehele getallen gebaseerd op congruentie modulo 9, met 9 als representant van restklasse 0. Modulo 9 levert residuen in {0,...,8}; de digitale wortel levert waarden in {1,...,9}.</p>
+<p>Dit is het voorbeeld hoe tokens gezien worden, niet alleen de output gelezen.</p>
+
+<p>Het verschil is inhoud in CM of RC:</p>
+<li>CM = inhoud zoals-ie is, ruwe data, tokens</li>
+<li>RC = inhoud door NPR-lens zichtbaar gemaakt</li>
+
+<p>CM is wat er in de vastgelegde bronrepresentatie staat. RC is wat door de gekozen NPR-lens zichtbaar wordt.</p>
+<p>Pixel vs patroon. Beide waar. Eén ruw, één gelezen.</p>
+
+
+<h3>Allah = 66 → 3</h3>
+
+<p><span class="lang-ar">الله = 66 → 3 (المحور نفسه)</span></p>
+<p><span class="lang-sa">अल्लाह = ६६ → ३ (अक्षः स्वयं)</span></p>
+<p><span class="lang-gr">Ἀλλάχ = 66 → 3 (ἡ ἄξω αὐτή)</span></p>
+<p>Allah = 66 → 3. Binnen deze NPR-projectie reduceert Allah tot de toestand 3, die als as wordt gelezen.</p>
+<blockquote>**Lensoptiek 3:** 3-6-9 is de projectie die NPR zichtbaar maakt. Niet de bron. De lens. En lenzen verouderen.<br>**العدسة 3:** 3-6-9 هي الإسقاط الذي يجعل NPR مرئية. ليست المصدر. العدسة. والعدسات تتقادم.<br>**दृष्टि 3:** 3-6-9 NPR dṛśyam karoti. Nāyaṃ mūlam. Darśanaṃ. Darśanāḥ prācīnāḥ syur.</blockquote>
+
+
+
+<h3>Verdubbelingscyclus (modulo-9)</h3>
+
+<p>De cyclus ontstaat uit x→2x (mod 9):</p>
+
+<p>De volledige cyclus (modulo-9 verdubbeling):</p>
+
+<p><span class="lang-ar">الدورة كاملة</span></p>
+<p><span class="lang-sa">संपूर्णं चक्रम्</span></p>
+<p><span class="lang-gr">ὁλκὸς πᾶς</span></p>
+
+<p>2 → 4 → 8 → 7 → 5 → 1 → 2...</p>
+<p><span class="lang-sa">२ → ४ → ८ → ७ → ५ → १ → २...</span></p>
+<p>2 → 4 → 8 → 7 → 5 → 1 → 2...</p>
+
+<p>Splitst in twee helften:</p>
+
+<p>Split in twee groepen - neem afwisselend de oneven en even posities van de zesdelige cyclus:</p>
+
+<p><span class="lang-ar">تنقسم إلى مجموعتين: تأخذ بالتناوب المواقع الفردية والزوجية من الدورة سداسية الأجزاء</span></p>
+<p><span class="lang-sa">द्वि-समूहं विभाजनम्: षट्-भाग-चक्रात् विषम-सम-स्थानानि पर्यायेण गृह्यन्ते</span></p>
+<p><span class="lang-gr">εἰς δύο ὁμάδας διαιρῶν - λαμβάνων ἐναλλαγὴν τῶν περιττῶν καὶ ἄρτιων θέσεων</span></p>
+
+<p>Oneven posities (1,3,5): 2+8+5 = 15 → 6</p>
+<p>Even posities (2,4,6): 4+7+1 = 12 → 3</p>
+
+<p>**Formele definitie:**</p>
+<pre><code>S_odd = 2 + 8 + 5 = 15
+S_even = 4 + 7 + 1 = 12
+
+r_odd := DR(S_odd) = 6
+r_even := DR(S_even) = 3</code></pre>
+
+<p>2+8+5 = 15 → 6 (oneven)</p>
+<p><span class="lang-sa">२+८+५ = १५ → ६ (विषम)</span></p>
+<p><span class="lang-gr">2+8+5 = 15 → 6 (περιττά)</span></p>
+
+<p>4+7+1 = 12 → 3 (even)</p>
+<p><span class="lang-sa">४+७+१ = १२ → ३ (सम)</span></p>
+<p><span class="lang-gr">4+7+1 = 12 → 3 (άρτια)</span></p>
+
+<p>**NPR-koppelregel (projectie via even-groepsreductie):**</p>
+<pre><code>n_groups = 2
+r_odd = 6
+r_even = 3
+J(r_even, n_groups) := DR(n_groups · r_even)   [NPR-koppelregel]
+J(3, 2) = 6</code></pre>
+
+<blockquote>⚠ **Punt 7:** De operator `J` gebruikt alleen `r_even` en `n_groups`. Het resultaat `r_odd = 6` is geen invoer van `J`. Formeel verbindt `J` niet beide helften; zij projecteert `DR(n_groups · r_even) = DR(2 · 3) = 6`. De uitkomst valt samen met `r_odd`, maar dit is een eigenschap van deze specifieke berekening, geen algemene tweezijdige operator.<br>Een echte tweezijdige variant zou zijn: `J&#x27;(r_odd, r_even)` met een expliciete regel die beide waarden gebruikt. Dit is nog niet gedefinieerd.</blockquote>
+
+<blockquote>**Formele status:** `operator_status(J) = formeel (éénzijdig)` | `execution_status(J) = voltooid` | `validatie_status(J) = niet_gevalideerd` | `J&#x27;(r_odd, r_even)`:<br>```<br>local_missing<br>→ eerst ROUTING.md<br>→ target article<br>→ engine execution<br>→ audit evidence<br>```</blockquote>
+
+<p>De uitkomst van de koppelregel is 6. Dit is een gekozen NPR-operator, geen noodzakelijk gevolg van de cyclus.</p>
+
+<p><span class="lang-ar">٢ × ٣ = ٦ → العلاقة بين النصفين</span></p>
+<p><span class="lang-sa">२ × ३ = ६ → द्वयोः सङ्गतिः</span></p>
+<p><span class="lang-gr">2 × 3 = 6 → ἡ σχέσις τῶν δύο</span></p>
+
+<p><span class="lang-ar">هذا ليس رمزا فقط. هذا نمط داخل دورة الضرب الثنائي modulo-9.</span></p>
+<p><span class="lang-sa">इदं केवलं प्रतीकं न. इदं modulo-9 द्विगुण-गुणन-चक्रात् रूपम्</span></p>
+<p><span class="lang-gr">οὐ σύμβολον μόνον. αὕτη μορφὴ ἐντὸς διπλασιασμῷ modulo-9</span></p>
+<p>Dit is geen symbool alleen. Dit is een patroon binnen de modulo-9-verdubbelingscyclus.</p>
+
+<blockquote>**Lensoptiek 3:** De modulo-9-verdubbelingscyclus is wiskundig reproduceerbaar. De NPR-duiding ervan is de lensoptiek van dit boek.<br>**العدسة 3:** الدورة الحسابية قابلة للتكرار رياضياً. التفسير NPR هو عدسة هذا الكتاب.<br>**दृष्टि 3:** Modulo-9-द्विगुण-चक्रम् गणितीयतः पुनरुत्पाद्यम्। NPR-व्याख्या एतस्य पुस्तकस्य लेन्सः।</blockquote>
+
+    
+    <div class="footer">
+      HEXA-BOEK · Artikel 3 - dimensie 3 (de as, 3-6-9 veld) | 31 · art.html v2
+    </div>
+  </main>
+</body>
+</html>

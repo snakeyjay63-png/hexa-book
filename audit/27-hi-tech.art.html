@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artikel 14 — Hi-Tech</title>
+  <meta name="generator" content="gen_art_pieces_v2">
+  <meta name="structure" content="dark">
+  <meta name="tone" content="spiral">
+  <meta name="languages" content="ar, sa, nl, en">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Sans+Greek:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0610;
+    color: #c8a0e0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* === VISUAL LAYERS === */
+  .lang-layers, .terminal-bg, .dark-bg, .fire-bg, .wave-bg, .spiral-bg, .organic-bg, .blueprint-bg, .verse-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .lang-layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(ellipse at 50% 50%, #7040c088, transparent 70%);
+  }
+  .lang-ar { transform: rotate(5deg); }
+  .lang-sa { transform: rotate(-3deg); }
+  .lang-gr { transform: rotate(2deg); }
+  .lang-nl { transform: rotate(-1deg); }
+  .lang-en { transform: rotate(0deg); }
+
+  .noise-layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity: 0.5;
+  }
+  .vertical-pressure {
+    position: absolute;
+    top: 0; left: 20%;
+    width: 60%; height: 100%;
+    animation: pressure 6s ease-in-out infinite alternate;
+  }
+  @keyframes pressure {
+    0% { opacity: 0.3; transform: scaleY(1); }
+    100% { opacity: 0.6; transform: scaleY(1.02); }
+  }
+
+  .spiral-bg { width: 100%; height: 100%; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .spiral-ring {
+    transform-origin: 50% 50%;
+    animation: spiral-rotate 40s linear infinite;
+  }
+  .ring-0 { animation-duration: 10s; animation-direction: normal; }
+  .ring-1 { animation-duration: 15s; animation-direction: reverse; }
+  .ring-2 { animation-duration: 20s; animation-direction: normal; }
+  .ring-3 { animation-duration: 25s; animation-direction: reverse; }
+  .ring-4 { animation-duration: 30s; animation-direction: normal; }
+  .ring-5 { animation-duration: 40s; animation-direction: reverse; }
+  @keyframes spiral-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* === CONTENT === */
+  .content {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 12vh 2rem;
+  }
+
+  .meta {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #9050d0;
+    opacity: 0.4;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #9050d01a;
+    padding-bottom: 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #c8a0e0;
+    opacity: 0.8;
+    margin: 2rem 0 3rem;
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  .dark-section {
+    margin: 3rem 0;
+    opacity: 0.6;
+  }
+  .dark-section h2 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #9050d0;
+    opacity: 0.5;
+    margin-bottom: 1rem;
+  }
+  .glitch {
+    animation: glitch 4s ease-in-out infinite;
+  }
+  @keyframes glitch {
+    0%, 90%, 100% { transform: translate(0); }
+    92% { transform: translate(-2px, 1px); }
+    94% { transform: translate(2px, -1px); }
+    96% { transform: translate(-1px, 2px); }
+    98% { transform: translate(1px, -2px); }
+  }
+
+  h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #c8a0e0;
+    opacity: 0.7;
+    margin: 2.5rem 0 1rem;
+  }
+  
+  h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #c8a0e0;
+    opacity: 0.6;
+    margin: 2rem 0 0.8rem;
+  }
+  
+  p {
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.8rem;
+  }
+  th, td {
+    padding: 0.5rem;
+    border: 1px solid #9050d01a;
+    text-align: left;
+  }
+  th {
+    color: #9050d0;
+    opacity: 0.5;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+  
+  code {
+    background: #9050d010;
+    padding: 0.1em 0.3em;
+    border-radius: 2px;
+    font-size: 0.85em;
+  }
+  
+  pre {
+    background: #9050d008;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    font-size: 0.8rem;
+    border-left: 2px solid #9050d02a;
+  }
+  
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  
+  blockquote {
+    border-left: 2px solid #9050d03a;
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    opacity: 0.6;
+    font-style: italic;
+  }
+  
+  .footer {
+    margin-top: 6rem;
+    padding-top: 2rem;
+    border-top: 1px solid #9050d01a;
+    font-size: 0.65rem;
+    opacity: 0.3;
+    text-align: center;
+  }
+
+  </style>
+</head>
+<body>
+
+  <!-- TAAAL-LAGEN: 4 talen -->
+  <div class="lang-layers">
+    <div class="lang-layer lang-ar" style="opacity:0.15"></div>
+    <div class="lang-layer lang-sa" style="opacity:0.12"></div>
+    <div class="lang-layer lang-nl" style="opacity:0.09"></div>
+    <div class="lang-layer lang-en" style="opacity:0.06"></div>
+  </div>
+
+  <!-- DARK: noise + druk -->
+  <div class="dark-bg">
+    <div class="noise-layer"></div>
+    <div class="vertical-pressure" style="background:linear-gradient(to bottom, #7040c088, transparent)"></div>
+  </div>
+
+  <!-- SPIRAL: concentrische cirkels -->
+  <svg class="spiral-bg" viewBox="0 0 100 100">
+    <circle class="spiral-ring ring-0" cx="50" cy="50" r="5" fill="none" stroke="#9050d0" stroke-width="3" opacity="0.2"></circle><circle class="spiral-ring ring-1" cx="50" cy="50" r="13" fill="none" stroke="#9050d0" stroke-width="3" opacity="0.18000000000000002"></circle><circle class="spiral-ring ring-2" cx="50" cy="50" r="21" fill="none" stroke="#9050d0" stroke-width="2" opacity="0.16"></circle><circle class="spiral-ring ring-3" cx="50" cy="50" r="29" fill="none" stroke="#9050d0" stroke-width="2" opacity="0.14"></circle><circle class="spiral-ring ring-4" cx="50" cy="50" r="37" fill="none" stroke="#9050d0" stroke-width="1" opacity="0.12000000000000001"></circle><circle class="spiral-ring ring-5" cx="50" cy="50" r="45" fill="none" stroke="#9050d0" stroke-width="1" opacity="0.1"></circle>
+  </svg>
+
+  <main class="content">
+    <div class="meta">
+      27-hi-tech.md · structuur: dark · toon: spiral
+    </div>
+    
+    <h1 class="title">Artikel 14 — Hi-Tech</h1>
+    
+    
+<blockquote>**تقنية عالية**  <br>**उच्च तकनीक**  <br>Music = Hi-Tech Psytrance  <br>Muziek = Hi-Tech Psytrance</blockquote>
+
+
+<h2>De Terminal (CPU)</h2>
+
+<pre><code>┌─────────────────────────────────────┐
+│  1980 TERMINAL                      │
+│                                     │
+│  command: glitch-rush               │
+│  command: speed=max                 │
+│                                     │
+│  → CPU: extreem snelle,              │
+│    gefragmenteerde ritmes,           │
+│    broken beats                     │
+└──────────────────┬──────────────────┘
+                   │ verbinding
+                   ▼
+┌─────────────────────────────────────┐
+│  SYNTHS (veld)                      │
+│                                     │
+│  digital → pixel → lead             │
+│  glitch  → breuk → textuur          │
+│                                     │
+│  → GPU: hyper-digitale, scherpe laag│
+└─────────────────────────────────────┘</code></pre>
+
+
+<h2>Synth Geometrie</h2>
+
+<table>
+  <tr><th>Synth</th><th>Geometrie</th><th>Vertraging</th><th>Uiting</th></tr>
+  <tr><td>digital</td><td>pixel</td><td>50ms</td><td>scherp</td></tr>
+  <tr><td>glitch</td><td>breuk</td><td>25ms</td><td>kapot</td></tr>
+  <tr><td>laser</td><td>lijn</td><td>100ms</td><td>snijdend</td></tr>
+</table>
+
+
+<h2>Hi-Tech = Interface-Taal</h2>
+
+<pre><code>Hi-Tech zegt:
+  &quot;rush&quot;  → digital doet pixel
+  &quot;break&quot; → glitch doet breuk
+  &quot;cut&quot;   → laser doet lijn</code></pre>
+
+
+<h2>Donker Bos Regio</h2>
+
+<pre><code>CPU range: 160 - 180 BPM
+GPU range: 8 - 14 layers
+Donker bos: nee — pure digitale nacht, geen natuur, alleen code</code></pre>
+
+
+<p>*Conceptueel audit-artikel.*</p>
+
+    
+    <div class="footer">
+      HEXA-BOEK · Artikel 14 — Hi-Tech · art.html v2
+    </div>
+  </main>
+</body>
+</html>

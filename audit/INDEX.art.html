@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audit Index — HEXA-BOEK</title>
+  <meta name="generator" content="gen_art_pieces_v2">
+  <meta name="structure" content="technical">
+  <meta name="tone" content="neutral">
+  <meta name="languages" content="gr, en">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Sans+Greek:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0f;
+    color: #c0c0d0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* === VISUAL LAYERS === */
+  .lang-layers, .terminal-bg, .dark-bg, .fire-bg, .wave-bg, .spiral-bg, .organic-bg, .blueprint-bg, .verse-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .blueprint-grid { width: 100%; height: 100%; }
+
+  /* === CONTENT === */
+  .content {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 12vh 2rem;
+  }
+
+  .meta {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #7070a0;
+    opacity: 0.4;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #7070a01a;
+    padding-bottom: 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #c0c0d0;
+    opacity: 0.8;
+    margin: 2rem 0 3rem;
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  .code-block {
+    background: #7070a008;
+    border-left: 2px solid #7070a03a;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    font-size: 0.8rem;
+    overflow-x: auto;
+  }
+  .diagram {
+    background: #7070a005;
+    border: 1px solid #7070a01a;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    white-space: pre;
+    line-height: 1.4;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #c0c0d0;
+    opacity: 0.7;
+    margin: 2.5rem 0 1rem;
+  }
+  
+  h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #c0c0d0;
+    opacity: 0.6;
+    margin: 2rem 0 0.8rem;
+  }
+  
+  p {
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.8rem;
+  }
+  th, td {
+    padding: 0.5rem;
+    border: 1px solid #7070a01a;
+    text-align: left;
+  }
+  th {
+    color: #7070a0;
+    opacity: 0.5;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+  
+  code {
+    background: #7070a010;
+    padding: 0.1em 0.3em;
+    border-radius: 2px;
+    font-size: 0.85em;
+  }
+  
+  pre {
+    background: #7070a008;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    font-size: 0.8rem;
+    border-left: 2px solid #7070a02a;
+  }
+  
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  
+  blockquote {
+    border-left: 2px solid #7070a03a;
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    opacity: 0.6;
+    font-style: italic;
+  }
+  
+  .footer {
+    margin-top: 6rem;
+    padding-top: 2rem;
+    border-top: 1px solid #7070a01a;
+    font-size: 0.65rem;
+    opacity: 0.3;
+    text-align: center;
+  }
+
+  </style>
+</head>
+<body>
+
+  <!-- TECHNICAL: blueprint grid -->
+  <div class="blueprint-bg">
+    <svg class="blueprint-grid" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <defs>
+        <pattern id="bgrid" width="10" height="10" patternUnits="userSpaceOnUse">
+          <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#7070a0" stroke-width="0.08" opacity="0.08"/>
+        </pattern>
+        <pattern id="bgrid-lg" width="50" height="50" patternUnits="userSpaceOnUse">
+          <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#7070a0" stroke-width="0.12" opacity="0.12"/>
+        </pattern>
+      </defs>
+      <rect width="100" height="100" fill="url(#bgrid)"/>
+      <rect width="100" height="100" fill="url(#bgrid-lg)"/>
+    </svg>
+  </div>
+
+  <main class="content">
+    <div class="meta">
+      INDEX.md · structuur: technical · toon: neutral
+    </div>
+    
+    <h1 class="title">Audit Index — HEXA-BOEK</h1>
+    
+    
+<p>**Laatste update:** 2026-07-24</p>
+<p>**Base commit:** `dbd6c18`</p>
+
+
+<h2>3D Statusmodel</h2>
+
+<p>Elke operator/route krijgt drie onafhankelijke statussen:</p>
+
+<table>
+  <tr><th>Dimensie</th><th>Waarden</th><th>Betekenis</th></tr>
+  <tr><td>**Formele Status**</td><td>conceptueel, conventie, formeel, interpretatief, open</td><td>Is de operator wiskundig/syntactisch gedefinieerd?</td></tr>
+  <tr><td>**Uitvoerings Status**</td><td>niet_van_toepassing, niet_voltooid, voltooid</td><td>Is de operator geïmplementeerd en uitgevoerd?</td></tr>
+  <tr><td>**Validatie Status**</td><td>niet_gevalideerd, gevalideerd_lokaal, gevalideerd_onafhankelijk</td><td>Is het resultaat gevalideerd?</td></tr>
+</table>
+
+<p>**Gesloten** = alle drie de statussen zijn niet-negatief (formeel + voltooid + ≥ geverifieerd_lokaal)</p>
+
+
+<h2>Auditbestanden</h2>
+
+<table>
+  <tr><th>File</th><th>Artikel</th><th>Onderwerp</th><th>Routes</th><th>Status</th></tr>
+  <tr><td>[00-intro.md](00-intro.md)</td><td>—</td><td>Introductie + ReturnCycle conventie</td><td>—</td><td>gevalideerd_lokaal</td></tr>
+  <tr><td>[01-artikel-01-dimensie-1.md](01-artikel-01-dimensie-1.md)</td><td>001</td><td>Dimensie 0 ≐ 1</td><td>—</td><td>conceptueel</td></tr>
+  <tr><td>[02-artikel-02-dimensie-2.md](02-artikel-02-dimensie-2.md)</td><td>002</td><td>Frequentie-basis, DR, C-keten</td><td>1-5</td><td>gesloten</td></tr>
+  <tr><td>[03-artikel-e-audio.md](03-artikel-e-audio.md)</td><td>E</td><td>Audio-superpositie (vier lens-golven)</td><td>M_A..M_D, R_audio</td><td>gesloten</td></tr>
+  <tr><td>[04-artikel-f-returnmedium.md](04-artikel-f-returnmedium.md)</td><td>F</td><td>Returnmedium, ℱ, ρ_ℱ</td><td>R, ρ_ℱ</td><td>half</td></tr>
+  <tr><td>[05-artikel-03-dimensie-3.md](05-artikel-03-dimensie-3.md)</td><td>003</td><td>Dimensie 3</td><td>—</td><td>conceptueel</td></tr>
+  <tr><td>[06-artikel-04-dimensie-4.md](06-artikel-04-dimensie-4.md)</td><td>004</td><td>Dimensie 4</td><td>—</td><td>conceptueel</td></tr>
+  <tr><td>[07-artikel-05-dimensie-5.md](07-artikel-05-dimensie-5.md)</td><td>005</td><td>Dimensie 5</td><td>—</td><td>conceptueel</td></tr>
+  <tr><td>[08-artikel-06-dimensie-6.md](08-artikel-06-dimensie-6.md)</td><td>006</td><td>Dimensie 6</td><td>—</td><td>conceptueel</td></tr>
+  <tr><td>[09-artikel-07-dimensie-7.md](09-artikel-07-dimensie-7.md)</td><td>007</td><td>Dimensie 7</td><td>—</td><td>conceptueel</td></tr>
+  <tr><td>[10-artikel-08-dimensie-8.md](10-artikel-08-dimensie-8.md)</td><td>008</td><td>Dimensie 8</td><td>—</td><td>conceptueel</td></tr>
+  <tr><td>[11-artikel-09-dimensie-9.md](11-artikel-09-dimensie-9.md)</td><td>009</td><td>Dimensie 9</td><td>—</td><td>conceptueel</td></tr>
+  <tr><td>[12-artikel-10-dimensie-10.md](12-artikel-10-dimensie-10.md)</td><td>010</td><td>Dimensie 10</td><td>—</td><td>conceptueel</td></tr>
+  <tr><td>[13-artikel-11-dimensie-11.md](13-artikel-11-dimensie-11.md)</td><td>011</td><td>Synth-operator, ρ_water, ρ_fractal</td><td>5, 6</td><td>gesloten</td></tr>
+  <tr><td>[14-artikel-12-dimensie-12.md](14-artikel-12-dimensie-12.md)</td><td>012</td><td>24-brug, 6-bit routing, NPR Bedrock</td><td>4</td><td>gesloten</td></tr>
+  <tr><td>[15-artikel-13-dimensie-13.md](15-artikel-13-dimensie-13.md)</td><td>013</td><td>Dimensie 13</td><td>—</td><td>conceptueel</td></tr>
+  <tr><td>[16-artikel-014-dimensie-14.md](16-artikel-014-dimensie-14.md)</td><td>014</td><td>Eka Routing (nidrā-pointer)</td><td>3 routes → ✅</td><td>structuur_gesloten</td></tr>
+  <tr><td>[17-artikel-015-dimensie-15.md](17-artikel-015-dimensie-15.md)</td><td>015</td><td>Logos (nidrā-pointer)</td><td>3 routes → ✅</td><td>structuur_gesloten</td></tr>
+  <tr><td>[18-artikel-016-dimensie-16.md](18-artikel-016-dimensie-16.md)</td><td>016</td><td>Taal/Veld/Soevereiniteit (nidrā-pointer)</td><td>3 routes → ✅</td><td>structuur_gesloten</td></tr>
+  <tr><td>[19-artikel-017-cc-construct.md](19-artikel-017-cc-construct.md)</td><td>017</td><td>CC-Construct (nidrā-router meta)</td><td>5 pointers → ✅</td><td>structuur_gesloten</td></tr>
+  <tr><td>[20-artikel-018-sanskrit-npr-bridge.md](20-artikel-018-sanskrit-npr-bridge.md)</td><td>018</td><td>Sanskrit-NPR Bridge</td><td>6 routes</td><td>gesloten</td></tr>
+</table>
+
+
+<h2>Samenvatting</h2>
+
+<table>
+  <tr><th>Categorie</th><th>Aantal</th></tr>
+  <tr><td>Totaal auditbestanden</td><td>21</td></tr>
+  <tr><td>Gesloten (volledig gevalideerd)</td><td>4</td></tr>
+  <tr><td>Half (gedeeltelijk gevalideerd)</td><td>1</td></tr>
+  <tr><td>Structuur gesloten (nidrā)</td><td>4</td></tr>
+  <tr><td>Conceptueel (nog niet uitgevoerd)</td><td>12</td></tr>
+</table>
+
+
+<h2>Engine Evidence</h2>
+
+<table>
+  <tr><th>Engine</th><th>Locatie</th><th>Status</th></tr>
+  <tr><td>validate_return_cycle.py</td><td>`engine/validate_return_cycle.py`</td><td>✅ 26/26</td></tr>
+  <tr><td>npr_sound_engine.py</td><td>`engine/npr_sound_engine.py`</td><td>✅ 21/21</td></tr>
+  <tr><td>sanskrit_npr_bridge.py</td><td>`engine/sanskrit_npr_bridge.py`</td><td>✅ 24/24</td></tr>
+  <tr><td>validate_freq_lenses.py</td><td>`engine/validate_freq_lenses.py`</td><td>✅</td></tr>
+  <tr><td>validate_patanjali.py</td><td>`engine/validate_patanjali.py`</td><td>optioneel</td></tr>
+</table>
+
+
+<h2>Migratie Log</h2>
+
+<table>
+  <tr><th>Datum</th><th>Commit</th><th>Actie</th></tr>
+  <tr><td>2026-07-24</td><td>`30208e8`</td><td>Kritieke 4 bestanden (00,02,03,04) — 3D + YAML</td></tr>
+  <tr><td>2026-07-24</td><td>`3741a6b`</td><td>Volledige migratie (00-15) — 15 files</td></tr>
+  <tr><td>2026-07-24</td><td>`a312ad0`</td><td>Fase 2 (014-018) — 5 nieuwe audit-files + INDEX</td></tr>
+</table>
+
+    
+    <div class="footer">
+      HEXA-BOEK · Audit Index — HEXA-BOEK · art.html v2
+    </div>
+  </main>
+</body>
+</html>

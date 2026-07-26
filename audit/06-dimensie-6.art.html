@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artikel 6 - dimensie 6 (de terugkeer vormt zich) | 3×2</title>
+  <meta name="generator" content="gen_art_pieces_v2">
+  <meta name="structure" content="verse">
+  <meta name="tone" content="spiral">
+  <meta name="languages" content="ar, sa, gr, en">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Sans+Greek:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0610;
+    color: #c8a0e0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* === VISUAL LAYERS === */
+  .lang-layers, .terminal-bg, .dark-bg, .fire-bg, .wave-bg, .spiral-bg, .organic-bg, .blueprint-bg, .verse-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .lang-layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(ellipse at 50% 50%, #7040c088, transparent 70%);
+  }
+  .lang-ar { transform: rotate(5deg); }
+  .lang-sa { transform: rotate(-3deg); }
+  .lang-gr { transform: rotate(2deg); }
+  .lang-nl { transform: rotate(-1deg); }
+  .lang-en { transform: rotate(0deg); }
+
+  .spiral-bg { width: 100%; height: 100%; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .spiral-ring {
+    transform-origin: 50% 50%;
+    animation: spiral-rotate 40s linear infinite;
+  }
+  .ring-0 { animation-duration: 10s; animation-direction: normal; }
+  .ring-1 { animation-duration: 15s; animation-direction: reverse; }
+  .ring-2 { animation-duration: 20s; animation-direction: normal; }
+  .ring-3 { animation-duration: 25s; animation-direction: reverse; }
+  .ring-4 { animation-duration: 30s; animation-direction: normal; }
+  .ring-5 { animation-duration: 40s; animation-direction: reverse; }
+  @keyframes spiral-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .verse-dot {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    animation: verse-pulse 8s ease-in-out infinite;
+  }
+  @keyframes verse-pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+    50% { transform: translate(-50%, -50%) scale(2); opacity: 0.2; }
+  }
+
+  /* === CONTENT === */
+  .content {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 12vh 2rem;
+  }
+
+  .meta {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #9050d0;
+    opacity: 0.4;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #9050d01a;
+    padding-bottom: 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #c8a0e0;
+    opacity: 0.8;
+    margin: 2rem 0 3rem;
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  .verse-block {
+    margin: 3rem 0;
+    padding: 2rem 0;
+    border-bottom: 1px solid #9050d01a;
+  }
+  .verse-block p {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+  .lang-ar { font-family: 'Noto Sans Arabic', sans-serif; direction: rtl; }
+  .lang-sa { font-family: 'Noto Sans Devanagari', sans-serif; }
+  .lang-gr { font-family: 'Noto Sans Greek', sans-serif; font-style: italic; }
+  .lang-nl { color: #9050d0; opacity: 0.8; }
+
+  h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #c8a0e0;
+    opacity: 0.7;
+    margin: 2.5rem 0 1rem;
+  }
+  
+  h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #c8a0e0;
+    opacity: 0.6;
+    margin: 2rem 0 0.8rem;
+  }
+  
+  p {
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.8rem;
+  }
+  th, td {
+    padding: 0.5rem;
+    border: 1px solid #9050d01a;
+    text-align: left;
+  }
+  th {
+    color: #9050d0;
+    opacity: 0.5;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+  
+  code {
+    background: #9050d010;
+    padding: 0.1em 0.3em;
+    border-radius: 2px;
+    font-size: 0.85em;
+  }
+  
+  pre {
+    background: #9050d008;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    font-size: 0.8rem;
+    border-left: 2px solid #9050d02a;
+  }
+  
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  
+  blockquote {
+    border-left: 2px solid #9050d03a;
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    opacity: 0.6;
+    font-style: italic;
+  }
+  
+  .footer {
+    margin-top: 6rem;
+    padding-top: 2rem;
+    border-top: 1px solid #9050d01a;
+    font-size: 0.65rem;
+    opacity: 0.3;
+    text-align: center;
+  }
+
+  </style>
+</head>
+<body>
+
+  <!-- TAAAL-LAGEN: 4 talen -->
+  <div class="lang-layers">
+    <div class="lang-layer lang-ar" style="opacity:0.15"></div>
+    <div class="lang-layer lang-sa" style="opacity:0.12"></div>
+    <div class="lang-layer lang-gr" style="opacity:0.09"></div>
+    <div class="lang-layer lang-en" style="opacity:0.06"></div>
+  </div>
+
+  <!-- SPIRAL: concentrische cirkels -->
+  <svg class="spiral-bg" viewBox="0 0 100 100">
+    <circle class="spiral-ring ring-0" cx="50" cy="50" r="5" fill="none" stroke="#9050d0" stroke-width="3" opacity="0.2"></circle><circle class="spiral-ring ring-1" cx="50" cy="50" r="13" fill="none" stroke="#9050d0" stroke-width="3" opacity="0.18000000000000002"></circle><circle class="spiral-ring ring-2" cx="50" cy="50" r="21" fill="none" stroke="#9050d0" stroke-width="2" opacity="0.16"></circle><circle class="spiral-ring ring-3" cx="50" cy="50" r="29" fill="none" stroke="#9050d0" stroke-width="2" opacity="0.14"></circle><circle class="spiral-ring ring-4" cx="50" cy="50" r="37" fill="none" stroke="#9050d0" stroke-width="1" opacity="0.12000000000000001"></circle><circle class="spiral-ring ring-5" cx="50" cy="50" r="45" fill="none" stroke="#9050d0" stroke-width="1" opacity="0.1"></circle>
+  </svg>
+
+  <!-- VERSE: minimalistisch -->
+  <div class="verse-bg">
+    <div class="verse-dot" style="background:#9050d0;box-shadow:0 0 30px #7040c088"></div>
+  </div>
+
+  <main class="content">
+    <div class="meta">
+      08-artikel-06-dimensie-6 · structuur: verse · toon: spiral
+    </div>
+    
+    <h1 class="title">Artikel 6 - dimensie 6 (de terugkeer vormt zich) | 3×2</h1>
+    
+    <table>
+  <tr><th># Artikel 6 - dimensie 6 (de terugkeer vormt zich)</th><th>3×2</th></tr>
+</table>
+
+<table>
+  <tr><th>## الفصل السادس - NPR: العودة تبدأ</th><th>षष्ठ अध्यायः - NPR: प्रतिगमनं आरभ्यते</th><th>Περὶ Σʹ - NPR: ἡ ἐπιστροφὴ ἄρχει</th></tr>
+</table>
+
+<p><span class="lang-ar">العودة ليست تكرارا. هي اكتشاف أن البداية كانت دائما موجودة.</span></p>
+<p><span class="lang-sa">प्रतिगमनं पुनरावृत्तिः न। आरभं सदा उपस्थितम् इति अन्वेषणम्</span></p>
+<p><span class="lang-gr">ἡ ἐπιστροφὴ οὐκ ἐπαναλήψις. ἡ ἀρχὴ ἀεὶ ἐγένετο</span></p>
+<p>Terugkeer is geen herhaling. Het is ontdekken dat het begin altijd al aanwezig was.</p>
+
+<p><span class="lang-ar">3 → 6: نصف الدورة يكتمل.</span></p>
+<p><span class="lang-sa">३ → ६: चक्रार्धं पूर्णम्</span></p>
+<p><span class="lang-gr">3 → 6: ἡ ἡμίσεως τοῦ κύκλου τελεῖται</span></p>
+<p>3 → 6: de halve cyclus wordt voltooid.</p>
+
+
+<h3>Allah = 66 → 3 (de as)</h3>
+
+<p><span class="lang-ar">الله = 66 → 3 (المحور)</span></p>
+<p><span class="lang-sa">अल्लाह = ६६ → ३ (अक्षः)</span></p>
+<p><span class="lang-gr">Ἀλλάχ = 66 → 3 (ἡ ἄξω)</span></p>
+<blockquote>**Lensoptiek 6:** 3→6 voltooid. De lokale NPR-overgang van as naar Pattern is uitgevoerd via `J_axis`. De volledige route 3 → 6 → 9 is nog niet voltooid.</blockquote>
+
+<pre><code>status_route(3→6) = uitgevoerd
+status_route(6→9) = niet_uitgevoerd
+status_route(3→6→9) = onvolledig</code></pre>
+<blockquote>**العدسة 6:** 3→6 مكتمل. دورة العدسة كاملة. لكن العدسة التالية تنتظر بالفعل.<br>**दृष्टि 6:** 3→6 samāptam. Darśana-cakraṃ pūrṇam. Parantam anyat darśanaṃ priyam avatiṣṭhate.</blockquote>
+
+
+
+<h3>Verdubbelingscyclus (wiskundig onafhankelijk)</h3>
+
+<p>De cyclus 2→4→8→7→5→1 is wiskundig onafhankelijk van de Basmala.</p>
+<p><span class="lang-ar">الدورة 2→4→8→7→5→1 مستقلة رياضياً عن البسملة.</span></p>
+
+<p>2 → 4 → 8 → 7 → 5 → 1 → 2...</p>
+<p><span class="lang-sa">२ → ४ → ८ → ७ → ५ → १ → २...</span></p>
+<p>2 → 4 → 8 → 7 → 5 → 1 → 2...</p>
+
+<p>De overgang 3 → 6 wordt uitgevoerd door de verdubbelingsoperator:</p>
+
+<pre><code>J_axis: {1,...,9} → {1,...,9}
+J_axis(x) := DR(2x)</code></pre>
+
+<blockquote>**Opmerking:** `J_axis(x) ≡ d(x)` (dezelfde operator als Artikel 3; `J_axis` is de NPR-specifieke naam).</blockquote>
+
+<pre><code>J_axis(3) = DR(2 · 3) = DR(6) = 6
+status_local(J_axis(3)) = uitgevoerd
+r_local,axis = 6</code></pre>
+
+<blockquote>**Formele status:** `operator_status(J_axis) = formeel` | `J_axis ≡ d` (alias) | `execution_status(J_axis(3)) = voltooid`</blockquote>
+
+<p><span class="lang-ar">3 → 6 → المحور يتضاعف.</span></p>
+<p><span class="lang-sa">३ → ६ → अक्षः द्विगुणः</span></p>
+<p><span class="lang-gr">3 → 6 → ἡ ἄξω διπλασιάζεται</span></p>
+<p>3 → 6. De as verdubbelt via `J_axis`.</p>
+
+<p><span class="lang-ar">الحجر لا يتحرك. الحجر يحمل.</span></p>
+<p><span class="lang-sa">शिला न चरति। शिला वहति।</span></p>
+<p><span class="lang-gr">ὁ λίθος οὐκ ἔκινετο. ὁ λίθος βαστάζει</span></p>
+<p>De steen beweegt niet. De steen draagt.</p>
+
+<p>Steen = gepositioneerde informatie. De steen positioneert de route zonder zelf te bewegen.</p>
+
+<p>0 ≘ 1</p>
+<p><span class="lang-sa">शून्यं ≘ एकम्</span></p>
+<p><span class="lang-gr">μηδὲν ≘ εἷς</span></p>
+<p>De returnroute opent; operationele bron-equivalentie is nog niet gevalideerd.</p>
+
+    
+    <div class="footer">
+      HEXA-BOEK · Artikel 6 - dimensie 6 (de terugkeer vormt zich) | 3×2 · art.html v2
+    </div>
+  </main>
+</body>
+</html>

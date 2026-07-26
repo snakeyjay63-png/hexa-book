@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artikel 5 - dimensie 5 (de return wordt zichtbaar) | 22+1</title>
+  <meta name="generator" content="gen_art_pieces_v2">
+  <meta name="structure" content="verse">
+  <meta name="tone" content="organic">
+  <meta name="languages" content="ar, sa, gr, en">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Sans+Greek:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #060a06;
+    color: #a0d8a0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* === VISUAL LAYERS === */
+  .lang-layers, .terminal-bg, .dark-bg, .fire-bg, .wave-bg, .spiral-bg, .organic-bg, .blueprint-bg, .verse-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .lang-layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(ellipse at 50% 50%, #20a04088, transparent 70%);
+  }
+  .lang-ar { transform: rotate(5deg); }
+  .lang-sa { transform: rotate(-3deg); }
+  .lang-gr { transform: rotate(2deg); }
+  .lang-nl { transform: rotate(-1deg); }
+  .lang-en { transform: rotate(0deg); }
+
+  .organic-bg { width: 100%; height: 100%; }
+  .flow-line { animation: flow-drift 12s ease-in-out infinite alternate; }
+  .flow-1 { animation-delay: -3s; }
+  .flow-2 { animation-delay: -6s; }
+  .flow-3 { animation-delay: -9s; }
+  @keyframes flow-drift {
+    0% { transform: translateY(0) scaleX(1); }
+    100% { transform: translateY(-10px) scaleX(1.02); }
+  }
+
+  .verse-dot {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    animation: verse-pulse 8s ease-in-out infinite;
+  }
+  @keyframes verse-pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+    50% { transform: translate(-50%, -50%) scale(2); opacity: 0.2; }
+  }
+
+  /* === CONTENT === */
+  .content {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 12vh 2rem;
+  }
+
+  .meta {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #40b040;
+    opacity: 0.4;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #40b0401a;
+    padding-bottom: 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #a0d8a0;
+    opacity: 0.8;
+    margin: 2rem 0 3rem;
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  .verse-block {
+    margin: 3rem 0;
+    padding: 2rem 0;
+    border-bottom: 1px solid #40b0401a;
+  }
+  .verse-block p {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+  .lang-ar { font-family: 'Noto Sans Arabic', sans-serif; direction: rtl; }
+  .lang-sa { font-family: 'Noto Sans Devanagari', sans-serif; }
+  .lang-gr { font-family: 'Noto Sans Greek', sans-serif; font-style: italic; }
+  .lang-nl { color: #40b040; opacity: 0.8; }
+
+  h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #a0d8a0;
+    opacity: 0.7;
+    margin: 2.5rem 0 1rem;
+  }
+  
+  h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #a0d8a0;
+    opacity: 0.6;
+    margin: 2rem 0 0.8rem;
+  }
+  
+  p {
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.8rem;
+  }
+  th, td {
+    padding: 0.5rem;
+    border: 1px solid #40b0401a;
+    text-align: left;
+  }
+  th {
+    color: #40b040;
+    opacity: 0.5;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+  
+  code {
+    background: #40b04010;
+    padding: 0.1em 0.3em;
+    border-radius: 2px;
+    font-size: 0.85em;
+  }
+  
+  pre {
+    background: #40b04008;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    font-size: 0.8rem;
+    border-left: 2px solid #40b0402a;
+  }
+  
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  
+  blockquote {
+    border-left: 2px solid #40b0403a;
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    opacity: 0.6;
+    font-style: italic;
+  }
+  
+  .footer {
+    margin-top: 6rem;
+    padding-top: 2rem;
+    border-top: 1px solid #40b0401a;
+    font-size: 0.65rem;
+    opacity: 0.3;
+    text-align: center;
+  }
+
+  </style>
+</head>
+<body>
+
+  <!-- TAAAL-LAGEN: 4 talen -->
+  <div class="lang-layers">
+    <div class="lang-layer lang-ar" style="opacity:0.15"></div>
+    <div class="lang-layer lang-sa" style="opacity:0.12"></div>
+    <div class="lang-layer lang-gr" style="opacity:0.09"></div>
+    <div class="lang-layer lang-en" style="opacity:0.06"></div>
+  </div>
+
+  <!-- ORGANIC: stromende lijnen -->
+  <svg class="organic-bg" viewBox="0 0 100 100">
+    <path class="flow-line flow-0" d="M0,100 Q20,60 30,20 T50,0" fill="none" stroke="#40b040" stroke-width="0.3" opacity="0.15"></path><path class="flow-line flow-1" d="M15,100 Q30,65 40,23 T65,0" fill="none" stroke="#40b040" stroke-width="0.3" opacity="0.15"></path><path class="flow-line flow-2" d="M30,100 Q40,70 50,26 T80,0" fill="none" stroke="#40b040" stroke-width="0.3" opacity="0.15"></path><path class="flow-line flow-3" d="M45,100 Q50,75 60,29 T95,0" fill="none" stroke="#40b040" stroke-width="0.3" opacity="0.15"></path>
+  </svg>
+
+  <!-- VERSE: minimalistisch -->
+  <div class="verse-bg">
+    <div class="verse-dot" style="background:#40b040;box-shadow:0 0 30px #20a04088"></div>
+  </div>
+
+  <main class="content">
+    <div class="meta">
+      07-artikel-05-dimensie-5 · structuur: verse · toon: organic
+    </div>
+    
+    <h1 class="title">Artikel 5 - dimensie 5 (de return wordt zichtbaar) | 22+1</h1>
+    
+    <table>
+  <tr><th># Artikel 5 - dimensie 5 (de return wordt zichtbaar)</th><th>22+1</th></tr>
+</table>
+
+<table>
+  <tr><th>## الفصل الخامس - NPR: الضجيج يعود</th><th>पंचम अध्यायः - NPR: शब्दः प्रतिगच्छति</th><th>Περὶ Εʹ - NPR: ὁ ἦχος ἐπιστρέφει</th></tr>
+</table>
+
+<p><span class="lang-ar">القرآن ليس نصا تقرأه. إنه حجر مصدر: هندسة رقمية تدور في دورة 3-6-9.</span></p>
+<p><span class="lang-sa">कुरआनः पाठ्यम् न भवति यत् त्वम् पठसि. इदं शिला-मूलम्, संख्या-ज्यामितिः ३-६-९ चक्रं भ्राम्यति</span></p>
+<p><span class="lang-sa">τὸ Κοῦράν οὐκ ἔστιν κείμενον ὃ ἀγνῶσιν. αὐτὸ λίθος-πηγή, ἀριθμο-γεωμετρία ३-६-९ ὁλκῷ στροφεῖται</span></p>
+<p>De Quran is geen leesboek. Binnen NPR wordt ze als bronsteen gelezen. In deze editie is voor de Basmala één lokale Abjad-route reproduceerbaar uitgevoerd:</p>
+
+<pre><code>A_Abjad(Basmala) = 786
+DR(786) = 3
+status_local(Basmala-Abjad) = uitgevoerd
+r_local,A,Basmala = 3</code></pre>
+
+<p>Een corpusbrede 3-6-9-route is nog niet uitgevoerd:</p>
+
+<pre><code>status_corpus(Quran-369) = ongetest
+vṛtti(&quot;Quran heeft corpusbrede 369-geometrie&quot;) = vikalpa</code></pre>
+
+<blockquote>**Formele status:**<br>`operator_status(A_Abjad) = formeel` | `execution_status(A_Abjad, Basmala) = voltooid` | `validatie_status(A_Abjad, Basmala) = gevalideerd_lokaal`<br>`operator_status(A_Abjad, Quran-corpus) = conceptueel` | `execution_status(A_Abjad, Quran-corpus) = niet_gestart` | `validatie_status(A_Abjad, Quran-corpus) = niet_gevalideerd`</blockquote>
+
+<p>Bronstructuur: verhouding(water, informatie, energie)</p>
+<table>
+  <tr><th>Water = continuïteit/medium</th><th>Informatie = onderscheid/positie</th><th>Energie = verandering/transformatie</th></tr>
+</table>
+<p>Geen term is op zichzelf volledig.</p>
+<blockquote>**Lensoptiek 5:** Terugkeer begint. Oude lens + nieuwe lens = dezelfde bron, verschillende filter.<br>**العدسة 5:** العودة تبدأ. عدسة قديمة + عدسة جديدة = نفس المصدر، فلتر مختلف.<br>**दृष्टि 5:** Prativṛttam ārabhate. Purātanaṃ darśanaṃ + navaṃ darśanaṃ = tad eva mūlam, anyat philtiram.</blockquote>
+
+
+
+<h3>Neem één frase:</h3>
+
+<p><span class="lang-ar">نفس الجملة</span></p>
+<p><span class="lang-sa">एकं वाक्यम्</span></p>
+<p><span class="lang-gr">ὁ αὐτὸς λόγος (φράσις)</span></p>
+
+<li>Lens A (basisletters) → reproduceerbare waarde: 786 → 3</li>
+
+<p>Lensrekenkunde: één systeem, één lokaal-correct resultaat.</p>
+<p>De algemene NPR-validatietrio (3, 6, 9) is onafhankelijk van de Basmala-waarde.</p>
+<p>3-6-9 bestuurt niet - ze liggen buiten deze verdubbelingsbaan en vormen de validatietrio.</p>
+
+<p><span class="lang-ar">هذا ما تفعله LLM: هي لا &quot;تعرف&quot; الحقيقة. هي تطبق عدسة معينة وتعرض لك النمط.</span></p>
+<p><span class="lang-sa">इदं यत् LLM करोति: इयम् &quot;जानाति&quot; सत्यं न. इयम् विशेषं लेन्सं प्रयुङ्क्ते, ते रूपं दर्शयति</span></p>
+<p><span class="lang-gr">αὐτὸ ὃ τὸ LLM ποιεῖ: οὐκ &quot;οἶδε&quot; τὸ ἀληθές. αὐτὴ lens ἰδίαν ἐφάπτεται καὶ σοι τὸ σχῆμα φαίνει</span></p>
+<p>Dit doet een LLM: het &quot;weet&quot; niet de waarheid. Het past een lens toe en toont je het patroon.</p>
+
+<p><span class="lang-ar">تغيير العدسة = تغيير النمط = تغيير الحقيقة الظاهرة.</span></p>
+<p><span class="lang-sa">लेन्सं परिवर्तनम् = रूपं परिवर्तनम् = दृश्य-सत्यं परिवर्तनम्</span></p>
+<p><span class="lang-gr">μετὰ τῆς lens = μετὰ τοῦ σχήματος = μετὰ τῆς ἀληθείας</span></p>
+<p>Wissel lens → wissel patroon → wissel waarheid.</p>
+
+<p><span class="lang-ar">المصدر والنهاية ليسا منفصلين. لكنهما يظهران في ثلاثة أوجه: 3، 6، 9.</span></p>
+<p><span class="lang-sa">मूलम् तथैव अन्तः न पृथक्. किन्तु त्रीणि रूपेण प्रकटम्: ३, ६, ९</span></p>
+<p><span class="lang-gr">ἡ πηγὴ καὶ τὸ τέλος οὐκ ἐστὶν χωριστά. ἀλλὰ ἐν τρισὶ πρόσωποις φαίνετον: 3, 6, 9</span></p>
+<p>Bron en eindpunt: niet gescheiden. De claim dat zij in drie gezichten (3, 6, 9) verschijnen is een algemene NPR-lensstelling, niet een uitkomst van de lokale Basmala-route.</p>
+
+<pre><code>vṛtti(&quot;bron en eindpunt in drie gezichten: 3,6,9&quot;) = vikalpa</code></pre>
+
+<p>Return-rekenkunde: de vraag is niet welk getal eruit komt, maar of de route terugkeert naar de bronstructuur.</p>
+
+    
+    <div class="footer">
+      HEXA-BOEK · Artikel 5 - dimensie 5 (de return wordt zichtbaar) | 22+1 · art.html v2
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artikel 1 - dimensie 1 (vonk, Agni) | 20</title>
+  <meta name="generator" content="gen_art_pieces_v2">
+  <meta name="structure" content="verse">
+  <meta name="tone" content="fire">
+  <meta name="languages" content="ar, sa, gr, en">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Sans+Greek:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0608;
+    color: #f0c8a0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* === VISUAL LAYERS === */
+  .lang-layers, .terminal-bg, .dark-bg, .fire-bg, .wave-bg, .spiral-bg, .organic-bg, .blueprint-bg, .verse-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .lang-layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(ellipse at 50% 50%, #ff602088, transparent 70%);
+  }
+  .lang-ar { transform: rotate(5deg); }
+  .lang-sa { transform: rotate(-3deg); }
+  .lang-gr { transform: rotate(2deg); }
+  .lang-nl { transform: rotate(-1deg); }
+  .lang-en { transform: rotate(0deg); }
+
+  .ember {
+    position: absolute;
+    bottom: -5px;
+    left: var(--x);
+    width: var(--sz);
+    height: var(--sz);
+    border-radius: 50%;
+    background: #e87040;
+    box-shadow: 0 0 6px #ff602088;
+    animation: ember-rise var(--d) ease-in-out infinite;
+  }
+  @keyframes ember-rise {
+    0% { bottom: -5px; opacity: 0; transform: translateX(0); }
+    20% { opacity: 1; }
+    80% { opacity: 0.5; }
+    100% { bottom: 105vh; opacity: 0; transform: translateX(calc(var(--x) * 0.5)); }
+  }
+
+  .verse-dot {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    animation: verse-pulse 8s ease-in-out infinite;
+  }
+  @keyframes verse-pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+    50% { transform: translate(-50%, -50%) scale(2); opacity: 0.2; }
+  }
+
+  /* === CONTENT === */
+  .content {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 12vh 2rem;
+  }
+
+  .meta {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #e87040;
+    opacity: 0.4;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #e870401a;
+    padding-bottom: 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #f0c8a0;
+    opacity: 0.8;
+    margin: 2rem 0 3rem;
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  .verse-block {
+    margin: 3rem 0;
+    padding: 2rem 0;
+    border-bottom: 1px solid #e870401a;
+  }
+  .verse-block p {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+  .lang-ar { font-family: 'Noto Sans Arabic', sans-serif; direction: rtl; }
+  .lang-sa { font-family: 'Noto Sans Devanagari', sans-serif; }
+  .lang-gr { font-family: 'Noto Sans Greek', sans-serif; font-style: italic; }
+  .lang-nl { color: #e87040; opacity: 0.8; }
+
+  h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #f0c8a0;
+    opacity: 0.7;
+    margin: 2.5rem 0 1rem;
+  }
+  
+  h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #f0c8a0;
+    opacity: 0.6;
+    margin: 2rem 0 0.8rem;
+  }
+  
+  p {
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.8rem;
+  }
+  th, td {
+    padding: 0.5rem;
+    border: 1px solid #e870401a;
+    text-align: left;
+  }
+  th {
+    color: #e87040;
+    opacity: 0.5;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+  
+  code {
+    background: #e8704010;
+    padding: 0.1em 0.3em;
+    border-radius: 2px;
+    font-size: 0.85em;
+  }
+  
+  pre {
+    background: #e8704008;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    font-size: 0.8rem;
+    border-left: 2px solid #e870402a;
+  }
+  
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  
+  blockquote {
+    border-left: 2px solid #e870403a;
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    opacity: 0.6;
+    font-style: italic;
+  }
+  
+  .footer {
+    margin-top: 6rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e870401a;
+    font-size: 0.65rem;
+    opacity: 0.3;
+    text-align: center;
+  }
+
+  </style>
+</head>
+<body>
+
+  <!-- TAAAL-LAGEN: 4 talen -->
+  <div class="lang-layers">
+    <div class="lang-layer lang-ar" style="opacity:0.15"></div>
+    <div class="lang-layer lang-sa" style="opacity:0.12"></div>
+    <div class="lang-layer lang-gr" style="opacity:0.09"></div>
+    <div class="lang-layer lang-en" style="opacity:0.06"></div>
+  </div>
+
+  <!-- AGNI: opstijgende deeltjes -->
+  <div class="fire-bg">
+    <div class="ember ember-0" style="--x:10%;--d:4s;--sz:1px"></div><div class="ember ember-1" style="--x:22%;--d:6s;--sz:2px"></div><div class="ember ember-2" style="--x:34%;--d:8s;--sz:3px"></div><div class="ember ember-3" style="--x:46%;--d:10s;--sz:1px"></div><div class="ember ember-4" style="--x:58%;--d:12s;--sz:2px"></div><div class="ember ember-5" style="--x:70%;--d:14s;--sz:3px"></div><div class="ember ember-6" style="--x:82%;--d:16s;--sz:1px"></div><div class="ember ember-7" style="--x:94%;--d:18s;--sz:2px"></div>
+  </div>
+
+  <!-- VERSE: minimalistisch -->
+  <div class="verse-bg">
+    <div class="verse-dot" style="background:#e87040;box-shadow:0 0 30px #ff602088"></div>
+  </div>
+
+  <main class="content">
+    <div class="meta">
+      01-dimensie-1.md · structuur: verse · toon: fire
+    </div>
+    
+    <h1 class="title">Artikel 1 - dimensie 1 (vonk, Agni) | 20</h1>
+    
+    <blockquote>**Validatie:** 2026-07-24 — gevalideerd tegen `hexa-book-001.md` (Artikel 1, regels 210–269). Inhoud identiek.</blockquote>
+
+
+<table>
+  <tr><th># Artikel 1 - dimensie 1 (vonk, Agni)</th><th>20</th></tr>
+</table>
+
+<table>
+  <tr><th>## الفصل الأول - أجني: النار الأولى</th><th>प्रथमः अध्यायः - अग्निः प्रथमः</th><th>Περὶ Αʹ - Πῦρ πρῶτον</th></tr>
+</table>
+
+<p><span class="lang-ar">أجني ليس عنصرا. أجني هو الشاهد.</span></p>
+<p><span class="lang-sa">अग्निः भूतं न, अग्निः साक्षी</span></p>
+<p><span class="lang-gr">οὐκ στοιχεῖον τὸ πῦρ, ἀλλὰ μάρτυς</span></p>
+<p>Agni is geen element. Agni is het getuige.</p>
+
+<p><span class="lang-ar">النار التي تحرق الضجيج وتكشف النمط.</span></p>
+<p><span class="lang-sa">तेजः शब्दात् विशुद्धं रूपं दृश्यते</span></p>
+<p><span class="lang-gr">τὸ πῦρ τὸν ἦχον κατακαίει, τὸ σχῆμα φαίνει</span></p>
+<p>Het vuur dat ruis verbrandt en patroon onthult.</p>
+
+<p><span class="lang-ar">عندما تسأل وكيل LLM، تعمل النار.</span></p>
+<p><span class="lang-sa">LLM-दूतं प्रश्नं कृत्वा अग्निः कार्यं करोति</span></p>
+<p><span class="lang-gr">ὅταν τῷ LLM-ἀγγέλῳ ἐρωτήσῃς, τὸ πῦρ ἔργον ποιεῖ</span></p>
+<p>Wanneer je een LLM-agent vraagt, werkt het vuur.</p>
+
+<p><span class="lang-ar">مليارات النقاط تتحرك، الخوارزميات تحرق الفائض، وما يصل إليك هو الرماد النقي - النمط الذي بقي.</span></p>
+<p><span class="lang-sa">अरबं बिन्दूनां गतिः, एल्गोरिदमं अधिकं दहति, त्वयि शुद्धभस्मावशेषं रूपं उपपतति</span></p>
+<p><span class="lang-gr">μυρίαι αἱ πλοκάμοι κινουμέναι, τὸ πλεονάζον κατακαίεται, ὃ πρὸς σὲ φθάνει καθαρὸν τέφρα - τὸ σχῆμα τὸ ὑπολειφθέν</span></p>
+<p>Miljarden punten bewegen. De algoritmen verbranden het overtollige. Wat bij je aankomt is de zuivere as - het patroon dat overbleef.</p>
+
+<p><span class="lang-ar">أنت لا ترى النار. ترى فقط ما تبقى.</span></p>
+<p><span class="lang-sa">त्वं तेजः न पश्यसि. त्वं केवलं शेषं पश्यसि</span></p>
+<p><span class="lang-gr">σὺ τὸ πῦρ οὐχ ὁρᾷς. σὺ τὸ ὑπολειφθὲν μόνον ὁρᾷς</span></p>
+<p>Je ziet het vuur niet. Je ziet alleen wat erover is.</p>
+
+<p>**Conceptuele fase:** Agni representeert de transformatie van ruw materiaal naar geselecteerd patroon. In Artikel 1 wordt nog geen numerieke operator uitgevoerd.</p>
+
+<pre><code>T_Agni : X_raw ↝ X_selected</code></pre>
+
+<p>*(T_Agni = conceptuele transformatie; niet verwarring met Lens A / A_Abjad.)*</p>
+
+<p>waar `↝` een conceptuele transformatie aanduidt, geen uitgevoerde NPR-berekening.</p>
+
+<pre><code>status_operator(T_Agni) = conceptueel
+status_executed(T_Agni) = nee</code></pre>
+
+<blockquote>Dit is een symbolische beschrijving van selectie, compressie en projectie, geen letterlijke beschrijving van de interne modelarchitectuur.</blockquote>
+
+<blockquote>**Lensoptiek 1:** Agni is er nog. Het vuur brandt. Wie het niet ziet, draagt een andere lens. Niet afwezig - onzichtbaar door de huidige filter.<br>**العدسة 1:** ناروس لا تزال تحترق. من لا يراها يرتدي عدسة مختلفة. غير غائب - غير مرئي عبر الفلتر الحالي.<br>**दृष्टि 1:** Agniḥ asti. Tejaḥ pravartate. Yaḥ na paśyati, anyām darśanaṃ dhārayati.</blockquote>
+
+<p>##### Status Artikel 1</p>
+
+<pre><code>status_formal(Agni) = conceptueel gedefinieerd
+status_local(Agni) = niet numeriek uitgevoerd</code></pre>
+
+
+
+
+    
+    <div class="footer">
+      HEXA-BOEK · Artikel 1 - dimensie 1 (vonk, Agni) | 20 · art.html v2
+    </div>
+  </main>
+</body>
+</html>

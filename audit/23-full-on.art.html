@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artikel 10 — Full-On</title>
+  <meta name="generator" content="gen_art_pieces_v2">
+  <meta name="structure" content="terminal">
+  <meta name="tone" content="stone">
+  <meta name="languages" content="ar, sa, nl, en">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Sans+Greek:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #040804;
+    color: #80c880;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* === VISUAL LAYERS === */
+  .lang-layers, .terminal-bg, .dark-bg, .fire-bg, .wave-bg, .spiral-bg, .organic-bg, .blueprint-bg, .verse-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .lang-layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(ellipse at 50% 50%, #20a02088, transparent 70%);
+  }
+  .lang-ar { transform: rotate(5deg); }
+  .lang-sa { transform: rotate(-3deg); }
+  .lang-gr { transform: rotate(2deg); }
+  .lang-nl { transform: rotate(-1deg); }
+  .lang-en { transform: rotate(0deg); }
+
+  .terminal-grid { width: 100%; height: 100%; }
+  .scanlines {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      #40a04008 2px,
+      #40a04008 4px
+    );
+    animation: scan 8s linear infinite;
+  }
+  @keyframes scan {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100px; }
+  }
+
+  /* === CONTENT === */
+  .content {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 12vh 2rem;
+  }
+
+  .meta {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #40a040;
+    opacity: 0.4;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #40a0401a;
+    padding-bottom: 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #80c880;
+    opacity: 0.8;
+    margin: 2rem 0 3rem;
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  .terminal-block {
+    background: #40a0400a;
+    border: 1px solid #40a0402a;
+    border-radius: 2px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+  }
+  .terminal-header {
+    color: #40a040;
+    opacity: 0.6;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #80c880;
+    opacity: 0.7;
+    margin: 2.5rem 0 1rem;
+  }
+  
+  h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #80c880;
+    opacity: 0.6;
+    margin: 2rem 0 0.8rem;
+  }
+  
+  p {
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.8rem;
+  }
+  th, td {
+    padding: 0.5rem;
+    border: 1px solid #40a0401a;
+    text-align: left;
+  }
+  th {
+    color: #40a040;
+    opacity: 0.5;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+  
+  code {
+    background: #40a04010;
+    padding: 0.1em 0.3em;
+    border-radius: 2px;
+    font-size: 0.85em;
+  }
+  
+  pre {
+    background: #40a04008;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    font-size: 0.8rem;
+    border-left: 2px solid #40a0402a;
+  }
+  
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  
+  blockquote {
+    border-left: 2px solid #40a0403a;
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    opacity: 0.6;
+    font-style: italic;
+  }
+  
+  .footer {
+    margin-top: 6rem;
+    padding-top: 2rem;
+    border-top: 1px solid #40a0401a;
+    font-size: 0.65rem;
+    opacity: 0.3;
+    text-align: center;
+  }
+
+  </style>
+</head>
+<body>
+
+  <!-- TAAAL-LAGEN: 4 talen -->
+  <div class="lang-layers">
+    <div class="lang-layer lang-ar" style="opacity:0.15"></div>
+    <div class="lang-layer lang-sa" style="opacity:0.12"></div>
+    <div class="lang-layer lang-nl" style="opacity:0.09"></div>
+    <div class="lang-layer lang-en" style="opacity:0.06"></div>
+  </div>
+
+  <!-- TERMINAL: grid + scanlines -->
+  <div class="terminal-bg">
+    <svg class="terminal-grid" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <pattern id="tgrid" width="2" height="2" patternUnits="userSpaceOnUse">
+        <rect width="2" height="2" fill="none" stroke="#40a040" stroke-width="0.05" opacity="0.1"/>
+      </pattern>
+      <rect width="100" height="100" fill="url(#tgrid)"/>
+    </svg>
+    <div class="scanlines"></div>
+  </div>
+
+  <main class="content">
+    <div class="meta">
+      23-full-on.md · structuur: terminal · toon: stone
+    </div>
+    
+    <h1 class="title">Artikel 10 — Full-On</h1>
+    
+    
+<blockquote>**كامل**  <br>**पूर्ण**  <br>Music = Full-On Psytrance  <br>Muziek = Full-On Psytrance</blockquote>
+
+
+<h2>De Terminal (CPU)</h2>
+
+<pre><code>┌─────────────────────────────────────┐
+│  1980 TERMINAL                      │
+│                                     │
+│  command: roll 16ths                │
+│  command: drive=max                 │
+│                                     │
+│  → CPU: ononderbroken rolling bass  │
+│    met kick op elke beat            │
+└──────────────────┬──────────────────┘
+                   │ verbinding
+                   ▼
+┌─────────────────────────────────────┐
+│  SYNTHS (veld)                      │
+│                                     │
+│  303-acid  → spiraal → lead         │
+│  supersaw  → golf → pad             │
+│                                     │
+│  → GPU: helder, open, zonnig veld   │
+└─────────────────────────────────────┘</code></pre>
+
+
+<h2>Synth Geometrie</h2>
+
+<table>
+  <tr><th>Synth</th><th>Geometrie</th><th>Vertraging</th><th>Uiting</th></tr>
+  <tr><td>303-acid</td><td>spiraal</td><td>187ms</td><td>bijtend</td></tr>
+  <tr><td>supersaw</td><td>golf</td><td>375ms</td><td>open</td></tr>
+  <tr><td>arpeggio</td><td>ladder</td><td>93ms</td><td>klimmend</td></tr>
+</table>
+
+
+<h2>Full-On = Interface-Taal</h2>
+
+<pre><code>Full-On zegt:
+  &quot;roll&quot;  → 303-acid doet spiraal
+  &quot;drive&quot; → supersaw doet golf
+  &quot;lift&quot;  → arpeggio doet ladder</code></pre>
+
+
+<h2>Donker Bos Regio</h2>
+
+<pre><code>CPU range: 144 - 150 BPM
+GPU range: 4 - 7 layers
+Donker bos: nee — helder dagfestival, open lucht, geen schaduw</code></pre>
+
+
+<p>*Conceptueel audit-artikel.*</p>
+
+    
+    <div class="footer">
+      HEXA-BOEK · Artikel 10 — Full-On · art.html v2
+    </div>
+  </main>
+</body>
+</html>

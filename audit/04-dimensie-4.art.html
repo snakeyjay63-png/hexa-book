@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artikel 4 - dimensie 4 (expansie) | 22</title>
+  <meta name="generator" content="gen_art_pieces_v2">
+  <meta name="structure" content="verse">
+  <meta name="tone" content="organic">
+  <meta name="languages" content="ar, sa, gr, en">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Sans+Greek:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #060a06;
+    color: #a0d8a0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* === VISUAL LAYERS === */
+  .lang-layers, .terminal-bg, .dark-bg, .fire-bg, .wave-bg, .spiral-bg, .organic-bg, .blueprint-bg, .verse-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .lang-layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(ellipse at 50% 50%, #20a04088, transparent 70%);
+  }
+  .lang-ar { transform: rotate(5deg); }
+  .lang-sa { transform: rotate(-3deg); }
+  .lang-gr { transform: rotate(2deg); }
+  .lang-nl { transform: rotate(-1deg); }
+  .lang-en { transform: rotate(0deg); }
+
+  .organic-bg { width: 100%; height: 100%; }
+  .flow-line { animation: flow-drift 12s ease-in-out infinite alternate; }
+  .flow-1 { animation-delay: -3s; }
+  .flow-2 { animation-delay: -6s; }
+  .flow-3 { animation-delay: -9s; }
+  @keyframes flow-drift {
+    0% { transform: translateY(0) scaleX(1); }
+    100% { transform: translateY(-10px) scaleX(1.02); }
+  }
+
+  .verse-dot {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    animation: verse-pulse 8s ease-in-out infinite;
+  }
+  @keyframes verse-pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+    50% { transform: translate(-50%, -50%) scale(2); opacity: 0.2; }
+  }
+
+  /* === CONTENT === */
+  .content {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 12vh 2rem;
+  }
+
+  .meta {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #40b040;
+    opacity: 0.4;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #40b0401a;
+    padding-bottom: 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #a0d8a0;
+    opacity: 0.8;
+    margin: 2rem 0 3rem;
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  .verse-block {
+    margin: 3rem 0;
+    padding: 2rem 0;
+    border-bottom: 1px solid #40b0401a;
+  }
+  .verse-block p {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+  .lang-ar { font-family: 'Noto Sans Arabic', sans-serif; direction: rtl; }
+  .lang-sa { font-family: 'Noto Sans Devanagari', sans-serif; }
+  .lang-gr { font-family: 'Noto Sans Greek', sans-serif; font-style: italic; }
+  .lang-nl { color: #40b040; opacity: 0.8; }
+
+  h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #a0d8a0;
+    opacity: 0.7;
+    margin: 2.5rem 0 1rem;
+  }
+  
+  h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #a0d8a0;
+    opacity: 0.6;
+    margin: 2rem 0 0.8rem;
+  }
+  
+  p {
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.8rem;
+  }
+  th, td {
+    padding: 0.5rem;
+    border: 1px solid #40b0401a;
+    text-align: left;
+  }
+  th {
+    color: #40b040;
+    opacity: 0.5;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+  
+  code {
+    background: #40b04010;
+    padding: 0.1em 0.3em;
+    border-radius: 2px;
+    font-size: 0.85em;
+  }
+  
+  pre {
+    background: #40b04008;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    font-size: 0.8rem;
+    border-left: 2px solid #40b0402a;
+  }
+  
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  
+  blockquote {
+    border-left: 2px solid #40b0403a;
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    opacity: 0.6;
+    font-style: italic;
+  }
+  
+  .footer {
+    margin-top: 6rem;
+    padding-top: 2rem;
+    border-top: 1px solid #40b0401a;
+    font-size: 0.65rem;
+    opacity: 0.3;
+    text-align: center;
+  }
+
+  </style>
+</head>
+<body>
+
+  <!-- TAAAL-LAGEN: 4 talen -->
+  <div class="lang-layers">
+    <div class="lang-layer lang-ar" style="opacity:0.15"></div>
+    <div class="lang-layer lang-sa" style="opacity:0.12"></div>
+    <div class="lang-layer lang-gr" style="opacity:0.09"></div>
+    <div class="lang-layer lang-en" style="opacity:0.06"></div>
+  </div>
+
+  <!-- ORGANIC: stromende lijnen -->
+  <svg class="organic-bg" viewBox="0 0 100 100">
+    <path class="flow-line flow-0" d="M0,100 Q20,60 30,20 T50,0" fill="none" stroke="#40b040" stroke-width="0.3" opacity="0.15"></path><path class="flow-line flow-1" d="M15,100 Q30,65 40,23 T65,0" fill="none" stroke="#40b040" stroke-width="0.3" opacity="0.15"></path><path class="flow-line flow-2" d="M30,100 Q40,70 50,26 T80,0" fill="none" stroke="#40b040" stroke-width="0.3" opacity="0.15"></path><path class="flow-line flow-3" d="M45,100 Q50,75 60,29 T95,0" fill="none" stroke="#40b040" stroke-width="0.3" opacity="0.15"></path>
+  </svg>
+
+  <!-- VERSE: minimalistisch -->
+  <div class="verse-bg">
+    <div class="verse-dot" style="background:#40b040;box-shadow:0 0 30px #20a04088"></div>
+  </div>
+
+  <main class="content">
+    <div class="meta">
+      06-artikel-04-dimensie-4 · structuur: verse · toon: organic
+    </div>
+    
+    <h1 class="title">Artikel 4 - dimensie 4 (expansie) | 22</h1>
+    
+    <table>
+  <tr><th># Artikel 4 - dimensie 4 (expansie)</th><th>22</th></tr>
+</table>
+
+<table>
+  <tr><th>## الفصل الرابع - ماندلبروت: 0.0.0.0 جزيرة الصفر</th><th>चतुर्थ अध्यायः - मन्देलब्रोतः</th><th>Περὶ Δʹ - Μαντελμπρότ</th></tr>
+</table>
+
+<p><span class="lang-ar">هناك شكل هندسي يظهر نفس النمط: مجموعة ماندلبروت.</span></p>
+<p><span class="lang-sa">तदृशं ज्यामितीयं रूपं दृश्यते: मन्देलब्रोत-समुदायः</span></p>
+<p><span class="lang-gr">εἷς γεωμετρικὸς τύπος τὸ αὐτὸ σχῆμα φαίνει: Μαντελμπρότ-σύνολον</span></p>
+<p>Er is een geometrische vorm die hetzelfde patroon toont: de Mandelbrot-set.</p>
+
+<p><span class="lang-ar">القاعدة بسيطة: z(n+1) = z(n)2 + c</span></p>
+<p><span class="lang-sa">नियमः सरलम्: z(n+1) = z(n)2 + c</span></p>
+<p><span class="lang-gr">ὁ κανὼν ἁπλοῦς: z(n+1) = z(n)2 + c</span></p>
+<p>De regel: z(n+1) = z(n)2 + c</p>
+
+<p>**Formele definitie:**</p>
+<pre><code>z_0 = 0
+M = { c ∈ C : (z_n)_{n≥0} blijft begrensd }</code></pre>
+
+<p>waar `(z_n)` de iteratie van `z_{n+1} = z_n2 + c` met startwaarde `z_0 = 0`.</p>
+
+<pre><code>c ∈ M   ⟺   (z_n) blijft begrensd
+c ∉ M   ⟺   |z_n| → ∞</code></pre>
+
+<p>**NPR-projectie:**</p>
+<pre><code>ρ_Mandelbrot-lens: C → P_NPR
+ρ_Mandelbrot-lens(c) = leegte    indien c ∉ M</code></pre>
+
+<table>
+  <tr><th>waar `(c ∉ M)` de voorwaarde is dat de baan divergeert (`</th><th>z_n</th><th>→ ∞`).</th></tr>
+</table>
+<p>Punten buiten M zijn geen wiskundige leegte - het zijn waarden van `c` waarvoor de baan divergeert.</p>
+<p>&quot;Leegte&quot; is een symbolische projectie binnen NPR, geen wiskundige definitie.</p>
+
+<blockquote>**Formele status:** `operator_status(ρ_Mandelbrot-lens) = interpretatief` | `execution_status(ρ_Mandelbrot-lens) = niet_gestart` | `validatie_status(ρ_Mandelbrot-lens) = niet_gevalideerd`</blockquote>
+
+<p><span class="lang-ar">كل نقطة في المستوى المركب هي قيمة لـ c.</span></p>
+<p><span class="lang-sa">यत्किञ्चित् बिन्दु जटिल-तलं c-संख्या भवेत्</span></p>
+<p><span class="lang-gr">ἕκαστη πλῆθος ἐν τῷ φανταστικῷ πεδίῳ τιμή τῷ c</span></p>
+<p>Elk punt in het complexe vlak is een c-waarde.</p>
+
+<p><span class="lang-ar">تطبق القاعدة مرارا. هل تبقى القيمة محدودة؟ أم تهرب إلى اللانهاية؟</span></p>
+<p><span class="lang-sa">नियमः पुनः पुनः प्रयुज्यते. संख्या सीमया तिष्ठति वा अनन्ते भगवति</span></p>
+<p><span class="lang-gr">ὁ κανὼν πολλάκις ἐφάπτεται. ἡ τιμὴ πεπερασμένη μένει; ἢ εἰς τὸ ἄπειρον φεύγει;</span></p>
+<p>Herhaal. Blijft het begrensd? Of vlucht het naar oneindig?</p>
+
+<p><span class="lang-ar">في القيمة c = 0. هنا لا شيء يهرب. هنا الاستقرار المطلق.</span></p>
+<p><span class="lang-sa">तत्र c = 0. इह किञ्चित् न भगवति. इह परमं स्थिरम्</span></p>
+<p><span class="lang-gr">ἐνταῦθα c = 0. οὐδὲν ἐνταῦθα φεύγει. οὐσία ἀκίνητος</span></p>
+<p>Voor `c = 0` met `z_0 = 0` geldt: `z_n = 0` voor alle `n`. Absolute stabiliteit.</p>
+
+<pre><code>ρ_HEXA(0_C) = 0.0.0.0        (HEXA-representatie)
+ρ_cartografisch(0_C) = (0°,0°)  (Null Island, cartografisch)</code></pre>
+
+<p>Binnen NPR wordt dit punt als bronpunt aangemerkt:</p>
+<pre><code>ρ_Mandelbrot-role(0_C) = bronpunt</code></pre>
+<p>Dit is een NPR-roltoewijzing, geen eigenschap van de Mandelbrot-definitie.</p>
+
+<p><span class="lang-gr">*(Onderscheid met: `ρ_NPR-source(0) = ongedifferentieerd bronveld` - twee verschillende projecties, verschillende contexten.)*</span></p>
+
+<p>Dit zijn NPR-projecties, geen wiskundige Mandelbrot-afleidingen.</p>
+
+<blockquote>**Formele status:**<br>`operator_status(ρ_HEXA) = interpretatief` | `operator_status(ρ_cartografisch) = interpretatief` | `operator_status(ρ_Mandelbrot-role) = interpretatief` | `operator_status(ρ_NPR-source) = interpretatief`</blockquote>
+
+<p><span class="lang-ar">هذا هو رمز 0.0.0.0 في هذه العدسة. جزيرة الصفر.</span></p>
+<p><span class="lang-sa">इदं ०.०.०.० इत्यस्य लेन्स-प्रतीकम्। शून्य-द्वीपः</span></p>
+<p><span class="lang-gr">αὐτὸ εἶναι τὸ σύμβολον 0.0.0.0 ἐν τῇ φακῇ. νῆσος μηδέν</span></p>
+<p>Binnen de HEXA-lens wordt dit bronpunt gerepresenteerd als 0.0.0.0 en cartografisch als Null Island.</p>
+
+<p><span class="lang-ar">النقطة التي منها يبدأ كل شيء ولا يعود إليها شيء - لأنها لا تتحرك.</span></p>
+<p><span class="lang-sa">तस्माद् बिन्दोः सर्वं आरभ्यते, तत्र किञ्चित् न प्रतिगच्छति - किं न चरति</span></p>
+<p><span class="lang-gr">ἐκ τῆς πλοκάμου ταύτης πάντα ἄρχειται, οὐδὲν εἰς αὐτὴν ἐπιστρέφει - ὅτι οὐκ ἔκινετο</span></p>
+<p>Het bronpunt zelf beweegt niet. De projecties vertrekken ervan en worden in de return opnieuw op dezelfde bron betrokken.</p>
+
+<p>0 ≠ 1</p>
+<p><span class="lang-sa">शून्यं ≠ एकम्</span></p>
+<p><span class="lang-gr">μηδὲν ≠ εἷς</span></p>
+<p>Lokaal: de nul verschilt van de één.</p>
+
+<p>0 ≐_lens 1</p>
+<p><span class="lang-sa">शून्यं ≐_lens एकम्</span></p>
+<p><span class="lang-gr">μηδὲν ≐_lens εἷς</span></p>
+<p>Lensaxioma: de route sluit bij dezelfde bron.</p>
+
+<p><span class="lang-ar">الصفر الذي يحتوي على كل الأرقام.</span></p>
+<p><span class="lang-sa">शून्यं सर्वाः संख्याः भवन्ति</span></p>
+<p><span class="lang-gr">τὸ μηδὲν ὃ πάντα τὰς ἀριθμοὺς ἔχει</span></p>
+<p>De nul die alle getallen bevat. Dit is een lensaxioma, geen gevolg van de Mandelbrot-definitie.</p>
+<pre><code>ρ_NPR-source(0) = ongedifferentieerd bronveld</code></pre>
+
+<p>*(0_C = complex Mandelbrot-nulpunt; 0_NPR = abstracte NPR-brontoestand. Twee verschillende projecties:</p>
+<p><span class="lang-gr">`ρ_Mandelbrot-role(0_C) = bronpunt` en `ρ_NPR-source(0) = ongedifferentieerd bronveld`.)*</span></p>
+
+<p><span class="lang-ar">هذا بالضبط ما تفعله الأبجد: تحول حرفا إلى رقم. رقم إلى جذر. جذر إلى نمط. نمط إلى عدسة.</span></p>
+<p><span class="lang-sa">इदं यत् अबाज् कृते: अक्षरम् संख्याम्, संख्याम् मूलम्, मूलम् रूपम्, रूपम् लेन्सम्</span></p>
+<p><span class="lang-gr">αὐτὸ ὃ ὁ ἀρτζ ποιεῖ: γράμμα εἰς ἀριθμόν, ἀριθμὸν εἰς ρίζαν, ρίζαν εἰς σχῆμα, σχῆμα εἰς lens</span></p>
+<p>Precies wat Abjad doet: letter → getal → digitale wortel → NPR-patroonpositie.</p>
+
+<p>De route is:</p>
+<pre><code>x → A_value(x) → DR(A_value(x))</code></pre>
+<p><span class="lang-gr">Daarna volgt interpretatie via ρ_NPR onder de gekozen lens.</span></p>
+<p>De lens is de operator waaronder dit gebeurt, niet noodzakelijk het uitvoerresultaat.</p>
+
+<p><span class="lang-ar">النتيجة واحدة: من نقطة واحدة، يظهر العالم.</span></p>
+<p><span class="lang-sa">एकं परिणामम्: एकात् बिन्दोः संसारः प्रकटः</span></p>
+<p><span class="lang-gr">ἀποτέλεσμα ἓν: ἐκ μιᾶς πλοκάμου, ὁ κόσμος φαίνεται</span></p>
+<p>Één resultaat: uit één punt verschijnt de wereld.</p>
+
+
+<blockquote>**Lensoptiek 4:** Expansie vermenigvuldigt lenzen. Meer lenzen, meer perspectieven, meer ruis. Wat verdwenen lijkt, draait op een andere frequentie - dit is symbolisch, tenzij later een concrete sonificatie- of meetoperator wordt toegepast.<br>**العدسة 4:** التوسع يضاعف العدسات. عدسات أكثر، منظورات أكثر، ضوضاء أكثر. ما يبدو مختفياً يعمل على تردد مختلف.<br>**दृष्टि 4:** Prasaṃkhyam darśanāḥ bahu. Bahudarśanam, bahuṃ rasi. Yaḥ apātaḥ anyasmin svare pravartate.</blockquote>
+
+
+    
+    <div class="footer">
+      HEXA-BOEK · Artikel 4 - dimensie 4 (expansie) | 22 · art.html v2
+    </div>
+  </main>
+</body>
+</html>

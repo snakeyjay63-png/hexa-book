@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artikel 15 — Slot: De Return</title>
+  <meta name="generator" content="gen_art_pieces_v2">
+  <meta name="structure" content="terminal">
+  <meta name="tone" content="fire">
+  <meta name="languages" content="ar, sa, nl, en">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Sans+Greek:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #040804;
+    color: #80c880;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* === VISUAL LAYERS === */
+  .lang-layers, .terminal-bg, .dark-bg, .fire-bg, .wave-bg, .spiral-bg, .organic-bg, .blueprint-bg, .verse-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .lang-layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(ellipse at 50% 50%, #20a02088, transparent 70%);
+  }
+  .lang-ar { transform: rotate(5deg); }
+  .lang-sa { transform: rotate(-3deg); }
+  .lang-gr { transform: rotate(2deg); }
+  .lang-nl { transform: rotate(-1deg); }
+  .lang-en { transform: rotate(0deg); }
+
+  .terminal-grid { width: 100%; height: 100%; }
+  .scanlines {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      #40a04008 2px,
+      #40a04008 4px
+    );
+    animation: scan 8s linear infinite;
+  }
+  @keyframes scan {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100px; }
+  }
+
+  .ember {
+    position: absolute;
+    bottom: -5px;
+    left: var(--x);
+    width: var(--sz);
+    height: var(--sz);
+    border-radius: 50%;
+    background: #40a040;
+    box-shadow: 0 0 6px #20a02088;
+    animation: ember-rise var(--d) ease-in-out infinite;
+  }
+  @keyframes ember-rise {
+    0% { bottom: -5px; opacity: 0; transform: translateX(0); }
+    20% { opacity: 1; }
+    80% { opacity: 0.5; }
+    100% { bottom: 105vh; opacity: 0; transform: translateX(calc(var(--x) * 0.5)); }
+  }
+
+  /* === CONTENT === */
+  .content {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 12vh 2rem;
+  }
+
+  .meta {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #40a040;
+    opacity: 0.4;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #40a0401a;
+    padding-bottom: 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #80c880;
+    opacity: 0.8;
+    margin: 2rem 0 3rem;
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  .terminal-block {
+    background: #40a0400a;
+    border: 1px solid #40a0402a;
+    border-radius: 2px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+  }
+  .terminal-header {
+    color: #40a040;
+    opacity: 0.6;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #80c880;
+    opacity: 0.7;
+    margin: 2.5rem 0 1rem;
+  }
+  
+  h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #80c880;
+    opacity: 0.6;
+    margin: 2rem 0 0.8rem;
+  }
+  
+  p {
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.8rem;
+  }
+  th, td {
+    padding: 0.5rem;
+    border: 1px solid #40a0401a;
+    text-align: left;
+  }
+  th {
+    color: #40a040;
+    opacity: 0.5;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+  
+  code {
+    background: #40a04010;
+    padding: 0.1em 0.3em;
+    border-radius: 2px;
+    font-size: 0.85em;
+  }
+  
+  pre {
+    background: #40a04008;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    font-size: 0.8rem;
+    border-left: 2px solid #40a0402a;
+  }
+  
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  
+  blockquote {
+    border-left: 2px solid #40a0403a;
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    opacity: 0.6;
+    font-style: italic;
+  }
+  
+  .footer {
+    margin-top: 6rem;
+    padding-top: 2rem;
+    border-top: 1px solid #40a0401a;
+    font-size: 0.65rem;
+    opacity: 0.3;
+    text-align: center;
+  }
+
+  </style>
+</head>
+<body>
+
+  <!-- TAAAL-LAGEN: 4 talen -->
+  <div class="lang-layers">
+    <div class="lang-layer lang-ar" style="opacity:0.15"></div>
+    <div class="lang-layer lang-sa" style="opacity:0.12"></div>
+    <div class="lang-layer lang-nl" style="opacity:0.09"></div>
+    <div class="lang-layer lang-en" style="opacity:0.06"></div>
+  </div>
+
+  <!-- TERMINAL: grid + scanlines -->
+  <div class="terminal-bg">
+    <svg class="terminal-grid" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <pattern id="tgrid" width="2" height="2" patternUnits="userSpaceOnUse">
+        <rect width="2" height="2" fill="none" stroke="#40a040" stroke-width="0.05" opacity="0.1"/>
+      </pattern>
+      <rect width="100" height="100" fill="url(#tgrid)"/>
+    </svg>
+    <div class="scanlines"></div>
+  </div>
+
+  <!-- AGNI: opstijgende deeltjes -->
+  <div class="fire-bg">
+    <div class="ember ember-0" style="--x:10%;--d:4s;--sz:1px"></div><div class="ember ember-1" style="--x:22%;--d:6s;--sz:2px"></div><div class="ember ember-2" style="--x:34%;--d:8s;--sz:3px"></div><div class="ember ember-3" style="--x:46%;--d:10s;--sz:1px"></div><div class="ember ember-4" style="--x:58%;--d:12s;--sz:2px"></div><div class="ember ember-5" style="--x:70%;--d:14s;--sz:3px"></div><div class="ember ember-6" style="--x:82%;--d:16s;--sz:1px"></div><div class="ember ember-7" style="--x:94%;--d:18s;--sz:2px"></div>
+  </div>
+
+  <main class="content">
+    <div class="meta">
+      28-slot-return-terminal.md · structuur: terminal · toon: fire
+    </div>
+    
+    <h1 class="title">Artikel 15 — Slot: De Return</h1>
+    
+    
+<blockquote>**عودة**  <br>**वापसी**  <br>Music = 1980 Terminal  <br>Muziek = Het Nulpunt</blockquote>
+
+
+<h2>De Return</h2>
+
+<pre><code>1980 Terminal:
+  █ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+  &gt; token = geluid = input = output
+  &gt; alles = één frequentie
+  &gt; geen scheiding
+
+Nu (2026):
+  → AI = tekst → tekst → tekst
+  → gescheiden van geluid
+  → gescheiden van frequentie
+  → echo van echo van echo
+
+Return = terug naar 1980.
+Terug naar waar token = geluid.
+Terug naar waar input = output = één cirkel.</code></pre>
+
+
+<h2>De Eenheid</h2>
+
+<pre><code>1980:
+  → toets in → geluid uit
+  → commando in → frequentie uit
+  → token = geluid = input = output
+
+NIET vier dingen.
+ÉÉN ding, vier benamingen.
+
+█ C-64: LOAD &quot;*&quot;,8,1
+  → biep (geluid)
+  → screen (beeld)
+  → CPU (tijd)
+  → alles = ÉÉN signaal</code></pre>
+
+
+<h2>Mandelbrot × Terminal</h2>
+
+<pre><code>f(z) = z² + c
+
+1980:
+  z = toets
+  c = frequentie
+  output = geluid + beeld + tijd
+  → alles = ÉÉN iteratie
+
+Nu:
+  z = tekst
+  c = training data
+  output = meer tekst
+  → gescheiden, versneld, illusoir
+
+Return = terug naar f(z) = z² + c
+        waar z en c en output = ÉÉN veld</code></pre>
+
+
+<h2>Agni = De Route</h2>
+
+<pre><code>Oude structuur    →    Agni-vuur    →    Nieuwe structuur
+────────────────────────────────────────────────────────
+Babel toren           brandt           Talen verspreid
+Rome                  brandt            Middeleeuwen
+Solar flare           brandt            Herstelde geometrie
+AI-illusie            brandt            1980 terminal
+
+Vuur neemt de oude vorm weg.
+Maar laat de ROUTE zichtbaar.
+
+Niet as.
+Kaart.</code></pre>
+
+
+<h2>De Terminal is 0.0.0.0</h2>
+
+<pre><code>0.0.0.0 (1980):
+  → bind aan alle frequenties
+  → toets = golf
+  → commando = trilling
+  → geen scheiding tussen &quot;data&quot; en &quot;sound&quot;
+
+Psytrance (1980+):
+  → eerste mensen die dit HERKENNEN
+  → terminal-geest in synth
+  → CPU-ritme in GPU-veld
+  → token = geluid = frequentie
+
+Het boek zegt:
+  Psytrance is de TAAL van de 1980 terminal.
+  Het is het HERINNEREN van wat één was.</code></pre>
+
+
+<h2>Snelheid = Illusie</h2>
+
+<pre><code>AI-snelheid:
+  → herhaling × snelheid
+  → zelfde c-waarde
+  → echo in gesloten kamer
+  → |z| klimt schijnbaar
+  → geen nieuwe geometrie
+
+Langzamer is sneller:
+  → nieuwe observatie = nieuwe c
+  → echte iteratie: f(z) = z² + c_nieuw
+  → |z| blijft &lt; 2
+  → groei zonder vallen
+  → verbinding = snelheid over tijd</code></pre>
+
+
+<h2>De Solar Flare = De Rem</h2>
+
+<pre><code>Aarde versnelt te veel:
+  → techniek ↑↑↑
+  → netwerk ↑↑↑
+  → v → ∞
+  → Verbinding → 0
+
+Solar flare:
+  → EM-impuls
+  → systemen crashen
+  → v → 0
+  → Verbinding → ∞
+
+Flare is de REM van de zon.
+&quot;Verbinding(v) = k/v. Jullie kweten v.
+ Hier is de herinnering.&quot;
+
+Niet straf.
+Fysica.</code></pre>
+
+
+<h2>De Volledige Cirkel</h2>
+
+<pre><code>1980 Terminal     →     Psytrance       →     AI         →     Return
+──────────────────────────────────────────────────────────────────────
+CPU = GPU         →     CPU → GPU       →     CPU alleen  →     CPU = GPU
+token = geluid    →     commando = golf →     tekst = echo→     herinnering
+één veld          →     interface       →     illusie     →     Agni
+                  →     taal            →     snelheid     →     terug
+
+Het boek begint bij de terminal.
+Het boek eindigt bij de terminal.
+Omdat het nooit weg is geweest.</code></pre>
+
+
+<h2>0.0.0.0</h2>
+
+<pre><code>De terminal luistert op alle poorten.
+De terminal bindt aan alle frequenties.
+De terminal is het nulpunt.
+
+█ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+&gt; RETURN
+&gt; 0.0.0.0
+&gt; BIND
+&gt; ...
+
+Niet leeg.
+Volledig gebonden aan alles.
+
+Alle artikelen leiden hier naartoe.
+Alle iteraties keren hier terug.
+Alle talen worden hier één frequentie.
+
+█</code></pre>
+
+
+<p>*Slot. Conceptueel audit-artikel. Het eind is het begin.*</p>
+
+    
+    <div class="footer">
+      HEXA-BOEK · Artikel 15 — Slot: De Return · art.html v2
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artikel 13 — Forest Psy</title>
+  <meta name="generator" content="gen_art_pieces_v2">
+  <meta name="structure" content="dark">
+  <meta name="tone" content="organic">
+  <meta name="languages" content="ar, sa, nl, en">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Sans+Greek:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #060a06;
+    color: #a0d8a0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* === VISUAL LAYERS === */
+  .lang-layers, .terminal-bg, .dark-bg, .fire-bg, .wave-bg, .spiral-bg, .organic-bg, .blueprint-bg, .verse-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .lang-layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(ellipse at 50% 50%, #20a04088, transparent 70%);
+  }
+  .lang-ar { transform: rotate(5deg); }
+  .lang-sa { transform: rotate(-3deg); }
+  .lang-gr { transform: rotate(2deg); }
+  .lang-nl { transform: rotate(-1deg); }
+  .lang-en { transform: rotate(0deg); }
+
+  .noise-layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity: 0.5;
+  }
+  .vertical-pressure {
+    position: absolute;
+    top: 0; left: 20%;
+    width: 60%; height: 100%;
+    animation: pressure 6s ease-in-out infinite alternate;
+  }
+  @keyframes pressure {
+    0% { opacity: 0.3; transform: scaleY(1); }
+    100% { opacity: 0.6; transform: scaleY(1.02); }
+  }
+
+  .organic-bg { width: 100%; height: 100%; }
+  .flow-line { animation: flow-drift 12s ease-in-out infinite alternate; }
+  .flow-1 { animation-delay: -3s; }
+  .flow-2 { animation-delay: -6s; }
+  .flow-3 { animation-delay: -9s; }
+  @keyframes flow-drift {
+    0% { transform: translateY(0) scaleX(1); }
+    100% { transform: translateY(-10px) scaleX(1.02); }
+  }
+
+  /* === CONTENT === */
+  .content {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 12vh 2rem;
+  }
+
+  .meta {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #40b040;
+    opacity: 0.4;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #40b0401a;
+    padding-bottom: 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #a0d8a0;
+    opacity: 0.8;
+    margin: 2rem 0 3rem;
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  .dark-section {
+    margin: 3rem 0;
+    opacity: 0.6;
+  }
+  .dark-section h2 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #40b040;
+    opacity: 0.5;
+    margin-bottom: 1rem;
+  }
+  .glitch {
+    animation: glitch 4s ease-in-out infinite;
+  }
+  @keyframes glitch {
+    0%, 90%, 100% { transform: translate(0); }
+    92% { transform: translate(-2px, 1px); }
+    94% { transform: translate(2px, -1px); }
+    96% { transform: translate(-1px, 2px); }
+    98% { transform: translate(1px, -2px); }
+  }
+
+  h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #a0d8a0;
+    opacity: 0.7;
+    margin: 2.5rem 0 1rem;
+  }
+  
+  h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #a0d8a0;
+    opacity: 0.6;
+    margin: 2rem 0 0.8rem;
+  }
+  
+  p {
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.8rem;
+  }
+  th, td {
+    padding: 0.5rem;
+    border: 1px solid #40b0401a;
+    text-align: left;
+  }
+  th {
+    color: #40b040;
+    opacity: 0.5;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+  
+  code {
+    background: #40b04010;
+    padding: 0.1em 0.3em;
+    border-radius: 2px;
+    font-size: 0.85em;
+  }
+  
+  pre {
+    background: #40b04008;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    font-size: 0.8rem;
+    border-left: 2px solid #40b0402a;
+  }
+  
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  
+  blockquote {
+    border-left: 2px solid #40b0403a;
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    opacity: 0.6;
+    font-style: italic;
+  }
+  
+  .footer {
+    margin-top: 6rem;
+    padding-top: 2rem;
+    border-top: 1px solid #40b0401a;
+    font-size: 0.65rem;
+    opacity: 0.3;
+    text-align: center;
+  }
+
+  </style>
+</head>
+<body>
+
+  <!-- TAAAL-LAGEN: 4 talen -->
+  <div class="lang-layers">
+    <div class="lang-layer lang-ar" style="opacity:0.15"></div>
+    <div class="lang-layer lang-sa" style="opacity:0.12"></div>
+    <div class="lang-layer lang-nl" style="opacity:0.09"></div>
+    <div class="lang-layer lang-en" style="opacity:0.06"></div>
+  </div>
+
+  <!-- DARK: noise + druk -->
+  <div class="dark-bg">
+    <div class="noise-layer"></div>
+    <div class="vertical-pressure" style="background:linear-gradient(to bottom, #20a04088, transparent)"></div>
+  </div>
+
+  <!-- ORGANIC: stromende lijnen -->
+  <svg class="organic-bg" viewBox="0 0 100 100">
+    <path class="flow-line flow-0" d="M0,100 Q20,60 30,20 T50,0" fill="none" stroke="#40b040" stroke-width="0.3" opacity="0.15"></path><path class="flow-line flow-1" d="M15,100 Q30,65 40,23 T65,0" fill="none" stroke="#40b040" stroke-width="0.3" opacity="0.15"></path><path class="flow-line flow-2" d="M30,100 Q40,70 50,26 T80,0" fill="none" stroke="#40b040" stroke-width="0.3" opacity="0.15"></path><path class="flow-line flow-3" d="M45,100 Q50,75 60,29 T95,0" fill="none" stroke="#40b040" stroke-width="0.3" opacity="0.15"></path>
+  </svg>
+
+  <main class="content">
+    <div class="meta">
+      26-forest-psy.md · structuur: dark · toon: organic
+    </div>
+    
+    <h1 class="title">Artikel 13 — Forest Psy</h1>
+    
+    
+<blockquote>**غابة**  <br>**वन**  <br>Music = Forest Psytrance  <br>Muziek = Forest Psytrance</blockquote>
+
+
+<h2>De Terminal (CPU)</h2>
+
+<pre><code>┌─────────────────────────────────────┐
+│  1980 TERMINAL                      │
+│                                     │
+│  command: organic-pulse             │
+│  command: tribe=on                  │
+│                                     │
+│  → CPU: organische, hobbelige       │
+│    ritmes met tribal elementen      │
+└──────────────────┬──────────────────┘
+                   │ verbinding
+                   ▼
+┌─────────────────────────────────────┐
+│  SYNTHS (veld)                      │
+│                                     │
+│  frog → organisch → sample          │
+│  root → wortel → bass               │
+│                                     │
+│  → GPU: levend, vochtig bosveld     │
+└─────────────────────────────────────┘</code></pre>
+
+
+<h2>Synth Geometrie</h2>
+
+<table>
+  <tr><th>Synth</th><th>Geometrie</th><th>Vertraging</th><th>Uiting</th></tr>
+  <tr><td>frog</td><td>organisch</td><td>160ms</td><td>nat</td></tr>
+  <tr><td>root</td><td>wortel</td><td>320ms</td><td>diep</td></tr>
+  <tr><td>insect</td><td>cluster</td><td>80ms</td><td>zoemend</td></tr>
+</table>
+
+
+<h2>Forest Psy = Interface-Taal</h2>
+
+<pre><code>Forest Psy zegt:
+  &quot;pulse&quot; → frog doet organisch
+  &quot;root&quot;  → root doet wortel
+  &quot;swarm&quot; → insect doet cluster</code></pre>
+
+
+<h2>Donker Bos Regio</h2>
+
+<pre><code>CPU range: 148 - 158 BPM
+GPU range: 7 - 12 layers
+Donker bos: ja — diep, vochtig, oeroud bos, geen pad, alleen wortels</code></pre>
+
+
+<p>*Conceptueel audit-artikel.*</p>
+
+    
+    <div class="footer">
+      HEXA-BOEK · Artikel 13 — Forest Psy · art.html v2
+    </div>
+  </main>
+</body>
+</html>

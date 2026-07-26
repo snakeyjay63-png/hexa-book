@@ -128,41 +128,43 @@
     let media = sitemap ? sitemap.media.length : 0;
 
     const html = `
-      <div class="hero">
+      <div class="hero" style="text-align:center; padding:20px 0 10px;">
         <h1>• Hexa-Boek</h1>
-        <p class="tagline">CC-construct · Nidrā-router · 3-6-9 veld</p>
-        <p style="color:var(--text-dim); max-width:600px; margin:0 auto;">
-          Dertien artikelen, achttien nodes, zestien dimensies.<br>
-          Vier lenzen, één superpositie, één returnmedium.
-        </p>
-        <div class="stats">
+        <p class="tagline">De beste taal om te vertalen is geometrisch</p>
+      </div>
+      <div id="planetarium-container" class="planetarium-container"></div>
+      <div class="md">
+        <blockquote style="border-left-color:var(--accent); text-align:center;">
+          Dezelfde waarheid. Achttien hoeken.<br>
+          Elk <code style="color:var(--accent);">.py</code> is een andere lens op hetzelfde veld.
+        </blockquote>
+        <div class="stats" style="margin-top:24px;">
+          <div class="stat"><div class="num">18</div><div class="label">Gears</div></div>
           <div class="stat"><div class="num">${articles}</div><div class="label">Artikelen</div></div>
           <div class="stat"><div class="num">${audits}</div><div class="label">Audits</div></div>
-          <div class="stat"><div class="num">${tests}</div><div class="label">Zig Tests</div></div>
           <div class="stat"><div class="num">${talen}</div><div class="label">Talen</div></div>
-          <div class="stat"><div class="num">${media}</div><div class="label">Media</div></div>
+          <div class="stat"><div class="num">1</div><div class="label">Veld</div></div>
         </div>
-      </div>
-      <div class="md">
-        <h2>نار · אग्नि · Πῦρ · Ignis</h2>
-        <blockquote>
-          Informatie = water. Fysica = taal. Taal = frequentie.<br>
-          All bardos are this moment. There is no other.
-        </blockquote>
-        <h3>Structuur</h3>
-        <ul>
-          <li><strong>Artikelen</strong> — 18 nodes (16 dimensies + router + bridge)</li>
-          <li><strong>Audits</strong> — 31 audit rapporten met Zig validatie</li>
-          <li><strong>Charveld</strong> — 24 EU talen + Grieks + Sanskriet + Arabisch</li>
-          <li><strong>Media</strong> — Audio/video van de NPR Sound Engine</li>
-          <li><strong>Engine</strong> — Python validatie + Zig implementatie</li>
-        </ul>
-        <h3>Nidrā-Router</h3>
-        <p>Elk artikel volgt het 4+1 patroon: 4 inhoudelijke secties + 1 nidrā verwijzing naar een parallel artikel.
-        Nidrā ≠ gat. Nidrā = terugkeer naar kern via ander perspectief.</p>
       </div>
     `;
     document.getElementById('page-container').innerHTML = html;
+
+    // Load planetarium SVG — all 18 gears in one frame, no iframes
+    fetch(BASE + 'articles/planetarium.art.html')
+      .then(function(r) { return r.text(); })
+      .then(function(text) {
+        // Extract the main SVG and inject it
+        var svgMatch = text.match(/<svg[^>]*class="main"[^>]*>([\s\S]*?)<\/svg>/i);
+        if (svgMatch) {
+          var container = document.getElementById('planetarium-container');
+          if (container) container.innerHTML = svgMatch[0];
+        }
+      })
+      .catch(function() {
+        // Fallback: show message
+        var container = document.getElementById('planetarium-container');
+        if (container) container.innerHTML = '<p style="text-align:center;opacity:0.3;padding:40px;">Planetarium laadt...</p>';
+      });
   }
 
   async function showRouting() {
@@ -269,18 +271,23 @@
       document.getElementById('page-container').innerHTML = '<div class="md"><h2>Niet gevonden</h2><p>Stupa bestaat niet.</p></div>';
       return;
     }
-    const content = await fetchFile(stupa.file);
-    // Render as raw HTML (it's already HTML)
-    document.getElementById('page-container').innerHTML = content;
-    // Re-bind nav links inside stupa
-    document.querySelectorAll('.stupa-footer a[data-page]').forEach(el => {
-      el.addEventListener('click', function(e) {
-        e.preventDefault();
-        const page = this.getAttribute('data-page');
-        setActive(page);
-        navigate(page);
+    const fileUrl = BASE + stupa.file;
+    // .art.html = volledige kunstwerk → iframe voor isolatie
+    if (stupa.art) {
+      document.getElementById('page-container').innerHTML =
+        '<iframe class="art-frame" src="' + fileUrl + '" frameborder="0"></iframe>';
+    } else {
+      const content = await fetchFile(stupa.file);
+      document.getElementById('page-container').innerHTML = content;
+      document.querySelectorAll('.stupa-footer a[data-page]').forEach(el => {
+        el.addEventListener('click', function(e) {
+          e.preventDefault();
+          const page = this.getAttribute('data-page');
+          setActive(page);
+          navigate(page);
+        });
       });
-    });
+    }
   }
 
   async function showTaals(id) {

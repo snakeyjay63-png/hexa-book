@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Artikel 006 — Dimensie 3: 3-6-9 Veld | Hexa-Boek</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #06060a; color: #d4d4e0; font-family: 'Instrument Sans', -apple-system, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; }
+.field { position: relative; width: 500px; height: 500px; }
+.layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.layer-rotate { animation: rotate 70s linear infinite; }
+@keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.metadata { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: hsl(30, 40%, 50%); opacity: 0.5; }
+.metadata .title { font-size: 1.1rem; margin-bottom: 6px; color: hsl(30, 60%, 55%); opacity: 0.8; }
+.metadata .params { display: flex; gap: 12px; justify-content: center; }
+</style>
+</head>
+<body>
+<div class="field">
+  <div class="layer layer-rotate">
+    <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+<polygon points="330.0,250.0 290.0,319.3 210.0,319.3 170.0,250.0 210.0,180.7 290.0,180.7" fill="none" stroke="hsl(30,60,50%)" stroke-width="1.5" opacity="0.6"/>
+<polygon points="364.2,263.8 342.0,319.0 295.2,355.8 236.2,364.2 181.0,342.0 144.2,295.2 135.8,236.2 158.0,181.0 204.8,144.2 263.8,135.8 319.0,158.0 355.8,204.8" fill="none" stroke="hsl(60,60,50%)" stroke-width="1.5" opacity="0.6"/>
+<polygon points="395.7,285.7 374.7,333.3 338.7,371.0 292.0,394.0 240.2,399.7 189.6,387.3 146.3,358.4 115.5,316.3 100.9,266.3 104.3,214.3 125.3,166.7 161.3,129.0 208.0,106.0 259.8,100.3 310.4,112.7 353.7,141.6 384.5,183.7 399.1,233.7" fill="none" stroke="hsl(90,60,50%)" stroke-width="1.5" opacity="0.6"/>
+<circle cx="421.4" cy="250.0" r="1" fill="hsl(30,40%,50%)" opacity="0.15"/>
+<circle cx="422.1" cy="266.9" r="1" fill="hsl(30,40%,50%)" opacity="0.15"/>
+<circle cx="419.0" cy="283.6" r="1" fill="hsl(30,40%,50%)" opacity="0.15"/>
+<circle cx="409.8" cy="298.5" r="1" fill="hsl(30,40%,50%)" opacity="0.15"/>
+<circle cx="406.9" cy="315.0" r="1" fill="hsl(30,40%,50%)" opacity="0.15"/>
+<circle cx="400.6" cy="330.5" r="1" fill="hsl(30,40%,50%)" opacity="0.15"/>
+<circle cx="393.4" cy="345.8" r="1" fill="hsl(30,40%,50%)" opacity="0.15"/>
+<circle cx="382.5" cy="358.8" r="1" fill="hsl(30,40%,50%)" opacity="0.15"/>
+<circle cx="370.1" cy="370.1" r="1" fill="hsl(30,40%,50%)" opacity="0.175"/>
+<circle cx="357.6" cy="381.2" r="1" fill="hsl(30,40%,50%)" opacity="0.175"/>
+<circle cx="345.1" cy="392.4" r="1" fill="hsl(30,40%,50%)" opacity="0.175"/>
+<circle cx="331.0" cy="401.5" r="1" fill="hsl(30,40%,50%)" opacity="0.175"/>
+<circle cx="314.0" cy="404.6" r="1" fill="hsl(30,40%,50%)" opacity="0.175"/>
+<circle cx="299.0" cy="411.4" r="1" fill="hsl(30,40%,50%)" opacity="0.175"/>
+<circle cx="282.8" cy="414.9" r="1" fill="hsl(30,40%,50%)" opacity="0.175"/>
+<circle cx="266.8" cy="420.2" r="1" fill="hsl(30,40%,50%)" opacity="0.175"/>
+<circle cx="250.0" cy="421.2" r="1" fill="hsl(30,40%,50%)" opacity="0.2"/>
+<circle cx="233.4" cy="418.6" r="1" fill="hsl(30,40%,50%)" opacity="0.2"/>
+<circle cx="217.3" cy="414.3" r="1" fill="hsl(30,40%,50%)" opacity="0.2"/>
+<circle cx="199.9" cy="415.3" r="1" fill="hsl(30,40%,50%)" opacity="0.2"/>
+<circle cx="184.0" cy="409.3" r="1" fill="hsl(30,40%,50%)" opacity="0.2"/>
+<circle cx="169.1" cy="401.4" r="1" fill="hsl(30,40%,50%)" opacity="0.2"/>
+<circle cx="155.3" cy="391.7" r="1" fill="hsl(30,40%,50%)" opacity="0.2"/>
+<circle cx="140.5" cy="383.4" r="1" fill="hsl(30,40%,50%)" opacity="0.2"/>
+<circle cx="128.9" cy="371.1" r="1" fill="hsl(30,40%,50%)" opacity="0.225"/>
+<circle cx="117.1" cy="359.1" r="1" fill="hsl(30,40%,50%)" opacity="0.225"/>
+<circle cx="108.0" cy="344.9" r="1" fill="hsl(30,40%,50%)" opacity="0.225"/>
+<circle cx="100.4" cy="330.0" r="1" fill="hsl(30,40%,50%)" opacity="0.225"/>
+<circle cx="95.1" cy="314.2" r="1" fill="hsl(30,40%,50%)" opacity="0.225"/>
+<circle cx="90.2" cy="298.5" r="1" fill="hsl(30,40%,50%)" opacity="0.225"/>
+<circle cx="82.1" cy="283.4" r="1" fill="hsl(30,40%,50%)" opacity="0.225"/>
+<circle cx="81.0" cy="266.6" r="1" fill="hsl(30,40%,50%)" opacity="0.225"/>
+<circle cx="81.9" cy="250.0" r="1" fill="hsl(30,40%,50%)" opacity="0.25"/>
+<circle cx="79.9" cy="233.3" r="1" fill="hsl(30,40%,50%)" opacity="0.25"/>
+<circle cx="83.1" cy="216.8" r="1" fill="hsl(30,40%,50%)" opacity="0.25"/>
+<circle cx="88.4" cy="201.0" r="1" fill="hsl(30,40%,50%)" opacity="0.25"/>
+<circle cx="90.2" cy="183.8" r="1" fill="hsl(30,40%,50%)" opacity="0.25"/>
+<circle cx="97.6" cy="168.5" r="1" fill="hsl(30,40%,50%)" opacity="0.25"/>
+<circle cx="109.2" cy="155.9" r="1" fill="hsl(30,40%,50%)" opacity="0.25"/>
+<circle cx="116.7" cy="140.6" r="1" fill="hsl(30,40%,50%)" opacity="0.25"/>
+<circle cx="128.7" cy="128.7" r="1" fill="hsl(30,40%,50%)" opacity="0.275"/>
+<circle cx="143.0" cy="119.6" r="1" fill="hsl(30,40%,50%)" opacity="0.275"/>
+<circle cx="155.4" cy="108.4" r="1" fill="hsl(30,40%,50%)" opacity="0.275"/>
+<circle cx="171.2" cy="102.7" r="1" fill="hsl(30,40%,50%)" opacity="0.275"/>
+<circle cx="184.6" cy="92.0" r="1" fill="hsl(30,40%,50%)" opacity="0.275"/>
+<circle cx="200.2" cy="85.8" r="1" fill="hsl(30,40%,50%)" opacity="0.275"/>
+<circle cx="216.9" cy="83.6" r="1" fill="hsl(30,40%,50%)" opacity="0.275"/>
+<circle cx="233.2" cy="79.2" r="1" fill="hsl(30,40%,50%)" opacity="0.275"/>
+<circle cx="250.0" cy="77.3" r="1" fill="hsl(30,40%,50%)" opacity="0.30000000000000004"/>
+<circle cx="266.8" cy="79.8" r="1" fill="hsl(30,40%,50%)" opacity="0.30000000000000004"/>
+<circle cx="283.3" cy="82.3" r="1" fill="hsl(30,40%,50%)" opacity="0.30000000000000004"/>
+<circle cx="299.1" cy="88.1" r="1" fill="hsl(30,40%,50%)" opacity="0.30000000000000004"/>
+<circle cx="315.8" cy="91.2" r="1" fill="hsl(30,40%,50%)" opacity="0.30000000000000004"/>
+<circle cx="329.9" cy="100.4" r="1" fill="hsl(30,40%,50%)" opacity="0.30000000000000004"/>
+<circle cx="342.9" cy="111.0" r="1" fill="hsl(30,40%,50%)" opacity="0.30000000000000004"/>
+<circle cx="358.5" cy="117.8" r="1" fill="hsl(30,40%,50%)" opacity="0.30000000000000004"/>
+<circle cx="371.8" cy="128.2" r="1" fill="hsl(30,40%,50%)" opacity="0.325"/>
+<circle cx="381.6" cy="142.0" r="1" fill="hsl(30,40%,50%)" opacity="0.325"/>
+<circle cx="393.3" cy="154.2" r="1" fill="hsl(30,40%,50%)" opacity="0.325"/>
+<circle cx="402.4" cy="168.5" r="1" fill="hsl(30,40%,50%)" opacity="0.325"/>
+<circle cx="408.0" cy="184.6" r="1" fill="hsl(30,40%,50%)" opacity="0.325"/>
+<circle cx="415.1" cy="199.9" r="1" fill="hsl(30,40%,50%)" opacity="0.325"/>
+<circle cx="415.8" cy="217.0" r="1" fill="hsl(30,40%,50%)" opacity="0.325"/>
+<circle cx="417.2" cy="233.5" r="1" fill="hsl(30,40%,50%)" opacity="0.325"/>
+<circle cx="423.2" cy="350.0" r="3" fill="hsl(150,50%,55%)" opacity="0.5"/>
+<line x1="250" y1="250" x2="423.2" y2="350.0" stroke="hsl(30,30%,40%)" stroke-width="0.5" opacity="0.2" stroke-dasharray="3,3"/>
+<circle cx="76.8" cy="350.0" r="3" fill="hsl(150,50%,55%)" opacity="0.5"/>
+<line x1="250" y1="250" x2="76.8" y2="350.0" stroke="hsl(30,30%,40%)" stroke-width="0.5" opacity="0.2" stroke-dasharray="3,3"/>
+<circle cx="250" cy="250" r="6" fill="hsl(30,70%,55%)" opacity="0.8"/>
+<circle cx="201.5" cy="261.5" r="0.6" fill="hsl(30,50%,60%)" opacity="0.3"/>
+<circle cx="307.6" cy="318.3" r="0.6" fill="hsl(30,50%,60%)" opacity="0.3"/>
+<circle cx="310.2" cy="252.4" r="0.6" fill="hsl(30,50%,60%)" opacity="0.3"/>
+<circle cx="271.2" cy="234.2" r="0.6" fill="hsl(30,50%,60%)" opacity="0.3"/>
+<circle cx="184.7" cy="226.8" r="0.6" fill="hsl(30,50%,60%)" opacity="0.3"/>
+<circle cx="298.7" cy="262.8" r="0.6" fill="hsl(30,50%,60%)" opacity="0.3"/>
+<circle cx="233.8" cy="196.2" r="0.6" fill="hsl(30,50%,60%)" opacity="0.3"/>
+<circle cx="244.9" cy="217.8" r="0.6" fill="hsl(30,50%,60%)" opacity="0.3"/>
+<circle cx="252.2" cy="278.8" r="0.6" fill="hsl(30,50%,60%)" opacity="0.3"/>
+<circle cx="156.2" cy="246.3" r="0.6" fill="hsl(30,50%,60%)" opacity="0.3"/>
+    </svg>
+  </div>
+  <div class="metadata">
+    <div class="title">Artikel 006 — Dimensie 3: 3-6-9 Veld</div>
+    <div class="params">
+      <span>3-6-9</span>
+      <span>STATEN: 64</span>
+      <span>DR: 9</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>
