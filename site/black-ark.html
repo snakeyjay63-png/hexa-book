@@ -79,24 +79,20 @@
   }
   #bpm-label { font-size: 0.45rem; color: #666655; letter-spacing: 0.15em; }
 
-  /* ── Sequencer Grid (Hex) ── */
+  /* ── Sequencer Grid (Hex Cells, Linear) ── */
   #sequencer {
     position: fixed; top: 100px; left: 50%;
     transform: translateX(-50%);
     z-index: 10;
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 4px;
-    width: 90vw; max-width: 900px;
+    width: 90vw; max-width: 1000px;
   }
-  .hex-row {
+  .seq-row {
     display: flex;
     align-items: center;
-    gap: 2px;
-  }
-  .hex-row.offset {
-    margin-left: 22px;  /* half-hex offset for diagonal */
+    gap: 3px;
   }
   .seq-label {
     font-size: 0.5rem;
@@ -108,26 +104,17 @@
     flex-shrink: 0;
   }
   .hex-cell {
-    width: 42px; height: 24px;
+    width: 44px; height: 28px;
     clip-path: polygon(15% 0%, 85% 0%, 100% 50%, 85% 100%, 15% 100%, 0% 50%);
     background: rgba(20,18,12,0.4);
     cursor: pointer;
     transition: all 0.1s ease;
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .hex-cell::before {
-    content: '';
-    position: absolute;
-    inset: 1px;
-    clip-path: inherit;
-    background: inherit;
+    flex-shrink: 0;
   }
   .hex-cell:hover { background: rgba(255,200,50,0.15); }
-  .hex-cell.on { border-color: rgba(255,200,50,0.4); }
-  .hex-cell.current { box-shadow: 0 0 8px rgba(255,200,50,0.4); filter: brightness(1.5); }
+  .hex-cell.on { }
+  .hex-cell.current { filter: brightness(1.5); }
   .hex-cell.kick.on { background: rgba(255,100,50,0.35); }
   .hex-cell.snare.on { background: rgba(255,200,50,0.35); }
   .hex-cell.hihat.on { background: rgba(100,200,255,0.3); }
@@ -668,64 +655,30 @@
     }
   };
 
-  // ── Hex Grid Layout ──
-  // 16 steps mapped to hex rows: [0-3], [4-7], [8-11], [12-15]
-  // Odd rows offset → diagonal routing
-  const HEX_ROWS = [
-    { steps: [0,1,2,3],      offset: false },
-    { steps: [4,5,6,7],      offset: true  },
-    { steps: [8,9,10,11],    offset: false },
-    { steps: [12,13,14,15],  offset: true  }
-  ];
-  // Diagonal step order: zigzag through hex rows
-  // 0→1→2→3→7→6→5→4→8→9→10→11→15→14→13→12 (boustrophedon/diagonal)
-  const HEX_DIAG_PATH = [0,1,2,3, 7,6,5,4, 8,9,10,11, 15,14,13,12];
-
-  // Reverse map: which diagonal index → which step
-  const diagIndexToStep = {};
-  HEX_DIAG_PATH.forEach((step, idx) => { diagIndexToStep[idx] = step; });
-
-  // ── Build Hex Sequencer Grid ──
+  // ── Build Sequencer Grid (Hex cells, linear 0-15) ──
   const seqEl = document.getElementById('sequencer');
   tracks.forEach((track, ti) => {
-    HEX_ROWS.forEach((row, ri) => {
-      const rowDiv = document.createElement('div');
-      rowDiv.className = 'hex-row' + (row.offset ? ' offset' : '');
+    const rowDiv = document.createElement('div');
+    rowDiv.className = 'seq-row';
 
-      if (ri === 0) {
-        const label = document.createElement('div');
-        label.className = 'seq-label';
-        label.textContent = track.name.toUpperCase();
-        rowDiv.appendChild(label);
-      } else {
-        // Spacer for label
-        const spacer = document.createElement('div');
-        spacer.style.width = '60px';
-        spacer.style.flexShrink = '0';
-        rowDiv.appendChild(spacer);
-      }
+    const label = document.createElement('div');
+    label.className = 'seq-label';
+    label.textContent = track.name.toUpperCase();
+    rowDiv.appendChild(label);
 
-      row.steps.forEach(s => {
-        const cell = document.createElement('div');
-        cell.className = `hex-cell ${track.cls}`;
-        cell.dataset.track = ti;
-        cell.dataset.step = s;
-        cell.addEventListener('click', () => {
-          track.pattern[s] = track.pattern[s] ? 0 : 1;
-          cell.classList.toggle('on', !!track.pattern[s]);
-        });
-        rowDiv.appendChild(cell);
+    for (let s = 0; s < 16; s++) {
+      const cell = document.createElement('div');
+      cell.className = `hex-cell ${track.cls}`;
+      cell.dataset.track = ti;
+      cell.dataset.step = s;
+      cell.addEventListener('click', () => {
+        track.pattern[s] = track.pattern[s] ? 0 : 1;
+        cell.classList.toggle('on', !!track.pattern[s]);
       });
-
-      seqEl.appendChild(rowDiv);
-    });
-
-    // Spacer between tracks
-    if (ti < tracks.length - 1 || true) {
-      const spacer = document.createElement('div');
-      spacer.style.height = '8px';
-      seqEl.appendChild(spacer);
+      rowDiv.appendChild(cell);
     }
+
+    seqEl.appendChild(rowDiv);
   });
 
   // ── Audio Engine ──
@@ -1124,19 +1077,17 @@
     sub: playSub
   };
 
-  // ── Sequencer Engine (Hex Diagonal) ──
-  let diagPos = 0;  // position in diagonal path
+  // ── Sequencer Engine ──
   function tick() {
-    diagPos = (diagPos + 1) % 16;
-    currentStep = diagIndexToStep[diagPos];  // map diagonal index → step
+    currentStep = (currentStep + 1) % 16;
 
-    // Update beat indicator (4 groups of 4)
-    const beatGroup = Math.floor(diagPos / 4);
+    // Update beat indicator
+    const beatGroup = Math.floor(currentStep / 4);
     document.querySelectorAll('.beat-dot').forEach((dot, i) => {
       dot.classList.toggle('active', i === beatGroup);
     });
 
-    // Update hex grid visual
+    // Update sequencer visual
     document.querySelectorAll('.hex-cell').forEach(cell => {
       cell.classList.toggle('current', parseInt(cell.dataset.step) === currentStep);
     });
@@ -1173,7 +1124,6 @@
   document.getElementById('btn-stop').addEventListener('click', () => {
     isPlaying = false;
     clearInterval(intervalId);
-    diagPos = -1;
     currentStep = -1;
     document.getElementById('btn-play').classList.remove('active');
     document.querySelectorAll('.beat-dot').forEach(d => d.classList.remove('active'));
@@ -1437,45 +1387,32 @@
     });
   });
 
-  // Rebuild hex sequencer grid (called when tracks change)
+  // Rebuild sequencer grid (called when tracks change)
   function rebuildSequencer() {
     seqEl.innerHTML = '';
     tracks.forEach((track, ti) => {
-      HEX_ROWS.forEach((row, ri) => {
-        const rowDiv = document.createElement('div');
-        rowDiv.className = 'hex-row' + (row.offset ? ' offset' : '');
+      const rowDiv = document.createElement('div');
+      rowDiv.className = 'seq-row';
 
-        if (ri === 0) {
-          const label = document.createElement('div');
-          label.className = 'seq-label';
-          label.textContent = track.name.toUpperCase();
-          rowDiv.appendChild(label);
-        } else {
-          const spacer = document.createElement('div');
-          spacer.style.width = '60px';
-          spacer.style.flexShrink = '0';
-          rowDiv.appendChild(spacer);
-        }
+      const label = document.createElement('div');
+      label.className = 'seq-label';
+      label.textContent = track.name.toUpperCase();
+      rowDiv.appendChild(label);
 
-        row.steps.forEach(s => {
-          const cell = document.createElement('div');
-          cell.className = 'hex-cell ' + track.cls;
-          if (track.pattern[s]) cell.classList.add('on');
-          cell.dataset.track = ti;
-          cell.dataset.step = s;
-          cell.addEventListener('click', () => {
-            track.pattern[s] = track.pattern[s] ? 0 : 1;
-            cell.classList.toggle('on', !!track.pattern[s]);
-          });
-          rowDiv.appendChild(cell);
+      for (let s = 0; s < 16; s++) {
+        const cell = document.createElement('div');
+        cell.className = 'hex-cell ' + track.cls;
+        if (track.pattern[s]) cell.classList.add('on');
+        cell.dataset.track = ti;
+        cell.dataset.step = s;
+        cell.addEventListener('click', () => {
+          track.pattern[s] = track.pattern[s] ? 0 : 1;
+          cell.classList.toggle('on', !!track.pattern[s]);
         });
+        rowDiv.appendChild(cell);
+      }
 
-        seqEl.appendChild(rowDiv);
-      });
-
-      const spacer = document.createElement('div');
-      spacer.style.height = '8px';
-      seqEl.appendChild(spacer);
+      seqEl.appendChild(rowDiv);
     });
   }
 })();
