@@ -324,6 +324,20 @@
     }
   }
 
+  // ── Audio Envelope (volgt stages) ──
+  function setAudioEnvelope(s) {
+    if (!audioNodes || !audioCtx) return;
+    const t = audioCtx.currentTime;
+    const n = audioNodes;
+    let vol;
+    // 0=stil, 1→2→4→8=opbouw, 5=chaos(luid), 6=mandelbrot(fade)
+    if (s <= 0) vol = 0.1;
+    else if (s <= 4) vol = 0.1 + s * 0.1;        // 0.2→0.5 opbouw
+    else if (s === 5) vol = 0.6 + Math.sin(Date.now() * 0.008) * 0.2; // chaos
+    else vol = Math.max(0.05, 0.5 * (1 - tensionProgress)); // mandelbrot fade
+    ramp(n.masterGain.gain, Math.min(1, vol), 0.5);
+  }
+
   // ── Bliksem/donder trigger ──
   function triggerThunder() {
     if (!audioNodes || thunderPlaying) return;
@@ -719,6 +733,7 @@
     lightningBolts = [];
     updateUI();
     playStageAudio(stage);
+    setAudioEnvelope(stage); // volume volgt stage
     // Reset autoplay timer if active
     if (autoplay) {
       autoplayStart = Date.now();

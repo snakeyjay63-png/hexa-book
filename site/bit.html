@@ -132,12 +132,23 @@
     noiseGain.gain.value = 0.05; // zacht start
 
     masterGain = audioCtx.createGain();
-    masterGain.gain.value = 0.8;
+    masterGain.gain.value = 0.3; // start zacht
 
     noiseSource.connect(filter);
     filter.connect(noiseGain);
     noiseGain.connect(masterGain);
     masterGain.connect(audioCtx.destination);
+  }
+
+  // ── Audio Envelope (volgt fases) ──
+  function setAudioEnvelope(p, progress) {
+    if (!masterGain || !audioCtx) return;
+    const t = audioCtx.currentTime;
+    let vol;
+    if (p === 0) vol = 0.1 + progress * 0.4;       // opbouw
+    else if (p === 1) vol = 0.5 + Math.sin(Date.now() * 0.01) * 0.3; // chaos
+    else vol = Math.max(0.05, 0.3 * (1 - progress)); // zee fade
+    masterGain.gain.setTargetAtTime(Math.min(1, vol), t, 0.3);
   }
 
   // ── Resize ──
@@ -204,6 +215,7 @@
         if (noiseGain) {
           noiseGain.gain.setTargetAtTime(0.05 + progress * 0.08, audioCtx.currentTime, 0.3);
         }
+        setAudioEnvelope(0, progress); // volume opbouw
       }
 
       counterEl.textContent = bitsOn + ' / 64';
@@ -266,6 +278,7 @@
       if (noiseGain) {
         noiseGain.gain.setTargetAtTime(0.08 + Math.random() * 0.06, audioCtx.currentTime, 0.1);
       }
+      setAudioEnvelope(1, chaosTime / chaosDuration); // chaos volume
     }
 
     counterEl.textContent = '64 / 64 → ∞';
@@ -337,6 +350,12 @@
   // Grid is opgelost — golven overal
   function drawPhaseSea() {
     const seaTime = time - chaosDuration - 2;
+
+    // Audio: zee = rustig, zacht
+    if (audioOn) {
+      const seaProgress = Math.min(1, seaTime / 10);
+      setAudioEnvelope(2, seaProgress); // fade naar stilte
+    }
 
     // Meerdere golf-lagen
     const layers = [
