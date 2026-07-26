@@ -345,13 +345,19 @@
     const t = audioCtx.currentTime;
     thunderPlaying = true;
 
+    // Boost masterGain kort voor donder (anders te zacht door envelope)
+    ramp(n.masterGain.gain, 0.9, 0.01);
+
     // Kort crack + lange dreun
-    ramp(n.thunderGain.gain, 0.5, 0.01);
-    ramp(n.thunderGain.gain, 0.3, 0.1);
+    ramp(n.thunderGain.gain, 0.6, 0.01);
+    ramp(n.thunderGain.gain, 0.35, 0.1);
     ramp(n.thunderGain.gain, 0, 2);
 
-    // Timer om thunderPlaying te resetten
-    setTimeout(() => { thunderPlaying = false; }, 2100);
+    // Reset masterGain na donder
+    setTimeout(() => {
+      thunderPlaying = false;
+      setAudioEnvelope(stage);
+    }, 2100);
   }
 
   function stopAudio() {
