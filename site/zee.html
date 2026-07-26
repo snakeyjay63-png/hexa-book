@@ -70,6 +70,7 @@
     <button class="mode-btn" data-mode="water">water + E/M</button>
     <button class="mode-btn" data-mode="air">lucht</button>
     <button class="mode-btn" data-mode="ice">ijspolen</button>
+    <button class="mode-btn active" data-mode="cycle">watercyclus</button>
   </div>
 
   <div style="position:fixed;bottom:130px;left:50%;transform:translateX(-50%);z-index:10;text-align:center;">
@@ -440,11 +441,21 @@
     const inner = R * LAYERS.em.inner;
     const outer = R * LAYERS.em.outer;
 
+    // Jupiter invloed op EM veld
+    let jupiterPulse = 0;
+    if (showPlanets) {
+      const jup = PLANETS.find(p => p.name === 'jupiter');
+      if (jup) {
+        const jAngle = time * jup.speed + jup.phase;
+        jupiterPulse = COSMIC_INFLUENCE['jupiter'].strength * (0.5 + Math.sin(jAngle) * 0.5) * 0.1;
+      }
+    }
+
     // EM zone
     const emGrad = ctx.createRadialGradient(cx, cy, inner, cx, cy, outer);
     emGrad.addColorStop(0, 'rgba(100,50,200,0)');
-    emGrad.addColorStop(0.3, 'rgba(100,50,200,0.12)');
-    emGrad.addColorStop(0.7, 'rgba(80,40,180,0.15)');
+    emGrad.addColorStop(0.3, `rgba(100,50,200,${0.12 + jupiterPulse})`);
+    emGrad.addColorStop(0.7, `rgba(80,40,180,${0.15 + jupiterPulse})`);
     emGrad.addColorStop(1, 'rgba(60,30,160,0)');
     ctx.beginPath();
     ctx.arc(cx, cy, outer, 0, Math.PI * 2);
@@ -490,11 +501,25 @@
     const inner = R * LAYERS.water.inner;
     const outer = R * LAYERS.water.outer;
 
+    // Kosmische invloed op water
+    let cosmicPulse = 0;
+    if (showPlanets) {
+      PLANETS.forEach((pl, pi) => {
+        const inf = COSMIC_INFLUENCE[pl.name];
+        if (inf && inf.layer === 'water') {
+          const pAngle = time * pl.speed + pl.phase;
+          const dist = Math.cos(pAngle - Math.PI * 0.5); // hoe dicht bij top?
+          cosmicPulse += inf.strength * (0.5 + dist * 0.5) * 0.1;
+        }
+      });
+      cosmicPulse = Math.min(cosmicPulse, 0.3);
+    }
+
     // Water zone
     const wGrad = ctx.createRadialGradient(cx, cy, inner, cx, cy, outer);
-    wGrad.addColorStop(0, 'rgba(30,80,150,0.35)');
-    wGrad.addColorStop(0.5, 'rgba(20,50,120,0.25)');
-    wGrad.addColorStop(1, 'rgba(40,80,160,0.15)');
+    wGrad.addColorStop(0, `rgba(30,80,150,${0.35 + cosmicPulse})`);
+    wGrad.addColorStop(0.5, `rgba(20,50,120,${0.25 + cosmicPulse * 0.5})`);
+    wGrad.addColorStop(1, `rgba(40,80,160,${0.15 + cosmicPulse * 0.3})`);
     ctx.beginPath();
     ctx.arc(cx, cy, outer, 0, Math.PI * 2);
     ctx.arc(cx, cy, inner, 0, Math.PI * 2, true);
@@ -548,6 +573,37 @@
     ctx.stroke();
     ctx.setLineDash([]);
 
+    // ── Watercyclus pijlen ──
+    if (showCycle) {
+      // Verdamping: water ↑ → vochtige lucht
+      drawCycleArrow(
+        cx + R * 0.55, cy - R * 0.55,
+        cx + R * 0.65, cy - R * 0.72,
+        'rgba(100,180,220,0.12)', 'verdamping'
+      );
+
+      // Regen: vochtige lucht ↓ → water
+      drawCycleArrow(
+        cx - R * 0.72, cy - R * 0.65,
+        cx - R * 0.55, cy - R * 0.50,
+        'rgba(120,160,200,0.10)', 'regen'
+      );
+
+      // Bevriezing: water → poolijs
+      drawCycleArrow(
+        cx + R * 0.50, cy - R * 0.45,
+        cx + R * 0.10, cy - R * 0.92,
+        'rgba(180,210,240,0.08)', 'bevriezing'
+      );
+
+      // Sedimentatie: water ↓ → aarde
+      drawCycleArrow(
+        cx - R * 0.50, cy + R * 0.50,
+        cx - R * 0.30, cy + R * 0.25,
+        'rgba(160,120,70,0.10)', 'sediment'
+      );
+    }
+
     // Label
     const labelR = (inner + outer) / 2;
     ctx.fillStyle = 'rgba(100,150,200,0.1)';
@@ -557,6 +613,66 @@
     ctx.font = '0.25em "IBM Plex Mono", monospace';
     ctx.fillStyle = 'rgba(100,150,200,0.06)';
     ctx.fillText('(bovenkant verdampt → rest zakt → aarde)', cx, cy + labelR + 10);
+  }
+
+  // ── Helper: watercyclus pijl ──
+  function drawCycleArrow(x1, y1, x2, y2, color, label) {
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+
+    // Gebogen lijn
+    const steps = 12;
+    ctx.beginPath();
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      let x = x1 + dx * t;
+      let y = y1 + dy * t;
+
+      // Buiging
+      const perpX = -dy / dist;
+      const perpY = dx / dist;
+      const bend = Math.sin(t * Math.PI) * 8;
+      x += perpX * bend;
+      y += perpY * bend;
+
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+
+    // Pulse effect
+    const pulse = 0.7 + Math.sin(time * 2) * 0.3;
+    ctx.strokeStyle = color.replace(/\d+$/, (m) => Math.round(parseInt(m) * pulse));
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Pijlkop
+    const arrowAngle = Math.atan2(dy, dx);
+    const arrowSize = 4;
+    ctx.beginPath();
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(
+      x2 - arrowSize * Math.cos(arrowAngle - 0.4),
+      y2 - arrowSize * Math.sin(arrowAngle - 0.4)
+    );
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(
+      x2 - arrowSize * Math.cos(arrowAngle + 0.4),
+      y2 - arrowSize * Math.sin(arrowAngle + 0.4)
+    );
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Label
+    const midX = (x1 + x2) / 2;
+    const midY = (y1 + y2) / 2;
+    ctx.fillStyle = color;
+    ctx.font = '0.20em "IBM Plex Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, midX + 12, midY - 4);
   }
 
   // ── Vochtige Lucht ──
@@ -829,6 +945,26 @@
   }
 
   let showPlanets = true;
+  let showCycle = true;
+
+  // ── Watercyclus deeltjes ──
+  // Verdamping: water → vochtige lucht (omhoog)
+  // Regen: vochtige lucht → water (omlaag)
+  // Bevriezing: water → poolijs (naar polen)
+  const CYCLE_PARTICLES = 40;
+  let evapParticles = [];
+  let rainParticles = [];
+  let freezeParticles = [];
+
+  // ── Kosmische invloed per laag ──
+  // Elke planeet stuurt een specifieke laag aan
+  const COSMIC_INFLUENCE = {
+    'zon':    { layer: 'water',   type: 'verdamping', strength: 0.9 },
+    'maan':   { layer: 'water',   type: 'getijden',   strength: 0.7 },
+    'venus':  { layer: 'airVocht', type: 'condensatie', strength: 0.4 },
+    'jupiter':{ layer: 'em',      type: 'magnetisch', strength: 0.5 },
+    'mars':   { layer: 'aarde',   type: 'sediment',   strength: 0.2 },
+  };
 
   function drawPlanets() {
     if (!showPlanets) return;
@@ -939,7 +1075,86 @@
     ctx.font = '0.22em "IBM Plex Mono", monospace';
     ctx.textAlign = 'center';
     ctx.fillText('0.0.0.0 → 4 punten', cx, cy - baseR * 1.85);
-  }
+
+    // ── Kosmische invloed pijlen (planeet → laag) ──
+    if (showPlanets) {
+      for (const [planetName, inf] of Object.entries(COSMIC_INFLUENCE)) {
+        const pl = PLANETS.find(p => p.name === planetName);
+        if (!pl) continue;
+
+        const pAngle = time * pl.speed + pl.phase;
+        const ppx = cx + Math.cos(pAngle) * baseR * pl.orbitR;
+        const ppy = cy + Math.sin(pAngle) * baseR * pl.orbitR;
+
+        // Target: laag positie (binnen de planeet)
+        let targetR, targetAngle;
+        switch (inf.layer) {
+          case 'water':
+            targetR = R * (LAYERS.water.inner + LAYERS.water.outer) / 2;
+            targetAngle = Math.PI * 0.7; // links
+            break;
+          case 'airVocht':
+            targetR = R * (LAYERS.airVocht.inner + LAYERS.airVocht.outer) / 2;
+            targetAngle = -Math.PI * 0.3; // rechts-boven
+            break;
+          case 'em':
+            targetR = R * (LAYERS.em.inner + LAYERS.em.outer) / 2;
+            targetAngle = Math.PI * 0.5; // onder
+            break;
+          case 'aarde':
+            targetR = R * (LAYERS.aarde.inner + LAYERS.aarde.outer) / 2;
+            targetAngle = Math.PI * 1.1; // links-onder
+            break;
+          default:
+            targetR = R * 0.5;
+            targetAngle = 0;
+        }
+
+        const tx = cx + Math.cos(targetAngle) * targetR;
+        const ty = cy + Math.sin(targetAngle) * targetR;
+
+        // Gebogen pijl (planeet → laag)
+        const steps = 20;
+        ctx.beginPath();
+        for (let i = 0; i <= steps; i++) {
+          const t = i / steps;
+          let x = ppx + (tx - ppx) * t;
+          let y = ppy + (ty - ppy) * t;
+
+          // Buiging naar buiten
+          const perpX = -(ty - ppy);
+          const perpY = (tx - ppx);
+          const perpLen = Math.sqrt(perpX * perpX + perpY * perpY) || 1;
+          const bend = Math.sin(t * Math.PI) * 15 * inf.strength;
+          x += (perpX / perpLen) * bend;
+          y += (perpY / perpLen) * bend;
+
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+
+        const infAlpha = 0.04 + inf.strength * 0.06 + Math.sin(time * 1.2 + PLANETS.indexOf(pl)) * 0.02;
+        ctx.strokeStyle = `rgba(${pl.color[0]},${pl.color[1]},${pl.color[2]},${infAlpha})`;
+        ctx.lineWidth = 0.3 + inf.strength * 0.3;
+        ctx.setLineDash([3, 5]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Pijlkop bij doel
+        const arrowSize = 3 + inf.strength * 2;
+        ctx.beginPath();
+        ctx.arc(tx, ty, arrowSize, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(${pl.color[0]},${pl.color[1]},${pl.color[2]},${infAlpha * 1.5})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+
+        // Label bij doel
+        ctx.fillStyle = `rgba(${pl.color[0]},${pl.color[1]},${pl.color[2]},${infAlpha * 1.2})`;
+        ctx.font = '0.18em "IBM Plex Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(`${inf.type} ← ${planetName}`, tx + 20, ty + 2);
+      }
+    }
 
   // ── Buitenste rand ──
   function drawOuterRing() {
@@ -1037,7 +1252,16 @@
   // ── Mode buttons ──
   document.querySelectorAll('.mode-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+      if (btn.dataset.mode === 'cycle') {
+        showCycle = !showCycle;
+        btn.classList.toggle('active', showCycle);
+        return;
+      }
+      // Keep cycle button state independent
+      const cycleBtn = document.querySelector('.mode-btn[data-mode="cycle"]');
+      document.querySelectorAll('.mode-btn').forEach(b => {
+        if (b.dataset.mode !== 'cycle') b.classList.remove('active');
+      });
       btn.classList.add('active');
       viewMode = btn.dataset.mode;
     });
