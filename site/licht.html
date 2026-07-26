@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>• Licht — Flower of Life Navigatie</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="css/main.css">
+<style>
+  /* ── Flower of Life Canvas ── */
+  #flower-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    cursor: crosshair;
+  }
+
+  #flower-ui {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    font-family: var(--mono);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    background: rgba(12, 12, 18, 0.85);
+    padding: 12px 24px;
+    border-radius: 8px;
+    backdrop-filter: blur(8px);
+  }
+
+  #flower-info {
+    text-align: center;
+  }
+
+  #flower-circle {
+    font-size: 0.9rem;
+    color: var(--accent);
+    font-weight: bold;
+  }
+
+  #flower-band {
+    font-size: 0.7rem;
+    color: var(--text-soft);
+  }
+
+  #flower-perspectief {
+    font-size: 0.65rem;
+    color: var(--text-faint);
+    margin-top: 4px;
+  }
+
+  /* ── Direction Pad ── */
+  #direction-pad {
+    position: fixed;
+    top: 50%;
+    right: 24px;
+    transform: translateY(-50%);
+    z-index: 1000;
+    display: grid;
+    grid-template-columns: repeat(3, 40px);
+    grid-template-rows: repeat(3, 40px);
+    gap: 4px;
+  }
+
+  .dir-btn {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background: rgba(6, 6, 10, 0.8);
+    color: var(--accent);
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .dir-btn:hover {
+    background: rgba(124, 110, 245, 0.2);
+    border-color: var(--accent);
+  }
+
+  .dir-btn.active {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  /* ── Oogjes overlay ── */
+  .eye-point {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.3;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .eye-point:hover {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1.5);
+  }
+
+  .eye-point.inward {
+    background: var(--yellow);
+    opacity: 0.4;
+  }
+</style>
+</head>
+<body>
+<!-- Top nav -->
+<nav id="nav-top">
+  <a href="/" style="color:#7c6ef5;text-decoration:none;opacity:0.7;">• index</a>
+  <a href="spectrum.html" style="color:#7c6ef5;text-decoration:none;opacity:0.7;">spectrum</a>
+  <a href="dna.html" style="color:#fbbf24;text-decoration:none;opacity:0.7;">DNA</a>
+  <a href="priemen.html" style="color:#a78bfa;text-decoration:none;opacity:0.7;">priemen</a>
+</nav>
+
+<!-- Flower of Life Canvas -->
+<canvas id="flower-canvas"></canvas>
+
+<!-- Direction Pad — 12 richtingen -->
+<nav id="direction-pad">
+  <div></div>
+  <button class="dir-btn" data-dir="n" title="Noord">↑</button>
+  <div></div>
+  <button class="dir-btn" data-dir="nw" title="Noord-West">↖</button>
+  <button class="dir-btn" data-dir="w" title="West">←</button>
+  <button class="dir-btn" data-dir="ne" title="Noord-Oost">↗</button>
+  <div></div>
+  <button class="dir-btn" data-dir="sw" title="Zuid-West">↙</button>
+  <button class="dir-btn" data-dir="s" title="Zuid">↓</button>
+  <button class="dir-btn" data-dir="e" title="Oost">→</button>
+  <div></div>
+</nav>
+
+<!-- Info UI -->
+<div id="flower-ui">
+  <div id="flower-info">
+    <div id="flower-circle">Cirkel 0 / 19</div>
+    <div id="flower-band">P0 — As (0.0.0.0)</div>
+    <div id="flower-perspectief">90 ogen — 72 buiten, 18 binnen</div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const canvas = document.getElementById('flower-canvas');
+  const ctx = canvas.getContext('2d');
+
+  let W, H, cx, cy, radius;
+  let currentCircle = 0; // 0-18
+  let currentPerspectief = 0; // 0-89
+  let animFrame;
+
+  // ── Flower of Life: 19 circles ──
+  const circles = [];
+
+  function buildFlower() {
+    circles.length = 0;
+
+    // Center circle (P0)
+    circles.push({ x: cx, y: cy, band: 'p0', label: 'P0 — As (0.0.0.0)', index: 0 });
+
+    // Ring 1: 6 circles (P1)
+    for (let i = 0; i < 6; i++) {
+      const angle = (i * 60) * Math.PI / 180;
+      circles.push({
+        x: cx + radius * Math.cos(angle),
+        y: cy + radius * Math.sin(angle),
+        band: 'p1',
+        label: 'P1 — Kern',
+        index: i + 1,
+      });
+    }
+
+    // Ring 2: 12 circles (P2-P6)
+    for (let i = 0; i < 12; i++) {
+      const angle = (i * 30 + 30) * Math.PI / 180;
+      const bandIndex = Math.floor(i / 2); // P2-P7
+      const bands = ['p2', 'p3', 'p4', 'p5', 'p6', 'p6'];
+      circles.push({
+        x: cx + radius * 2 * Math.cos(angle),
+        y: cy + radius * 2 * Math.sin(angle),
+        band: bands[bandIndex],
+        label: ['P2 — Mantel', 'P3 — Korst', 'P4 — Atmosfeer', 'P5 — Ionosfeer', 'P6 — Magnetosfeer', 'P6 — Magnetosfeer'][bandIndex],
+        index: i + 7,
+      });
+    }
+  }
+
+  // ── Draw ──
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Draw all circles
+    circles.forEach((c, i) => {
+      const isActive = i === currentCircle;
+      const bandColors = {
+        'p0': '#ffffff',
+        'p1': '#e0e0e8',
+        'p2': '#8ecae6',
+        'p3': '#fbbf24',
+        'p4': '#219ebc',
+        'p5': '#023047',
+        'p6': '#a78bfa',
+      };
+
+      // Circle outline
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, radius * 0.95, 0, Math.PI * 2);
+      ctx.strokeStyle = isActive ? bandColors[c.band] : 'rgba(124, 110, 245, 0.15)';
+      ctx.lineWidth = isActive ? 3 : 1;
+      ctx.stroke();
+
+      // Fill if active
+      if (isActive) {
+        ctx.fillStyle = `rgba(124, 110, 245, 0.08)`;
+        ctx.fill();
+      }
+    });
+
+    // Draw connection lines
+    ctx.strokeStyle = 'rgba(124, 110, 245, 0.08)';
+    ctx.lineWidth = 1;
+    circles.forEach((c, i) => {
+      if (i === 0) return;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(c.x, c.y);
+      ctx.stroke();
+    });
+
+    // Draw eyes
+    drawEyes();
+
+    animFrame = requestAnimationFrame(draw);
+  }
+
+  function drawEyes() {
+    const outerEyes = 72; // 3×24
+    const innerEyes = 18;
+
+    // Outer eyes (P6, looking outward)
+    for (let i = 0; i < outerEyes; i++) {
+      const angle = (i * (360 / outerEyes)) * Math.PI / 180;
+      const dist = radius * 2.5;
+      const x = cx + dist * Math.cos(angle);
+      const y = cy + dist * Math.sin(angle);
+
+      const isActive = currentPerspectief === i;
+      ctx.beginPath();
+      ctx.arc(x, y, isActive ? 6 : 3, 0, Math.PI * 2);
+      ctx.fillStyle = isActive ? '#fbbf24' : 'rgba(167, 139, 250, 0.3)';
+      ctx.fill();
+    }
+
+    // Inner eyes (looking inward toward center)
+    for (let i = 0; i < innerEyes; i++) {
+      const angle = (i * (360 / innerEyes)) * Math.PI / 180;
+      const dist = radius * 1.2;
+      const x = cx + dist * Math.cos(angle);
+      const y = cy + dist * Math.sin(angle);
+
+      const isActive = currentPerspectief === (outerEyes + i);
+      ctx.beginPath();
+      ctx.arc(x, y, isActive ? 5 : 2, 0, Math.PI * 2);
+      ctx.fillStyle = isActive ? '#fbbf24' : 'rgba(251, 191, 36, 0.2)';
+      ctx.fill();
+    }
+  }
+
+  // ── Navigation ──
+  function navigate(dir) {
+    // Simple hex grid navigation
+    const dirs = {
+      'n': { dx: 0, dy: -1 },
+      'ne': { dx: 1, dy: -1 },
+      'e': { dx: 1, dy: 0 },
+      'se': { dx: 1, dy: 1 },
+      's': { dx: 0, dy: 1 },
+      'sw': { dx: -1, dy: 1 },
+      'w': { dx: -1, dy: 0 },
+      'nw': { dx: -1, dy: -1 },
+    };
+
+    // For now: cycle through circles
+    if (dir === 's' || dir === 'se') currentCircle = Math.min(currentCircle + 1, 18);
+    else if (dir === 'n' || dir === 'nw') currentCircle = Math.max(currentCircle - 1, 0);
+    else if (dir === 'e') {
+      currentCircle = (currentCircle + 1) % 19;
+      currentPerspectief = (currentPerspectief + 1) % 90;
+    }
+    else if (dir === 'w') {
+      currentCircle = (currentCircle - 1 + 19) % 19;
+      currentPerspectief = (currentPerspectief - 1 + 90) % 90;
+    }
+
+    updateUI();
+  }
+
+  function updateUI() {
+    const c = circles[currentCircle];
+    document.getElementById('flower-circle').textContent = `Cirkel ${currentCircle} / 18`;
+    document.getElementById('flower-band').textContent = `${c.label} — perspectief ${currentPerspectief}`;
+  }
+
+  // ── Events ──
+  document.querySelectorAll('.dir-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const dir = this.getAttribute('data-dir');
+      navigate(dir);
+    });
+  });
+
+  // Click on canvas to select circle
+  canvas.addEventListener('click', function(e) {
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    // Find nearest circle
+    let nearest = -1;
+    let minDist = Infinity;
+    circles.forEach((c, i) => {
+      const dist = Math.hypot(c.x - x, c.y - y);
+      if (dist < minDist && dist < radius) {
+        minDist = dist;
+        nearest = i;
+      }
+    });
+
+    if (nearest >= 0) {
+      currentCircle = nearest;
+      updateUI();
+    }
+  });
+
+  // ── Init ──
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    cx = W / 2;
+    cy = H / 2;
+    radius = Math.min(W, H) * 0.12;
+    buildFlower();
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  draw();
+})();
+</script>
+</body>
+</html>
