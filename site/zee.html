@@ -494,12 +494,24 @@
     ctx.fillText('(Mars: onder zand, zelfde patroon)', cx + Math.cos(time * 0.1) * labelR * 0.3, cy - labelR + 10);
   }
 
-  // ── Water Laag ──
+  // ── Water Laag (+ getijden vervorming) ──
   function drawWaterLayer() {
     if (!showLayer('water')) return;
 
     const inner = R * LAYERS.water.inner;
     const outer = R * LAYERS.water.outer;
+
+    // Getijden: maan veroorzaakt dubbele bol (naar maan + tegenovergesteld)
+    let moonAngle = 0;
+    let tidalAmplitude = 0;
+    if (showPlanets) {
+      const maan = PLANETS.find(p => p.name === 'maan');
+      if (maan) {
+        moonAngle = time * maan.speed + maan.phase;
+        const tidalInf = COSMIC_INFLUENCE['maan'];
+        tidalAmplitude = (tidalInf ? tidalInf.strength : 0.7) * 8; // max 8px vervorming
+      }
+    }
 
     // Kosmische invloed op water
     let cosmicPulse = 0;
@@ -508,20 +520,35 @@
         const inf = COSMIC_INFLUENCE[pl.name];
         if (inf && inf.layer === 'water') {
           const pAngle = time * pl.speed + pl.phase;
-          const dist = Math.cos(pAngle - Math.PI * 0.5); // hoe dicht bij top?
+          const dist = Math.cos(pAngle - Math.PI * 0.5);
           cosmicPulse += inf.strength * (0.5 + dist * 0.5) * 0.1;
         }
       });
       cosmicPulse = Math.min(cosmicPulse, 0.3);
     }
 
-    // Water zone
+    // Water zone (met getijden vervorming aan buitenrand)
     const wGrad = ctx.createRadialGradient(cx, cy, inner, cx, cy, outer);
     wGrad.addColorStop(0, `rgba(30,80,150,${0.35 + cosmicPulse})`);
     wGrad.addColorStop(0.5, `rgba(20,50,120,${0.25 + cosmicPulse * 0.5})`);
     wGrad.addColorStop(1, `rgba(40,80,160,${0.15 + cosmicPulse * 0.3})`);
     ctx.beginPath();
-    ctx.arc(cx, cy, outer, 0, Math.PI * 2);
+
+    // Getijden vervorming: dubbele bol (2*Math.cos(2*theta) = bol bij maan + tegenover)
+    const tidalSteps = 120;
+    for (let i = 0; i <= tidalSteps; i++) {
+      const angle = (i / tidalSteps) * Math.PI * 2;
+      const thetaDiff = angle - moonAngle;
+      const tidalBulge = Math.cos(2 * thetaDiff) * tidalAmplitude;
+      const r = outer + tidalBulge;
+      const px = cx + Math.cos(angle) * r;
+      const py = cy + Math.sin(angle) * r;
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+
+    // Inner ring (normaal, niet vervormd)
     ctx.arc(cx, cy, inner, 0, Math.PI * 2, true);
     ctx.fillStyle = wGrad;
     ctx.fill();
@@ -561,6 +588,55 @@
       ctx.strokeStyle = `rgba(80,120,180,0.15)`;
       ctx.lineWidth = 0.5;
       ctx.stroke();
+    }
+
+    // ── Getijden markers ──
+    if (showPlanets && tidalAmplitude > 0) {
+      // Hoogwater (naar maan)
+      const hwR = outer + tidalAmplitude;
+      const hwX = cx + Math.cos(moonAngle) * hwR;
+      const hwY = cy + Math.sin(moonAngle) * hwR;
+      ctx.beginPath();
+      ctx.arc(hwX, hwY, 2, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(80,160,200,0.25)';
+      ctx.fill();
+      ctx.fillStyle = 'rgba(80,160,200,0.2)';
+      ctx.font = '0.22em "IBM Plex Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('hoogwater ↑', hwX, hwY + 10);
+
+      // Hoogwater (tegenover maan)
+      const hw2Angle = moonAngle + Math.PI;
+      const hw2X = cx + Math.cos(hw2Angle) * hwR;
+      const hw2Y = cy + Math.sin(hw2Angle) * hwR;
+      ctx.beginPath();
+      ctx.arc(hw2X, hw2Y, 2, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(80,160,200,0.25)';
+      ctx.fill();
+      ctx.fillStyle = 'rgba(80,160,200,0.2)';
+      ctx.fillText('hoogwater ↑', hw2X, hw2Y + 10);
+
+      // Laagwater (tussen de bollen in, 90° verschoven)
+      const lwAngle1 = moonAngle + Math.PI * 0.5;
+      const lwAngle2 = moonAngle - Math.PI * 0.5;
+      const lwR = outer - tidalAmplitude * 0.6;
+      [lwAngle1, lwAngle2].forEach(lwA => {
+        const lwX = cx + Math.cos(lwA) * lwR;
+        const lwY = cy + Math.sin(lwA) * lwR;
+        ctx.beginPath();
+        ctx.arc(lwX, lwY, 1.5, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(180,200,100,0.15)';
+        ctx.fill();
+        ctx.fillStyle = 'rgba(180,200,100,0.12)';
+        ctx.font = '0.20em "IBM Plex Mono", monospace';
+        ctx.fillText('laagwater ↓', lwX, lwY + 8);
+      });
+
+      // Getijden label
+      ctx.fillStyle = 'rgba(80,160,200,0.12)';
+      ctx.font = '0.22em "IBM Plex Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('getijden = maan trekkracht (dubbele bol)', cx, cy + outer + tidalAmplitude + 22);
     }
 
     // Verdampings indicator (volgt zonpositie — waar zon schijnt = verdamping)
