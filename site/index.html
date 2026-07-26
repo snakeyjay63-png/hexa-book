@@ -1,134 +1,571 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>• Hexa-Boek</title>
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="stylesheet" href="css/main.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>• Hexa — Het Veld</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { overflow-x: hidden; }
+    body {
+      background: #06060a;
+      color: #e0e0e0;
+      font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+      overflow-x: hidden;
+    }
+
+    /* ── Entry Canvas ── */
+    #entry-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+    }
+
+    /* ── Entry Overlay ── */
+    #entry-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      transition: opacity 1.5s ease;
+    }
+    #entry-overlay.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .entry-dot {
+      font-size: 4rem;
+      color: #7c6ef5;
+      opacity: 0;
+      animation: dot-appear 2s ease 0.5s forwards;
+      text-shadow: 0 0 40px rgba(124,110,245,0.6);
+    }
+
+    .entry-title {
+      font-size: 1rem;
+      color: #e0e0e0;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-top: 20px;
+      opacity: 0;
+      animation: text-appear 2s ease 1.2s forwards;
+    }
+
+    .entry-sub {
+      font-size: 0.7rem;
+      color: #7a7a94;
+      margin-top: 12px;
+      opacity: 0;
+      animation: text-appear 2s ease 1.8s forwards;
+      letter-spacing: 0.15em;
+    }
+
+    .entry-hint {
+      position: absolute;
+      bottom: 60px;
+      font-size: 0.65rem;
+      color: #4a4a62;
+      opacity: 0;
+      animation: text-appear 1.5s ease 3s forwards, pulse 3s ease-in-out 4.5s infinite;
+      letter-spacing: 0.1em;
+    }
+
+    @keyframes dot-appear {
+      0%   { opacity: 0; transform: scale(0.3); }
+      50%  { opacity: 1; transform: scale(1.1); }
+      100% { opacity: 0.9; transform: scale(1); }
+    }
+    @keyframes text-appear {
+      0%   { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 0.8; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; }
+      50%      { opacity: 0.7; }
+    }
+
+    /* ── Main Site (behind entry, revealed after) ── */
+    #main-site {
+      position: relative;
+      z-index: 5;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    #main-site.visible {
+      opacity: 1;
+    }
+
+    /* ── Hero Section ── */
+    .hero-section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 40px 20px;
+      background: transparent;
+    }
+
+    .hero-dot {
+      font-size: 3rem;
+      color: #7c6ef5;
+      text-shadow: 0 0 30px rgba(124,110,245,0.5);
+      margin-bottom: 20px;
+    }
+
+    .hero-title {
+      font-size: 0.9rem;
+      color: #e0e0e0;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .hero-tagline {
+      font-size: 0.75rem;
+      color: #7a7a94;
+      letter-spacing: 0.1em;
+      text-align: center;
+      max-width: 500px;
+      line-height: 1.8;
+    }
+
+    .hero-tagline em {
+      color: #8ecae6;
+      font-style: normal;
+    }
+
+    /* ── Portal Grid ── */
+    .portal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      max-width: 900px;
+      width: 100%;
+      padding: 80px 40px;
+      margin: 0 auto;
+    }
+
+    .portal-card {
+      position: relative;
+      aspect-ratio: 1;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(124,110,245,0.15);
+      background: rgba(12,12,20,0.8);
+      backdrop-filter: blur(8px);
+    }
+    .portal-card:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 10px 40px rgba(124,110,245,0.2);
+      border-color: rgba(124,110,245,0.4);
+    }
+
+    .portal-icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+      opacity: 0.8;
+    }
+
+    .portal-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .portal-desc {
+      font-size: 0.65rem;
+      opacity: 0.5;
+      text-align: center;
+      padding: 0 20px;
+      line-height: 1.5;
+    }
+
+    /* Card accent colors */
+    .portal-card.zee     { border-color: rgba(142,202,230,0.2); }
+    .portal-card.zee:hover  { box-shadow: 0 10px 40px rgba(142,202,230,0.2); }
+    .portal-card.bit     { border-color: rgba(124,110,245,0.2); }
+    .portal-card.bit:hover  { box-shadow: 0 10px 40px rgba(124,110,245,0.2); }
+    .portal-card.bitc    { border-color: rgba(251,191,36,0.2); }
+    .portal-card.bitc:hover { box-shadow: 0 10px 40px rgba(251,191,36,0.2); }
+    .portal-card.licht   { border-color: rgba(248,113,113,0.2); }
+    .portal-card.licht:hover { box-shadow: 0 10px 40px rgba(248,113,113,0.2); }
+    .portal-card.dna     { border-color: rgba(167,139,250,0.2); }
+    .portal-card.dna:hover  { box-shadow: 0 10px 40px rgba(167,139,250,0.2); }
+    .portal-card.priemen { border-color: rgba(52,211,153,0.2); }
+    .portal-card.priemen:hover { box-shadow: 0 10px 40px rgba(52,211,153,0.2); }
+    .portal-card.spec    { border-color: rgba(34,211,238,0.2); }
+    .portal-card.spec:hover { box-shadow: 0 10px 40px rgba(34,211,238,0.2); }
+
+    /* ── Section Divider ── */
+    .section-divider {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #7c6ef5, transparent);
+      margin: 0 auto;
+    }
+
+    /* ── Footer ── */
+    .site-footer {
+      text-align: center;
+      padding: 60px 20px;
+      font-size: 0.6rem;
+      color: #4a4a62;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── Top Nav (subtle) ── */
+    #nav-top {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      display: flex;
+      gap: 16px;
+      z-index: 100;
+      font-size: 0.65rem;
+      opacity: 0.5;
+      transition: opacity 0.3s ease;
+    }
+    #nav-top:hover { opacity: 1; }
+    #nav-top a {
+      color: #7a7a94;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    #nav-top a:hover { color: #e0e0e0; }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .portal-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        padding: 40px 20px;
+      }
+      .hero-title { font-size: 0.75rem; letter-spacing: 0.2em; }
+      .entry-dot { font-size: 3rem; }
+    }
+  </style>
 </head>
 <body>
-<!-- Top nav -->
+
+<!-- Entry Canvas (animated background) -->
+<canvas id="entry-canvas"></canvas>
+
+<!-- Entry Overlay (intro text) -->
+<div id="entry-overlay">
+  <div class="entry-dot">•</div>
+  <div class="entry-title">Hexa — Het Veld</div>
+  <div class="entry-sub">De beste taal om te vertalen is geometrisch</div>
+  <div class="entry-hint">scroll of click ↓</div>
+</div>
+
+<!-- Top Nav -->
 <nav id="nav-top">
-  <a href="spectrum.html" style="color:#7c6ef5;text-decoration:none;opacity:0.7;">spectrum</a>
-  <a href="dna.html" style="color:#fbbf24;text-decoration:none;opacity:0.7;">DNA</a>
-  <a href="priemen.html" style="color:#a78bfa;text-decoration:none;opacity:0.7;">priemen</a>
-  <a href="licht.html" style="color:#a78bfa;text-decoration:none;opacity:0.7;">licht</a>
-  <a href="zee.html" style="color:#8ec6e6;text-decoration:none;opacity:0.7;">zee</a>
-  <a href="bit.html" style="color:#7c6ef5;text-decoration:none;opacity:0.7;">bit</a>
+  <a href="zee.html">zee</a>
+  <a href="bit.html">bit</a>
+  <a href="bit-classic.html">bit-classic</a>
+  <a href="licht.html">licht</a>
+  <a href="dna.html">dna</a>
+  <a href="priemen.html">priemen</a>
+  <a href="spectrum.html">spectrum</a>
 </nav>
 
-<!-- Floating nav -->
-<nav id="spectrum-nav">
-  <div class="nav-dot" data-band="p0" title="P0 — As"></div>
-  <div class="nav-dot" data-band="p1" title="P1 — Kern"></div>
-  <div class="nav-dot" data-band="p2" title="P2 — Mantel"></div>
-  <div class="nav-dot" data-band="p3" title="P3 — Korst"></div>
-  <div class="nav-dot" data-band="p4" title="P4 — Atmosfeer"></div>
-  <div class="nav-dot" data-band="p5" title="P5 — Ionosfeer"></div>
-  <div class="nav-dot" data-band="p6" title="P6 — Magnetosfeer"></div>
-</nav>
+<!-- Main Site Content -->
+<div id="main-site">
 
-<!-- Bit Slider -->
-<div id="bit-control">
-  <div id="bit-display">
-    <span id="bit-value">5</span><span id="bit-unit">-bit</span>
+  <!-- Hero -->
+  <section class="hero-section">
+    <div class="hero-dot">•</div>
+    <div class="hero-title">Hexa — Het Veld</div>
+    <div class="hero-tagline">
+      Eén substantie. Zeven snelheden.<br>
+      <em>Dezelfde waarheid. Achttien hoeken.</em><br>
+      Elk punt is een andere lens op hetzelfde veld.
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- Portal Grid -->
+  <div class="portal-grid">
+
+    <a href="zee.html" class="portal-card zee">
+      <div class="portal-icon">🌊</div>
+      <div class="portal-name">Zee</div>
+      <div class="portal-desc">Plasma core × ijspolen. Het water spectrum in beweging.</div>
+    </a>
+
+    <a href="bit.html" class="portal-card bit">
+      <div class="portal-icon">◈</div>
+      <div class="portal-name">Bit</div>
+      <div class="portal-desc">De hexa golf. 1→2→4→8→chaos. Digitale resonantie.</div>
+    </a>
+
+    <a href="bit-classic.html" class="portal-card bitc">
+      <div class="portal-icon">⚡</div>
+      <div class="portal-name">Bit Classic</div>
+      <div class="portal-desc">Originele hexa golf met spanning en ontlading.</div>
+    </a>
+
+    <a href="licht.html" class="portal-card licht">
+      <div class="portal-icon">✦</div>
+      <div class="portal-name">Licht</div>
+      <div class="portal-desc">Fotonen als taal. Spectrum als structuur.</div>
+    </a>
+
+    <a href="dna.html" class="portal-card dna">
+      <div class="portal-icon">∞</div>
+      <div class="portal-name">DNA</div>
+      <div class="portal-desc">Dubbele helix als hexa-code. Leven als frequentie.</div>
+    </a>
+
+    <a href="priemen.html" class="portal-card priemen">
+      <div class="portal-icon">△</div>
+      <div class="portal-name">Priemen</div>
+      <div class="portal-desc">Priemgetallen als veldresonantie. Het skelet van getallen.</div>
+    </a>
+
+    <a href="spectrum.html" class="portal-card spec">
+      <div class="portal-icon">◉</div>
+      <div class="portal-name">Spectrum</div>
+      <div class="portal-desc">Het volledige water spectrum. P0 → P6. Ijs tot veld.</div>
+    </a>
+
   </div>
-  <input type="range" min="5" max="24" value="5" class="bit-slider" id="bit-slider">
-  <div id="bit-labels">
-    <span>5</span>
-    <span>24</span>
-  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    Alles komt terug. •<br>
+    Hexa-Boek — 2026
+  </footer>
+
 </div>
 
-<!-- Vertical Navigation — P0 → P6 (and back) -->
-<nav id="depth-nav">
-  <button id="nav-up" title="Omhoog — meer complexiteit">↑</button>
-  <div id="depth-label">P0</div>
-  <button id="nav-down" title="Omlaag — minder complexiteit">↓</button>
-</nav>
+<script>
+(function() {
+  // ── Entry Animation Canvas ──
+  const canvas = document.getElementById('entry-canvas');
+  const ctx = canvas.getContext('2d');
+  const overlay = document.getElementById('entry-overlay');
+  const mainSite = document.getElementById('main-site');
 
-<!-- Main: Book Index -->
-<main id="book-index">
-  <!-- P0: As (always visible) -->
-  <section class="book-band" data-band="p0" data-min-bit="5">
-    <div class="band-header">
-      <span class="band-id">P0</span>
-      <span class="band-title">As — Shambala</span>
-      <span class="band-state">ijs (tijdloos)</span>
-    </div>
-    <div class="band-articles"></div>
-  </section>
+  let W, H, cx, cy;
+  let particles = [];
+  let hexParticles = [];
+  let entered = false;
+  let entryTime = 0;
 
-  <!-- P1: Kern -->
-  <section class="book-band" data-band="p1" data-min-bit="7">
-    <div class="band-header">
-      <span class="band-id">P1</span>
-      <span class="band-title">Kern — Priem 2</span>
-      <span class="band-state">traag water</span>
-    </div>
-    <div class="band-articles"></div>
-  </section>
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    cx = W / 2;
+    cy = H / 2;
+  }
+  window.addEventListener('resize', resize);
+  resize();
 
-  <!-- P2: Mantel -->
-  <section class="book-band" data-band="p2" data-min-bit="9">
-    <div class="band-header">
-      <span class="band-id">P2</span>
-      <span class="band-title">Mantel — Priem 3</span>
-      <span class="band-state">half-ijs</span>
-    </div>
-    <div class="band-articles"></div>
-  </section>
+  // Create hex-grid particles
+  function initParticles() {
+    particles = [];
+    const count = Math.floor((W * H) / 8000);
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        r: Math.random() * 1.5 + 0.5,
+        alpha: Math.random() * 0.3 + 0.05,
+        hue: 240 + Math.random() * 60, // purple-blue range
+        pulse: Math.random() * Math.PI * 2,
+        pulseSpeed: 0.005 + Math.random() * 0.01
+      });
+    }
 
-  <!-- P3: Korst — ANKER -->
-  <section class="book-band" data-band="p3" data-min-bit="12">
-    <div class="band-header">
-      <span class="band-id">P3</span>
-      <span class="band-title">Korst — WIJ — Park of Peace</span>
-      <span class="band-state">wakker</span>
-    </div>
-    <div class="band-articles"></div>
-  </section>
+    // Hexagonal ring particles
+    hexParticles = [];
+    const ringCount = 60;
+    const rings = 3;
+    for (let r = 0; r < rings; r++) {
+      const ringR = 80 + r * 60;
+      const count = ringCount + r * 15;
+      for (let i = 0; i < count; i++) {
+        const angle = (i / count) * Math.PI * 2 + r * 0.3;
+        hexParticles.push({
+          baseAngle: angle,
+          ringR: ringR,
+          ring: r,
+          speed: 0.0003 * (r % 2 === 0 ? 1 : -1),
+          alpha: 0.15 - r * 0.04,
+          hue: 250 + r * 20,
+          size: 1.5 - r * 0.3
+        });
+      }
+    }
+  }
+  initParticles();
 
-  <!-- P4: Atmosfeer -->
-  <section class="book-band" data-band="p4" data-min-bit="16">
-    <div class="band-header">
-      <span class="band-id">P4</span>
-      <span class="band-title">Atmosfeer — Priem 7</span>
-      <span class="band-state">snel water</span>
-    </div>
-    <div class="band-articles"></div>
-  </section>
+  // Draw connections
+  function drawConnections() {
+    const maxDist = 100;
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < maxDist) {
+          const alpha = (1 - dist / maxDist) * 0.06;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(124,110,245,${alpha})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+  }
 
-  <!-- P5: Ionosfeer -->
-  <section class="book-band" data-band="p5" data-min-bit="20">
-    <div class="band-header">
-      <span class="band-id">P5</span>
-      <span class="band-title">Ionosfeer — Priem 11</span>
-      <span class="band-state">plasma</span>
-    </div>
-    <div class="band-articles"></div>
-  </section>
+  // Draw central hex pulse
+  function drawCore(time) {
+    const pulseR = 20 + Math.sin(time * 0.001) * 5;
 
-  <!-- P6: Magnetosfeer -->
-  <section class="book-band" data-band="p6" data-min-bit="24">
-    <div class="band-header">
-      <span class="band-id">P6</span>
-      <span class="band-title">Magnetosfeer — Priem 13</span>
-      <span class="band-state">veld (snelst)</span>
-    </div>
-    <div class="band-articles"></div>
-  </section>
-</main>
+    // Outer glow
+    const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, pulseR * 4);
+    glow.addColorStop(0, 'rgba(124,110,245,0.08)');
+    glow.addColorStop(0.5, 'rgba(124,110,245,0.02)');
+    glow.addColorStop(1, 'rgba(124,110,245,0)');
+    ctx.beginPath();
+    ctx.arc(cx, cy, pulseR * 4, 0, Math.PI * 2);
+    ctx.fillStyle = glow;
+    ctx.fill();
 
-<!-- Resolutie overlay -->
-<div id="resolutie-overlay">
-  <div class="resolutie-info">
-    <div class="bit-label" id="bit-label">24-bit</div>
-    <div class="perspectief-label" id="perspectief-label">Volledig spectrum</div>
-  </div>
-</div>
+    // Core dot
+    const core = ctx.createRadialGradient(cx, cy, 0, cx, cy, pulseR);
+    core.addColorStop(0, 'rgba(124,110,245,0.6)');
+    core.addColorStop(0.5, 'rgba(124,110,245,0.2)');
+    core.addColorStop(1, 'rgba(124,110,245,0)');
+    ctx.beginPath();
+    ctx.arc(cx, cy, pulseR, 0, Math.PI * 2);
+    ctx.fillStyle = core;
+    ctx.fill();
+  }
 
-<script src="js/app.js"></script>
+  // Main draw loop
+  let time = 0;
+  function draw() {
+    time++;
+    ctx.fillStyle = 'rgba(6,6,10,0.15)';
+    ctx.fillRect(0, 0, W, H);
+
+    // Draw core
+    drawCore(Date.now());
+
+    // Draw hex rings
+    hexParticles.forEach(p => {
+      const angle = p.baseAngle + Date.now() * p.speed;
+      const wobble = Math.sin(angle * 3 + time * 0.02) * 3;
+      const x = cx + Math.cos(angle) * (p.ringR + wobble);
+      const y = cy + Math.sin(angle) * (p.ringR + wobble);
+
+      ctx.beginPath();
+      ctx.arc(x, y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${p.hue}, 40%, 65%, ${p.alpha})`;
+      ctx.fill();
+    });
+
+    // Update and draw particles
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.pulse += p.pulseSpeed;
+
+      // Wrap
+      if (p.x < 0) p.x = W;
+      if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H;
+      if (p.y > H) p.y = 0;
+
+      const currentAlpha = p.alpha * (0.5 + 0.5 * Math.sin(p.pulse));
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${p.hue}, 40%, 65%, ${currentAlpha})`;
+      ctx.fill();
+    });
+
+    // Draw connections (throttled)
+    if (time % 3 === 0) {
+      drawConnections();
+    }
+
+    if (!entered) {
+      requestAnimationFrame(draw);
+    }
+  }
+  draw();
+
+  // ── Entry Trigger ──
+  function triggerEntry() {
+    if (entered) return;
+    entered = true;
+
+    overlay.classList.add('fade-out');
+    setTimeout(() => {
+      mainSite.classList.add('visible');
+      // Fade out canvas slowly
+      canvas.style.transition = 'opacity 2s ease';
+      canvas.style.opacity = '0.3';
+    }, 800);
+  }
+
+  // Click/tap to enter
+  document.addEventListener('click', function handler() {
+    triggerEntry();
+  });
+
+  // Scroll to enter
+  let scrollTriggered = false;
+  window.addEventListener('wheel', function() {
+    if (!scrollTriggered) {
+      scrollTriggered = true;
+      triggerEntry();
+    }
+  });
+
+  // Auto-enter after 6 seconds
+  setTimeout(() => {
+    if (!entered) triggerEntry();
+  }, 6000);
+
+  // Re-init on resize
+  window.addEventListener('resize', () => {
+    initParticles();
+  });
+})();
+</script>
 </body>
 </html>
