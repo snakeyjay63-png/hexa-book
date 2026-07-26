@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DNA als Veld-Expressie | Hexa-Boek</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #06060a;
+  color: #d4d4e0;
+  font-family: 'Instrument Sans', -apple-system, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.dna-container {
+  position: relative;
+  width: 500px;
+  height: 600px;
+}
+
+.dna-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.dna-info {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: #7a7a94;
+  pointer-events: none;
+}
+
+.dna-info .label {
+  color: #fbbf24;
+  font-weight: 500;
+}
+
+.back-btn {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  padding: 8px 16px;
+  background: rgba(30,30,48,.8);
+  border: 1px solid #1e1e30;
+  border-radius: 99px;
+  color: #7a7a94;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all .15s ease;
+  z-index: 100;
+}
+
+.back-btn:hover {
+  background: rgba(124,110,245,.2);
+  border-color: #7c6ef5;
+  color: #d4d4e0;
+}
+</style>
+</head>
+<body>
+
+<button class="back-btn" onclick="location.href='/'">← terug</button>
+
+<div class="dna-container">
+  <canvas class="dna-canvas" id="dnaCanvas"></canvas>
+  <div class="dna-info">
+    <span class="label">DNA</span> = opslag (ijs P0→P2) → expressie (water P3→P6)
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('dnaCanvas');
+const ctx = canvas.getContext('2d');
+
+function resize() {
+  canvas.width = canvas.offsetWidth * 2;
+  canvas.height = canvas.offsetHeight * 2;
+  ctx.scale(2, 2);
+}
+resize();
+
+const W = () => canvas.offsetWidth;
+const H = () => canvas.offsetHeight;
+
+// DNA parameters
+const bands = [
+  { id: 'P0', color: '#ffffff', label: 'As' },
+  { id: 'P1', color: '#e0e0e8', label: 'Structuur' },
+  { id: 'P2', color: '#8ecae6', label: 'Patroon' },
+  { id: 'P3', color: '#fbbf24', label: 'Leven' },
+  { id: 'P4', color: '#219ebc', label: 'Taal' },
+  { id: 'P5', color: '#023047', label: 'Lens' },
+  { id: 'P6', color: '#7c6ef5', label: 'Pomp' },
+];
+
+let t = 0;
+
+function draw() {
+  const w = W(), h = H();
+  ctx.clearRect(0, 0, w, h);
+
+  const cx = w / 2;
+  const cy = h / 2;
+
+  // DNA double helix
+  const strands = 7; // 7 bands = 7 helix strands
+  const amplitude = 60;
+  const frequency = 0.015;
+  const speed = 0.02;
+  const spacing = 8;
+
+  for (let s = 0; s < strands; s++) {
+    const band = bands[s];
+    const phaseOffset = (s / strands) * Math.PI * 2;
+    const strandAmp = amplitude * (1 - s / strands * 0.5);
+
+    ctx.beginPath();
+    ctx.strokeStyle = band.color;
+    ctx.lineWidth = 1.5;
+    ctx.globalAlpha = 0.6;
+
+    for (let y = 0; y < h; y += 2) {
+      const x = cx + Math.sin(y * frequency + t * speed + phaseOffset) * strandAmp;
+      if (y === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+
+  // Horizontal connections (base pairs)
+  ctx.globalAlpha = 0.15;
+  for (let y = 0; y < h; y += spacing) {
+    const x1 = cx + Math.sin(y * frequency + t * speed) * amplitude;
+    const x2 = cx + Math.sin(y * frequency + t * speed + Math.PI) * amplitude;
+    ctx.beginPath();
+    ctx.strokeStyle = '#7c6ef5';
+    ctx.lineWidth = 0.5;
+    ctx.moveTo(x1, y);
+    ctx.lineTo(x2, y);
+    ctx.stroke();
+  }
+
+  // P3 highlight (Park of Peace)
+  ctx.globalAlpha = 0.3 + Math.sin(t * 0.03) * 0.15;
+  for (let y = 0; y < h; y += 2) {
+    const band = bands[3]; // P3
+    const phaseOffset = (3 / strands) * Math.PI * 2;
+    const strandAmp = amplitude * (1 - 3 / strands * 0.5);
+    const x = cx + Math.sin(y * frequency + t * speed + phaseOffset) * strandAmp;
+
+    ctx.beginPath();
+    ctx.fillStyle = band.color;
+    ctx.arc(x, y, 2, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Labels
+  ctx.globalAlpha = 0.5;
+  ctx.font = "9px 'JetBrains Mono', monospace";
+  bands.forEach((b, i) => {
+    const phaseOffset = (i / strands) * Math.PI * 2;
+    const strandAmp = amplitude * (1 - i / strands * 0.5);
+    const labelY = 30 + i * 70;
+    const labelX = cx + Math.sin(labelY * frequency + t * speed + phaseOffset) * strandAmp + 12;
+    ctx.fillStyle = b.color;
+    ctx.fillText(b.id, labelX, labelY);
+  });
+
+  // Center axis line (P0)
+  ctx.globalAlpha = 0.2;
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(cx, 0);
+  ctx.lineTo(cx, h);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Footer text
+  ctx.globalAlpha = 0.4;
+  ctx.fillStyle = '#7a7a94';
+  ctx.font = "8px 'JetBrains Mono', monospace";
+  ctx.textAlign = 'center';
+  ctx.fillText('7 banden = 7 DNA-snelheden', cx, h - 10);
+
+  t++;
+  requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+
+</body>
+</html>

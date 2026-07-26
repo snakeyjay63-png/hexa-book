@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Priemen als On-reduceerbare Perspectieven | Hexa-Boek</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #06060a;
+  color: #d4d4e0;
+  font-family: 'Instrument Sans', -apple-system, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.priem-container {
+  position: relative;
+  width: 600px;
+  height: 600px;
+}
+
+.priem-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.priem-info {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: #7a7a94;
+  pointer-events: none;
+}
+
+.priem-info .label {
+  color: #a78bfa;
+  font-weight: 500;
+}
+
+.back-btn {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  padding: 8px 16px;
+  background: rgba(30,30,48,.8);
+  border: 1px solid #1e1e30;
+  border-radius: 99px;
+  color: #7a7a94;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all .15s ease;
+  z-index: 100;
+}
+
+.back-btn:hover {
+  background: rgba(124,110,245,.2);
+  border-color: #7c6ef5;
+  color: #d4d4e0;
+}
+
+.title {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: #a78bfa;
+  text-align: center;
+  z-index: 100;
+}
+</style>
+</head>
+<body>
+
+<button class="back-btn" onclick="location.href='/'">← terug</button>
+<div class="title">Priemen als On-reduceerbare Perspectieven</div>
+
+<div class="priem-container">
+  <canvas class="priem-canvas" id="priemCanvas"></canvas>
+  <div class="priem-info">
+    <span class="label">priem</span> = uniek perspectief van "3" dat niet te reduceren is
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('priemCanvas');
+const ctx = canvas.getContext('2d');
+
+function resize() {
+  canvas.width = canvas.offsetWidth * 2;
+  canvas.height = canvas.offsetHeight * 2;
+  ctx.scale(2, 2);
+}
+resize();
+
+const W = () => canvas.offsetWidth;
+const H = () => canvas.offsetHeight;
+
+// Priemen + band mapping
+const priemen = [
+  { n: 0,  band: 'P0', label: 'As (Shambala)',     color: '#ffffff' },
+  { n: 2,  band: 'P1', label: 'Structuur',          color: '#e0e0e8' },
+  { n: 3,  band: 'P2', label: 'Patroon (DNA)',      color: '#8ecae6' },
+  { n: 5,  band: 'P3', label: 'Leven (Ark)',        color: '#fbbf24' },
+  { n: 7,  band: 'P4', label: 'Communicatie',       color: '#219ebc' },
+  { n: 11, band: 'P5', label: 'Perceptie',          color: '#023047' },
+  { n: 13, band: 'P6', label: 'Regenatie (pomp)',   color: '#7c6ef5' },
+  { n: 17, band: '?',  label: 'beyond P6',          color: '#a78bfa' },
+  { n: 19, band: '?',  label: 'beyond P6',          color: '#c4b5fd' },
+  { n: 23, band: '?',  label: 'beyond P6',          color: '#8ecae6' },
+];
+
+let t = 0;
+
+function hexagon(cx, cy, r, rotation = 0) {
+  const points = [];
+  for (let i = 0; i < 6; i++) {
+    const angle = (Math.PI / 3) * i + rotation;
+    points.push({
+      x: cx + r * Math.cos(angle),
+      y: cy + r * Math.sin(angle),
+    });
+  }
+  return points;
+}
+
+function draw() {
+  const w = W(), h = H();
+  ctx.clearRect(0, 0, w, h);
+
+  const cx = w / 2;
+  const cy = h / 2;
+
+  // Draw hex grid with priemen
+  const hexR = 25;
+  const spacingX = hexR * 1.8;
+  const spacingY = hexR * 1.6;
+
+  // Hex grid background
+  ctx.globalAlpha = 0.08;
+  ctx.strokeStyle = '#7c6ef5';
+  ctx.lineWidth = 0.5;
+
+  for (let row = -2; row < 6; row++) {
+    for (let col = -2; col < 6; col++) {
+      const x = cx + col * spacingX + (row % 2) * (spacingX / 2);
+      const y = cy + row * spacingY;
+      const pts = hexagon(x, y, hexR, t * 0.001);
+
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      pts.forEach(p => ctx.lineTo(p.x, p.y));
+      ctx.closePath();
+      ctx.stroke();
+    }
+  }
+
+  // Draw priemen as glowing hexagons
+  priemen.forEach((p, i) => {
+    const angle = (i / priemen.length) * Math.PI * 2 + t * 0.005;
+    const radius = 100 + Math.sin(t * 0.01 + i) * 20;
+    const px = cx + Math.cos(angle) * radius;
+    const py = cy + Math.sin(angle) * radius;
+
+    // Glow
+    ctx.globalAlpha = 0.15 + Math.sin(t * 0.02 + i) * 0.1;
+    const pts = hexagon(px, py, hexR + 5, t * 0.002);
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    pts.forEach(pt => ctx.lineTo(pt.x, pt.y));
+    ctx.closePath();
+    ctx.fillStyle = p.color;
+    ctx.fill();
+
+    // Hex
+    ctx.globalAlpha = 0.8;
+    const pts2 = hexagon(px, py, hexR, t * 0.002);
+    ctx.beginPath();
+    ctx.moveTo(pts2[0].x, pts2[0].y);
+    pts2.forEach(pt => ctx.lineTo(pt.x, pt.y));
+    ctx.closePath();
+    ctx.strokeStyle = p.color;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Number
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = p.color;
+    ctx.font = "bold 14px 'JetBrains Mono', monospace";
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(p.n, px, py - 6);
+
+    // Band label
+    ctx.globalAlpha = 0.6;
+    ctx.font = "8px 'JetBrains Mono', monospace";
+    ctx.fillText(p.band, px, py + 8);
+  });
+
+  // Connection lines between priemen
+  ctx.globalAlpha = 0.1;
+  ctx.strokeStyle = '#7c6ef5';
+  ctx.lineWidth = 0.5;
+  ctx.setLineDash([2, 4]);
+
+  for (let i = 0; i < priemen.length; i++) {
+    for (let j = i + 1; j < priemen.length; j++) {
+      const angleI = (i / priemen.length) * Math.PI * 2 + t * 0.005;
+      const angleJ = (j / priemen.length) * Math.PI * 2 + t * 0.005;
+      const rI = 100 + Math.sin(t * 0.01 + i) * 20;
+      const rJ = 100 + Math.sin(t * 0.01 + j) * 20;
+
+      const x1 = cx + Math.cos(angleI) * rI;
+      const y1 = cy + Math.sin(angleI) * rI;
+      const x2 = cx + Math.cos(angleJ) * rJ;
+      const y2 = cy + Math.sin(angleJ) * rJ;
+
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
+  }
+
+  ctx.setLineDash([]);
+
+  // Center
+  ctx.globalAlpha = 0.3;
+  ctx.fillStyle = '#ffffff';
+  ctx.font = "10px 'JetBrains Mono', monospace";
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('3 = kern', cx, cy);
+
+  // Footer
+  ctx.globalAlpha = 0.3;
+  ctx.fillStyle = '#7a7a94';
+  ctx.font = "8px 'JetBrains Mono', monospace";
+  ctx.fillText('Elk priem = irreducible perspectief', cx, h - 10);
+
+  t++;
+  requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+
+</body>
+</html>
