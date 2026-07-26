@@ -72,6 +72,35 @@
     margin-top: 4px;
   }
 
+  #speed-control {
+    display: flex;
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  .speed-btn {
+    padding: 4px 12px;
+    border: 1px solid rgba(124, 110, 245, 0.3);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--text-soft);
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .speed-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .speed-btn.active {
+    background: var(--accent);
+    color: #06060a;
+    border-color: var(--accent);
+  }
+
   #autoplay-progress {
     width: 100px;
     height: 2px;
@@ -130,10 +159,17 @@
     <div class="stage-dot" data-stage="2"></div>
     <div class="stage-dot" data-stage="3"></div>
     <div class="stage-dot" data-stage="4"></div>
+    <div class="stage-dot" data-stage="5"></div>
+    <div class="stage-dot" data-stage="6"></div>
   </div>
   <div class="btn-row">
     <button id="play-btn">▶ PLAY</button>
     <button id="autoplay-btn">⏵ AUTO</button>
+  </div>
+  <div id="speed-control">
+    <button class="speed-btn" data-speed="0.5">0.5×</button>
+    <button class="speed-btn active" data-speed="1">1×</button>
+    <button class="speed-btn" data-speed="2">2×</button>
   </div>
   <div id="autoplay-progress">
     <div id="autoplay-bar"></div>
@@ -149,7 +185,7 @@
   const bitLabel = document.getElementById('bit-label');
 
   let W, H, cx, cy;
-  let stage = 0; // 0=bit, 1=wave, 2=4waves, 3=whitenoise, 4=mandelbrot
+  let stage = 0; // 0=bit, 1=wave, 2=oscillatie, 3=interferentie, 4=4harmonischen, 5=noise, 6=mandelbrot
   let playing = false;
   let time = 0;
   let audioCtx = null;
@@ -158,13 +194,16 @@
   let autoplay = false;
   let autoplayTimer = null;
   let autoplayInterval = null;
-  let autoplayDelay = 4000; // 4 seconden per stage
+  let autoplayDelay = 6000; // 6 seconden per stage
   let autoplayStart = 0;
+  let speedMultiplier = 1; // 0.5 = langzaam, 1 = normaal, 2 = snel
 
   const stages = [
     { name: '0 = 1', label: '1 bit licht — statisch' },
     { name: 'WAVE', label: 'bit vertragen → golf' },
-    { name: '4 WAVES', label: 'meerdere golven → resonantie' },
+    { name: 'OSCILLATIE', label: 'golf heen-en-weer → beat' },
+    { name: 'INTERFERENTIE', label: 'beat versnelt → patroon' },
+    { name: '4 HARMONISCHEN', label: 'patroon kristalliseert → resonantie' },
     { name: 'WHITE NOISE', label: 'chaos → alles tegelijk' },
     { name: 'MANDELBROT', label: 'oneindige complexiteit uit eenvoud' },
   ];
@@ -180,13 +219,22 @@
   resize();
 
   // ── Audio ──
+  let activeOscillators = [];
+  let activeNoiseNode = null;
+
   function initAudio() {
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   }
 
   function stopAudio() {
-    if (currentOsc) { currentOsc.stop(); currentOsc = null; }
-    if (noiseNode) { noiseNode.stop(); noiseNode = null; }
+    activeOscillators.forEach(function(o) {
+      try { o.stop(); } catch(e) {}
+    });
+    activeOscillators = [];
+    if (activeNoiseNode) {
+      try { activeNoiseNode.stop(); } catch(e) {}
+      activeNoiseNode = null;
+    }
   }
 
   function playStageAudio(s) {
@@ -194,34 +242,74 @@
     stopAudio();
 
     if (s === 0) {
-      // Single bit: pure tone
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.value = 440;
-      gain.gain.value = 0.05;
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      currentOsc = osc;
-
-    } else if (s === 1) {
-      // Wave: slowing sine
+      // 1 BIT: zuivere toon — stil punt
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = 'sine';
       osc.frequency.value = 220;
-      osc.frequency.exponentialRampToValueAtTime(55, audioCtx.currentTime + 4);
       gain.gain.value = 0.08;
       osc.connect(gain);
       gain.connect(audioCtx.destination);
       osc.start();
-      currentOsc = osc;
+      activeOscillators.push(osc);
+
+    } else if (s === 1) {
+      // WAVE: dezelfde toon — begint te dalen (vertraging)
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = 220;
+      osc.frequency.exponentialRampToValueAtTime(110, audioCtx.currentTime + 5);
+      gain.gain.value = 0.08;
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      activeOscillators.push(osc);
 
     } else if (s === 2) {
-      // 4 waves: polyphonic
-      const freqs = [110, 165, 220, 330];
-      freqs.forEach(function(f) {
+      // OSCILLATIE: dezelfde wave — gaat heen en weer (niet toevoegen, veranderen)
+      const osc = audioCtx.createOscillator();
+      const lfo = audioCtx.createOscillator();
+      const lfoGain = audioCtx.createGain();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = 165;
+      lfo.type = 'sine';
+      lfo.frequency.value = 0.5; // trage oscillatie
+      lfoGain.gain.value = 55;   // swing range
+      lfo.connect(lfoGain);
+      lfoGain.connect(osc.frequency);
+      gain.gain.value = 0.08;
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      lfo.start();
+      osc.start();
+      activeOscillators.push(osc, lfo);
+
+    } else if (s === 3) {
+      // INTERFERENTIE: oscillatie wordt sneller + complexer
+      const osc = audioCtx.createOscillator();
+      const lfo = audioCtx.createOscillator();
+      const lfoGain = audioCtx.createGain();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = 165;
+      lfo.type = 'sine';
+      lfo.frequency.value = 2; // snellere oscillatie → interferentie
+      lfoGain.gain.value = 82.5;
+      lfo.connect(lfoGain);
+      lfoGain.connect(osc.frequency);
+      gain.gain.value = 0.07;
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      lfo.start();
+      osc.start();
+      activeOscillators.push(osc, lfo);
+
+    } else if (s === 4) {
+      // 4 HARMONISCHEN: het patroon kristalliseert
+      // Nu pas splitst de oscillatie in 4 vaste frequenties
+      [110, 165, 220, 330].forEach(function(f) {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'sine';
@@ -230,10 +318,10 @@
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.start();
-        if (!currentOsc) currentOsc = osc; // track for stopping
+        activeOscillators.push(osc);
       });
 
-    } else if (s === 3) {
+    } else if (s === 5) {
       // White noise
       const bufferSize = audioCtx.sampleRate * 2;
       const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
@@ -253,12 +341,11 @@
       filter.connect(gain);
       gain.connect(audioCtx.destination);
       source.start();
-      noiseNode = source;
+      activeNoiseNode = source;
 
-    } else if (s === 4) {
+    } else if (s === 6) {
       // Mandelbrot: deep drone + subtle tones
-      const freqs = [55, 82.5, 110, 137.5, 165];
-      freqs.forEach(function(f) {
+      [55, 82.5, 110, 137.5, 165].forEach(function(f) {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'sine';
@@ -267,6 +354,7 @@
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.start();
+        activeOscillators.push(osc);
       });
     }
   }
@@ -304,7 +392,37 @@
       ctx.stroke();
 
     } else if (stage === 2) {
-      // 4 waves — polyphonic
+      // OSCILLATIE: 1 golf — gaat heen-en-weer (LFO zichtbaar)
+      // Niet meer golven, dezelfde golf verandert
+      ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        const t = (x / W) * Math.PI * 4;
+        const lfo = Math.sin(time * 0.3) * 80; // trage oscillatie van amplitude
+        const y = cy + Math.sin(t + time * 0.5) * (100 + lfo);
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = 'rgba(124, 110, 245, 0.6)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+    } else if (stage === 3) {
+      // INTERFERENTIE: dezelfde golf — snellere oscillatie → staande golf
+      ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        const t = (x / W) * Math.PI * 4;
+        const fastLfo = Math.sin(time * 0.8) * 60; // snellere LFO
+        const waveAmp = 100 + fastLfo;
+        const y = cy + Math.sin(t + time * 0.5) * waveAmp;
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = 'rgba(124, 110, 245, 0.6)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+    } else if (stage === 4) {
+      // 4 waves — resonantie
       const waves = [
         { amp: 100, freq: 1, color: 'rgba(124, 110, 245, 0.5)' },
         { amp: 70, freq: 1.5, color: 'rgba(251, 191, 36, 0.4)' },
@@ -324,7 +442,7 @@
         ctx.stroke();
       });
 
-    } else if (stage === 3) {
+    } else if (stage === 5) {
       // White noise — particles
       for (let i = 0; i < 500; i++) {
         const x = Math.random() * W;
@@ -334,7 +452,7 @@
         ctx.fillRect(x, y, 2, 2);
       }
 
-    } else if (stage === 4) {
+    } else if (stage === 6) {
       // Mandelbrot — simplified fractal rendering
       const zoom = 2.5;
       const maxIter = 50;
@@ -396,7 +514,7 @@
 
   // ── Stage progression ──
   function advanceStage() {
-    if (stage < 4) {
+    if (stage < 6) {
       stage++;
     } else {
       // Loop back
@@ -423,6 +541,22 @@
 
     playBtn.textContent = stage === 0 ? '▶ PLAY' : '→ VOLGENDE';
   }
+
+  // ── Speed control ──
+  document.querySelectorAll('.speed-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.speed-btn').forEach(function(b) {
+        b.classList.remove('active');
+      });
+      this.classList.add('active');
+      speedMultiplier = parseFloat(this.getAttribute('data-speed'));
+      autoplayDelay = 6000 / speedMultiplier;
+      // Restart autoplay timer if active
+      if (autoplay) {
+        startAutoplay();
+      }
+    });
+  });
 
   // ── Events ──
   playBtn.addEventListener('click', advanceStage);
