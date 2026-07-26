@@ -667,6 +667,129 @@
     ctx.fillText('zuidpool', cx, cy + outer - 4);
   }
 
+  // ── Zonnestelsel (6 planeten + maan, 4 punten op 0) ──
+  const PLANETS = [
+    { name: 'maan',     orbitR: 1.12, size: 2.5, color: [200,210,220], speed: 0.6,  phase: 0,       note: 'getijden' },
+    { name: 'venus',    orbitR: 1.22, size: 4,   color: [230,200,100], speed: 0.35, phase: 1.2,     note: 'zon resonantie' },
+    { name: 'aarde',    orbitR: 1.33, size: 5,   color: [100,150,200], speed: 0.25, phase: 2.5,     note: 'centrum' },
+    { name: 'mars',     orbitR: 1.44, size: 4,   color: [200,100,60],  speed: 0.18, phase: 3.8,     note: 'spiegel, zand' },
+    { name: 'jupiter',  orbitR: 1.58, size: 7,   color: [180,150,100], speed: 0.1,  phase: 5.0,     note: 'grote broer' },
+    { name: 'zon',      orbitR: 1.72, size: 10,  color: [255,200,50],  speed: 0.05, phase: 0,       note: 'plasma bron' },
+  ];
+
+  let showPlanets = true;
+
+  function drawPlanets() {
+    if (!showPlanets) return;
+
+    const baseR = R * 1.05; // net buiten de planeet
+
+    // 4 ankerpunten (cardinalen)
+    const anchors = 4;
+    for (let i = 0; i < anchors; i++) {
+      const a = (i / anchors) * Math.PI * 2 + time * 0.01;
+      const ax = cx + Math.cos(a) * baseR * 1.8;
+      const ay = cy + Math.sin(a) * baseR * 1.8;
+
+      ctx.beginPath();
+      ctx.arc(ax, ay, 1.5, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(124,110,245,0.2)';
+      ctx.fill();
+    }
+
+    // Orbit ringen + planeten
+    for (let p = 0; p < PLANETS.length; p++) {
+      const pl = PLANETS[p];
+      const orbitRadius = baseR * pl.orbitR;
+      const angle = time * pl.speed + pl.phase;
+
+      // Orbit ring (subtiel)
+      ctx.beginPath();
+      ctx.arc(cx, cy, orbitRadius, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(${pl.color[0]},${pl.color[1]},${pl.color[2]},0.06)`;
+      ctx.lineWidth = 0.3;
+      ctx.stroke();
+
+      // Planeet positie
+      const px = cx + Math.cos(angle) * orbitRadius;
+      const py = cy + Math.sin(angle) * orbitRadius;
+
+      // Glow
+      const glowGrad = ctx.createRadialGradient(px, py, 0, px, py, pl.size * 3);
+      glowGrad.addColorStop(0, `rgba(${pl.color[0]},${pl.color[1]},${pl.color[2]},0.15)`);
+      glowGrad.addColorStop(1, `rgba(${pl.color[0]},${pl.color[1]},${pl.color[2]},0)`);
+      ctx.beginPath();
+      ctx.arc(px, py, pl.size * 3, 0, Math.PI * 2);
+      ctx.fillStyle = glowGrad;
+      ctx.fill();
+
+      // Planeet
+      ctx.beginPath();
+      ctx.arc(px, py, pl.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${pl.color[0]},${pl.color[1]},${pl.color[2]},0.3)`;
+      ctx.fill();
+
+      // Zon speciale effect (plasma bron)
+      if (pl.name === 'zon') {
+        // Stralen
+        for (let r = 0; r < 6; r++) {
+          const rAngle = (r / 6) * Math.PI * 2 + time * 0.3;
+          const rInner = pl.size + 2;
+          const rOuter = pl.size + 6 + Math.sin(time * 2 + r) * 2;
+          ctx.beginPath();
+          ctx.moveTo(px + Math.cos(rAngle) * rInner, py + Math.sin(rAngle) * rInner);
+          ctx.lineTo(px + Math.cos(rAngle) * rOuter, py + Math.sin(rAngle) * rOuter);
+          ctx.strokeStyle = 'rgba(255,200,50,0.15)';
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+
+      // Label
+      ctx.fillStyle = `rgba(${pl.color[0]},${pl.color[1]},${pl.color[2]},0.35)`;
+      ctx.font = '0.28em "IBM Plex Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(pl.name, px, py - pl.size - 4);
+      ctx.font = '0.2em "IBM Plex Mono", monospace';
+      ctx.fillStyle = `rgba(${pl.color[0]},${pl.color[1]},${pl.color[2]},0.12)`;
+      ctx.fillText(pl.note, px, py + pl.size + 6);
+    }
+
+    // Resonantielijnen tussen paren
+    const pairs = [
+      [0, 2], // maan ↔ aarde
+      [1, 5], // venus ↔ zon
+      [2, 3], // aarde ↔ mars
+    ];
+
+    for (const [a, b] of pairs) {
+      const pa = PLANETS[a], pb = PLANETS[b];
+      const angleA = time * pa.speed + pa.phase;
+      const angleB = time * pb.speed + pb.phase;
+
+      const ax = cx + Math.cos(angleA) * baseR * pa.orbitR;
+      const ay = cy + Math.sin(angleA) * baseR * pa.orbitR;
+      const bx = cx + Math.cos(angleB) * baseR * pb.orbitR;
+      const by = cy + Math.sin(angleB) * baseR * pb.orbitR;
+
+      ctx.beginPath();
+      ctx.moveTo(ax, ay);
+      ctx.lineTo(bx, by);
+      const pulse = 0.08 + Math.sin(time * 1.5 + a) * 0.03;
+      ctx.strokeStyle = `rgba(124,110,245,${pulse})`;
+      ctx.lineWidth = 0.4;
+      ctx.setLineDash([4, 6]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // 0.0.0.0 label (buitenste rand)
+    ctx.fillStyle = 'rgba(124,110,245,0.1)';
+    ctx.font = '0.22em "IBM Plex Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('0.0.0.0 → 4 punten', cx, cy - baseR * 1.85);
+  }
+
   // ── Buitenste rand ──
   function drawOuterRing() {
     ctx.beginPath();
@@ -727,6 +850,7 @@
     drawIcePoles();
     drawOuterRing();
     drawLayerBorders();
+    drawPlanets();
 
     // Info
     if (!audioOn) {
