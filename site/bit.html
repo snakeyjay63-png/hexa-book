@@ -218,198 +218,180 @@
   window.addEventListener('resize', resize);
   resize();
 
-  // ── Audio ──
-  let activeOscillators = [];
-  let activeNoiseNode = null;
-  let masterGain = null;
-  let fadeDuration = 0.4; // 400ms crossfade
+  // ── Audio: één continue stroom ──
+  // Eén oscillator die doorloopt. Stages = parameter verandering.
+  // Geen stoppen/starten. De synth vertaalt alleen.
+
+  let audioNodes = null; // { osc, oscGain, filter, delay, delayGain, noise, noiseGain }
 
   function initAudio() {
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    // Master gain voor crossfade
-    if (!masterGain) {
-      masterGain = audioCtx.createGain();
-      masterGain.gain.value = 1;
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+
+    if (!audioNodes) {
+      // ── Eén master oscillator ──
+      const osc = audioCtx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = 220;
+
+      // Gain voor de oscillator
+      const oscGain = audioCtx.createGain();
+      oscGain.gain.value = 0.1;
+
+      // Filter — verandert per stage
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 8000; // open = alles hoorbaar
+      filter.Q.value = 0;
+
+      // Delay = ripple/return (inversie die terugkomt)
+      const delay = audioCtx.createDelay();
+      delay.delayTime.value = 0; // geen delay = geen ripple
+      const delayGain = audioCtx.createGain();
+      delayGain.gain.value = 0; // geen return = geen echo
+
+      // Master gain
+      const masterGain = audioCtx.createGain();
+      masterGain.gain.value = 0.15;
+
+      // Noise source voor chaos (stage 5) — altijd aan, gain=0 tot nodig
+      const bufSize = audioCtx.sampleRate * 4;
+      const buf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buf;
+      noise.loop = true;
+      const noiseGain = audioCtx.createGain();
+      noiseGain.gain.value = 0; // stil tot chaos
+      noise.start();
+
+      // Signal chain:
+      // osc → oscGain → filter → masterGain → destination
+      // filter → delay → delayGain → filter (feedback loop = ripple)
+      // noise → noiseGain → masterGain
+
+      osc.connect(oscGain);
+      oscGain.connect(filter);
+      filter.connect(masterGain);
       masterGain.connect(audioCtx.destination);
-    }
-  }
 
-  function fadeOutAudio(cb) {
-    if (!masterGain) { cb(); return; }
-    masterGain.gain.setTargetAtTime(0, audioCtx.currentTime, fadeDuration / 3);
-    setTimeout(function() {
-      stopAudioHard();
-      cb();
-    }, fadeDuration * 1000);
-  }
+      // Delay feedback (ripple = inversie die terugkomt)
+      filter.connect(delay);
+      delay.connect(delayGain);
+      delayGain.connect(filter); // terug naar filter input = feedback
 
-  function fadeInAudio() {
-    if (!masterGain) return;
-    masterGain.gain.setTargetAtTime(1, audioCtx.currentTime, fadeDuration / 2);
-  }
+      // Noise parallel
+      noise.connect(noiseGain);
+      noiseGain.connect(masterGain);
 
-  function stopAudioHard() {
-    activeOscillators.forEach(function(o) {
-      try { o.stop(); } catch(e) {}
-    });
-    activeOscillators = [];
-    if (activeNoiseNode) {
-      try { activeNoiseNode.stop(); } catch(e) {}
-      activeNoiseNode = null;
+      osc.start();
+
+      audioNodes = { osc, oscGain, filter, delay, delayGain, masterGain, noise, noiseGain };
     }
   }
 
   function stopAudio() {
-    // Legacy, not used anymore — crossfade replaces this
-    stopAudioHard();
+    if (audioNodes) {
+      try { audioNodes.osc.stop(); } catch(e) {}
+      try { audioNodes.noise.stop(); } catch(e) {}
+      audioNodes = null;
+    }
   }
+
+  // ── Smooth parameter ramping — geen hiaten ──
+  function ramp(param, target, duration) {
+    // Exponential ramp = natuurlijke vertragen/versnellen
+    param.setTargetAtTime(target, audioCtx.currentTime, duration);
+  }
+
+  // ── Stage → parameters ──
+  // De synth vertaalt: continue stroom, alleen frequentie/filter/delay verandert
 
   function playStageAudio(s) {
     initAudio();
+    const n = audioNodes;
+    const t = 0.5; // ramp duration (halve seconde = vloeibaar)
 
-    // Crossfade: fade uit → nieuwe audio → fade in (geen gap)
-    fadeOutAudio(function() {
-      stopAudioHard();
-      createStageAudio(s);
-      fadeInAudio();
-    });
-  }
+    switch(s) {
 
-  function createStageAudio(s) {
-    if (s === 0) {
-      // 0=1: zuivere toon — eenheid
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.value = 220;
-      gain.gain.value = 0.1;
-      osc.connect(gain);
-      gain.connect(masterGain);
-      osc.start();
-      activeOscillators.push(osc);
+      case 0: // 0=1: zuivere toon — eenheid
+        ramp(n.osc.frequency, 220, t);
+        ramp(n.oscGain.gain, 1, t);
+        ramp(n.filter.frequency, 8000, t); // open
+        ramp(n.filter.Q, 0, t);
+        ramp(n.delay.delayTime, 0, t);      // geen ripple
+        ramp(n.delayGain.gain, 0, t);       // geen echo
+        ramp(n.noiseGain.gain, 0, t);       // geen noise
+        break;
 
-    } else if (s === 1) {
-      // 1 WAVE: 2⁰ — eerste beweging
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.value = 220;
-      gain.gain.value = 0.1;
-      osc.connect(gain);
-      gain.connect(masterGain);
-      osc.start();
-      activeOscillators.push(osc);
+      case 1: // 1 WAVE: 2⁰ — eerste beweging
+        // Vertraagt → inversie begint
+        ramp(n.osc.frequency, 110, t);      // halve frequentie = vertraagt
+        ramp(n.oscGain.gain, 1, t);
+        ramp(n.filter.frequency, 8000, t);
+        ramp(n.filter.Q, 0, t);
+        ramp(n.delay.delayTime, 0.1, t);    // mini-delay = beweging
+        ramp(n.delayGain.gain, 0.1, t);     // zwakke return
+        ramp(n.noiseGain.gain, 0, t);
+        break;
 
-    } else if (s === 2) {
-      // 2 WAVES: 2¹ — verdubbeling (octaaf)
-      [110, 220].forEach(function(f) {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sine';
-        osc.frequency.value = f;
-        gain.gain.value = 0.07;
-        osc.connect(gain);
-        gain.connect(masterGain);
-        osc.start();
-        activeOscillators.push(osc);
-      });
+      case 2: // 2 WAVES: inversie komt terug = ripple (2e wave)
+        // Delay = inversie die terugkomt als tweede golf
+        ramp(n.osc.frequency, 110, t);      // blijft traag
+        ramp(n.oscGain.gain, 0.7, t);
+        ramp(n.filter.frequency, 8000, t);
+        ramp(n.filter.Q, 0, t);
+        ramp(n.delay.delayTime, 0.3, t);    // meer delay = duidelijk ripple
+        ramp(n.delayGain.gain, 0.4, t);     // sterkere echo = 2e wave hoorbaar
+        ramp(n.noiseGain.gain, 0, t);
+        break;
 
-    } else if (s === 3) {
-      // 4 WAVES: 2² — resonantie (harmonische serie)
-      [110, 165, 220, 330].forEach(function(f) {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sine';
-        osc.frequency.value = f;
-        gain.gain.value = 0.05;
-        osc.connect(gain);
-        gain.connect(masterGain);
-        osc.start();
-        activeOscillators.push(osc);
-      });
+      case 3: // 4 WAVES: 2² — resonantie
+        // Harmonische serie = filter verandert resonantie
+        ramp(n.osc.frequency, 165, t);
+        ramp(n.oscGain.gain, 0.5, t);
+        ramp(n.filter.frequency, 660, t);   // bandpass = resonant
+        ramp(n.filter.Q, 2, t);
+        ramp(n.delay.delayTime, 0.25, t);
+        ramp(n.delayGain.gain, 0.3, t);
+        ramp(n.noiseGain.gain, 0, t);
+        break;
 
-    } else if (s === 4) {
-      // 8 WAVES: 2³ — grens van orde (dichthelder)
-      [55, 82.5, 110, 137.5, 165, 220, 275, 330].forEach(function(f) {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sine';
-        osc.frequency.value = f;
-        gain.gain.value = 0.03;
-        osc.connect(gain);
-        gain.connect(masterGain);
-        osc.start();
-        activeOscillators.push(osc);
-      });
+      case 4: // 8 WAVES: 2³ — grens van orde (dichthelder)
+        // Alles dicht bij elkaar = dichthelder
+        ramp(n.osc.frequency, 82.5, t);     // laag = dicht
+        ramp(n.oscGain.gain, 0.4, t);
+        ramp(n.filter.frequency, 500, t);   // smaller band = dicht
+        ramp(n.filter.Q, 4, t);
+        ramp(n.delay.delayTime, 0.2, t);
+        ramp(n.delayGain.gain, 0.35, t);
+        ramp(n.noiseGain.gain, 0, t);
+        break;
 
-    } else if (s === 5) {
-      // CHAOS: >7 limiet → white noise (alles tegelijk)
-      const bufferSize = audioCtx.sampleRate * 2;
-      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) {
-        data[i] = Math.random() * 2 - 1;
-      }
-      const source = audioCtx.createBufferSource();
-      const gain = audioCtx.createGain();
-      const filter = audioCtx.createBiquadFilter();
-      source.buffer = buffer;
-      source.loop = true;
-      filter.type = 'lowpass';
-      filter.frequency.value = 3000;
-      gain.gain.value = 0.06;
-      source.connect(filter);
-      filter.connect(gain);
-      gain.connect(masterGain);
-      source.start();
-      activeNoiseNode = source;
+      case 5: // CHAOS: >7 limiet → versnelt > Mach 1 → implosie → KNAL
+        // Versnellen tot sneller dan geluid = implosie
+        // Knal = alles tegelijk = white noise + extreme filter
+        ramp(n.osc.frequency, 8000, t);     // extreem hoog = versnelt
+        ramp(n.oscGain.gain, 0.3, t);
+        ramp(n.filter.frequency, 4000, t);  // breed open
+        ramp(n.filter.Q, 0, t);
+        ramp(n.delay.delayTime, 0.05, t);   // bijna geen delay = geen tijd
+        ramp(n.delayGain.gain, 0.8, t);     // maximale feedback = chaos
+        ramp(n.noiseGain.gain, 0.5, t);     // noise = implosie = knal
+        break;
 
-    } else if (s === 6) {
-      // 0.0.0.0: 7 banden → audio stroomt naar center → echo = positie
-      const bands = [
-        { freq: 55, q: 1 }, { freq: 82.5, q: 1.5 },
-        { freq: 110, q: 1 }, { freq: 165, q: 2 },
-        { freq: 220, q: 1.5 }, { freq: 330, q: 2 },
-        { freq: 440, q: 3 },
-      ];
+      case 6: // 0.0.0.0: 7 banden → water keert terug (stilte)
+        // Na de knal: implosie implodeert → terug naar center → stilte
+        ramp(n.osc.frequency, 55, t);       // diep = grond
+        ramp(n.oscGain.gain, 0.2, t);       // zwak = verdwijnt
+        ramp(n.filter.frequency, 200, t);   // smal band = 1 van 7
+        ramp(n.filter.Q, 8, t);             // zeer resonant = scherp
+        ramp(n.delay.delayTime, 0.8, t);    // lange echo = water stroomt
+        ramp(n.delayGain.gain, 0.2, t);     // zachte return = positie
+        ramp(n.noiseGain.gain, 0, t);       // geen chaos meer
+        break;
 
-      // Bron: white noise (ru = potentieel)
-      const bufSize = audioCtx.sampleRate * 2;
-      const buf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
-      const data = buf.getChannelData(0);
-      for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
-      const src = audioCtx.createBufferSource();
-      src.buffer = buf;
-      src.loop = true;
-
-      // 7 band filters → masterGain (crossfade)
-      const stageGain = audioCtx.createGain();
-      stageGain.gain.value = 0.02;
-      stageGain.connect(masterGain);
-
-      bands.forEach(function(b) {
-        const bp = audioCtx.createBiquadFilter();
-        bp.type = 'bandpass';
-        bp.frequency.value = b.freq;
-        bp.Q.value = b.q;
-        const g = audioCtx.createGain();
-        g.gain.value = 1 / bands.length;
-        src.connect(bp);
-        bp.connect(g);
-        g.connect(stageGain);
-      });
-
-      // Delay = return/echo (snelheid = momentum, return = positie)
-      const delay = audioCtx.createDelay();
-      delay.delayTime.value = 0.5;
-      const delayGain = audioCtx.createGain();
-      delayGain.gain.value = 0.3;
-      stageGain.connect(delay);
-      delay.connect(delayGain);
-      delayGain.connect(masterGain);
-
-      src.start();
-      activeNoiseNode = src;
     }
   }
 
