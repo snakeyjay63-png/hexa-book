@@ -3,16 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>• Zee — Spiegel → Chaos</title>
+  <title>• Zee — Spiegel van de Diepte</title>
   <link rel="stylesheet" href="css/main.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #06060a; color: #e0e0e0; font-family: 'IBM Plex Mono', monospace; overflow: hidden; }
+    body {
+      background: #06060a; color: #e0e0e0;
+      font-family: 'IBM Plex Mono', monospace;
+      overflow: hidden; cursor: crosshair;
+    }
     canvas { display: block; }
 
     .ui {
       position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-      text-align: center; z-index: 10; transition: opacity 1s;
+      text-align: center; z-index: 10;
     }
 
     .element-label { font-size: 1.4em; color: #7c6ef5; margin-bottom: 4px; }
@@ -29,12 +33,16 @@
 
     .stone-btn {
       margin-top: 10px;
-      background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.2);
-      color: #fbbf26; padding: 8px 20px; border-radius: 20px; cursor: pointer;
+      background: rgba(100,140,200,0.08); border: 1px solid rgba(100,140,200,0.2);
+      color: #8ab4f8; padding: 8px 20px; border-radius: 20px; cursor: pointer;
       font-family: inherit; font-size: 0.85em; transition: all 0.5s;
     }
-    .stone-btn:hover { background: rgba(251,191,36,0.15); }
-    .stone-btn.rippled { background: rgba(251,191,36,0.25); border-color: rgba(251,191,36,0.5); box-shadow: 0 0 20px rgba(251,191,36,0.1); }
+    .stone-btn:hover { background: rgba(100,140,200,0.15); }
+    .stone-btn.rippled {
+      background: rgba(100,140,200,0.25);
+      border-color: rgba(100,140,200,0.5);
+      box-shadow: 0 0 20px rgba(100,140,200,0.1);
+    }
 
     .back-link {
       position: fixed; top: 20px; left: 20px; color: #555; text-decoration: none;
@@ -57,7 +65,7 @@
 
   <div class="ui" id="ui">
     <div class="element-label" id="el-label">zee</div>
-    <div class="element-sub" id="el-sub">spiegel → steen → rimpel → chaos</div>
+    <div class="element-sub" id="el-sub">spiegel van de diepte — cirkel → rimpel → interferentie</div>
     <button class="stone-btn" id="stone-btn">● steen gooien</button>
   </div>
 
@@ -66,31 +74,32 @@
   const canvas = document.getElementById('c');
   const ctx = canvas.getContext('2d');
   const infoEl = document.getElementById('info');
-  const uiEl = document.getElementById('ui');
-  const elLabel = document.getElementById('el-label');
   const elSub = document.getElementById('el-sub');
   const stoneBtn = document.getElementById('stone-btn');
 
-  let W, H, cx, cy;
+  let W, H, cx, cy, pondRadius;
+
   function resize() {
     W = canvas.width = window.innerWidth;
     H = canvas.height = window.innerHeight;
     cx = W / 2; cy = H / 2;
+    pondRadius = Math.min(W, H) * 0.38;
   }
   window.addEventListener('resize', resize);
   resize();
 
-  // ── Concept: Spiegel → Steen → Rimpel → Chaos ──
+  // ── Concept: Spiegel van de Diepte ──
   //
-  // Stil = pure spiegel. Alleen subtiele stroming zichtbaar.
-  // Steen gooien = geluid AAN → ripple effect → butterfly effect
-  // Geluid volgt beeld. Beeld volgt geluid.
-  // Chaos is niet willekeurig — het is de natuurlijke uitkomst van de ripple.
+  // Een cirkel = pond in het park = vrede
+  // Oppervlak = perfecte spiegel (wit, helder, zon zichtbaar)
+  // Diepte = steeds blauwer, dieper indigo
+  // Steen gooien = rimpel → golven botsen → interferentie patronen
+  // Alles komt terug: de golven reflecteren van de rand
 
   let time = 0;
   let audioOn = false;
-  let rippleTime = 0; // tijd sinds steen gegooid
-  let stones = []; // gegooiden stenen met positie + tijd
+  let rippleTime = 0;
+  let stones = []; // {x, y, time} — binnen de cirkel
 
   // ── Audio ──
   let audioCtx = null;
@@ -107,24 +116,23 @@
     for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
 
     const noise = audioCtx.createBufferSource();
-    noise.buffer = buf;
-    noise.loop = true;
+    noise.buffer = buf; noise.loop = true;
 
     const bp1 = audioCtx.createBiquadFilter();
-    bp1.type = 'bandpass'; bp1.frequency.value = 300; bp1.Q.value = 0.5;
+    bp1.type = 'bandpass'; bp1.frequency.value = 400; bp1.Q.value = 0.5;
     const bp2 = audioCtx.createBiquadFilter();
-    bp2.type = 'bandpass'; bp2.frequency.value = 300; bp2.Q.value = 0.5;
+    bp2.type = 'bandpass'; bp2.frequency.value = 400; bp2.Q.value = 0.5;
 
     const lfo = audioCtx.createOscillator();
     const lfoGain = audioCtx.createGain();
-    lfo.frequency.value = 0.2;
-    lfoGain.gain.value = 100;
+    lfo.frequency.value = 0.15;
+    lfoGain.gain.value = 200;
     lfo.connect(lfoGain);
     lfoGain.connect(bp1.frequency);
     lfo.start();
 
     const master = audioCtx.createGain();
-    master.gain.value = 0; // start stil
+    master.gain.value = 0;
 
     noise.connect(bp1); noise.connect(bp2);
     bp1.connect(master); bp2.connect(master);
@@ -141,202 +149,306 @@
     const n = audioNodes;
 
     if (on) {
-      // Steen in water = lage frequentie + trage golven
-      n.bp1.frequency.setTargetAtTime(200, audioCtx.currentTime, t);
+      n.bp1.frequency.setTargetAtTime(250, audioCtx.currentTime, t);
       n.bp1.Q.setTargetAtTime(0.5, audioCtx.currentTime, t);
-      n.bp2.frequency.setTargetAtTime(1500, audioCtx.currentTime, t);
-      n.bp2.Q.setTargetAtTime(1, audioCtx.currentTime, t);
-      n.lfo.frequency.setTargetAtTime(0.1, audioCtx.currentTime, t);
-      n.lfoGain.gain.setTargetAtTime(100, audioCtx.currentTime, t);
-      n.master.gain.setTargetAtTime(0.1, audioCtx.currentTime, t);
+      n.bp2.frequency.setTargetAtTime(1800, audioCtx.currentTime, t);
+      n.bp2.Q.setTargetAtTime(1.5, audioCtx.currentTime, t);
+      n.lfo.frequency.setTargetAtTime(0.08, audioCtx.currentTime, t);
+      n.lfoGain.gain.setTargetAtTime(150, audioCtx.currentTime, t);
+      n.master.gain.setTargetAtTime(0.08, audioCtx.currentTime, t);
     } else {
       n.master.gain.setTargetAtTime(0, audioCtx.currentTime, t);
     }
   }
 
-  // ── Stroming: de onzichtbare kracht ──
-  // In stilte: subtiele stroming (niet direct zichtbaar)
-  // Na steen: stroming wordt sterker, zichtbaar, chaotisch
+  // ── Diepte: van wit (oppervlak) naar indigo (diepte) ──
+  //
+  // Kleur interpolatie:
+  // 0 = oppervlak = helder wit/lichtblauw
+  // 1 = diepte = donker indigo
 
-  // Height map = de oppervlakte van het water
-  // Stil: platte lijn
-  // Na steen: sinusgolven die uitbreiden
+  function depthColor(depth) {
+    // depth: 0-1 (0=oppervlak, 1=diepte)
+    const r = Math.round(240 - depth * 220); // 240 → 20
+    const g = Math.round(245 - depth * 225); // 245 → 20
+    const b = Math.round(255 - depth * 175); // 255 → 80
+    return `rgb(${r},${g},${b})`;
+  }
 
-  function getWaterHeight(x, y, t) {
+  function depthColorAlpha(depth, alpha) {
+    const r = Math.round(240 - depth * 220);
+    const g = Math.round(245 - depth * 225);
+    const b = Math.round(255 - depth * 175);
+    return `rgba(${r},${g},${b},${alpha})`;
+  }
+
+  // ── Golf berekening ──
+  // Golven breiden uit van steen → botsen → interferentie → reflecteren van rand
+
+  function getWaveHeight(px, py, t) {
     let h = 0;
 
-    // Basis stroming (altijd aanwezig, niet zichtbaar in stilte)
-    h += Math.sin(x * 0.003 + t * 0.1) * 2;
-    h += Math.cos(y * 0.004 + t * 0.08) * 2;
-
-    // Ripple van gegooiden stenen
-    for (let i = 0; i < stones.length; i++) {
-      const s = stones[i];
+    for (let si = 0; si < stones.length; si++) {
+      const s = stones[si];
       const age = t - s.time;
-      const dx = x - s.x;
-      const dy = y - s.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
+      const speed = 80; // pixels/sec
 
-      // Uitbreidende ring
-      const speed = 100; // pixels per second
+      // Originele golf
+      const dx = px - s.x;
+      const dy = py - s.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
       const ringDist = age * speed;
-      const ringWidth = 50 + age * 20;
+      const ringWidth = 40 + age * 15;
 
       if (Math.abs(dist - ringDist) < ringWidth) {
-        const ripple = Math.sin((dist - ringDist) * 0.05) *
-                       Math.exp(-age * 0.3) *
+        const ripple = Math.sin((dist - ringDist) * 0.08) *
+                       Math.exp(-age * 0.15) *
                        Math.exp(-Math.abs(dist - ringDist) / ringWidth);
-        h += ripple * 30;
+        h += ripple * 20;
       }
 
-      // Secundaire rimpels (butterfly effect)
-      if (age > 1) {
-        const chaosFreq = 0.02 + age * 0.01;
-        const chaosAmp = Math.min(1, age * 0.1) * Math.exp(-age * 0.1);
-        h += Math.sin(dist * chaosFreq + t * 2) * chaosAmp * 5;
+      // Reflected golf (van de rand van de cirkel)
+      // Simpel: golf van spiegel punt
+      const sDx = s.x - cx;
+      const sDy = s.y - cy;
+      const sDist = Math.sqrt(sDx * sDx + sDy * sDy);
+
+      if (sDist < pondRadius) {
+        // Spiegel punt (buiten de cirkel)
+        const mirrorDist = 2 * pondRadius - sDist;
+        const mirrorAngle = Math.atan2(sDy, sDx);
+        const mx = cx + mirrorDist * Math.cos(mirrorAngle);
+        const my = cy + mirrorDist * Math.sin(mirrorAngle);
+
+        const rdx = px - mx;
+        const rdy = py - my;
+        const rDist = Math.sqrt(rdx * rdx + rdy * rdy);
+        const rRingDist = (age + sDist / speed) * speed;
+        const rRingWidth = ringWidth * 0.7;
+
+        if (Math.abs(rDist - rRingDist) < rRingWidth) {
+          const rRipple = Math.sin((rDist - rRingDist) * 0.08) *
+                          Math.exp(-age * 0.15) *
+                          Math.exp(-Math.abs(rDist - rRingDist) / rRingWidth);
+          h += rRipple * 10; // zwakker reflectie
+        }
       }
     }
 
     return h;
   }
 
-  // ── Visuals ──
-  const COLORS = {
-    mirror: '100, 140, 220',    // stil water
-    ripple: '124, 110, 245',    // rimpel
-    chaos:  '251, 191, 36',     // chaos
-  };
+  // ── Teken ──
 
   function draw() {
-    // Fade = continue laag
-    ctx.fillStyle = 'rgba(6, 6, 10, 0.02)';
+    // Donkere achtergrond
+    ctx.fillStyle = '#06060a';
     ctx.fillRect(0, 0, W, H);
 
     time += 0.016;
     if (audioOn) rippleTime += 0.016;
 
-    // ── Spiegel: horizontale lijnen ──
-    // Stil: platte lijnen met subtiele stroming
-    // Na steen: golven die uitbreiden
+    // ── Cirkel = de spiegel ──
+    // Clip binnen cirkel
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, pondRadius, 0, Math.PI * 2);
+    ctx.clip();
 
-    const lineCount = Math.floor(H / 8);
-    for (let i = 0; i < lineCount; i++) {
-      const yBase = i * 8;
+    // Basis kleur = diepte gradiënt (centrum = diep, rand = oppervlak)
+    const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, pondRadius);
+    grad.addColorStop(0, '#0a0a2e');   // diep indigo in centrum
+    grad.addColorStop(0.5, '#1a1a4e'); // medium blauw
+    grad.addColorStop(1, '#3a4a6e');   // lichtblauw aan rand (oppervlak)
 
-      // Hoe zichtbaar is de beweging?
-      let visibility;
-      if (!audioOn) {
-        visibility = 0.01 + Math.sin(time * 0.1) * 0.005;
-      } else {
-        const chaos = Math.min(1, rippleTime * 0.05);
-        visibility = 0.02 + chaos * 0.03;
+    ctx.fillStyle = grad;
+    ctx.fillRect(cx - pondRadius, cy - pondRadius, pondRadius * 2, pondRadius * 2);
+
+    // ── Golven = rimpels in de spiegel ──
+    // Tekening via scanlines (horizontale lijnen door cirkel)
+
+    if (audioOn && stones.length > 0) {
+      const step = 3; // pixel stap
+      for (let y = cy - pondRadius; y < cy + pondRadius; y += step) {
+        const rowDy = y - cy;
+        const rowHalfWidth = Math.sqrt(Math.max(0, pondRadius * pondRadius - rowDy * rowDy));
+
+        ctx.beginPath();
+        for (let x = cx - rowHalfWidth; x < cx + rowHalfWidth; x += step) {
+          const h = getWaveHeight(x, y, time);
+
+          // Diepte van dit punt
+          const px = x - cx;
+          const py = y - cy;
+          const dist = Math.sqrt(px * px + py * py);
+          const depth = dist / pondRadius; // 0=centrum(diep), 1=rand(oppervlak)
+
+          // Golf = vervorming van de spiegel
+          // In diepte: golven zijn donkerder
+          // Aan oppervlak: golven zijn lichter (wit/spiegel)
+          const waveBright = h * (1 - depth) * 30;
+
+          const r = Math.round(10 + depth * 40 + waveBright);
+          const g = Math.round(10 + depth * 35 + waveBright * 0.9);
+          const b = Math.round(40 + depth * 60 + waveBright * 0.5);
+
+          const a = Math.min(0.4, 0.1 + Math.abs(h) * 0.02);
+
+          if (x === cx - rowHalfWidth) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = `rgba(100,140,200,${0.02 + Math.abs(getWaveHeight(cx, y, time)) * 0.005})`;
+        ctx.lineWidth = step;
+        ctx.stroke();
       }
+
+      // Golven als heldere lijnen
+      for (let y = cy - pondRadius; y < cy + pondRadius; y += step) {
+        const rowDy = y - cy;
+        const rowHalfWidth = Math.sqrt(Math.max(0, pondRadius * pondRadius - rowDy * rowDy));
+
+        ctx.beginPath();
+        for (let x = cx - rowHalfWidth; x < cx + rowHalfWidth; x += step) {
+          const h = getWaveHeight(x, y, time);
+
+          // Lichtreflectie op golftop
+          if (h > 1) {
+            const px = x - cx;
+            const py = y - cy;
+            const dist = Math.sqrt(px * px + py * py);
+            const depth = dist / pondRadius;
+
+            const bright = h * 5 * (1 - depth);
+            if (bright > 0.5) {
+              ctx.beginPath();
+              ctx.arc(x, y, bright * 0.3, 0, Math.PI * 2);
+              ctx.fillStyle = `rgba(240,245,255,${bright * 0.02})`;
+              ctx.fill();
+            }
+          }
+        }
+      }
+    }
+
+    // ── Spiegel effect (altijd) ──
+    // Subtiele horizontale lijnen = de stilte van het water
+    const lineCount = Math.floor(pondRadius * 2 / 6);
+    for (let i = 0; i < lineCount; i++) {
+      const y = (cy - pondRadius) + i * 6;
+      const rowDy = y - cy;
+      const rowHalfWidth = Math.sqrt(Math.max(0, pondRadius * pondRadius - rowDy * rowDy));
+
+      if (rowHalfWidth < 1) continue;
 
       ctx.beginPath();
-      for (let x = 0; x < W; x += 4) {
-        const h = getWaterHeight(x, yBase, time);
-        const y = yBase + h * 0.3;
-        if (x === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
-
-      // Kleur verandert met chaos
-      let color;
-      if (!audioOn) {
-        color = COLORS.mirror;
-      } else if (rippleTime < 3) {
-        color = COLORS.ripple;
-      } else {
-        // Langzaam naar chaos kleur
-        const chaos = Math.min(1, (rippleTime - 3) * 0.05);
-        const r = 100 + chaos * 151;
-        const g = 140 - chaos * 49;
-        const b = 220 - chaos * 184;
-        color = `${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}`;
-      }
-
-      ctx.strokeStyle = `rgba(${color}, ${visibility})`;
+      ctx.moveTo(cx - rowHalfWidth, y);
+      ctx.lineTo(cx + rowHalfWidth, y);
+      ctx.strokeStyle = `rgba(200,210,230,${0.015})`;
       ctx.lineWidth = 0.5;
       ctx.stroke();
     }
 
-    // ── Ripple visuals ──
-    if (audioOn) {
-      for (let i = 0; i < stones.length; i++) {
-        const s = stones[i];
-        const age = time - s.time;
-        const speed = 100;
-        const ringDist = age * speed;
-        const alpha = Math.exp(-age * 0.2) * 0.3;
+    // ── Zon reflectie (subtiele witte gloed) ──
+    const sunX = cx + pondRadius * 0.3;
+    const sunY = cy - pondRadius * 0.4;
+    const sunGrad = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, pondRadius * 0.5);
+    sunGrad.addColorStop(0, 'rgba(255,255,255,0.03)');
+    sunGrad.addColorStop(0.5, 'rgba(255,255,255,0.01)');
+    sunGrad.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = sunGrad;
+    ctx.fillRect(cx - pondRadius, cy - pondRadius, pondRadius * 2, pondRadius * 2);
 
-        if (alpha > 0.01) {
+    ctx.restore(); // end clip
+
+    // ── Cirkel rand ──
+    ctx.beginPath();
+    ctx.arc(cx, cy, pondRadius, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(100,140,200,0.15)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Rand glow
+    ctx.beginPath();
+    ctx.arc(cx, cy, pondRadius, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(100,140,200,0.05)';
+    ctx.lineWidth = 15;
+    ctx.stroke();
+
+    // ── Rimpel ring visuals ──
+    if (audioOn) {
+      for (let si = 0; si < stones.length; si++) {
+        const s = stones[si];
+        const age = time - s.time;
+        const speed = 80;
+        const ringDist = age * speed;
+        const alpha = Math.exp(-age * 0.12) * 0.2;
+
+        if (alpha > 0.005 && ringDist < pondRadius) {
           ctx.beginPath();
           ctx.arc(s.x, s.y, ringDist, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(124, 110, 245, ${alpha})`;
+          ctx.strokeStyle = `rgba(140,180,220,${alpha})`;
           ctx.lineWidth = 1;
           ctx.stroke();
         }
       }
     }
 
-    // ── Stroming indicators (subtiel) ──
-    // Alleen zichtbaar als je kijkt
+    // ── Diepte indicator (subtiele tekst in centrum) ──
     if (!audioOn) {
-      // Stil: bijna onzichtbare deeltjes
-      for (let i = 0; i < 5; i++) {
-        const px = cx + Math.sin(time * 0.05 + i * 2) * W * 0.4;
-        const py = cy + Math.cos(time * 0.04 + i * 3) * H * 0.4;
-        const h = getWaterHeight(px, py, time);
-
-        ctx.beginPath();
-        ctx.arc(px, py, 0.5, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(100, 140, 220, ${0.02 + Math.abs(h) * 0.001})`;
-        ctx.fill();
-      }
+      ctx.fillStyle = 'rgba(100,140,200,0.08)';
+      ctx.font = '0.6em "IBM Plex Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('diepte', cx, cy);
     }
 
-    // ── Info ──
+    // ── Info update ──
     if (!audioOn) {
       infoEl.textContent = 'spiegel — stil';
-    } else if (rippleTime < 3) {
+    } else if (rippleTime < 2) {
       infoEl.textContent = `rimpel — ${rippleTime.toFixed(1)}s`;
-    } else if (rippleTime < 10) {
-      infoEl.textContent = `butterfly effect — ${rippleTime.toFixed(1)}s`;
+    } else if (rippleTime < 8) {
+      infoEl.textContent = `interferentie — ${rippleTime.toFixed(1)}s`;
     } else {
-      infoEl.textContent = `chaos — ${rippleTime.toFixed(1)}s`;
+      infoEl.textContent = `golven botsen — ${rippleTime.toFixed(1)}s`;
     }
 
     requestAnimationFrame(draw);
   }
 
-  // ── Stone throw ──
+  // ── Steen gooien ──
   stoneBtn.addEventListener('click', () => {
     initAudio();
     audioOn = !audioOn;
     setAudio(audioOn);
 
     if (audioOn) {
-      // Steen gooien!
+      // Steen in centrum
       stones.push({
-        x: cx + (Math.random() - 0.5) * W * 0.3,
-        y: cy + (Math.random() - 0.5) * H * 0.3,
+        x: cx + (Math.random() - 0.5) * 20,
+        y: cy + (Math.random() - 0.5) * 20,
         time: time
       });
       stoneBtn.textContent = '● stil';
       stoneBtn.classList.add('rippled');
-      elSub.textContent = 'steen → rimpel → butterfly → chaos';
+      elSub.textContent = 'steen → rimpel → interferentie → alles komt terug';
     } else {
-      // Terug naar spiegel
       stones = [];
       rippleTime = 0;
       stoneBtn.textContent = '● steen gooien';
       stoneBtn.classList.remove('rippled');
-      elSub.textContent = 'spiegel → steen → rimpel → chaos';
+      elSub.textContent = 'spiegel van de diepte — cirkel → rimpel → interferentie';
     }
   });
 
-  // Click op canvas = steen gooien op die plek
+  // Click op cirkel = steen op die plek
   canvas.addEventListener('click', (e) => {
+    const dx = e.clientX - cx;
+    const dy = e.clientY - cy;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    if (dist > pondRadius * 1.1) return;
+
     if (!audioOn) {
       initAudio();
       audioOn = true;
@@ -345,11 +457,16 @@
       stoneBtn.classList.add('rippled');
     }
 
-    stones.push({
-      x: e.clientX,
-      y: e.clientY,
-      time: time
-    });
+    // Binnen cirkel gooien
+    const sx = Math.min(e.clientX, cx + pondRadius * 0.9);
+    const sy = Math.min(e.clientY, cy + pondRadius * 0.9);
+    const sDx = sx - cx;
+    const sDy = sy - cy;
+    const sDist = Math.sqrt(sDx * sDx + sDy * sDy);
+
+    if (sDist < pondRadius * 0.95) {
+      stones.push({ x: sx, y: sy, time: time });
+    }
   });
 
   // Start
