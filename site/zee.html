@@ -88,7 +88,7 @@
 
   <div class="ui" id="ui">
     <div class="element-label">zee</div>
-    <div class="element-sub" id="el-sub">plasma core (druk↔) → aarde → E/M → water → lucht (vochtig→droog) → ijs</div>
+    <div class="element-sub" id="el-sub">plasma core (druk↔) → aarde → E/M → water → lucht (L/H druk → wind) → wolken → ijs</div>
     <button class="stone-btn" id="stone-btn">● steen gooien</button>
   </div>
 
@@ -563,30 +563,61 @@
       ctx.stroke();
     }
 
-    // Verdampings indicator (bovenkant water → sediment)
-    const evapAngle = Math.PI * 0.1;
+    // Verdampings indicator (volgt zonpositie — waar zon schijnt = verdamping)
+    let evapAngle = Math.PI * 0.1; // default
+    if (showPlanets) {
+      const zon = PLANETS.find(p => p.name === 'zon');
+      if (zon) evapAngle = time * zon.speed + zon.phase;
+    }
+    const evapX = cx + Math.cos(evapAngle) * (outer - 4);
+    const evapY = cy + Math.sin(evapAngle) * (outer - 4);
     ctx.beginPath();
-    ctx.arc(cx, cy, outer, -evapAngle, evapAngle);
-    ctx.strokeStyle = 'rgba(100,150,200,0.08)';
+    ctx.arc(cx, cy, outer, evapAngle - 0.3, evapAngle + 0.3);
+    ctx.strokeStyle = `rgba(100,150,200,${0.1 + Math.sin(time * 2) * 0.03})`;
     ctx.lineWidth = 2;
     ctx.setLineDash([4, 6]);
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // ── Watercyclus pijlen ──
+    // Verdamping pijltje ↑ (volgt zon)
+    const evapPulse = 0.08 + Math.sin(time * 1.5) * 0.03;
+    ctx.beginPath();
+    ctx.moveTo(evapX, evapY);
+    const evapOut = evapX + Math.cos(evapAngle) * 15;
+    const evapOutY = evapY + Math.sin(evapAngle) * 15;
+    ctx.lineTo(evapOut, evapOutY);
+    ctx.strokeStyle = `rgba(255,200,80,${evapPulse})`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Zon-gerichte label
+    ctx.fillStyle = 'rgba(255,200,80,0.15)';
+    ctx.font = '0.2em "IBM Plex Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('verdamping ↑ (zon)', evapOut + Math.cos(evapAngle) * 10, evapOutY + Math.sin(evapAngle) * 10);
+
+    // ── Watercyclus pijlen (volgt drukveld + zon) ──
     if (showCycle) {
-      // Verdamping: water ↑ → vochtige lucht
+      // Verdamping volgt zonpositie
+      let cycleEvapAngle = evapAngle;
+      const evapStartR = (LAYERS.water.inner + LAYERS.water.outer) / 2;
+      const evapEndR = (LAYERS.airVocht.inner + LAYERS.airVocht.outer) / 2;
       drawCycleArrow(
-        cx + R * 0.55, cy - R * 0.55,
-        cx + R * 0.65, cy - R * 0.72,
-        'rgba(100,180,220,0.12)', 'verdamping'
+        cx + Math.cos(cycleEvapAngle) * R * evapStartR,
+        cy + Math.sin(cycleEvapAngle) * R * evapStartR,
+        cx + Math.cos(cycleEvapAngle) * R * evapEndR,
+        cy + Math.sin(cycleEvapAngle) * R * evapEndR,
+        'rgba(255,200,80,0.12)', 'verdamping (zon↑)'
       );
 
-      // Regen: vochtige lucht ↓ → water
+      // Regen volgt laag druk (condensatie → water)
+      const rainAngle = cycleEvapAngle + Math.PI * 0.15; // iets verschoven
       drawCycleArrow(
-        cx - R * 0.72, cy - R * 0.65,
-        cx - R * 0.55, cy - R * 0.50,
-        'rgba(120,160,200,0.10)', 'regen'
+        cx + Math.cos(rainAngle) * R * evapEndR,
+        cy + Math.sin(rainAngle) * R * evapEndR,
+        cx + Math.cos(rainAngle) * R * evapStartR,
+        cy + Math.sin(rainAngle) * R * evapStartR,
+        'rgba(120,160,200,0.10)', 'regen (druk↓)'
       );
 
       // Bevriezing: water → poolijs
@@ -682,6 +713,159 @@
     ctx.fillText(label, midX + 12, midY - 4);
   }
 
+  // ── Drukgebieden + Wind + Wolken ──
+  // Druk = mechanisch (niet E/M)
+  // Laag druk = warmte ↑ → verdamping → vochtige lucht stijgt
+  // Hoog druk = koeling ↓ → droge lucht daalt
+  // Wind = hoogdruk → laagdruk (drukverschil)
+  // Wolken = volgt laag druk (condensatie zone)
+  function drawPressureSystem() {
+    if (!showLayer('airVocht') && !showLayer('airDroog')) return;
+
+    const airInner = R * LAYERS.airVocht.inner;
+    const airOuter = R * LAYERS.airDroog.outer;
+
+    // Zon positie beïnvloedt druk (zon = warmte = laag druk)
+    let sunAngle = 0;
+    if (showPlanets) {
+      const zon = PLANETS.find(p => p.name === 'zon');
+      if (zon) sunAngle = time * zon.speed + zon.phase;
+    }
+
+    // Laag druk volgt zon (warmte → verdamping ↑)
+    const lowPressAngle = sunAngle;
+    const lowPressR = (airInner + airOuter) / 2;
+    const lowPressX = cx + Math.cos(lowPressAngle) * lowPressR;
+    const lowPressY = cy + Math.sin(lowPressAngle) * lowPressR;
+
+    // Hoog druk tegenovergesteld
+    const highPressAngle = sunAngle + Math.PI;
+    const highPressX = cx + Math.cos(highPressAngle) * lowPressR;
+    const highPressY = cy + Math.sin(highPressAngle) * lowPressR;
+
+    // ── Laag druk zone (L) ──
+    const lpGrad = ctx.createRadialGradient(lowPressX, lowPressY, 0, lowPressX, lowPressY, airOuter * 0.35);
+    lpGrad.addColorStop(0, 'rgba(180,140,100,0.12)');
+    lpGrad.addColorStop(0.5, 'rgba(180,140,100,0.05)');
+    lpGrad.addColorStop(1, 'rgba(180,140,100,0)');
+    ctx.beginPath();
+    ctx.arc(lowPressX, lowPressY, airOuter * 0.35, 0, Math.PI * 2);
+    ctx.fillStyle = lpGrad;
+    ctx.fill();
+
+    // L label
+    ctx.fillStyle = 'rgba(180,140,100,0.3)';
+    ctx.font = '0.35em "IBM Plex Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('L', lowPressX, lowPressY + 4);
+    ctx.font = '0.2em "IBM Plex Mono", monospace';
+    ctx.fillStyle = 'rgba(180,140,100,0.15)';
+    ctx.fillText('(warmte↑ verdamping)', lowPressX, lowPressY + 14);
+
+    // ── Hoog druk zone (H) ──
+    const hpGrad = ctx.createRadialGradient(highPressX, highPressY, 0, highPressX, highPressY, airOuter * 0.35);
+    hpGrad.addColorStop(0, 'rgba(100,140,180,0.12)');
+    hpGrad.addColorStop(0.5, 'rgba(100,140,180,0.05)');
+    hpGrad.addColorStop(1, 'rgba(100,140,180,0)');
+    ctx.beginPath();
+    ctx.arc(highPressX, highPressY, airOuter * 0.35, 0, Math.PI * 2);
+    ctx.fillStyle = hpGrad;
+    ctx.fill();
+
+    // H label
+    ctx.fillStyle = 'rgba(100,140,180,0.3)';
+    ctx.font = '0.35em "IBM Plex Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('H', highPressX, highPressY + 4);
+    ctx.font = '0.2em "IBM Plex Mono", monospace';
+    ctx.fillStyle = 'rgba(100,140,180,0.15)';
+    ctx.fillText('(koeling↓ droog)', highPressX, highPressY + 14);
+
+    // ── Wind pijlen (H → L, circulatie langs drukveld) ──
+    // Circulatie: H daalt → oppervlak H→L → L stijgt → hoogte L→H
+    const windArrows = 4;
+    for (let i = 0; i < windArrows; i++) {
+      const t = i / windArrows;
+      // Bogen van H naar L (twee kanten)
+      const arcAngle1 = highPressAngle + (lowPressAngle - highPressAngle + Math.PI * 2) % (Math.PI * 2) * t;
+      const arcAngle2 = lowPressAngle + (highPressAngle - lowPressAngle + Math.PI * 2) % (Math.PI * 2) * t;
+
+      // Onder: wind van H → L
+      const windR1 = (airInner + airOuter) / 2;
+      const wx1 = cx + Math.cos(arcAngle1) * windR1;
+      const wy1 = cy + Math.sin(arcAngle1) * windR1;
+
+      // Pijltjes langs de circulatie
+      const tangentAngle1 = arcAngle1 + Math.PI * 0.5; // tangentieel
+      const arrowLen = 12;
+      const ax1 = wx1 + Math.cos(tangentAngle1) * arrowLen;
+      const ay1 = wy1 + Math.sin(tangentAngle1) * arrowLen;
+
+      ctx.beginPath();
+      ctx.moveTo(wx1, wy1);
+      ctx.lineTo(ax1, ay1);
+      ctx.strokeStyle = `rgba(140,180,200,${0.15 + Math.sin(time * 2 + i) * 0.05})`;
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+
+      // Pijlkop
+      const aSize = 3;
+      ctx.beginPath();
+      ctx.moveTo(ax1, ay1);
+      ctx.lineTo(ax1 - aSize * Math.cos(tangentAngle1 - 0.4), ay1 - aSize * Math.sin(tangentAngle1 - 0.4));
+      ctx.moveTo(ax1, ay1);
+      ctx.lineTo(ax1 - aSize * Math.cos(tangentAngle1 + 0.4), ay1 - aSize * Math.sin(tangentAngle1 + 0.4));
+      ctx.stroke();
+
+      // Terug: wind van L → H (bovenkant, hogere lucht)
+      const windR2 = (airInner + airOuter) / 2 + 5; // iets buiten
+      const wx2 = cx + Math.cos(arcAngle2) * windR2;
+      const wy2 = cy + Math.sin(arcAngle2) * windR2;
+      const tangentAngle2 = arcAngle2 - Math.PI * 0.5;
+      const ax2 = wx2 + Math.cos(tangentAngle2) * arrowLen;
+      const ay2 = wy2 + Math.sin(tangentAngle2) * arrowLen;
+
+      ctx.beginPath();
+      ctx.moveTo(wx2, wy2);
+      ctx.lineTo(ax2, ay2);
+      ctx.strokeStyle = `rgba(140,180,200,${0.1 + Math.sin(time * 2 + i + 2) * 0.03})`;
+      ctx.lineWidth = 0.6;
+      ctx.stroke();
+    }
+
+    // Wind label
+    ctx.fillStyle = 'rgba(140,180,200,0.15)';
+    ctx.font = '0.22em "IBM Plex Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('wind = drukverschil (H→L)', cx, cy + airOuter + 16);
+
+    // ── Wolken volgen laag druk (condensatie zone) ──
+    const cloudCount = 12;
+    for (let i = 0; i < cloudCount; i++) {
+      // Wolken clusteren rond laag druk punt
+      const baseAngle = lowPressAngle + (i / cloudCount) * Math.PI * 0.8 - Math.PI * 0.4;
+      const cloudR = lowPressR + Math.sin(time * 0.3 + i * 1.7) * (airOuter - airInner) * 0.3;
+      const cpx = cx + Math.cos(baseAngle) * cloudR;
+      const cpy = cy + Math.sin(baseAngle) * cloudR;
+      const cSize = 2 + Math.sin(time + i) * 1;
+
+      // Wolken = condensatie (wit/blauw)
+      ctx.beginPath();
+      ctx.arc(cpx, cpy, cSize, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200,220,240,${0.12 + Math.sin(time * 0.5 + i) * 0.04})`;
+      ctx.fill();
+
+      // Subtiele glow
+      const cloudGlow = ctx.createRadialGradient(cpx, cpy, 0, cpx, cpy, cSize * 2);
+      cloudGlow.addColorStop(0, `rgba(200,220,240,0.04)`);
+      cloudGlow.addColorStop(1, 'rgba(200,220,240,0)');
+      ctx.beginPath();
+      ctx.arc(cpx, cpy, cSize * 2, 0, Math.PI * 2);
+      ctx.fillStyle = cloudGlow;
+      ctx.fill();
+    }
+  }
+
   // ── Vochtige Lucht ──
   function drawAirVocht() {
     if (!showLayer('airVocht')) return;
@@ -700,27 +884,15 @@
     ctx.fillStyle = aGrad;
     ctx.fill();
 
-    // Wolken / condensatie deeltjes
-    const particles = 15;
-    for (let i = 0; i < particles; i++) {
-      const angle = (i / particles) * Math.PI * 2 + time * 0.03;
-      const r = inner + (outer - inner) * ((Math.sin(time * 0.3 + i * 2) + 1) / 2);
-      const px = cx + Math.cos(angle) * r;
-      const py = cy + Math.sin(angle) * r;
-      const size = 1.5 + Math.sin(time + i) * 0.8;
-
-      ctx.beginPath();
-      ctx.arc(px, py, size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(170,200,220,${0.15 + Math.sin(time * 0.5 + i) * 0.03})`;
-      ctx.fill();
-    }
-
     // Label
     const labelR = (inner + outer) / 2;
     ctx.fillStyle = 'rgba(170,200,220,0.2)';
     ctx.font = '0.3em "IBM Plex Mono", monospace';
     ctx.textAlign = 'center';
     ctx.fillText('lucht (vochtig)', cx, cy - labelR);
+    ctx.font = '0.2em "IBM Plex Mono", monospace';
+    ctx.fillStyle = 'rgba(170,200,220,0.1)';
+    ctx.fillText('(verdamping + condensatie)', cx, cy - labelR + 8);
   }
 
   // ── Droge Lucht ──
@@ -763,7 +935,7 @@
     ctx.fillText('lucht (droog)', cx, cy - labelR);
     ctx.font = '0.23em "IBM Plex Mono", monospace';
     ctx.fillStyle = 'rgba(140,160,180,0.05)';
-    ctx.fillText('(geen water meer)', cx, cy - labelR + 8);
+    ctx.fillText('(hoog druk, geen water)', cx, cy - labelR + 8);
   }
 
   // ── IJspolen ──
@@ -1221,6 +1393,7 @@
     drawRipples();
     drawAirVocht();
     drawAirDroog();
+    drawPressureSystem();
     drawIcePoles();
     drawOuterRing();
     drawLayerBorders();
@@ -1295,7 +1468,7 @@
       rippleTime = 0;
       stoneBtn.textContent = '● steen gooien';
       stoneBtn.classList.remove('rippled');
-      elSub.textContent = 'plasma core (druk↔) → aarde → E/M → water → lucht (vochtig→droog) → ijs';
+      elSub.textContent = 'plasma core (druk↔) → aarde → E/M → water → lucht (L/H druk → wind) → wolken → ijs';
     }
   });
 
