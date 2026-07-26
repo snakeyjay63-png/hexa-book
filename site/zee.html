@@ -279,7 +279,7 @@
     return viewMode === name || (name === 'airVocht' && viewMode === 'air') || (name === 'airDroog' && viewMode === 'air');
   }
 
-  // ── Plasma Core ──
+  // ── Plasma Core + Zwart Gat ──
   function drawPlasmaCore() {
     if (!showLayer('core')) return;
 
@@ -338,16 +338,55 @@
       ctx.setLineDash([]);
     }
 
+    // ── Zwart Gat (centrum) ──
+    const holeR = r * 0.25;
+
+    // Schwarzschild radius (zwart gat)
+    const holeGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, holeR);
+    holeGrad.addColorStop(0, 'rgba(0,0,0,1)');
+    holeGrad.addColorStop(0.6, 'rgba(0,0,0,0.8)');
+    holeGrad.addColorStop(1, 'rgba(10,5,0,0.3)');
+    ctx.beginPath();
+    ctx.arc(cx, cy, holeR, 0, Math.PI * 2);
+    ctx.fillStyle = holeGrad;
+    ctx.fill();
+
+    // Geval licht (accretion disk)
+    ctx.beginPath();
+    ctx.arc(cx, cy, holeR, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(255,100,30,${0.4 + Math.sin(time * 3) * 0.1})`;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Accretion ring (dun, pulserend)
+    for (let a = 0; a < 6; a++) {
+      const aAngle = (a / 6) * Math.PI * 2 + time * 0.5 * coreSpeed;
+      const aInner = holeR + 2;
+      const aOuter = holeR + 6 + Math.sin(time * 4 + a) * 2;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(aAngle) * aInner, cy + Math.sin(aAngle) * aInner);
+      ctx.lineTo(cx + Math.cos(aAngle) * aOuter, cy + Math.sin(aAngle) * aOuter);
+      ctx.strokeStyle = `rgba(255,150,50,${0.15 + Math.sin(time * 2 + a) * 0.05})`;
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    }
+
     // Label
-    ctx.fillStyle = 'rgba(255,150,50,0.4)';
-    ctx.font = '0.4em "IBM Plex Mono", monospace';
+    ctx.fillStyle = 'rgba(255,100,30,0.5)';
+    ctx.font = '0.3em "IBM Plex Mono", monospace';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('plasma', cx, cy - 10);
-    ctx.fillText('core', cx, cy + 2);
-    ctx.font = '0.28em "IBM Plex Mono", monospace';
+    ctx.fillText('zwart gat', cx, cy);
+
+    // Plasma core label buiten het zwart gat
+    ctx.fillStyle = 'rgba(255,150,50,0.4)';
+    ctx.font = '0.35em "IBM Plex Mono", monospace';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('plasma', cx, cy + r + 12);
+    ctx.fillText('core', cx, cy + r + 24);
+    ctx.font = '0.25em "IBM Plex Mono", monospace';
     ctx.fillStyle = 'rgba(255,120,40,0.25)';
-    ctx.fillText('druk ↔ beweging', cx, cy + 14);
+    ctx.fillText('druk ↔ beweging', cx, cy + r + 36);
   }
 
   // ── Aarde / Sediment ──
@@ -677,6 +716,67 @@
     { name: 'zon',      orbitR: 1.72, size: 10,  color: [255,200,50],  speed: 0.05, phase: 0,       note: 'plasma bron' },
   ];
 
+  // ── Zwart Gat Brug (core → zon, E/M verbinding) ──
+  function drawBlackHoleBridge() {
+    if (!showPlanets) return;
+
+    // Zon positie vinden
+    const baseR = R * 1.05;
+    const zon = PLANETS[5]; // zon
+    const zonAngle = time * zon.speed + zon.phase;
+    const zonX = cx + Math.cos(zonAngle) * baseR * zon.orbitR;
+    const zonY = cy + Math.sin(zonAngle) * baseR * zon.orbitR;
+
+    // Brug van centrum (zwart gat) naar zon
+    // Hoofdlus
+    ctx.beginPath();
+    const steps = 40;
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      const x = cx + (zonX - cx) * t;
+      const y = cy + (zonY - cy) * t;
+
+      // Spirale effect (vortex)
+      const spiralR = 15 * (1 - Math.abs(t - 0.5) * 2);
+      const spiralAngle = t * Math.PI * 6 + time * 2;
+      const sx = x + Math.cos(spiralAngle) * spiralR;
+      const sy = y + Math.sin(spiralAngle) * spiralR;
+
+      if (i === 0) ctx.moveTo(sx, sy);
+      else ctx.lineTo(sx, sy);
+    }
+    ctx.strokeStyle = `rgba(255,150,50,${0.15 + Math.sin(time * 2) * 0.05})`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // E/M veld lijnen (parallel, dunner)
+    for (let l = 0; l < 3; l++) {
+      ctx.beginPath();
+      for (let i = 0; i <= steps; i++) {
+        const t = i / steps;
+        const x = cx + (zonX - cx) * t;
+        const y = cy + (zonY - cy) * t;
+
+        const spiralR = 8 * (1 - Math.abs(t - 0.5) * 2);
+        const spiralAngle = t * Math.PI * 4 + time * 1.5 + l * 2;
+        const sx = x + Math.cos(spiralAngle) * spiralR;
+        const sy = y + Math.sin(spiralAngle) * spiralR;
+
+        if (i === 0) ctx.moveTo(sx, sy);
+        else ctx.lineTo(sx, sy);
+      }
+      ctx.strokeStyle = `rgba(255,200,50,${0.06 + Math.sin(time * 1.5 + l) * 0.02})`;
+      ctx.lineWidth = 0.4;
+      ctx.stroke();
+    }
+
+    // Zwart gat label bij centrum
+    ctx.fillStyle = 'rgba(255,100,30,0.2)';
+    ctx.font = '0.22em "IBM Plex Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('zwart gat → E/M brug', cx, cy + R * 0.5);
+  }
+
   let showPlanets = true;
 
   function drawPlanets() {
@@ -850,6 +950,7 @@
     drawIcePoles();
     drawOuterRing();
     drawLayerBorders();
+    drawBlackHoleBridge();
     drawPlanets();
 
     // Info
