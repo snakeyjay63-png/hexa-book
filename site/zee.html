@@ -31,6 +31,13 @@
     .speed-btn:hover { background: rgba(255,255,255,0.1); }
     .speed-btn.active { background: rgba(124,110,245,0.2); border-color: rgba(124,110,245,0.5); color: #c0b8e8; }
 
+    .audio-btn {
+      background: rgba(124,110,245,0.08); border: 1px solid rgba(124,110,245,0.2);
+      color: #666; padding: 5px 12px; border-radius: 4px; cursor: pointer;
+      font-family: inherit; font-size: 0.75em; margin-top: 12px;
+    }
+    .audio-btn.on { background: rgba(124,110,245,0.25); border-color: #7c6ef5; color: #c0b8e8; }
+
     .back-link {
       position: fixed; top: 20px; left: 20px; color: #555; text-decoration: none;
       font-size: 0.8em; z-index: 10; transition: color 0.3s;
@@ -59,6 +66,7 @@
       <button class="speed-btn active" data-s="1">1×</button>
       <button class="speed-btn" data-s="2">2×</button>
     </div>
+    <button class="audio-btn" id="audio-toggle">♪ aan</button>
   </div>
 
 <script>
@@ -79,9 +87,10 @@
   let audioCtx = null;
   let audioNodes = null;
   let currentElement = 'zee';
+  let audioOn = false;
 
   function initAudio() {
-    if (audioCtx) return;
+    if (audioCtx) { audioOn = true; return; }
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     if (audioCtx.state === 'suspended') audioCtx.resume();
 
@@ -133,28 +142,43 @@
       case 'zee':
         n.bp1.frequency.setTargetAtTime(200, audioCtx.currentTime, t); n.bp1.Q.setTargetAtTime(0.5, audioCtx.currentTime, t);
         n.bp2.frequency.setTargetAtTime(2000, audioCtx.currentTime, t); n.bp2.Q.setTargetAtTime(1, audioCtx.currentTime, t);
-        lfo.frequency.setTargetAtTime(0.1, audioCtx.currentTime, t); n.lfoGain.gain.setTargetAtTime(120, audioCtx.currentTime, t);
+        n.lfo.frequency.setTargetAtTime(0.1, audioCtx.currentTime, t); n.lfoGain.gain.setTargetAtTime(120, audioCtx.currentTime, t);
         n.master.gain.setTargetAtTime(0.1, audioCtx.currentTime, t);
         break;
       case 'regen':
         n.bp1.frequency.setTargetAtTime(4000, audioCtx.currentTime, t); n.bp1.Q.setTargetAtTime(2, audioCtx.currentTime, t);
         n.bp2.frequency.setTargetAtTime(6000, audioCtx.currentTime, t); n.bp2.Q.setTargetAtTime(3, audioCtx.currentTime, t);
-        lfo.frequency.setTargetAtTime(2, audioCtx.currentTime, t); n.lfoGain.gain.setTargetAtTime(500, audioCtx.currentTime, t);
+        n.lfo.frequency.setTargetAtTime(2, audioCtx.currentTime, t); n.lfoGain.gain.setTargetAtTime(500, audioCtx.currentTime, t);
         n.master.gain.setTargetAtTime(0.06, audioCtx.currentTime, t);
         break;
       case 'water':
         n.bp1.frequency.setTargetAtTime(800, audioCtx.currentTime, t); n.bp1.Q.setTargetAtTime(1.5, audioCtx.currentTime, t);
         n.bp2.frequency.setTargetAtTime(1500, audioCtx.currentTime, t); n.bp2.Q.setTargetAtTime(1, audioCtx.currentTime, t);
-        lfo.frequency.setTargetAtTime(0.5, audioCtx.currentTime, t); n.lfoGain.gain.setTargetAtTime(300, audioCtx.currentTime, t);
+        n.lfo.frequency.setTargetAtTime(0.5, audioCtx.currentTime, t); n.lfoGain.gain.setTargetAtTime(300, audioCtx.currentTime, t);
         n.master.gain.setTargetAtTime(0.08, audioCtx.currentTime, t);
         break;
       case 'wind':
         n.bp1.frequency.setTargetAtTime(150, audioCtx.currentTime, t); n.bp1.Q.setTargetAtTime(0.8, audioCtx.currentTime, t);
         n.bp2.frequency.setTargetAtTime(800, audioCtx.currentTime, t); n.bp2.Q.setTargetAtTime(2, audioCtx.currentTime, t);
-        lfo.frequency.setTargetAtTime(0.3, audioCtx.currentTime, t); n.lfoGain.gain.setTargetAtTime(400, audioCtx.currentTime, t);
+        n.lfo.frequency.setTargetAtTime(0.3, audioCtx.currentTime, t); n.lfoGain.gain.setTargetAtTime(400, audioCtx.currentTime, t);
         n.master.gain.setTargetAtTime(0.1, audioCtx.currentTime, t);
         break;
     }
+  }
+
+  function toggleAudio() {
+    if (!audioNodes) {
+      initAudio();
+      setElement(currentElement);
+      return true;
+    }
+    // Toggle mute
+    const n = audioNodes;
+    const isMuted = n.master.gain.value === 0;
+    const wasMuted = n.master.gain.value === 0;
+    n.master.gain.setTargetAtTime(wasMuted ? 0.1 : 0, audioCtx.currentTime, 0.3);
+    audioOn = wasMuted;
+    return audioOn;
   }
 
   // ── Atoom: elk punt water = atoom met E/M veld ──
@@ -331,10 +355,10 @@
     const dt = speedMultiplier;
     time += 0.016 * dt;
 
-    // Spawn nieuwe atomen
+    // Spawn nieuwe atomen (meer met geluid)
     spawnTimer++;
     const spawnRate = { schelp: 10, zee: 12, regen: 20, water: 15, wind: 18 };
-    const rate = Math.max(1, Math.round((spawnRate[currentElement] || 10) / speedMultiplier));
+    const rate = Math.max(1, Math.round((spawnRate[currentElement] || 10) / (speedMultiplier * audioBoost)));
     if (spawnTimer % rate === 0) {
       // Spawn position afhankelijk van element
       let x, y;
@@ -355,9 +379,18 @@
     const maxAtoms = 300;
     atoms = atoms.filter(a => a.life > 0 && atoms.length <= maxAtoms);
 
+    // Geluid beïnvloedt visuals: audio aan = meer activiteit
+    const audioBoost = audioOn ? 1.5 : 1;
+    const fieldStrength = audioOn ? 1.2 : 0.6;
+
     atoms.forEach(a => {
-      // E/M veld interactie
+      // E/M veld interactie (sterker met geluid)
+      const localE = a.e * fieldStrength;
+      const localM = a.m * fieldStrength;
+      const saveE = a.e; const saveM = a.m;
+      a.e = localE; a.m = localM;
       applyFieldInteractions(a, dt);
+      a.e = saveE; a.m = saveM;
 
       // Eigen beweging (frequentie + fase)
       const selfMotion = Math.sin(time * a.f + a.phase) * 0.05 * a.depth;
@@ -388,17 +421,20 @@
       // E/M veld visualisatie: groter atoom = sterker veld
       const fieldRadius = r * (1 + a.e * 0.5);
 
-      // Kern
+      // Kern (groter met geluid)
+      const audioSize = audioOn ? 1.3 : 1;
+      const displayR = r * audioSize;
       ctx.beginPath();
-      ctx.arc(a.x, a.y, r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${color}, ${Math.min(0.4, a.life * 0.3 * a.depth)})`;
+      ctx.arc(a.x, a.y, displayR, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${color}, ${Math.min(0.4, a.life * 0.3 * a.depth * audioBoost)})`;
       ctx.fill();
 
-      // Veld (subtiele glow)
+      // Veld (sterker met geluid)
       if (a.e > 0.5 || a.m > 0.5) {
+        const glowSize = audioOn ? 3 : 2;
         ctx.beginPath();
-        ctx.arc(a.x, a.y, fieldRadius * 2, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${color}, ${Math.min(0.05, a.life * 0.02 * a.depth)})`;
+        ctx.arc(a.x, a.y, fieldRadius * glowSize, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${color}, ${Math.min(0.05, a.life * 0.02 * a.depth * audioBoost)})`;
         ctx.fill();
       }
 
@@ -454,8 +490,15 @@
     });
   });
 
+  // Audio toggle
+  const audioToggleBtn = document.getElementById('audio-toggle');
+  audioToggleBtn.addEventListener('click', () => {
+    const on = toggleAudio();
+    audioToggleBtn.textContent = on ? '♪ aan' : '♪ uit';
+    audioToggleBtn.classList.toggle('on', on);
+  });
+
   // Start
-  setElement('zee');
   draw();
 })();
 </script>
