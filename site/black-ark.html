@@ -114,6 +114,11 @@
   .seq-cell.hihat.on { background: rgba(100,200,255,0.25); }
   .seq-cell.bass.on { background: rgba(100,255,100,0.2); }
   .seq-cell.echo.on { background: rgba(200,100,255,0.25); }
+  .seq-cell.bird.on { background: rgba(100,255,200,0.3); }
+  .seq-cell.organ.on { background: rgba(255,150,200,0.25); }
+  .seq-cell.squelch.on { background: rgba(100,200,100,0.3); }
+  .seq-cell.noise.on { background: rgba(200,200,200,0.2); }
+  .seq-cell.sub.on { background: rgba(150,100,255,0.25); }
 
   /* ── Console ── */
   #console {
@@ -275,9 +280,194 @@
   #start h1 { font-size: 1.1rem; letter-spacing: 0.3em; color: #ffcc33; }
   #start p { font-size: 0.6rem; color: #666655; letter-spacing: 0.1em; }
 
+  /* ── Channel Module Panel ── */
+  #channel-panel {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 200;
+    width: 380px;
+    background: rgba(12,10,18,0.97);
+    border: 1px solid rgba(255,200,50,0.2);
+    border-radius: 8px;
+    padding: 20px;
+    display: none;
+    backdrop-filter: blur(16px);
+  }
+  #channel-panel.visible { display: block; }
+
+  #panel-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    z-index: 190;
+    background: rgba(0,0,0,0.6);
+    display: none;
+  }
+  #panel-overlay.visible { display: block; }
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,200,50,0.15);
+  }
+  .panel-title {
+    font-size: 0.7rem;
+    color: #ffcc33;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .panel-close {
+    background: none;
+    border: 1px solid rgba(255,50,50,0.3);
+    color: #ff5555;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .panel-close:hover { background: rgba(255,50,50,0.15); }
+
+  .panel-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .panel-label {
+    font-size: 0.5rem;
+    color: #777766;
+    min-width: 65px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .panel-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: rgba(255,200,50,0.15);
+    border-radius: 2px;
+    outline: none;
+  }
+  .panel-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: #ffcc33;
+    cursor: pointer;
+    border: 2px solid rgba(255,200,50,0.5);
+  }
+  .panel-value {
+    font-size: 0.5rem;
+    color: #aa9944;
+    min-width: 35px;
+    text-align: right;
+  }
+
+  .panel-select {
+    flex: 1;
+    background: rgba(20,18,12,0.9);
+    border: 1px solid rgba(255,200,50,0.2);
+    color: #aa9944;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-family: inherit;
+    font-size: 0.5rem;
+    cursor: pointer;
+  }
+
+  .panel-btn {
+    background: rgba(255,50,50,0.1);
+    border: 1px solid rgba(255,50,50,0.3);
+    color: #ff5555;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.5rem;
+    letter-spacing: 0.1em;
+    transition: all 0.2s ease;
+  }
+  .panel-btn:hover { background: rgba(255,50,50,0.2); }
+
+  .panel-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,200,50,0.1);
+  }
+
+  /* ── Add Channel Button ── */
+  #add-channel-btn {
+    position: fixed;
+    bottom: 190px;
+    right: 20px;
+    z-index: 15;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(255,200,50,0.1);
+    border: 1px solid rgba(255,200,50,0.3);
+    color: #ffcc33;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+  #add-channel-btn:hover {
+    background: rgba(255,200,50,0.2);
+    border-color: rgba(255,200,50,0.5);
+  }
+
+  /* ── Add Channel Menu ── */
+  #add-menu {
+    position: fixed;
+    bottom: 230px;
+    right: 20px;
+    z-index: 15;
+    background: rgba(12,10,18,0.95);
+    border: 1px solid rgba(255,200,50,0.2);
+    border-radius: 6px;
+    padding: 8px;
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    backdrop-filter: blur(12px);
+  }
+  #add-menu.visible { display: flex; }
+  .add-menu-item {
+    background: rgba(20,18,12,0.6);
+    border: 1px solid rgba(255,200,50,0.1);
+    color: #777766;
+    padding: 6px 14px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.5rem;
+    letter-spacing: 0.1em;
+    text-align: left;
+    transition: all 0.2s ease;
+  }
+  .add-menu-item:hover {
+    color: #aa9944;
+    border-color: rgba(255,200,50,0.3);
+    background: rgba(40,35,15,0.6);
+  }
+
   @media (max-width: 768px) {
     #sequencer { grid-template-columns: 50px repeat(16, 1fr); }
     #console { grid-template-columns: 1fr; height: auto; max-height: 45vh; overflow-y: auto; }
+    #channel-panel { width: 90vw; }
   }
 </style>
 </head>
@@ -367,6 +557,34 @@
     <div class="vu-label">VU</div>
     <div class="vu-meter"><div class="vu-fill" id="vu-fill"></div></div>
     <div class="vu-label">L ◉ R</div>
+  </div>
+</div>
+
+<!-- Add Channel -->
+<button id="add-channel-btn">+</button>
+<div id="add-menu">
+  <button class="add-menu-item" data-type="kick">+ Kick</button>
+  <button class="add-menu-item" data-type="snare">+ Snare</button>
+  <button class="add-menu-item" data-type="hihat">+ Hi-Hat</button>
+  <button class="add-menu-item" data-type="bass">+ Bass</button>
+  <button class="add-menu-item" data-type="organ">+ Organ</button>
+  <button class="add-menu-item" data-type="squelch">+ Squelch</button>
+  <button class="add-menu-item" data-type="noise">+ Noise</button>
+  <button class="add-menu-item" data-type="sub">+ Sub Bass</button>
+  <button class="add-menu-item" data-type="bird">+ Bird</button>
+</div>
+
+<!-- Channel Module Panel -->
+<div id="panel-overlay"></div>
+<div id="channel-panel">
+  <div class="panel-header">
+    <div class="panel-title" id="panel-title">KICK</div>
+    <button class="panel-close" id="panel-close">✕</button>
+  </div>
+  <div id="panel-content"></div>
+  <div class="panel-actions">
+    <button class="panel-btn" id="panel-duplicate">Duplicate</button>
+    <button class="panel-btn" id="panel-delete">Delete</button>
   </div>
 </div>
 
@@ -665,7 +883,190 @@
     src.start();
   }
 
-  const soundMap = { kick: playKick, snare: playSnare, hihat: playHihat, bass: playBass, echo: playEcho };
+  // ── Bird Chirp ──
+  // Short rising/falling frequency sweeps with noise texture
+  function playBird() {
+    if (!audioCtx || !fxSendGain) return;
+    const now = audioCtx.currentTime;
+
+    // Randomize chirp character slightly
+    const baseFreq = 1800 + Math.random() * 2000;  // 1.8k - 3.8kHz
+    const chirpLen = 0.06 + Math.random() * 0.06;  // 60-120ms
+    const numChirps = 1 + Math.floor(Math.random() * 2);  // 1-2 chirps per trigger
+
+    for (let c = 0; c < numChirps; c++) {
+      const offset = c * 0.08;
+      const t0 = now + offset;
+      const dur = chirpLen * (0.7 + Math.random() * 0.6);
+
+      // Main chirp oscillator - frequency sweep
+      const osc = audioCtx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(baseFreq, t0);
+      // Rising then falling (bell curve)
+      osc.frequency.linearRampToValueAtTime(baseFreq * 1.5, t0 + dur * 0.3);
+      osc.frequency.linearRampToValueAtTime(baseFreq * 0.6, t0 + dur);
+
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0, t0);
+      gain.gain.linearRampToValueAtTime(0.12, t0 + dur * 0.1);
+      gain.gain.linearRampToValueAtTime(0.08, t0 + dur * 0.5);
+      gain.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
+
+      // Subtle harmonic for richness
+      const harm = audioCtx.createOscillator();
+      harm.type = 'triangle';
+      harm.frequency.setValueAtTime(baseFreq * 2, t0);
+      harm.frequency.linearRampToValueAtTime(baseFreq * 2.8, t0 + dur * 0.3);
+      harm.frequency.linearRampToValueAtTime(baseFreq * 1.2, t0 + dur);
+
+      const harmGain = audioCtx.createGain();
+      harmGain.gain.setValueAtTime(0, t0);
+      harmGain.gain.linearRampToValueAtTime(0.03, t0 + dur * 0.15);
+      harmGain.gain.exponentialRampToValueAtTime(0.001, t0 + dur * 0.8);
+
+      // Bandpass for natural filter
+      const filt = audioCtx.createBiquadFilter();
+      filt.type = 'bandpass';
+      filt.frequency.value = baseFreq;
+      filt.Q.value = 2;
+
+      osc.connect(gain);
+      gain.connect(filt);
+      harm.connect(harmGain);
+      harmGain.connect(filt);
+      connectToFX(filt);
+
+      osc.start(t0); osc.stop(t0 + dur + 0.01);
+      harm.start(t0); harm.stop(t0 + dur + 0.01);
+    }
+  }
+
+  // ── Organ (B3-style) ──
+  function playOrgan(step) {
+    if (!audioCtx || !fxSendGain) return;
+    const scale = [220, 261.63, 293.66, 329.63, 349.23, 392, 440, 523.25];
+    const freq = scale[step % scale.length];
+    const now = audioCtx.currentTime;
+    const dur = 0.25;
+
+    // Multiple harmonics for organ body
+    [1, 2, 3, 4].forEach((harmonic, i) => {
+      const osc = audioCtx.createOscillator();
+      osc.type = i < 2 ? 'sine' : 'triangle';
+      osc.frequency.value = freq * harmonic;
+
+      const gain = audioCtx.createGain();
+      const vol = 0.12 / (harmonic * 0.7);
+      gain.gain.setValueAtTime(vol, now);
+      gain.gain.setValueAtTime(vol, now + dur * 0.6);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+
+      osc.connect(gain);
+      connectToFX(gain);
+      osc.start(now);
+      osc.stop(now + dur + 0.01);
+    });
+  }
+
+  // ── Squelch (sci-fi filter sweep) ──
+  function playSquelch() {
+    if (!audioCtx || !fxSendGain) return;
+    const now = audioCtx.currentTime;
+    const dur = 0.15;
+
+    // Noise source
+    const bufSize = audioCtx.sampleRate * dur;
+    const buf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
+    const src = audioCtx.createBufferSource();
+    src.buffer = buf;
+
+    // Resonant bandpass with sweeping frequency
+    const filt = audioCtx.createBiquadFilter();
+    filt.type = 'bandpass';
+    filt.Q.value = 15;
+    filt.frequency.setValueAtTime(200, now);
+    filt.frequency.exponentialRampToValueAtTime(3000, now + dur * 0.4);
+    filt.frequency.exponentialRampToValueAtTime(400, now + dur);
+
+    const gain = audioCtx.createGain();
+    gain.gain.setValueAtTime(0.25, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+
+    src.connect(filt);
+    filt.connect(gain);
+    connectToFX(gain);
+    src.start(now);
+  }
+
+  // ── Noise (atmospheric texture) ──
+  function playNoise() {
+    if (!audioCtx || !fxSendGain) return;
+    const dur = 0.3 + Math.random() * 0.2;
+    const bufSize = audioCtx.sampleRate * dur;
+    const buf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
+    const src = audioCtx.createBufferSource();
+    src.buffer = buf;
+
+    // Low-pass for warm texture
+    const filt = audioCtx.createBiquadFilter();
+    filt.type = 'lowpass';
+    filt.frequency.value = 800 + Math.random() * 1500;
+    filt.Q.value = 1;
+
+    const gain = audioCtx.createGain();
+    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+
+    src.connect(filt);
+    filt.connect(gain);
+    connectToFX(gain);
+    src.start();
+  }
+
+  // ── Sub Bass (deep 20-50Hz) ──
+  function playSub() {
+    if (!audioCtx || !fxSendGain) return;
+    const notes = [38, 41, 43.65, 46.25, 48, 51.91];
+    const freq = notes[Math.floor(Math.random() * notes.length)];
+    const dur = 0.5;
+    const now = audioCtx.currentTime;
+
+    const osc = audioCtx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq * 1.1, now);
+    osc.frequency.exponentialRampToValueAtTime(freq, now + dur * 0.1);
+    osc.frequency.setValueAtTime(freq, now + dur * 0.7);
+    osc.frequency.exponentialRampToValueAtTime(freq * 0.5, now + dur);
+
+    const gain = audioCtx.createGain();
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.35, now + 0.02);
+    gain.gain.setValueAtTime(0.35, now + dur * 0.6);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+
+    osc.connect(gain);
+    connectToFX(gain);
+    osc.start(now);
+    osc.stop(now + dur + 0.01);
+  }
+
+  const soundMap = {
+    kick: playKick,
+    snare: playSnare,
+    hihat: playHihat,
+    bass: playBass,
+    echo: playEcho,
+    bird: playBird,
+    organ: playOrgan,
+    squelch: playSquelch,
+    noise: playNoise,
+    sub: playSub
+  };
 
   // ── Sequencer Engine ──
   function tick() {
@@ -920,6 +1321,95 @@
       isPlaying ? document.getElementById('btn-stop').click() : document.getElementById('btn-play').click();
     }
   });
+
+  // ── Add Channel (Modular) ──
+  const channelTypes = {
+    kick:    { name: 'KICK',    cls: 'kick' },
+    snare:   { name: 'SNARE',   cls: 'snare' },
+    hihat:   { name: 'HI-HAT',  cls: 'hihat' },
+    bass:    { name: 'BASS',    cls: 'bass' },
+    echo:    { name: 'ECHO',    cls: 'echo' },
+    organ:   { name: 'ORGAN',   cls: 'organ' },
+    squelch: { name: 'SQUELCH', cls: 'squelch' },
+    noise:   { name: 'NOISE',   cls: 'noise' },
+    sub:     { name: 'SUB',     cls: 'sub' },
+    bird:    { name: 'BIRD',    cls: 'bird' }
+  };
+
+  // Toggle add menu
+  const addBtn = document.getElementById('add-channel-btn');
+  const addMenu = document.getElementById('add-menu');
+  addBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    addMenu.classList.toggle('visible');
+  });
+  document.addEventListener('click', () => addMenu.classList.remove('visible'));
+  addMenu.addEventListener('click', e => e.stopPropagation());
+
+  // Add new channel type
+  document.querySelectorAll('.add-menu-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const type = item.dataset.type;
+      const cfg = channelTypes[type];
+      if (!cfg) return;
+
+      const idx = tracks.length;
+      const track = {
+        name: type,
+        cls: cfg.cls,
+        pattern: new Array(16).fill(0)
+      };
+      tracks.push(track);
+
+      // Add sequencer row
+      // First remove old grid and rebuild
+      rebuildSequencer();
+
+      // Add channel strip
+      const channelsDiv = document.getElementById('channels');
+      const ch = document.createElement('div');
+      ch.className = 'channel active';
+      ch.dataset.ch = idx;
+      ch.innerHTML = `<div class="channel-led"></div><div class="channel-name">${cfg.name}</div><div class="meter"><div class="meter-fill"></div></div>`;
+      ch.addEventListener('click', () => ch.classList.toggle('active'));
+      channelsDiv.appendChild(ch);
+
+      addMenu.classList.remove('visible');
+    });
+  });
+
+  // Rebuild sequencer grid (called when tracks change)
+  function rebuildSequencer() {
+    seqEl.innerHTML = '';
+    // Update grid columns for current track count
+    const cols = '70px ' + 'repeat(' + tracks.length + ', 1fr)';
+    // We need a different approach: grid-template-rows = tracks, columns = 16 steps
+    // Actually the current layout is: row per track, 16 steps
+    // So grid-template-columns: 70px repeat(16, 1fr)
+    // But we need grid-template-rows: auto per track
+    // Let's keep it simple: rebuild everything
+    seqEl.style.gridTemplateColumns = '70px repeat(16, 1fr)';
+
+    tracks.forEach((track, ti) => {
+      const label = document.createElement('div');
+      label.className = 'seq-label';
+      label.textContent = track.name.toUpperCase();
+      seqEl.appendChild(label);
+
+      for (let s = 0; s < 16; s++) {
+        const cell = document.createElement('div');
+        cell.className = 'seq-cell ' + track.cls;
+        if (track.pattern[s]) cell.classList.add('on');
+        cell.dataset.track = ti;
+        cell.dataset.step = s;
+        cell.addEventListener('click', () => {
+          track.pattern[s] = track.pattern[s] ? 0 : 1;
+          cell.classList.toggle('on', !!track.pattern[s]);
+        });
+        seqEl.appendChild(cell);
+      }
+    });
+  }
 })();
 </script>
 </body>
