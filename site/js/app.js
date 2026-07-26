@@ -503,4 +503,104 @@
   if (document.getElementById('page-container') || document.getElementById('article-list')) {
     init();
   }
+
+  // ── Book Index — Bit Slider + Depth Nav (↑↓) ──
+  const bitSlider = document.getElementById('bit-slider');
+  const bitValue = document.getElementById('bit-value');
+  const bitLabel = document.getElementById('perspectief-label');
+  const bands = document.querySelectorAll('.book-band');
+  const navUp = document.getElementById('nav-up');
+  const navDown = document.getElementById('nav-down');
+  const depthLabel = document.getElementById('depth-label');
+
+  if (bitSlider && navUp && navDown) {
+    // ── Band Data (P0 → P6) ──
+    const bandData = [
+      { id: 'p0', label: 'P0 — As',         bits: 5,  geom: 'hexa-rooster',         state: 'ijs (tijdloos)' },
+      { id: 'p1', label: 'P1 — Kern',        bits: 7,  geom: 'cirkel',              state: 'traag water' },
+      { id: 'p2', label: 'P2 — Mantel',      bits: 9,  geom: 'helix',               state: 'half-ijs' },
+      { id: 'p3', label: 'P3 — Korst',       bits: 12, geom: 'gouden spiraal',      state: 'wakker' },
+      { id: 'p4', label: 'P4 — Atmosfeer',   bits: 16, geom: 'golf-interferentie',  state: 'snel water' },
+      { id: 'p5', label: 'P5 — Ionosfeer',   bits: 20, geom: 'fractaal-boom',       state: 'plasma' },
+      { id: 'p6', label: 'P6 — Magnetosfeer', bits: 24, geom: 'rooster→veld',       state: 'veld (snelst)' },
+    ];
+
+    // ── State ──
+    let currentDepth = 0;        // 0 = P0, 6 = P6
+    let routeHistory = ['p0'];   // track the route taken
+    let direction = 'start';     // 'up', 'down', 'start'
+
+    // ── Update everything ──
+    function updateBands() {
+      const data = bandData[currentDepth];
+      const bits = data.bits;
+
+      bitSlider.value = bits;
+      bitValue.textContent = bits;
+      bitLabel.textContent = bits + '-bit: ' + data.geom + ' — ' + data.state;
+      depthLabel.textContent = data.label;
+
+      // Show/hide bands
+      bands.forEach(function(band) {
+        const bandId = band.getAttribute('data-band');
+        const bandIndex = parseInt(bandId.replace('p', ''));
+
+        if (direction === 'up' || direction === 'start') {
+          // Omhoog: alleen bands ≤ huidige diepte
+          if (bandIndex <= currentDepth) {
+            band.classList.remove('hidden');
+          } else {
+            band.classList.add('hidden');
+          }
+        } else if (direction === 'down') {
+          // Omlaag: route is anders — bands tonen verschillende dingen
+          // Niet omkeerbaar: wat je zag bij omhoog zie je niet meer bij omlaag
+          if (bandIndex < currentDepth || bandIndex === 0) {
+            band.classList.remove('hidden');
+          } else {
+            band.classList.add('hidden');
+          }
+        }
+      });
+
+      // Update button states
+      navUp.disabled = currentDepth >= 6;
+      navDown.disabled = currentDepth <= 0;
+    }
+
+    // ── Omhoog ↑ ──
+    navUp.addEventListener('click', function() {
+      if (currentDepth < 6) {
+        currentDepth++;
+        direction = 'up';
+        routeHistory.push('p' + currentDepth);
+        updateBands();
+      }
+    });
+
+    // ── Omlaag ↓ ──
+    navDown.addEventListener('click', function() {
+      if (currentDepth > 0) {
+        currentDepth--;
+        direction = 'down';
+        routeHistory.push('p' + currentDepth);
+        updateBands();
+      }
+    });
+
+    // ── Slider (handmatig overschrijven) ──
+    bitSlider.addEventListener('input', function() {
+      const val = parseInt(this.value);
+      const data = bandData.find(function(b) { return b.bits === val; });
+      if (data) {
+        currentDepth = bandData.indexOf(data);
+        direction = 'up';
+        routeHistory = ['p' + currentDepth];
+        updateBands();
+      }
+    });
+
+    // Initial state — start at P0 (5-bit)
+    updateBands();
+  }
 })();
