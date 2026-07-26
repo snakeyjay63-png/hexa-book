@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>• 1 Bit Licht</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="css/main.css">
+<style>
+  #bit-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+  }
+
+  #bit-ui {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    font-family: var(--mono);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    background: rgba(6, 6, 10, 0.9);
+    padding: 16px 32px;
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+  }
+
+  #bit-stage {
+    font-size: 0.8rem;
+    color: var(--accent);
+    text-align: center;
+  }
+
+  #bit-label {
+    font-size: 0.65rem;
+    color: var(--text-soft);
+  }
+
+  #play-btn {
+    padding: 8px 24px;
+    border: 1px solid var(--accent);
+    border-radius: 99px;
+    background: transparent;
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  #play-btn:hover {
+    background: var(--accent);
+    color: #06060a;
+  }
+
+  .stage-bar {
+    display: flex;
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  .stage-dot {
+    width: 24px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(124, 110, 245, 0.2);
+    transition: background 0.3s ease;
+  }
+
+  .stage-dot.active {
+    background: var(--accent);
+  }
+
+  .stage-dot.done {
+    background: var(--yellow);
+  }
+</style>
+</head>
+<body>
+<!-- Top nav -->
+<nav id="nav-top">
+  <a href="/" style="color:#7c6ef5;text-decoration:none;opacity:0.7;">• index</a>
+  <a href="spectrum.html" style="color:#7c6ef5;text-decoration:none;opacity:0.7;">spectrum</a>
+  <a href="licht.html" style="color:#a78bfa;text-decoration:none;opacity:0.7;">licht</a>
+</nav>
+
+<canvas id="bit-canvas"></canvas>
+
+<div id="bit-ui">
+  <div id="bit-stage">0 = 1</div>
+  <div id="bit-label">1 bit licht — statisch</div>
+  <div class="stage-bar">
+    <div class="stage-dot" data-stage="0"></div>
+    <div class="stage-dot" data-stage="1"></div>
+    <div class="stage-dot" data-stage="2"></div>
+    <div class="stage-dot" data-stage="3"></div>
+    <div class="stage-dot" data-stage="4"></div>
+  </div>
+  <button id="play-btn">▶ PLAY</button>
+</div>
+
+<script>
+(function() {
+  const canvas = document.getElementById('bit-canvas');
+  const ctx = canvas.getContext('2d');
+  const playBtn = document.getElementById('play-btn');
+  const stageLabel = document.getElementById('bit-stage');
+  const bitLabel = document.getElementById('bit-label');
+
+  let W, H, cx, cy;
+  let stage = 0; // 0=bit, 1=wave, 2=4waves, 3=whitenoise, 4=mandelbrot
+  let playing = false;
+  let time = 0;
+  let audioCtx = null;
+  let currentOsc = null;
+  let noiseNode = null;
+
+  const stages = [
+    { name: '0 = 1', label: '1 bit licht — statisch' },
+    { name: 'WAVE', label: 'bit vertragen → golf' },
+    { name: '4 WAVES', label: 'meerdere golven → resonantie' },
+    { name: 'WHITE NOISE', label: 'chaos → alles tegelijk' },
+    { name: 'MANDELBROT', label: 'oneindige complexiteit uit eenvoud' },
+  ];
+
+  // ── Resize ──
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    cx = W / 2;
+    cy = H / 2;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // ── Audio ──
+  function initAudio() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+
+  function stopAudio() {
+    if (currentOsc) { currentOsc.stop(); currentOsc = null; }
+    if (noiseNode) { noiseNode.stop(); noiseNode = null; }
+  }
+
+  function playStageAudio(s) {
+    initAudio();
+    stopAudio();
+
+    if (s === 0) {
+      // Single bit: pure tone
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = 440;
+      gain.gain.value = 0.05;
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      currentOsc = osc;
+
+    } else if (s === 1) {
+      // Wave: slowing sine
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = 220;
+      osc.frequency.exponentialRampToValueAtTime(55, audioCtx.currentTime + 4);
+      gain.gain.value = 0.08;
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      currentOsc = osc;
+
+    } else if (s === 2) {
+      // 4 waves: polyphonic
+      const freqs = [110, 165, 220, 330];
+      freqs.forEach(function(f) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = f;
+        gain.gain.value = 0.04;
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        if (!currentOsc) currentOsc = osc; // track for stopping
+      });
+
+    } else if (s === 3) {
+      // White noise
+      const bufferSize = audioCtx.sampleRate * 2;
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+      const source = audioCtx.createBufferSource();
+      const gain = audioCtx.createGain();
+      const filter = audioCtx.createBiquadFilter();
+      source.buffer = buffer;
+      source.loop = true;
+      filter.type = 'lowpass';
+      filter.frequency.value = 1000;
+      gain.gain.value = 0.06;
+      source.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+      source.start();
+      noiseNode = source;
+
+    } else if (s === 4) {
+      // Mandelbrot: deep drone + subtle tones
+      const freqs = [55, 82.5, 110, 137.5, 165];
+      freqs.forEach(function(f) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = f;
+        gain.gain.value = 0.02;
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+      });
+    }
+  }
+
+  // ── Visuals ──
+  function draw() {
+    ctx.fillStyle = 'rgba(6, 6, 10, 0.15)';
+    ctx.fillRect(0, 0, W, H);
+
+    time += 0.016;
+
+    if (stage === 0) {
+      // Single bit — pulse
+      const pulse = 0.5 + 0.5 * Math.sin(time * 2);
+      const r = 100 + pulse * 20;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(124, 110, 245, ${0.05 + pulse * 0.05})`;
+      ctx.fill();
+      ctx.strokeStyle = `rgba(124, 110, 245, ${0.3 + pulse * 0.2})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+    } else if (stage === 1) {
+      // Wave — single sine
+      ctx.beginPath();
+      for (let x = 0; x < W; x++) {
+        const t = (x / W) * Math.PI * 4;
+        const y = cy + Math.sin(t + time * 0.5) * 100;
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = 'rgba(124, 110, 245, 0.6)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+    } else if (stage === 2) {
+      // 4 waves — polyphonic
+      const waves = [
+        { amp: 100, freq: 1, color: 'rgba(124, 110, 245, 0.5)' },
+        { amp: 70, freq: 1.5, color: 'rgba(251, 191, 36, 0.4)' },
+        { amp: 50, freq: 2, color: 'rgba(142, 202, 230, 0.3)' },
+        { amp: 30, freq: 2.5, color: 'rgba(167, 139, 250, 0.3)' },
+      ];
+      waves.forEach(function(w) {
+        ctx.beginPath();
+        for (let x = 0; x < W; x++) {
+          const t = (x / W) * Math.PI * 4;
+          const y = cy + Math.sin(t * w.freq + time * 0.3) * w.amp;
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = w.color;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      });
+
+    } else if (stage === 3) {
+      // White noise — particles
+      for (let i = 0; i < 500; i++) {
+        const x = Math.random() * W;
+        const y = Math.random() * H;
+        const a = Math.random() * 0.5;
+        ctx.fillStyle = `rgba(124, 110, 245, ${a})`;
+        ctx.fillRect(x, y, 2, 2);
+      }
+
+    } else if (stage === 4) {
+      // Mandelbrot — simplified fractal rendering
+      const zoom = 2.5;
+      const maxIter = 50;
+      const imgData = ctx.createImageData(W, H);
+      const data = imgData.data;
+
+      for (let px = 0; px < W; px += 2) {
+        for (let py = 0; py < H; py += 2) {
+          const x0 = (px - W / 2) / (W / 2) * zoom;
+          const y0 = (py - H / 2) / (H / 2) * zoom;
+          let x = 0, y = 0, iter = 0;
+          while (x * x + y * y <= 4 && iter < maxIter) {
+            const xt = x * x - y * y + x0;
+            y = 2 * x * y + y0;
+            x = xt;
+            iter++;
+          }
+          const hue = (iter / maxIter) * 270;
+          const rgb = hslToRgb(hue / 360, 0.7, iter === maxIter ? 0 : iter / maxIter);
+          // Fill 2x2 block for speed
+          for (let dx = 0; dx < 2 && px + dx < W; dx++) {
+            for (let dy = 0; dy < 2 && py + dy < H; dy++) {
+              const idx = ((py + dy) * W + (px + dx)) * 4;
+              data[idx] = rgb[0];
+              data[idx + 1] = rgb[1];
+              data[idx + 2] = rgb[2];
+              data[idx + 3] = iter === maxIter ? 255 : 200;
+            }
+          }
+        }
+      }
+      ctx.putImageData(imgData, 0, 0);
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  // HSL → RGB helper
+  function hslToRgb(h, s, l) {
+    let r, g, b;
+    if (s === 0) { r = g = b = l; }
+    else {
+      const hue2rgb = function(p, q, t) {
+        if (t < 0) t += 1;
+        if (t > 1) t -= 1;
+        if (t < 1/6) return p + (q - p) * 6 * t;
+        if (t < 1/2) return q;
+        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+        return p;
+      };
+      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      const p = 2 * l - q;
+      r = hue2rgb(p, q, h + 1/3);
+      g = hue2rgb(p, q, h);
+      b = hue2rgb(p, q, h - 1/3);
+    }
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+  }
+
+  // ── Stage progression ──
+  function advanceStage() {
+    if (stage < 4) {
+      stage++;
+    } else {
+      // Loop back
+      stage = 0;
+    }
+    updateUI();
+    playStageAudio(stage);
+  }
+
+  function updateUI() {
+    stageLabel.textContent = stages[stage].name;
+    bitLabel.textContent = stages[stage].label;
+
+    document.querySelectorAll('.stage-dot').forEach(function(dot, i) {
+      dot.classList.remove('active', 'done');
+      if (i === stage) dot.classList.add('active');
+      else if (i < stage) dot.classList.add('done');
+    });
+
+    playBtn.textContent = stage === 0 ? '▶ PLAY' : '→ VOLGENDE';
+  }
+
+  // ── Events ──
+  playBtn.addEventListener('click', advanceStage);
+
+  // Keyboard
+  document.addEventListener('keydown', function(e) {
+    if (e.code === 'Space') { e.preventDefault(); advanceStage(); }
+  });
+
+  // ── Start ──
+  updateUI();
+  draw();
+})();
+</script>
+</body>
+</html>
