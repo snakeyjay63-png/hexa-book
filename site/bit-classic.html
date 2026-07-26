@@ -258,7 +258,7 @@
 
       // Master gain
       const masterGain = audioCtx.createGain();
-      masterGain.gain.value = 0.15;
+      masterGain.gain.value = 0.4;
 
       // Noise source voor chaos (stage 5) — altijd aan, gain=0 tot nodig
       const bufSize = audioCtx.sampleRate * 4;
@@ -330,12 +330,12 @@
     thunderPlaying = true;
 
     // Kort crack + lange dreun
-    ramp(n.thunderGain.gain, 0.25, 0.01);
-    ramp(n.thunderGain.gain, 0.15, 0.1);
-    ramp(n.thunderGain.gain, 0, 1.5);
+    ramp(n.thunderGain.gain, 0.5, 0.01);
+    ramp(n.thunderGain.gain, 0.3, 0.1);
+    ramp(n.thunderGain.gain, 0, 2);
 
     // Timer om thunderPlaying te resetten
-    setTimeout(() => { thunderPlaying = false; }, 1600);
+    setTimeout(() => { thunderPlaying = false; }, 2100);
   }
 
   function stopAudio() {
@@ -420,15 +420,17 @@
       case 5: // CHAOS: >7 limiet → versnelt > Mach 1 → implosie → KNAL
         // Versnellen tot sneller dan geluid = implosie
         // Knal = alles tegelijk = white noise + extreme filter
-        ramp(n.osc.frequency, 8000, t);     // extreem hoog = versnelt
-        ramp(n.oscGain.gain, 0.3, t);
-        ramp(n.filter.frequency, 4000, t);  // breed open
-        ramp(n.filter.Q, 0, t);
+        // Lange ramp = opbouw van spanning (3 seconden)
+        const chaosT = 3;
+        ramp(n.osc.frequency, 8000, chaosT);     // extreem hoog = versnelt (langzaam)
+        ramp(n.oscGain.gain, 0.3, chaosT);
+        ramp(n.filter.frequency, 4000, chaosT);  // breed open
+        ramp(n.filter.Q, 0, chaosT);
+        ramp(n.delay.delayTime, 0.05, chaosT);   // bijna geen delay = geen tijd
+        ramp(n.delayGain.gain, 0.8, chaosT);     // maximale feedback = chaos
+        ramp(n.noiseGain.gain, 0.5, chaosT);     // noise opbouwt naar implosie
         // Bliksem/donder trigger bij chaos start
         triggerThunder();
-        ramp(n.delay.delayTime, 0.05, t);   // bijna geen delay = geen tijd
-        ramp(n.delayGain.gain, 0.8, t);     // maximale feedback = chaos
-        ramp(n.noiseGain.gain, 0.5, t);     // noise = implosie = knal
         break;
 
       case 6: // 0.0.0.0: 7 banden → water keert terug (stilte)
