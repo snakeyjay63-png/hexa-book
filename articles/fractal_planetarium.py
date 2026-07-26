@@ -275,7 +275,7 @@ def build_fractal_planetarium():
 
 
 def gen_fractal_html(data):
-    """Genereer HTML met fractale lagen."""
+    """Genereer HTML met fractale lagen + observatiepunt-schakelaar."""
     main = data["main"]
     j_moons = data["jupiter_moons"]
     u_moons = data["uranus_moons"]
@@ -483,7 +483,40 @@ def gen_fractal_html(data):
         "name": m["name"], "orbital": m["orbital"], "color": m.get("color"),
     } for m in u_moons])
 
-    html = f"""<!DOCTYPE html>
+    # ── Observatiepunten ──
+    # Vanuit elk observatiepunt zie je een ANDER universum
+    # Dezelfde Maxwell · verschillende harmonischen
+    observers = json.dumps([
+        {
+            "name": "Aarde",
+            "parent": "Zon",
+            "scale": 2,
+            "schumann": 7.83,
+            "brain": "theta",
+            "sun_angular": "0.53°",
+            "description": "Ons uitgangspunt. Zon = onze ster.",
+        },
+        {
+            "name": "Io (Jupiter-maan)",
+            "parent": "Jupiter",
+            "scale": 3,
+            "schumann": 10.0,
+            "brain": "alfa",
+            "sun_angular": "0.05°",
+            "jupiter_angular": "4.5°",
+            "description": "Jupiter = JE zon. Zon = heldere ster.",
+        },
+        {
+            "name": "Europa (Jupiter-maan)",
+            "parent": "Jupiter",
+            "scale": 3,
+            "schumann": 10.0,
+            "brain": "alfa",
+            "description": "2× Io resonantie. IJzige wereld, Jupiter-heerser.",
+        },
+    ])
+
+    html = f"""<!DOCTYPE html
 <html lang="nl">
 <head>
 <meta charset="UTF-8">
@@ -553,6 +586,44 @@ def gen_fractal_html(data):
   }}
   .layer-btn:hover {{ opacity: 1; }}
   .layer-btn.active {{ opacity: 1; border-color: hsl(45,40%,45%); }}
+
+  .observer-panel {{
+    position: fixed; top: 12px; left: 12px;
+    background: rgba(6,6,10,0.9);
+    border: 1px solid hsl(45,30%,25%);
+    border-radius: 6px; padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+    color: hsl(45,30%,55%); z-index: 10;
+    max-width: 260px;
+  }}
+  .observer-panel h3 {{
+    font-size: 0.65rem; margin-bottom: 6px;
+    color: hsl(45,50%,60%); opacity: 0.8;
+  }}
+  .observer-btn {{
+    display: block; width: 100%;
+    background: rgba(45,30,10,0.3);
+    border: 1px solid hsl(45,20%,20%);
+    color: hsl(45,30%,50%);
+    padding: 4px 8px; border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.55rem;
+    cursor: pointer; margin: 3px 0; text-align: left;
+    transition: all .15s;
+  }}
+  .observer-btn:hover {{ border-color: hsl(45,40%,40%); color: hsl(45,50%,70%); }}
+  .observer-btn.active {{ border-color: hsl(45,60%,55%); color: hsl(45,80%,75%); background: rgba(45,30,10,0.5); }}
+  .observer-info {{
+    margin-top: 8px; padding-top: 6px;
+    border-top: 1px solid hsl(45,20%,20%);
+    font-size: 0.55rem; opacity: 0.7; line-height: 1.5;
+  }}
+  .scale-label {{
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    font-family: 'JetBrains Mono', monospace; font-size: 1.2rem;
+    color: hsl(45,50%,60%); opacity: 0; transition: opacity .5s;
+    pointer-events: none; z-index: 100;
+  }}
+  .scale-label.visible {{ opacity: 0.3; }}
 </style>
 </head>
 <body>
@@ -608,7 +679,14 @@ def gen_fractal_html(data):
   </div>
 </div>
 
-<div class="tooltip" id="tooltip"></div>
+<div class="observer-panel" id="observerPanel">
+    <h3>◈ Observatiepunt</h3>
+    <div id="observerButtons"></div>
+    <div class="observer-info" id="observerInfo"></div>
+  </div>
+
+  <div class="tooltip" id="tooltip"></div>
+  <div class="scale-label" id="scaleLabel"></div>
 
 <script>
   const main = {main_json};
@@ -643,6 +721,37 @@ def gen_fractal_html(data):
     }}
     if (!found) tooltip.classList.remove('visible');
   }});
+
+  // ── Observatiepunt schakelaar ──
+  const observers = {observers};
+  const observerButtons = document.getElementById('observerButtons');
+  const observerInfo = document.getElementById('observerInfo');
+  const scaleLabel = document.getElementById('scaleLabel');
+
+  observers.forEach((obs, idx) => {{
+    const btn = document.createElement('button');
+    btn.className = 'observer-btn' + (idx === 0 ? ' active' : '');
+    btn.innerHTML = (idx === 0 ? '▸ ' : '') + obs.name +
+                    '<span style="opacity:0.5;font-size:0.5rem;"> schaal ' + obs.scale + '</span>';
+    btn.addEventListener('click', function() {{
+      document.querySelectorAll('.observer-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      let info = obs.description;
+      if (obs.schumann) info += '<br>Schumann: ' + obs.schumann + 'Hz → ' + obs.brain;
+      if (obs.sun_angular) info += '<br>Zon: ' + obs.sun_angular + ' (hemel)';
+      if (obs.jupiter_angular) info += '<br>Jupiter: ' + obs.jupiter_angular + ' (hemel)';
+      observerInfo.innerHTML = info;
+
+      // Toon schaal-label
+      scaleLabel.textContent = '◈ ' + obs.name + ' · schaal ' + obs.scale;
+      scaleLabel.classList.add('visible');
+      setTimeout(() => scaleLabel.classList.remove('visible'), 1500);
+    }});
+    observerButtons.appendChild(btn);
+  }});
+
+  // Start met eerste observer info
+  observerInfo.innerHTML = observers[0].description;
 </script>
 </body>
 </html>"""

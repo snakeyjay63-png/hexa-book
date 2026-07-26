@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html
 <html lang="nl">
 <head>
 <meta charset="UTF-8">
@@ -152,6 +152,44 @@
   }
   .layer-btn:hover { opacity: 1; }
   .layer-btn.active { opacity: 1; border-color: hsl(45,40%,45%); }
+
+  .observer-panel {
+    position: fixed; top: 12px; left: 12px;
+    background: rgba(6,6,10,0.9);
+    border: 1px solid hsl(45,30%,25%);
+    border-radius: 6px; padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+    color: hsl(45,30%,55%); z-index: 10;
+    max-width: 260px;
+  }
+  .observer-panel h3 {
+    font-size: 0.65rem; margin-bottom: 6px;
+    color: hsl(45,50%,60%); opacity: 0.8;
+  }
+  .observer-btn {
+    display: block; width: 100%;
+    background: rgba(45,30,10,0.3);
+    border: 1px solid hsl(45,20%,20%);
+    color: hsl(45,30%,50%);
+    padding: 4px 8px; border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.55rem;
+    cursor: pointer; margin: 3px 0; text-align: left;
+    transition: all .15s;
+  }
+  .observer-btn:hover { border-color: hsl(45,40%,40%); color: hsl(45,50%,70%); }
+  .observer-btn.active { border-color: hsl(45,60%,55%); color: hsl(45,80%,75%); background: rgba(45,30,10,0.5); }
+  .observer-info {
+    margin-top: 8px; padding-top: 6px;
+    border-top: 1px solid hsl(45,20%,20%);
+    font-size: 0.55rem; opacity: 0.7; line-height: 1.5;
+  }
+  .scale-label {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    font-family: 'JetBrains Mono', monospace; font-size: 1.2rem;
+    color: hsl(45,50%,60%); opacity: 0; transition: opacity .5s;
+    pointer-events: none; z-index: 100;
+  }
+  .scale-label.visible { opacity: 0.3; }
 </style>
 </head>
 <body>
@@ -511,7 +549,14 @@
   </div>
 </div>
 
-<div class="tooltip" id="tooltip"></div>
+<div class="observer-panel" id="observerPanel">
+    <h3>◈ Observatiepunt</h3>
+    <div id="observerButtons"></div>
+    <div class="observer-info" id="observerInfo"></div>
+  </div>
+
+  <div class="tooltip" id="tooltip"></div>
+  <div class="scale-label" id="scaleLabel"></div>
 
 <script>
   const main = [{"name": "Maan", "x": 590.0, "y": 400.0, "hue": 220, "orbital": 27.3217, "synodic": 29.5306, "field": "0 \u03bcT", "schumann": null, "has_subsystem": false, "sub_type": ""}, {"name": "Venus", "x": 455.0, "y": 477.9422863405995, "hue": 40, "orbital": 224.701, "synodic": 583.9209, "field": "~0 \u03bcT", "schumann": null, "has_subsystem": false, "sub_type": ""}, {"name": "Aarde", "x": 454.99999999999994, "y": 322.0577136594005, "hue": 210, "orbital": 365.2564, "synodic": 365.2422, "field": "25-65 \u03bcT", "schumann": 7.83, "has_subsystem": false, "sub_type": ""}, {"name": "Mars", "x": 633.4878040718663, "y": 496.98456662825805, "hue": 15, "orbital": 687.0, "synodic": 686.9798, "field": "~0 \u03bcT", "schumann": null, "has_subsystem": false, "sub_type": ""}, {"name": "Jupiter", "x": 349.2649994889709, "y": 467.1115461075071, "hue": 30, "orbital": 4332.59, "synodic": 398.8844, "field": "422 \u03bcT", "schumann": 10.0, "has_subsystem": true, "sub_type": "mini-sun"}, {"name": "Saturnus", "x": 517.2471964391627, "y": 235.9038872642349, "hue": 35, "orbital": 10759.22, "synodic": 792.5395, "field": "22.2 \u03bcT", "schumann": null, "has_subsystem": false, "sub_type": ""}, {"name": "Uranus", "x": 574.1640786499873, "y": 628.2535639108369, "hue": 185, "orbital": 30685.0, "synodic": 12340.0, "field": "23.9 \u03bcT", "schumann": null, "has_subsystem": true, "sub_type": "ice-track"}, {"name": "Neptunus", "x": 265.24457582388663, "y": 350.1011942037378, "hue": 230, "orbital": 60190.0, "synodic": 14640.0, "field": "14.2 \u03bcT", "schumann": null, "has_subsystem": false, "sub_type": ""}];
@@ -546,6 +591,37 @@
     }
     if (!found) tooltip.classList.remove('visible');
   });
+
+  // ── Observatiepunt schakelaar ──
+  const observers = [{"name": "Aarde", "parent": "Zon", "scale": 2, "schumann": 7.83, "brain": "theta", "sun_angular": "0.53\u00b0", "description": "Ons uitgangspunt. Zon = onze ster."}, {"name": "Io (Jupiter-maan)", "parent": "Jupiter", "scale": 3, "schumann": 10.0, "brain": "alfa", "sun_angular": "0.05\u00b0", "jupiter_angular": "4.5\u00b0", "description": "Jupiter = JE zon. Zon = heldere ster."}, {"name": "Europa (Jupiter-maan)", "parent": "Jupiter", "scale": 3, "schumann": 10.0, "brain": "alfa", "description": "2\u00d7 Io resonantie. IJzige wereld, Jupiter-heerser."}];
+  const observerButtons = document.getElementById('observerButtons');
+  const observerInfo = document.getElementById('observerInfo');
+  const scaleLabel = document.getElementById('scaleLabel');
+
+  observers.forEach((obs, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'observer-btn' + (idx === 0 ? ' active' : '');
+    btn.innerHTML = (idx === 0 ? '▸ ' : '') + obs.name +
+                    '<span style="opacity:0.5;font-size:0.5rem;"> schaal ' + obs.scale + '</span>';
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.observer-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      let info = obs.description;
+      if (obs.schumann) info += '<br>Schumann: ' + obs.schumann + 'Hz → ' + obs.brain;
+      if (obs.sun_angular) info += '<br>Zon: ' + obs.sun_angular + ' (hemel)';
+      if (obs.jupiter_angular) info += '<br>Jupiter: ' + obs.jupiter_angular + ' (hemel)';
+      observerInfo.innerHTML = info;
+
+      // Toon schaal-label
+      scaleLabel.textContent = '◈ ' + obs.name + ' · schaal ' + obs.scale;
+      scaleLabel.classList.add('visible');
+      setTimeout(() => scaleLabel.classList.remove('visible'), 1500);
+    });
+    observerButtons.appendChild(btn);
+  });
+
+  // Start met eerste observer info
+  observerInfo.innerHTML = observers[0].description;
 </script>
 </body>
 </html>
