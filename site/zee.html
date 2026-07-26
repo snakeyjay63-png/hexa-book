@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>• Zee — IJzerand × Klankkast</title>
+  <title>• Zee — Plasma Core × IJspolen</title>
   <link rel="stylesheet" href="css/main.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -20,15 +20,6 @@
     }
     .element-label { font-size: 1.4em; color: #7c6ef5; margin-bottom: 4px; }
     .element-sub { font-size: 0.7em; color: #666; margin-bottom: 12px; }
-
-    .btn-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
-    .btn {
-      background: rgba(124,110,245,0.05); border: 1px solid rgba(124,110,245,0.15);
-      color: #888; padding: 6px 14px; border-radius: 4px; cursor: pointer;
-      font-family: inherit; font-size: 0.75em; transition: all 0.3s;
-    }
-    .btn:hover { background: rgba(124,110,245,0.15); }
-    .btn.active { background: rgba(124,110,245,0.2); border-color: rgba(124,110,245,0.4); color: #c0b8e8; }
 
     .stone-btn {
       margin-top: 10px;
@@ -70,19 +61,21 @@
 <body>
   <a href="bit.html" class="back-link">← bit</a>
   <a href="index.html" class="back-link" style="top:50px;">← hexa-book</a>
-  <div class="info" id="info">spiegel — stil</div>
+  <div class="info" id="info">plasma core — stil</div>
 
   <div class="mode-toggle">
-    <button class="mode-btn active" data-mode="both">horizontaal × verticaal</button>
-    <button class="mode-btn" data-mode="horizontal">horizontaal</button>
-    <button class="mode-btn" data-mode="vertical">verticaal</button>
+    <button class="mode-btn active" data-mode="all">alle lagen</button>
+    <button class="mode-btn" data-mode="core">plasma core</button>
+    <button class="mode-btn" data-mode="water">water + E/M</button>
+    <button class="mode-btn" data-mode="air">lucht</button>
+    <button class="mode-btn" data-mode="ice">ijspolen</button>
   </div>
 
   <canvas id="c"></canvas>
 
   <div class="ui" id="ui">
     <div class="element-label">zee</div>
-    <div class="element-sub" id="el-sub">ijzerand × klankkast — de muur die alles terugkaatst</div>
+    <div class="element-sub" id="el-sub">plasma core → E/M veld → water → lucht → ijs (noord + zuidpool)</div>
     <button class="stone-btn" id="stone-btn">● steen gooien</button>
   </div>
 
@@ -94,30 +87,40 @@
   const elSub = document.getElementById('el-sub');
   const stoneBtn = document.getElementById('stone-btn');
 
-  let W, H, cx, cy, pondRadius;
+  let W, H, cx, cy, R;
 
   function resize() {
     W = canvas.width = window.innerWidth;
     H = canvas.height = window.innerHeight;
     cx = W / 2; cy = H / 2;
-    pondRadius = Math.min(W, H) * 0.38;
+    R = Math.min(W, H) * 0.35;
   }
   window.addEventListener('resize', resize);
   resize();
 
-  // ── Concept: IJzerand × Klankkast ──
+  // ── Laagstructuur (binnen → buiten) ──
   //
-  // Buitenkant = ijs = perfecte muur
-  // Muur = klankkast: golven reflecteren 100%
-  // Geen verlies = alles komt terug
-  // Sterkere interferentie = patronen die nooit sterven
+  // 1. Plasma Core (centrum, 0-15% R)
+  //    = water wat snel gaat = E/M veld generator
+  //    = fel licht, warm, rood/oranje
   //
-  // De zee als klankkast:
-  // Horizontaal = breedte (scanlines)
-  // Verticaal = diepte (ringen + spaken)
-  // IJzerand = de muur (reflectie)
+  // 2. E/M Veld Zone (15-35% R)
+  //    = het veld dat het water vasthoudt
+  //    = ioniserende straling, paars/blauw
+  //
+  // 3. Water Laag (35-70% R)
+  //    = de zee zelf, vastgehouden door E/M veld
+  //    = blauw, golven, leven
+  //
+  // 4. Lucht Laag (70-90% R)
+  //    = atmosfeer, ruimte tussen water en ijs
+  //    = licht, transparant
+  //
+  // 5. IJspolen (buiten 90% R, alleen boven/onder)
+  //    = ijs alleen op noord + zuid pool
+  //    = wit, koud, de muur
 
-  let viewMode = 'both';
+  let viewMode = 'all';
   let time = 0;
   let audioOn = false;
   let rippleTime = 0;
@@ -170,47 +173,46 @@
     const t = 1;
     const n = audioNodes;
     if (on) {
-      // Klankkast = meer resonantie = hogere Q
-      n.bp1.frequency.setTargetAtTime(200, audioCtx.currentTime, t);
-      n.bp1.Q.setTargetAtTime(2, audioCtx.currentTime, t); // hogere Q = meer resonantie
-      n.bp2.frequency.setTargetAtTime(2000, audioCtx.currentTime, t);
-      n.bp2.Q.setTargetAtTime(3, audioCtx.currentTime, t); // scherpe piep
-      n.lfo.frequency.setTargetAtTime(0.05, audioCtx.currentTime, t);
-      n.lfoGain.gain.setTargetAtTime(100, audioCtx.currentTime, t);
-      n.master.gain.setTargetAtTime(0.08, audioCtx.currentTime, t);
+      // Plasma core = lage frequentie + trillende hoge
+      n.bp1.frequency.setTargetAtTime(100, audioCtx.currentTime, t);
+      n.bp1.Q.setTargetAtTime(1, audioCtx.currentTime, t);
+      n.bp2.frequency.setTargetAtTime(3000, audioCtx.currentTime, t);
+      n.bp2.Q.setTargetAtTime(4, audioCtx.currentTime, t);
+      n.lfo.frequency.setTargetAtTime(0.03, audioCtx.currentTime, t);
+      n.lfoGain.gain.setTargetAtTime(200, audioCtx.currentTime, t);
+      n.master.gain.setTargetAtTime(0.06, audioCtx.currentTime, t);
     } else {
       n.master.gain.setTargetAtTime(0, audioCtx.currentTime, t);
     }
   }
 
-  // ── Golven — met ijzerand reflectie ──
+  // ── Golven (in water laag) ──
   function getWaveHeight(px, py, t) {
     let h = 0;
     for (let si = 0; si < stones.length; si++) {
       const s = stones[si];
       const age = t - s.time;
-      const speed = 80;
+      const speed = 60;
 
-      // Originele golf
       const dx = px - s.x;
       const dy = py - s.y;
       const dist = Math.sqrt(dx * dx + dy * dy);
       const ringDist = age * speed;
-      const ringWidth = 40 + age * 15;
+      const ringWidth = 30 + age * 10;
 
       if (Math.abs(dist - ringDist) < ringWidth) {
-        const ripple = Math.sin((dist - ringDist) * 0.08) *
-                       Math.exp(-age * 0.06) * // minder demping = ijzerand houdt geluid vast
+        const ripple = Math.sin((dist - ringDist) * 0.1) *
+                       Math.exp(-age * 0.04) *
                        Math.exp(-Math.abs(dist - ringDist) / ringWidth);
-        h += ripple * 20;
+        h += ripple * 15;
       }
 
-      // Reflected golf van ijzerand — 100% reflectie
+      // Reflectie van ijsrand (in water zone)
       const sDx = s.x - cx;
       const sDy = s.y - cy;
       const sDist = Math.sqrt(sDx * sDx + sDy * sDy);
-      if (sDist < pondRadius) {
-        const mirrorDist = 2 * pondRadius - sDist;
+      if (sDist < R * 0.7) {
+        const mirrorDist = 2 * R * 0.7 - sDist;
         const mirrorAngle = Math.atan2(sDy, sDx);
         const mx = cx + mirrorDist * Math.cos(mirrorAngle);
         const my = cy + mirrorDist * Math.sin(mirrorAngle);
@@ -219,100 +221,319 @@
         const rdy = py - my;
         const rDist = Math.sqrt(rdx * rdx + rdy * rdy);
         const rRingDist = (age + sDist / speed) * speed;
-        const rRingWidth = ringWidth * 0.8;
 
-        if (Math.abs(rDist - rRingDist) < rRingWidth) {
-          const rRipple = Math.sin((rDist - rRingDist) * 0.08) *
-                          Math.exp(-age * 0.06) *
-                          Math.exp(-Math.abs(rDist - rRingDist) / rRingWidth);
-          h += rRipple * 15; // sterke reflectie van ijzerand
-        }
-
-        // Dubbele reflectie (golf gaat heen en weer)
-        const doubleBounceDist = 4 * pondRadius - sDist;
-        const dBAngle = mirrorAngle;
-        const dmx = cx + doubleBounceDist * Math.cos(dBAngle);
-        const dmy = cy + doubleBounceDist * Math.sin(dBAngle);
-
-        const ddx = px - dmx;
-        const ddy = py - dmy;
-        const dDist = Math.sqrt(ddx * ddx + ddy * ddy);
-        const dRingDist = (age + 2 * sDist / speed) * speed;
-
-        if (Math.abs(dDist - dRingDist) < rRingWidth) {
-          const dBounce = Math.sin((dDist - dRingDist) * 0.08) *
-                          Math.exp(-age * 0.08) *
-                          Math.exp(-Math.abs(dDist - dRingDist) / rRingWidth);
-          h += dBounce * 8; // tweede reflectie, iets zwakker
+        if (Math.abs(rDist - rRingDist) < ringWidth) {
+          const rRipple = Math.sin((rDist - rRingDist) * 0.1) *
+                          Math.exp(-age * 0.04) *
+                          Math.exp(-Math.abs(rDist - rRingDist) / ringWidth);
+          h += rRipple * 10;
         }
       }
     }
     return h;
   }
 
-  // ── Kleur ──
-  function depthColor(depth) {
-    // depth: 0 = oppervlak (helder), 1 = diepte (indigo)
-    const r = Math.round(240 - depth * 220);
-    const g = Math.round(245 - depth * 225);
-    const b = Math.round(255 - depth * 175);
-    return { r, g, b };
+  // ── Lagen ──
+  const LAYERS = {
+    core:   { inner: 0, outer: 0.15 },
+    em:     { inner: 0.15, outer: 0.35 },
+    water:  { inner: 0.35, outer: 0.70 },
+    air:    { inner: 0.70, outer: 0.90 },
+    ice:    { inner: 0.90, outer: 1.0 },
+  };
+
+  function showLayer(name) {
+    if (viewMode === 'all') return true;
+    return viewMode === name;
   }
 
-  // ── IJzerand ──
-  function drawIceRing() {
-    const iceThickness = 15;
-    const iceOuter = pondRadius + iceThickness;
+  // ── Plasma Core ──
+  function drawPlasmaCore() {
+    if (!showLayer('core')) return;
 
-    // Ijs gradiënt
-    const iceGrad = ctx.createRadialGradient(cx, cy, pondRadius, cx, cy, iceOuter);
-    iceGrad.addColorStop(0, 'rgba(200,220,240,0.15)');
-    iceGrad.addColorStop(0.3, 'rgba(180,200,220,0.1)');
-    iceGrad.addColorStop(1, 'rgba(140,160,180,0)');
+    const r = R * LAYERS.core.outer;
 
+    // Core glow
+    const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+    coreGrad.addColorStop(0, 'rgba(255,100,30,0.6)');
+    coreGrad.addColorStop(0.5, 'rgba(255,60,20,0.3)');
+    coreGrad.addColorStop(1, 'rgba(255,30,10,0)');
     ctx.beginPath();
-    ctx.arc(cx, cy, iceOuter, 0, Math.PI * 2);
-    ctx.arc(cx, cy, pondRadius, 0, Math.PI * 2, true);
-    ctx.fillStyle = iceGrad;
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fillStyle = coreGrad;
     ctx.fill();
 
-    // Ijs rand lijn
-    ctx.beginPath();
-    ctx.arc(cx, cy, pondRadius, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(180,200,220,0.25)';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    // Ijs glow (buitenkant)
-    ctx.beginPath();
-    ctx.arc(cx, cy, pondRadius, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(180,200,220,0.08)';
-    ctx.lineWidth = iceThickness;
-    ctx.stroke();
-
-    // Ijs textuur (subtiele lijnen)
-    const cracks = 8;
-    for (let i = 0; i < cracks; i++) {
-      const angle = (i / cracks) * Math.PI * 2 + time * 0.01;
-      const innerR = pondRadius;
-      const outerR = pondRadius + iceThickness * 0.7;
+    // Plasma beweging
+    const plasmaLines = 6;
+    for (let i = 0; i < plasmaLines; i++) {
+      const angle = (i / plasmaLines) * Math.PI * 2 + time * 0.5;
+      const innerR = r * 0.2;
+      const outerR = r * 0.9;
 
       ctx.beginPath();
-      ctx.moveTo(
-        cx + Math.cos(angle) * innerR,
-        cy + Math.sin(angle) * innerR
-      );
-      ctx.lineTo(
-        cx + Math.cos(angle + 0.05) * outerR,
-        cy + Math.sin(angle + 0.05) * outerR
-      );
-      ctx.strokeStyle = 'rgba(200,220,240,0.05)';
+      for (let t = 0; t <= 1; t += 0.02) {
+        const cr = innerR + (outerR - innerR) * t;
+        const a = angle + Math.sin(t * 5 + time * 2) * 0.3;
+        const px = cx + Math.cos(a) * cr;
+        const py = cy + Math.sin(a) * cr;
+        if (t === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.strokeStyle = `rgba(255,150,50,${0.3 + Math.sin(time * 3 + i) * 0.1})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    // Label
+    ctx.fillStyle = 'rgba(255,150,50,0.15)';
+    ctx.font = '0.4em "IBM Plex Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('plasma', cx, cy - 8);
+    ctx.fillText('core', cx, cy + 6);
+  }
+
+  // ── E/M Veld ──
+  function drawEMField() {
+    if (!showLayer('em')) return;
+
+    const inner = R * LAYERS.em.inner;
+    const outer = R * LAYERS.em.outer;
+
+    // EM zone
+    const emGrad = ctx.createRadialGradient(cx, cy, inner, cx, cy, outer);
+    emGrad.addColorStop(0, 'rgba(100,50,200,0)');
+    emGrad.addColorStop(0.3, 'rgba(100,50,200,0.05)');
+    emGrad.addColorStop(0.7, 'rgba(80,40,180,0.08)');
+    emGrad.addColorStop(1, 'rgba(60,30,160,0)');
+    ctx.beginPath();
+    ctx.arc(cx, cy, outer, 0, Math.PI * 2);
+    ctx.arc(cx, cy, inner, 0, Math.PI * 2, true);
+    ctx.fillStyle = emGrad;
+    ctx.fill();
+
+    // Veld lijnen
+    const fieldLines = 12;
+    for (let i = 0; i < fieldLines; i++) {
+      const baseAngle = (i / fieldLines) * Math.PI * 2;
+
+      ctx.beginPath();
+      for (let t = 0; t <= 1; t += 0.01) {
+        const r = inner + (outer - inner) * t;
+        const wave = Math.sin(t * 8 + time * 2) * (outer - inner) * 0.1;
+        const a = baseAngle + wave / r;
+        const px = cx + Math.cos(a) * r;
+        const py = cy + Math.sin(a) * r;
+        if (t === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.strokeStyle = `rgba(120,80,220,${0.1 + Math.sin(time + i) * 0.03})`;
       ctx.lineWidth = 0.5;
       ctx.stroke();
     }
+
+    // Label
+    const labelR = (inner + outer) / 2;
+    ctx.fillStyle = 'rgba(120,80,220,0.1)';
+    ctx.font = '0.35em "IBM Plex Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('E/M veld', cx + Math.cos(time * 0.1) * labelR * 0.3, cy - labelR);
   }
 
-  // ── Tekenen ──
+  // ── Water Laag ──
+  function drawWaterLayer() {
+    if (!showLayer('water')) return;
+
+    const inner = R * LAYERS.water.inner;
+    const outer = R * LAYERS.water.outer;
+
+    // Water zone
+    const wGrad = ctx.createRadialGradient(cx, cy, inner, cx, cy, outer);
+    wGrad.addColorStop(0, 'rgba(30,60,120,0.15)');
+    wGrad.addColorStop(0.5, 'rgba(20,50,100,0.1)');
+    wGrad.addColorStop(1, 'rgba(40,80,140,0.05)');
+    ctx.beginPath();
+    ctx.arc(cx, cy, outer, 0, Math.PI * 2);
+    ctx.arc(cx, cy, inner, 0, Math.PI * 2, true);
+    ctx.fillStyle = wGrad;
+    ctx.fill();
+
+    // Golven
+    if (audioOn && stones.length > 0) {
+      const step = 4;
+      for (let y = cy - outer; y < cy + outer; y += step) {
+        const rowDy = y - cy;
+        const rowHW = Math.sqrt(Math.max(0, outer * outer - rowDy * rowDy));
+
+        // Alleen in water zone
+        const minDist = Math.max(rowDy, inner);
+        if (minDist > outer) continue;
+
+        let waveAlpha = 0;
+        const h = getWaveHeight(cx, y, time);
+        waveAlpha = Math.abs(h) * 0.005;
+
+        ctx.beginPath();
+        const startX = cx - Math.min(rowHW, outer);
+        ctx.moveTo(startX, y);
+        ctx.lineTo(cx + Math.min(rowHW, outer), y);
+        ctx.strokeStyle = `rgba(100,150,200,${0.005 + waveAlpha})`;
+        ctx.lineWidth = step * 0.3;
+        ctx.stroke();
+      }
+    }
+
+    // Concentrische ringen
+    const rings = 8;
+    for (let ri = 0; ri <= rings; ri++) {
+      const ringR = inner + (outer - inner) * (ri / rings);
+      ctx.beginPath();
+      ctx.arc(cx, cy, ringR, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(80,120,180,0.04)`;
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    }
+
+    // Label
+    const labelR = (inner + outer) / 2;
+    ctx.fillStyle = 'rgba(100,150,200,0.1)';
+    ctx.font = '0.35em "IBM Plex Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('water', cx, cy + labelR);
+  }
+
+  // ── Lucht Laag ──
+  function drawAirLayer() {
+    if (!showLayer('air')) return;
+
+    const inner = R * LAYERS.air.inner;
+    const outer = R * LAYERS.air.outer;
+
+    // Lucht zone (bijna onzichtbaar)
+    const aGrad = ctx.createRadialGradient(cx, cy, inner, cx, cy, outer);
+    aGrad.addColorStop(0, 'rgba(180,200,220,0)');
+    aGrad.addColorStop(0.5, 'rgba(180,200,220,0.02)');
+    aGrad.addColorStop(1, 'rgba(180,200,220,0)');
+    ctx.beginPath();
+    ctx.arc(cx, cy, outer, 0, Math.PI * 2);
+    ctx.arc(cx, cy, inner, 0, Math.PI * 2, true);
+    ctx.fillStyle = aGrad;
+    ctx.fill();
+
+    // Subtiele deeltjes
+    const particles = 20;
+    for (let i = 0; i < particles; i++) {
+      const angle = (i / particles) * Math.PI * 2 + time * 0.02;
+      const r = inner + (outer - inner) * ((Math.sin(time * 0.5 + i * 3) + 1) / 2);
+      const px = cx + Math.cos(angle) * r;
+      const py = cy + Math.sin(angle) * r;
+
+      ctx.beginPath();
+      ctx.arc(px, py, 1, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(180,200,220,0.06)`;
+      ctx.fill();
+    }
+
+    // Label
+    const labelR = (inner + outer) / 2;
+    ctx.fillStyle = 'rgba(180,200,220,0.08)';
+    ctx.font = '0.35em "IBM Plex Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('lucht', cx, cy - labelR);
+  }
+
+  // ── IJspolen ──
+  function drawIcePoles() {
+    if (!showLayer('ice')) return;
+
+    // Ijs ALLEEN boven en onder
+    const inner = R * LAYERS.ice.inner;
+    const outer = R * LAYERS.ice.outer;
+    const poleAngle = Math.PI * 0.2; // 36 graden boven/onder
+
+    // Noordpool (boven)
+    const northGrad = ctx.createRadialGradient(cx, cy - inner, 0, cx, cy - outer, outer - inner);
+    northGrad.addColorStop(0, 'rgba(220,230,240,0.15)');
+    northGrad.addColorStop(1, 'rgba(200,210,220,0)');
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, outer, -Math.PI/2 - poleAngle, -Math.PI/2 + poleAngle);
+    ctx.arc(cx, cy, inner, -Math.PI/2 + poleAngle, -Math.PI/2 - poleAngle, true);
+    ctx.closePath();
+    ctx.fillStyle = northGrad;
+    ctx.fill();
+
+    // Zuidpool (onder)
+    const southGrad = ctx.createRadialGradient(cx, cy + inner, 0, cx, cy + outer, outer - inner);
+    southGrad.addColorStop(0, 'rgba(220,230,240,0.15)');
+    southGrad.addColorStop(1, 'rgba(200,210,220,0)');
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, outer, Math.PI/2 - poleAngle, Math.PI/2 + poleAngle);
+    ctx.arc(cx, cy, inner, Math.PI/2 + poleAngle, Math.PI/2 - poleAngle, true);
+    ctx.closePath();
+    ctx.fillStyle = southGrad;
+    ctx.fill();
+
+    // Ijs textuur
+    const cracks = 6;
+    for (let i = 0; i < cracks; i++) {
+      // Noord
+      const nAngle = -Math.PI/2 + (i / cracks) * poleAngle * 2 - poleAngle;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(nAngle) * inner, cy + Math.sin(nAngle) * inner);
+      ctx.lineTo(cx + Math.cos(nAngle + 0.05) * outer, cy + Math.sin(nAngle + 0.05) * outer);
+      ctx.strokeStyle = 'rgba(220,230,240,0.05)';
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+
+      // Zuid
+      const sAngle = Math.PI/2 + (i / cracks) * poleAngle * 2 - poleAngle;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(sAngle) * inner, cy + Math.sin(sAngle) * inner);
+      ctx.lineTo(cx + Math.cos(sAngle + 0.05) * outer, cy + Math.sin(sAngle + 0.05) * outer);
+      ctx.strokeStyle = 'rgba(220,230,240,0.05)';
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    }
+
+    // Labels
+    ctx.fillStyle = 'rgba(220,230,240,0.12)';
+    ctx.font = '0.35em "IBM Plex Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('noordpool', cx, cy - outer + 12);
+    ctx.fillText('zuidpool', cx, cy + outer - 4);
+  }
+
+  // ── Buitenste rand ──
+  function drawOuterRing() {
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(100,140,200,0.1)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // ── Ripple visuals ──
+  function drawRipples() {
+    if (!audioOn) return;
+
+    for (let si = 0; si < stones.length; si++) {
+      const s = stones[si];
+      const age = time - s.time;
+      const ringDist = age * 60;
+      const alpha = Math.exp(-age * 0.04) * 0.1;
+      if (alpha > 0.003 && ringDist < R * 0.7) {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, ringDist, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(140,180,220,${alpha})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+  }
+
+  // ── Main draw ──
   function draw() {
     ctx.fillStyle = '#06060a';
     ctx.fillRect(0, 0, W, H);
@@ -320,160 +541,23 @@
     time += 0.016;
     if (audioOn) rippleTime += 0.016;
 
-    // ── Clip to circle ──
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, pondRadius, 0, Math.PI * 2);
-    ctx.clip();
-
-    // Basis: diepte gradiënt
-    const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, pondRadius);
-    grad.addColorStop(0, '#0a0a2e');
-    grad.addColorStop(0.5, '#1a1a4e');
-    grad.addColorStop(1, '#3a4a6e');
-    ctx.fillStyle = grad;
-    ctx.fillRect(cx - pondRadius, cy - pondRadius, pondRadius * 2, pondRadius * 2);
-
-    // HORIZONTAAL: scanlines
-    const showH = (viewMode === 'horizontal' || viewMode === 'both');
-    const hIntensity = (viewMode === 'horizontal') ? 1 : 0.5;
-
-    if (showH) {
-      const spacing = 4;
-      for (let y = cy - pondRadius; y < cy + pondRadius; y += spacing) {
-        const rowDy = y - cy;
-        const rowHW = Math.sqrt(Math.max(0, pondRadius * pondRadius - rowDy * rowDy));
-        if (rowHW < 1) continue;
-
-        const depth = Math.abs(rowDy) / pondRadius;
-        const c = depthColor(depth);
-
-        let waveAlpha = 0;
-        if (audioOn && stones.length > 0) {
-          const h = getWaveHeight(cx, y, time);
-          waveAlpha = Math.abs(h) * 0.006;
-        }
-
-        ctx.beginPath();
-        ctx.moveTo(cx - rowHW, y);
-        ctx.lineTo(cx + rowHW, y);
-        ctx.strokeStyle = `rgba(${c.r},${c.g},${c.b},${0.01 * hIntensity + waveAlpha})`;
-        ctx.lineWidth = spacing * 0.4;
-        ctx.stroke();
-      }
-    }
-
-    // VERTICAAL: diepte ringen + spaken
-    const showV = (viewMode === 'vertical' || viewMode === 'both');
-    const vIntensity = (viewMode === 'vertical') ? 1 : 0.5;
-
-    if (showV) {
-      const rings = 20;
-      for (let r = 0; r <= rings; r++) {
-        const ringR = (r / rings) * pondRadius;
-        const depth = r / rings;
-        const c = depthColor(1 - depth);
-
-        let waveAlpha = 0;
-        if (audioOn && stones.length > 0) {
-          const h = getWaveHeight(cx + ringR, cy, time);
-          waveAlpha = Math.abs(h) * 0.004;
-        }
-
-        ctx.beginPath();
-        ctx.arc(cx, cy, ringR, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(${c.r},${c.g},${c.b},${0.015 * vIntensity + waveAlpha})`;
-        ctx.lineWidth = 1;
-        ctx.stroke();
-      }
-
-      // Spaken
-      const spokes = 12;
-      for (let s = 0; s < spokes; s++) {
-        const angle = (s / spokes) * Math.PI * 2;
-        ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.lineTo(cx + Math.cos(angle) * pondRadius, cy + Math.sin(angle) * pondRadius);
-        ctx.strokeStyle = `rgba(100,140,200,${0.006 * vIntensity})`;
-        ctx.lineWidth = 0.5;
-        ctx.stroke();
-      }
-    }
-
-    // Lichtreflectie op golftoppen
-    if (audioOn) {
-      const step = 8;
-      for (let y = cy - pondRadius; y < cy + pondRadius; y += step) {
-        const rowDy = y - cy;
-        const rowHW = Math.sqrt(Math.max(0, pondRadius * pondRadius - rowDy * rowDy));
-        for (let x = cx - rowHW; x < cx + rowHW; x += step) {
-          const h = getWaveHeight(x, y, time);
-          if (h > 2) {
-            const px = x - cx;
-            const py = y - cy;
-            const dist = Math.sqrt(px * px + py * py);
-            const depth = dist / pondRadius;
-            const bright = h * 3 * (1 - depth);
-            if (bright > 1) {
-              ctx.beginPath();
-              ctx.arc(x, y, bright * 0.2, 0, Math.PI * 2);
-              ctx.fillStyle = `rgba(240,245,255,${bright * 0.012})`;
-              ctx.fill();
-            }
-          }
-        }
-      }
-    }
-
-    // Zon reflectie
-    const sunX = cx + pondRadius * 0.3;
-    const sunY = cy - pondRadius * 0.4;
-    const sunGrad = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, pondRadius * 0.4);
-    sunGrad.addColorStop(0, 'rgba(255,255,255,0.02)');
-    sunGrad.addColorStop(1, 'rgba(255,255,255,0)');
-    ctx.fillStyle = sunGrad;
-    ctx.fillRect(cx - pondRadius, cy - pondRadius, pondRadius * 2, pondRadius * 2);
-
-    ctx.restore();
-
-    // ── IJZERAND (buiten clip) ──
-    drawIceRing();
-
-    // Ripple rings
-    if (audioOn) {
-      for (let si = 0; si < stones.length; si++) {
-        const s = stones[si];
-        const age = time - s.time;
-        const ringDist = age * 80;
-        const alpha = Math.exp(-age * 0.06) * 0.15; // minder demping
-        if (alpha > 0.005) {
-          ctx.beginPath();
-          ctx.arc(s.x, s.y, ringDist, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(140,180,220,${alpha})`;
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
-        }
-      }
-    }
-
-    // Diepte label (stil)
-    if (!audioOn) {
-      ctx.fillStyle = 'rgba(100,140,200,0.06)';
-      ctx.font = '0.5em "IBM Plex Mono", monospace';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('diepte', cx, cy);
-    }
+    drawPlasmaCore();
+    drawEMField();
+    drawWaterLayer();
+    drawRipples();
+    drawAirLayer();
+    drawIcePoles();
+    drawOuterRing();
 
     // Info
     if (!audioOn) {
-      infoEl.textContent = 'spiegel — stil';
+      infoEl.textContent = 'plasma core — stil';
     } else if (rippleTime < 2) {
       infoEl.textContent = `rimpel — ${rippleTime.toFixed(1)}s`;
     } else if (rippleTime < 8) {
-      infoEl.textContent = `interferentie — ${rippleTime.toFixed(1)}s`;
+      infoEl.textContent = `E/M resonantie — ${rippleTime.toFixed(1)}s`;
     } else {
-      infoEl.textContent = `klankkast resonantie — ${rippleTime.toFixed(1)}s`;
+      infoEl.textContent = `plasma ↔ ijs resonantie — ${rippleTime.toFixed(1)}s`;
     }
 
     requestAnimationFrame(draw);
@@ -496,28 +580,28 @@
 
     if (audioOn) {
       stones.push({
-        x: cx + (Math.random() - 0.5) * 20,
-        y: cy + (Math.random() - 0.5) * 20,
+        x: cx + (Math.random() - 0.5) * R * 0.3,
+        y: cy + (Math.random() - 0.5) * R * 0.3,
         time: time
       });
       stoneBtn.textContent = '● stil';
       stoneBtn.classList.add('rippled');
-      elSub.textContent = 'steen → rimpel → ijzerand reflectie → klankkast resonantie';
+      elSub.textContent = 'steen → rimpel → E/M resonantie → plasma ↔ ijs';
     } else {
       stones = [];
       rippleTime = 0;
       stoneBtn.textContent = '● steen gooien';
       stoneBtn.classList.remove('rippled');
-      elSub.textContent = 'ijzerand × klankkast — de muur die alles terugkaatst';
+      elSub.textContent = 'plasma core → E/M veld → water → lucht → ijs (noord + zuidpool)';
     }
   });
 
-  // Click = steen
+  // Click = steen (in water zone)
   canvas.addEventListener('click', (e) => {
     const dx = e.clientX - cx;
     const dy = e.clientY - cy;
     const dist = Math.sqrt(dx * dx + dy * dy);
-    if (dist > pondRadius * 1.1) return;
+    if (dist > R || dist < R * 0.35) return;
 
     if (!audioOn) {
       initAudio();
@@ -527,15 +611,7 @@
       stoneBtn.classList.add('rippled');
     }
 
-    const sx = Math.min(Math.max(e.clientX, cx - pondRadius * 0.9), cx + pondRadius * 0.9);
-    const sy = Math.min(Math.max(e.clientY, cy - pondRadius * 0.9), cy + pondRadius * 0.9);
-    const sDx = sx - cx;
-    const sDy = sy - cy;
-    const sDist = Math.sqrt(sDx * sDx + sDy * sDy);
-
-    if (sDist < pondRadius * 0.95) {
-      stones.push({ x: sx, y: sy, time: time });
-    }
+    stones.push({ x: e.clientX, y: e.clientY, time: time });
   });
 
   draw();
